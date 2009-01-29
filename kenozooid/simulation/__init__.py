@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import time
+
 """
 Dive simulation routines.
 """
@@ -73,3 +75,37 @@ def parse(spec):
             raise ValueError('Invalid depth specification for "%s"' % chunk)
 
         yield t, d
+
+
+def interpolate(spec):
+    """
+    Interpolate dive simulation times and depths.
+
+    :Parameters:
+     spec
+        Specification of dive simulation.
+    """
+    ptime = 0
+    pdepth = 0
+    yield ptime, pdepth
+    for time, depth in spec:
+        tdelta = time - ptime
+        ddelta = depth - pdepth
+
+        if tdelta <= abs(ddelta):
+            d = float(ddelta) / tdelta
+            for i in range(1, tdelta):
+                yield ptime + i, int(pdepth + d * i)
+
+        elif tdelta > abs(ddelta) and ddelta != 0:
+            d = tdelta / float(ddelta)
+            for i in range(1, abs(ddelta)):
+                yield int(ptime + d * i), pdepth + i
+
+
+        yield time, depth
+
+        ptime = time
+        pdepth = depth
+
+
