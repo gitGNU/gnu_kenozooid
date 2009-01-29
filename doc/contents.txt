@@ -1,0 +1,14 @@
+Kenozooid Documentation
+=======================
+
+.. toctree::
+   :maxdepth: 2
+
+   features
+   moredev
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+
