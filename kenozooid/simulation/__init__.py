@@ -18,6 +18,7 @@
 #
 
 import time
+from datetime import datetime
 
 """
 Dive simulation routines.
@@ -89,9 +90,9 @@ def interpolate(spec):
     pdepth = 0
     yield ptime, pdepth
     for time, depth in spec:
+        count = time - ptime    # interpolation amount
         ddelta = depth - pdepth # depth delta
         value = abs(ddelta)     # value to interpolate
-        count = time - ptime    # interpolation amount
 
         if value != 0 and count !=0:
             d1 = 1
@@ -99,8 +100,11 @@ def interpolate(spec):
             # time or depth can be interpolated
             if value <= count:
                 value, count = count, value
-                d1 = 1 / d2
-                d2 = 1
+                d1 = abs(1 / d2)
+                if d2 > 0:
+                    d2 = 1
+                else:
+                    d2 = -1
 
             for i in range(1, count):
                 yield int(ptime + d1 * i), int(pdepth + d2 * i)
@@ -110,5 +114,33 @@ def interpolate(spec):
 
         ptime = time
         pdepth = depth
+
+
+def simulate(simulator, spec):
+    data = interpolate(tuple(parse(spec)))
+    simulator.start()
+    try:
+        # start simulation
+        pt, d = data.next()
+        simulator.depth(d)
+
+        for t, d in data:
+            time.sleep(t - pt)
+            simulator.depth(d)
+            pt = t
+
+    finally:
+        simulator.stop()
+        
+
+class SysOutSimulator(object):
+    def start(self):
+        print 'start simulator simulation'
+
+    def depth(self, d):
+        print '%s -> %02dm' % (datetime.now().time(), d)
+
+    def stop(self):
+        print 'stop simulator simulation'
 
 

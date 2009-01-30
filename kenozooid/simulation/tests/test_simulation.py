@@ -103,6 +103,13 @@ class InterpolationTestCase(unittest.TestCase):
         result = tuple(result)[3:]
         self.assertEquals(((3, 7), (4, 5)), result)
 
+        spec = ((3, 15), (15, 10))
+        result = tuple(interpolate(spec))[3:]
+        self.assertEquals((3, 15), result[0])
+        self.assertEquals((5, 14), result[1])
+        self.assertEquals((12, 11), result[-2])
+        self.assertEquals((15, 10), result[-1])
+
 
     def test_no_depth_change(self):
         """Test no depth change interpolation

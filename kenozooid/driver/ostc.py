@@ -65,39 +65,22 @@ class OSTCDriver(object):
         fingerprint = ''.join('%x' % ord(c) for c in data)
         return 'OSTC %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
 
-    def dive(self, depths):
-        import time
-        self._write('c')
-        depths = range(1, 22, 2)
-        depths += [25] * 20
-        depths += list(reversed(depths)) + [0]
-        for depth in depths:
-            time.sleep(2)
-            pressure = depth + 10
-            self._write(byte(pressure))
-            print depth, pressure
-        self._write(byte(0))
 
 
-
-class Simulator(object):
+class OSTCSimulator(object):
     def __init__(self, driver):
-        super(Simulator, self).__init__()
+        super(OSTCSimulator, self).__init__()
         self._driver = driver
 
     def start(self):
+        print 'starting'
         self._driver._write('c')
+        print 'started'
 
     def stop(self):
-        self._write(byte(0))
+        self._driver._write(byte(0))
 
     def depth(self, depth):
         pressure = depth + 10
-        self._write(byte(pressure))
-
-
-if __name__ == 'main':
-    driver = OSTCDriver()
-    #print 'id', driver.id()
-    driver.dive(0)
+        self._driver._write(byte(pressure))
 
