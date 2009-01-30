@@ -89,18 +89,21 @@ def interpolate(spec):
     pdepth = 0
     yield ptime, pdepth
     for time, depth in spec:
-        tdelta = time - ptime
-        ddelta = depth - pdepth
+        ddelta = depth - pdepth # depth delta
+        value = abs(ddelta)     # value to interpolate
+        count = time - ptime    # interpolation amount
 
-        if tdelta <= abs(ddelta):
-            d = float(ddelta) / tdelta
-            for i in range(1, tdelta):
-                yield ptime + i, int(pdepth + d * i)
+        if value != 0 and count !=0:
+            d1 = 1
+            d2 = float(ddelta) / count
+            # time or depth can be interpolated
+            if value <= count:
+                value, count = count, value
+                d1 = 1 / d2
+                d2 = 1
 
-        elif tdelta > abs(ddelta) and ddelta != 0:
-            d = tdelta / float(ddelta)
-            for i in range(1, abs(ddelta)):
-                yield int(ptime + d * i), pdepth + i
+            for i in range(1, count):
+                yield int(ptime + d1 * i), int(pdepth + d2 * i)
 
 
         yield time, depth
