@@ -5,6 +5,7 @@ Kenozooid Documentation
    :maxdepth: 2
 
    features
+   simulation
    moredev
 
 * :ref:`genindex`

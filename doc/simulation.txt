@@ -1,0 +1,11 @@
+Dive Simulation
+===============
+
+Please note, this is real time dive simulation, therefore real life
+rules apply to some of dive computers
+
+- when you reach surface, then computer may wait some time before exiting
+  dive mode, if you start another simulation too fast, then it is counted
+  as one dive
+
+
