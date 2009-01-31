@@ -92,4 +92,6 @@ class QueryTestCase(TestCase):
         class C2(object): pass
 
         result = query(DeviceDriver)
-        self.assertEquals((C1, C2), tuple(sorted(result)))
+        self.assertEquals(2, len(result))
+        self.assertTrue(C1 in result)
+        self.assertTrue(C2 in result)
