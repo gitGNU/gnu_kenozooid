@@ -77,7 +77,7 @@ def query(iface, id=None):
         if id is None:
             result = (cls for _, cls in _registry[iface].items())
         else:
-            result = _registry[iface].get(id)
+            result = _registry[iface].get(id),
 
     return tuple(result)
 
