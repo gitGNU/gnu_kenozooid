@@ -43,7 +43,17 @@ _registry = {}
 
 def inject(iface, id):
     """
-    Inject interface.
+    Class decorator to declare interface implementation.
+
+    Id of driver is required injection attribute. This makes injection
+    mechanism very specific to drivers and in the future will be replaced
+    by generic paramaters specification, i.e. `inject(iface, **params)`.
+
+    :Parameters:
+     iface
+        Interface to inject.
+     id
+        Id of driver.
     """
     def f(cls):
         print 'inject', iface, cls, id
@@ -52,7 +62,6 @@ def inject(iface, id):
             _registry[iface] = {}
         ireg = _registry[iface]
         ireg[id] = cls
-        print _registry
 
         return cls
 
@@ -66,10 +75,10 @@ def query(iface, id=None):
     result = None
     if iface in _registry:
         if id is None:
-            result = tuple(cls for _, cls in _registry[iface].items())
+            result = (cls for _, cls in _registry[iface].items())
         else:
             result = _registry[iface].get(id)
 
-    return result
+    return tuple(result)
 
 
