@@ -18,7 +18,6 @@
 #
 
 import time
-from datetime import datetime
 
 """
 Dive simulation routines.
@@ -131,16 +130,3 @@ def simulate(simulator, spec):
 
     finally:
         simulator.stop()
-        
-
-class SysOutSimulator(object):
-    def start(self):
-        print 'start simulator simulation'
-
-    def depth(self, d):
-        print '%s -> %02dm' % (datetime.now().time(), d)
-
-    def stop(self):
-        print 'stop simulator simulation'
-
-

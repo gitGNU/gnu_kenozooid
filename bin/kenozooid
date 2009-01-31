@@ -19,13 +19,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from kenozooid.simulation import simulate, SysOutSimulator
+from kenozooid.simulation import simulate
 from kenozooid.driver.ostc import OSTCDriver, OSTCSimulator
+from kenozooid.driver.dummy import DummyDriver, DummySimulator
 
-drv = OSTCDriver()
-s1 = OSTCSimulator(drv)
+#drv1 = OSTCDriver()
+#s1 = OSTCSimulator(drv1)
 #print drv.id()
 
-s2 = SysOutSimulator()
-simulate(s1, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+drv2 = DummyDriver()
+s2 = DummySimulator(drv2)
+simulate(s2, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
