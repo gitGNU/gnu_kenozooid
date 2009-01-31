@@ -27,14 +27,14 @@ from datetime import datetime
 
 from kenozooid.iface import DeviceDriver, Simulator, inject
 
-@inject(DeviceDriver, 'dummy')
+@inject(DeviceDriver, id='dummy', name='Dummy Device Driver')
 class DummyDriver(object):
     def id(self):
         return 'Dummy Device'
 
         
 
-@inject(Simulator, 'dummy')
+@inject(Simulator, id='dummy')
 class DummySimulator(object):
     """
     Dummy simulator implementation.

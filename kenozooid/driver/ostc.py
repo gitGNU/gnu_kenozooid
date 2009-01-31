@@ -37,7 +37,7 @@ def pressure(depth):
     return depth + 10
 
 
-@inject(DeviceDriver, 'ostc')
+@inject(DeviceDriver, id='ostc', name='OSTC Driver')
 class OSTCDriver(object):
     """
     OSTC dive computer driver.
@@ -70,7 +70,7 @@ class OSTCDriver(object):
 
 
 
-@inject(Simulator, 'ostc')
+@inject(Simulator, id='ostc')
 class OSTCSimulator(object):
     def __init__(self, driver):
         super(OSTCSimulator, self).__init__()

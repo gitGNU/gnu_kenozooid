@@ -24,6 +24,8 @@ Simple interface injection mechanism and searchable registry for classes
 implementing given interface are provided.
 """
 
+import itertools
+
 class DeviceDriver(object):
     def id(self):
         pass
@@ -41,44 +43,51 @@ class Simulator(object):
 
 _registry = {}
 
-def inject(iface, id):
+def inject(iface, **params):
     """
     Class decorator to declare interface implementation.
 
-    Id of driver is required injection attribute. This makes injection
-    mechanism very specific to drivers and in the future will be replaced
-    by generic paramaters specification, i.e. `inject(iface, **params)`.
+    Injection parameters can be used to query for classes implementing an
+    interface and having appropriate values.
 
     :Parameters:
      iface
         Interface to inject.
-     id
-        Id of driver.
+     params
+        Injection parameters.
     """
     def f(cls):
-        print 'inject', iface, cls, id
+        print 'inject', iface, cls, params
 
         if iface not in _registry:
-            _registry[iface] = {}
-        ireg = _registry[iface]
-        ireg[id] = cls
+            _registry[iface] = []
+        _registry[iface].append((cls, params))
 
         return cls
 
     return f
 
 
-def query(iface, id=None):
+def _applies(p1, p2):
+    keys = set(p2.keys())
+    return all(k in keys and p1[k] == p2[k] for k in p1.keys())
+
+
+def query(iface=None, **params):
     """
     Look for class implementing specified interface.
     """
-    result = None
-    if iface in _registry:
-        if id is None:
-            result = (cls for _, cls in _registry[iface].items())
-        else:
-            result = _registry[iface].get(id),
+    if iface is None:
+        data = itertools.chain(*_registry.values())
+    elif iface in _registry:
+        data = _registry[iface]
+    else:
+        data = ()
 
-    return tuple(result)
+    return (cls for cls, p in data if _applies(params, p))
 
 
+def params(cls):
+    for c, p in itertools.chain(*_registry.values()):
+        if c == cls:
+            return p

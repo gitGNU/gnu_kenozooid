@@ -23,7 +23,7 @@ Test interface injection mechanism.
 
 import unittest
 
-from kenozooid.iface import _registry, inject, query, DeviceDriver
+from kenozooid.iface import _registry, _applies, inject, query, DeviceDriver
 
 
 class TestCase(unittest.TestCase):
@@ -42,29 +42,29 @@ class InjectionTestCase(TestCase):
     def test_single_injection(self):
         """Test interface injection
         """
-        @inject(DeviceDriver, 'test')
+        @inject(DeviceDriver, id='test', name='Test')
         class C(object): pass
 
         self.assertTrue(DeviceDriver in _registry)
-        self.assertTrue('test' in _registry[DeviceDriver])
-        self.assertEquals(C, _registry[DeviceDriver]['test'])
+        p = {'id': 'test', 'name': 'Test'}
+        self.assertTrue((C, p) in _registry[DeviceDriver])
 
 
     def test_multiple_injection(self):
         """Test interface injection with multiple classes
         """
-        @inject(DeviceDriver, 'test1')
+        @inject(DeviceDriver, id='test1', name='Test1')
         class C1(object): pass
 
-        @inject(DeviceDriver, 'test2')
+        @inject(DeviceDriver, id='test2', name='Test2')
         class C2(object): pass
 
         self.assertTrue(DeviceDriver in _registry)
-        self.assertTrue('test1' in _registry[DeviceDriver])
-        self.assertEquals(C1, _registry[DeviceDriver]['test1'])
+        p = {'id': 'test1', 'name': 'Test1'}
+        self.assertTrue((C1, p) in _registry[DeviceDriver])
 
-        self.assertTrue('test2' in _registry[DeviceDriver])
-        self.assertEquals(C2, _registry[DeviceDriver]['test2'])
+        p = {'id': 'test2', 'name': 'Test2'}
+        self.assertTrue((C2, p) in _registry[DeviceDriver])
 
 
 
@@ -72,26 +72,61 @@ class QueryTestCase(TestCase):
     """
     Interface registry query tests.
     """
-    def test_query(self):
+    def test_dict_cmp(self):
+        p1 = {3: 4}
+        p2 = {1: 2, 3: 4}
+
+        self.assertTrue(_applies(p1, p2))
+
+        p1 = {3: 3}
+        self.assertFalse(_applies(p1, p2))
+
+        p1 = {4: 3}
+        self.assertFalse(_applies(p1, p2))
+
+
+    def test_cls_query(self):
         """Test interface registry query
         """
-        @inject(DeviceDriver, 'test')
+        @inject(DeviceDriver, id='test', name='Test')
         class C(object): pass
 
         result = query(DeviceDriver)
-        self.assertEquals((C, ), result)
+        self.assertEquals((C, ), tuple(result))
 
 
-    def test_multiple_query(self):
+    def test_cls_multiple_query(self):
         """Test interface registry query with multiple injections
         """
-        @inject(DeviceDriver, 'test1')
+        @inject(DeviceDriver, id='test1', name='Test1')
         class C1(object): pass
 
-        @inject(DeviceDriver, 'test2')
+        @inject(DeviceDriver, id='test2', name='Test2')
         class C2(object): pass
 
-        result = query(DeviceDriver)
+        result = tuple(query(DeviceDriver))
         self.assertEquals(2, len(result))
-        self.assertTrue(C1 in result)
+        self.assertTrue(C1 in result, result)
+        self.assertTrue(C2 in result, result)
+
+
+    def test_parameter_query(self):
+        """Test parameter query
+        """
+        @inject(DeviceDriver, id='test1', name='Test1')
+        class C1(object): pass
+
+        @inject(DeviceDriver, id='test2', name='Test2a')
+        class C2(object): pass
+
+        @inject(DeviceDriver, id='test2', name='Test2b')
+        class C3(object): pass
+
+        result = tuple(query(id='test1'))
+        self.assertEquals(1, len(result))
+        self.assertEquals(C1, result[0])
+
+        result = tuple(query(id='test2'))
+        self.assertEquals(2, len(result))
         self.assertTrue(C2 in result)
+        self.assertTrue(C3 in result)

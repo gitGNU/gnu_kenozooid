@@ -22,17 +22,58 @@
 from kenozooid.simulation import simulate
 import kenozooid.driver.ostc
 import kenozooid.driver.dummy
-from kenozooid.iface import query, DeviceDriver, Simulator
+from kenozooid.iface import query, params, DeviceDriver, Simulator
 
-#drv1 = OSTCDriver()
-#s1 = OSTCSimulator(drv1)
-#print drv.id()
+import optparse
+import sys
+
+commands = ('list', 'scan', 'simulate')
+
+usage = """
+    %prog [options] list
+    %prog [options] scan
+    %prog [options] simulate <dev> <divespec>
+
+Commands description:
+    list - list available drivers and their capabilities
+    scan - scan for and display attached devices
+    simulate - simulate dive with dive specification using device
+"""
+
+parser = optparse.OptionParser(usage=usage)
+options, args = parser.parse_args()
+
+if len(args) < 1 or args[0] not in commands:
+    parser.print_help()
+    sys.exit(1)
+
+cmd = args[0]
+
+if cmd == 'list':
+    drivers = query(DeviceDriver)
+    for cls in drivers:
+        p = params(cls)
+        id = p['id']
+        name = p['name']
+        drivers = query(id=id)
+
+        # find capabilities
+        caps = []
+        if len(tuple(query(Simulator, id=id))) > 0:
+            caps.append('simulation')
+        #if len(tuple(query(DiveLog, id=id))) > 0:
+        #    caps.append('simulation')
+        # ... etc ...
+
+        print '%20s %6s: %s' % (name, id, ', '.join(caps))
+
 
 #drv2 = DummyDriver()
 #s2 = DummySimulator(drv2)
 
-drv = query(DeviceDriver, 'dummy')()
-s = query(Simulator, 'dummy')(drv)
+#print query(DeviceDriver, 'ostc')
+#drv = query(DeviceDriver, 'ostc')[0]()
+#s = query(Simulator, 'ostc')[0](drv)
 
-simulate(s, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+#simulate(s, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
