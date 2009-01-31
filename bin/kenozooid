@@ -51,6 +51,7 @@ cmd = args[0]
 
 if cmd == 'list':
     drivers = query(DeviceDriver)
+    print 'Available drivers:\n'
     for cls in drivers:
         p = params(cls)
         id = p['id']
@@ -65,15 +66,18 @@ if cmd == 'list':
         #    caps.append('simulation')
         # ... etc ...
 
-        print '%20s %6s: %s' % (name, id, ', '.join(caps))
+        print '%s (%s): %s' % (id, name, ', '.join(caps))
 
+elif cmd == 'simulate':
+    if len(args) != 3:
+        parser.print_help()
+        sys.exit(2)
 
-#drv2 = DummyDriver()
-#s2 = DummySimulator(drv2)
+    id = args[1]
+    spec = args[2]
 
-#print query(DeviceDriver, 'ostc')
-#drv = query(DeviceDriver, 'ostc')[0]()
-#s = query(Simulator, 'ostc')[0](drv)
-
-#simulate(s, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+    # fixme: if class not found, then print appropriate error message
+    drv = tuple(query(DeviceDriver, id=id))[0]()
+    s = tuple(query(Simulator, id=id))[0](drv)
+    simulate(s, spec) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
