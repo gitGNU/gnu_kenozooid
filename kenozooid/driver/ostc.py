@@ -20,6 +20,8 @@
 from serial import Serial
 import array
 
+from kenozooid.iface import DeviceDriver, Simulator, inject
+
 def byte(i):
     """
     Convert integer to a byte.
@@ -35,6 +37,7 @@ def pressure(depth):
     return depth + 10
 
 
+@inject(DeviceDriver, 'ostc')
 class OSTCDriver(object):
     """
     OSTC dive computer driver.
@@ -67,6 +70,7 @@ class OSTCDriver(object):
 
 
 
+@inject(Simulator, 'ostc')
 class OSTCSimulator(object):
     def __init__(self, driver):
         super(OSTCSimulator, self).__init__()

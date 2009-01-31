@@ -20,14 +20,19 @@
 #
 
 from kenozooid.simulation import simulate
-from kenozooid.driver.ostc import OSTCDriver, OSTCSimulator
-from kenozooid.driver.dummy import DummyDriver, DummySimulator
+import kenozooid.driver.ostc
+import kenozooid.driver.dummy
+from kenozooid.iface import query, DeviceDriver, Simulator
 
 #drv1 = OSTCDriver()
 #s1 = OSTCSimulator(drv1)
 #print drv.id()
 
-drv2 = DummyDriver()
-s2 = DummySimulator(drv2)
-simulate(s2, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+#drv2 = DummyDriver()
+#s2 = DummySimulator(drv2)
+
+drv = query(DeviceDriver, 'dummy')()
+s = query(Simulator, 'dummy')(drv)
+
+simulate(s, '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
