@@ -1,6 +1,14 @@
-Features
-========
+Introduction
+============
 
+Kenozooid is software stack to support different capabilities of dive
+computers.
+
+This software is licensed under terms of
+`GPL <http://www.fsf.org/licensing/licenses/gpl.html>`_ license.
+
+Features
+--------
 Kenozooid is under development but following features are already present
 
 - supported devices 
@@ -18,8 +26,16 @@ Depending on dive computer driver capabilities
 - enter dive simulation mode and send specification of dive simulation to
   a dive computer
 
-Planned features
+Planned Features
+----------------
+
+Kenozooid development is driven by features of owned dive computers, access
+to hardware documentation and dive computer communication protocols
+openess. 
+
+Currently planned features are
 
 - fetch dive logbook data for dives made in specified period of time
+  (using *ostc* driver)
 - create a dive graph
 
