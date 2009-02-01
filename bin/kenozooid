@@ -69,6 +69,17 @@ if cmd == 'list':
 
         print '%s (%s): %s' % (id, name, ', '.join(caps))
 
+elif cmd == 'scan':
+    print 'Scanning...'
+    for cls in query(DeviceDriver):
+        print cls
+        for drv in cls.scan():
+            p = params(cls)
+            id = p['id']
+            name = p['name']
+            print 'Found %s (%s): %s' % (id, name, drv.version())
+
+
 elif cmd == 'simulate':
     if len(args) != 3:
         parser.print_help()
@@ -79,7 +90,7 @@ elif cmd == 'simulate':
 
     try:
         cls = query(DeviceDriver, id=id).next()
-        drv = cls()
+        drv = cls.scan().next()
     except StopIteration, ex:
         print 'Cannot find device driver for id %s' % id
         sys.exit(3)

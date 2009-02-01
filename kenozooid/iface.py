@@ -28,8 +28,27 @@ implementing given interface are provided.
 import itertools
 
 class DeviceDriver(object):
-    def id(self):
-        pass
+    """
+    Device driver interface.
+
+    Every device driver implementation has to implement at least this
+    interface.
+
+    Software using this interface shall get driver instance using
+    `DeviceDriver.scan` method.
+    """
+    @staticmethod
+    def scan():
+        """
+        Scan for connected devices and return device driver instances.
+
+        Each connected dive computer should get one device driver instance.
+        """
+
+    def version(self):
+        """
+        Get version information from connected dive computer.
+        """
 
 
 class Simulator(object):

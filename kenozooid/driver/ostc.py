@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from serial import Serial
+from serial import Serial, SerialException
 import array
 
 from kenozooid.iface import DeviceDriver, Simulator, inject
@@ -43,22 +43,43 @@ class OSTCDriver(object):
     """
     OSTC dive computer driver.
     """
-    def __init__(self):
+    def __init__(self, port):
         super(OSTCDriver, self).__init__()
 
-        self._device = Serial(port='/dev/ttyUSB4',
+        self._device = Serial(port=port,
                 baudrate=115200,
                 bytesize=8,
                 stopbits=1,
-                parity='N')
+                parity='N',
+                timeout=3)
 
     def _write(self, cmd):
         self._device.write(cmd)
 
     def _read(self, size):
+        assert size > 0
         return self._device.read(size)
 
-    def id(self):
+
+    @staticmethod
+    def scan():
+        """
+        Look for OSTC dive computer connected to one of USB serial ports.
+        """
+        for i in range(10):
+            port = '/dev/ttyUSB%d' % i
+            print 'trying port', port
+            try:
+                drv = OSTCDriver(port)
+                yield drv
+            except SerialException, ex:
+                print 'port %s failed: %s' % (port, ex)
+
+
+    def version(self):
+        """
+        Read OSTC dive computer firmware version and firmware fingerprint.
+        """
         print 'write'
         self._write('e')
         print 'returned'

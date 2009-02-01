@@ -30,8 +30,12 @@ from kenozooid.iface import DeviceDriver, Simulator, inject
 
 @inject(DeviceDriver, id='dummy', name='Dummy Device Driver')
 class DummyDriver(object):
-    def id(self):
-        return 'Dummy Device'
+    def version(self):
+        return 'Dummy Device 1.0'
+
+    @staticmethod
+    def scan():
+        yield DummyDriver()
 
         
 
