@@ -63,7 +63,7 @@ if cmd == 'list':
         if len(tuple(query(Simulator, id=id))) > 0:
             caps.append('simulation')
         #if len(tuple(query(DiveLog, id=id))) > 0:
-        #    caps.append('simulation')
+        #    caps.append('divelog')
         # ... etc ...
 
         print '%s (%s): %s' % (id, name, ', '.join(caps))
@@ -76,8 +76,20 @@ elif cmd == 'simulate':
     id = args[1]
     spec = args[2]
 
-    # fixme: if class not found, then print appropriate error message
-    drv = tuple(query(DeviceDriver, id=id))[0]()
-    s = tuple(query(Simulator, id=id))[0](drv)
-    simulate(s, spec) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+    try:
+        cls = query(DeviceDriver, id=id).next()
+        drv = cls()
+    except StopIteration, ex:
+        print 'Cannot find device driver for id %s' % id
+        sys.exit(3)
+
+    try:
+        cls = query(Simulator, id=id).next()
+        sim = cls(drv)
+    except StopIteration, ex:
+        print 'Device driver %s does not support simulation' % id
+        sys.exit(3)
+
+    simulate(sim, spec) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+
 
