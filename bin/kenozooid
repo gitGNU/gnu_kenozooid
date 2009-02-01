@@ -20,10 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from kenozooid.simulation import simulate
-import kenozooid.driver.ostc
-import kenozooid.driver.dummy
-from kenozooid.iface import query, params, DeviceDriver, Simulator
+import logging
 
 import optparse
 import sys
@@ -42,11 +39,34 @@ Commands description:
 """
 
 parser = optparse.OptionParser(usage=usage)
+parser.add_option('-v', '--verbose',
+        action='store_true', dest='verbose', default=False,
+        help='explain what is being done')
+
 options, args = parser.parse_args()
 
 if len(args) < 1 or args[0] not in commands:
     parser.print_help()
     sys.exit(1)
+
+# configure logger
+logging.basicConfig()
+logging.Logger.manager.loggerDict.clear()
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+
+if options.verbose:
+    log.setLevel(logging.DEBUG)
+
+# delayed import of kenozooid modules to support logging configuration
+# above
+from kenozooid.simulation import simulate
+from kenozooid.iface import query, params, DeviceDriver, Simulator, DeviceError
+
+# import modules implementing supported drivers
+# todo: support dynamic import of third party drivers
+import kenozooid.driver.ostc
+import kenozooid.driver.dummy
 
 cmd = args[0]
 
@@ -72,12 +92,14 @@ if cmd == 'list':
 elif cmd == 'scan':
     print 'Scanning...'
     for cls in query(DeviceDriver):
-        print cls
         for drv in cls.scan():
             p = params(cls)
             id = p['id']
             name = p['name']
-            print 'Found %s (%s): %s' % (id, name, drv.version())
+            try:
+                print 'Found %s (%s): %s' % (id, name, drv.version())
+            except DeviceError, ex:
+                print >> sys.stderr, 'Device %s (%s) error: %s' % (id, name, ex)
 
 
 elif cmd == 'simulate':

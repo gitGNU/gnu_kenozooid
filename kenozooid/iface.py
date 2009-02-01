@@ -26,6 +26,9 @@ implementing given interface are provided.
 """
 
 import itertools
+import logging
+
+log = logging.getLogger('kenozooid.iface')
 
 class DeviceDriver(object):
     """
@@ -61,6 +64,13 @@ class Simulator(object):
     def depth(self, d):
         pass
 
+
+class DeviceError(BaseException):
+    """
+    Device communication error.
+    """
+
+
 _registry = {}
 
 def inject(iface, **params):
@@ -77,7 +87,8 @@ def inject(iface, **params):
         Injection parameters.
     """
     def f(cls):
-        print 'inject', iface, cls, params
+        log.debug('inject interface %s for class %s with params %s' \
+                % (iface.__name__, cls.__name__, params))
 
         if iface not in _registry:
             _registry[iface] = []

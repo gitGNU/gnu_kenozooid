@@ -20,8 +20,11 @@
 
 from serial import Serial, SerialException
 import array
+import logging
 
-from kenozooid.iface import DeviceDriver, Simulator, inject
+log = logging.getLogger('kenozooid.driver.ostc')
+
+from kenozooid.iface import DeviceDriver, Simulator, DeviceError, inject
 
 def byte(i):
     """
@@ -51,14 +54,20 @@ class OSTCDriver(object):
                 bytesize=8,
                 stopbits=1,
                 parity='N',
-                timeout=3)
+                timeout=1)
 
     def _write(self, cmd):
+        log.debug('sending command %s' % cmd)
         self._device.write(cmd)
+        log.debug('returned after command %s' % cmd)
 
     def _read(self, size):
         assert size > 0
-        return self._device.read(size)
+        log.debug('reading %d byte(s)' % size)
+        data = self._device.read(size)
+        log.debug('got %d data' % len(data))
+        if len(data) != size:
+            raise DeviceError('Device communication error')
 
 
     @staticmethod
@@ -68,24 +77,22 @@ class OSTCDriver(object):
         """
         for i in range(10):
             port = '/dev/ttyUSB%d' % i
-            print 'trying port', port
+            log.debug('trying port %s' % port)
             try:
                 drv = OSTCDriver(port)
+                log.debug('found port %s' % port)
                 yield drv
             except SerialException, ex:
-                print 'port %s failed: %s' % (port, ex)
+                log.debug('%s' % ex)
 
 
     def version(self):
         """
         Read OSTC dive computer firmware version and firmware fingerprint.
         """
-        print 'write'
         self._write('e')
-        print 'returned'
         data = self._read(2)
         v1, v2 = tuple(map(ord, data))
-        print 'read done almost'
         data = self._read(16)
         fingerprint = ''.join('%x' % ord(c) for c in data)
         return 'OSTC %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
@@ -99,9 +106,7 @@ class OSTCSimulator(object):
         self._driver = driver
 
     def start(self):
-        print 'starting'
         self._driver._write('c')
-        print 'started'
 
     def stop(self):
         self._driver._write(byte(0))
