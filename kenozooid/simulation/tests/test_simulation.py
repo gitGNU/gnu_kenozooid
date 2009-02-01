@@ -1,5 +1,6 @@
 #
-# Kenozooid - software stack to support OSTC dive computer.
+# Kenozooid - software stack to support different capabilities of dive
+# computers.
 #
 # Copyright (C) 2009 by wrobell <wrobell@pld-linux.org>
 #
