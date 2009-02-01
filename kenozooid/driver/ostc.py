@@ -61,6 +61,7 @@ class OSTCDriver(object):
         self._device.write(cmd)
         log.debug('returned after command %s' % cmd)
 
+
     def _read(self, size):
         assert size > 0
         log.debug('reading %d byte(s)' % size)
@@ -68,6 +69,7 @@ class OSTCDriver(object):
         log.debug('got %d data' % len(data))
         if len(data) != size:
             raise DeviceError('Device communication error')
+        return data
 
 
     @staticmethod

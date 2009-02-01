@@ -90,7 +90,7 @@ if cmd == 'list':
         print '%s (%s): %s' % (id, name, ', '.join(caps))
 
 elif cmd == 'scan':
-    print 'Scanning...'
+    print 'Scanning...\n'
     for cls in query(DeviceDriver):
         for drv in cls.scan():
             p = params(cls)
