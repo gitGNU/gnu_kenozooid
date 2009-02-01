@@ -1,2 +1,25 @@
 Features
 ========
+
+Kenozooid is under development but following features are already present
+
+- supported devices 
+    - open source OSTC dive computer by HeinrichsWeikamp GbR,
+      http://www.heinrichsweikamp.net/ostc/en/
+    - dummy device driver displaying information to standard output
+- device drivers can implement different capabilities, i.e. one dive
+  computer can provide dive logbook data and allows to enter simulation
+  mode, but other dive computer allows to fetch dive logbook only
+- list available dive computers drivers and their capabilities
+- scan for attached dive computers
+
+Depending on dive computer driver capabilities
+
+- enter dive simulation mode and send specification of dive simulation to
+  a dive computer
+
+Planned features
+
+- fetch dive logbook data for dives made in specified period of time
+- create a dive graph
+
