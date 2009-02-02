@@ -1,23 +1,11 @@
 Dive Simulation
 ===============
 
-Ability to perform dive simulation implemented in some of dive computers
-can be great tool to familiarize yourself with computer screens and
-features present during diving.
-
-Kenozooid supports switching dive computers into simulation mode using
-``simulate`` command. The command can be used to perform end-to-end
-simulation or part of it, i.e. start simulation but do not finish it or
-jump in during dive simulation and provide dive specification for some
-period of time.
-
-Please note, this is real time dive simulation, therefore real life rules
-may apply to some of dive computers
+Please note, this is real time dive simulation, therefore real life
+rules apply to some of dive computers
 
 - when you reach surface, then computer may wait some time before exiting
-  dive mode, if another simulation is started too fast, then it is counted
+  dive mode, if you start another simulation too fast, then it is counted
   as one dive
 
-Please, read about dive simulation capabilities in your dive computer
-manual before starting to use Kenozooid software to simulate dives.
 
