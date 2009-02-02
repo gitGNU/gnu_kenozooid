@@ -36,5 +36,5 @@ class ConversionTestCase(unittest.TestCase):
         """
         self.assertEquals(11, pressure(1))
         self.assertEquals(30, pressure(20))
-        self.assertEquals(25, pressure(15))
+        self.assertEquals(25, pressure(15.5))
 

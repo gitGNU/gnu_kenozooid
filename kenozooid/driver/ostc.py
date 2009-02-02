@@ -21,6 +21,7 @@
 from serial import Serial, SerialException
 import array
 import logging
+import math
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
@@ -38,7 +39,7 @@ def pressure(depth):
     """
     Convert depth in meters to pressure in mBars.
     """
-    return depth + 10
+    return int(depth + 10)
 
 
 @inject(DeviceDriver, id='ostc', name='OSTC Driver')
@@ -114,6 +115,6 @@ class OSTCSimulator(object):
         self._driver._write(byte(0))
 
     def depth(self, depth):
-        pressure = depth + 10
-        self._driver._write(byte(pressure))
+        p = pressure(depth)
+        self._driver._write(byte(p))
 
