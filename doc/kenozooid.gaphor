@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gaphor version="3.0" gaphor-version="0.14.0">
+  <Package id="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714">
+    <name>
+      <val><![CDATA[Kenozooid]]></val>
+    </name>
+    <nestedPackage>
+      <reflist>
+        <ref refid="DCE:99292C50-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </nestedPackage>
+    <ownedClassifier>
+      <reflist>
+        <ref refid="DCE:AC9AE148-EE2F-11DD-8ED3-68CB41721714"/>
+        <ref refid="DCE:B5111D60-EE2F-11DD-8ED3-68CB41721714"/>
+        <ref refid="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedClassifier>
+    <ownedDiagram>
+      <reflist>
+        <ref refid="DCE:A860F496-EE2F-11DD-8ED3-68CB41721714"/>
+        <ref refid="DCE:8392EA24-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:71546FE0-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedDiagram>
+  </Package>
+  <Package id="DCE:99292C50-EE2F-11DD-8ED3-68CB41721714">
+    <name>
+      <val><![CDATA[Drivers]]></val>
+    </name>
+    <nestedPackage>
+      <reflist>
+        <ref refid="DCE:0F3F0D8A-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:13FD484E-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </nestedPackage>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+  </Package>
+  <Diagram id="DCE:A860F496-EE2F-11DD-8ED3-68CB41721714">
+    <name>
+      <val><![CDATA[Stereotypes]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <canvas>
+      <item type="ClassItem" id="DCE:AC9C1856-EE2F-11DD-8ED3-68CB41721714">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>1</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 163.0, 154.0)</val>
+        </matrix>
+        <width>
+          <val>100.0</val>
+        </width>
+        <height>
+          <val>59.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:AC9AE148-EE2F-11DD-8ED3-68CB41721714"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="ClassItem" id="DCE:B511F24E-EE2F-11DD-8ED3-68CB41721714">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>1</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 394.0, 152.0)</val>
+        </matrix>
+        <width>
+          <val>107.0</val>
+        </width>
+        <height>
+          <val>70.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:B5111D60-EE2F-11DD-8ED3-68CB41721714"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="ExtensionItem" id="DCE:C0321DA2-EE2F-11DD-8ED3-68CB41721714">
+        <subject>
+          <ref refid="DCE:C3B3FAF2-EE2F-11DD-8ED3-68CB41721714"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 263.0, 172.0)</val>
+        </matrix>
+        <orthogonal>
+          <val>0</val>
+        </orthogonal>
+        <horizontal>
+          <val>0</val>
+        </horizontal>
+        <points>
+          <val>[(0.0, 0.0), (131.0, 3.3333333333333428)]</val>
+        </points>
+        <head-connection>
+          <ref refid="DCE:AC9C1856-EE2F-11DD-8ED3-68CB41721714"/>
+        </head-connection>
+        <tail-connection>
+          <ref refid="DCE:B511F24E-EE2F-11DD-8ED3-68CB41721714"/>
+        </tail-connection>
+      </item>
+    </canvas>
+  </Diagram>
+  <Class id="DCE:AC9AE148-EE2F-11DD-8ED3-68CB41721714">
+    <name>
+      <val><![CDATA[Component]]></val>
+    </name>
+    <ownedAttribute>
+      <reflist>
+        <ref refid="DCE:C3B4940A-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </ownedAttribute>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:AC9C1856-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </presentation>
+  </Class>
+  <Stereotype id="DCE:B5111D60-EE2F-11DD-8ED3-68CB41721714">
+    <name>
+      <val><![CDATA[device]]></val>
+    </name>
+    <ownedAttribute>
+      <reflist>
+        <ref refid="DCE:3F472E8E-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedAttribute>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:B511F24E-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </presentation>
+  </Stereotype>
+  <Extension id="DCE:C3B3FAF2-EE2F-11DD-8ED3-68CB41721714">
+    <memberEnd>
+      <reflist>
+        <ref refid="DCE:C3B42C5E-EE2F-11DD-8ED3-68CB41721714"/>
+        <ref refid="DCE:C3B4940A-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </memberEnd>
+    <ownedEnd>
+      <ref refid="DCE:C3B4940A-EE2F-11DD-8ED3-68CB41721714"/>
+    </ownedEnd>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:C0321DA2-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </presentation>
+  </Extension>
+  <Property id="DCE:C3B42C5E-EE2F-11DD-8ED3-68CB41721714">
+    <association>
+      <ref refid="DCE:C3B3FAF2-EE2F-11DD-8ED3-68CB41721714"/>
+    </association>
+    <name>
+      <val><![CDATA[baseClass]]></val>
+    </name>
+    <type>
+      <ref refid="DCE:AC9AE148-EE2F-11DD-8ED3-68CB41721714"/>
+    </type>
+  </Property>
+  <ExtensionEnd id="DCE:C3B4940A-EE2F-11DD-8ED3-68CB41721714">
+    <association>
+      <ref refid="DCE:C3B3FAF2-EE2F-11DD-8ED3-68CB41721714"/>
+    </association>
+    <class_>
+      <ref refid="DCE:AC9AE148-EE2F-11DD-8ED3-68CB41721714"/>
+    </class_>
+    <type>
+      <ref refid="DCE:B5111D60-EE2F-11DD-8ED3-68CB41721714"/>
+    </type>
+  </ExtensionEnd>
+  <Package id="DCE:0F3F0D8A-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[OSTC]]></val>
+    </name>
+    <ownedClassifier>
+      <reflist>
+        <ref refid="DCE:2F7A0D14-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedClassifier>
+    <ownedDiagram>
+      <reflist>
+        <ref refid="DCE:281F0646-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedDiagram>
+    <package>
+      <ref refid="DCE:99292C50-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+  </Package>
+  <Package id="DCE:13FD484E-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[Dummy]]></val>
+    </name>
+    <ownedClassifier>
+      <reflist>
+        <ref refid="DCE:57D7D730-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedClassifier>
+    <ownedDiagram>
+      <reflist>
+        <ref refid="DCE:5300AF72-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </ownedDiagram>
+    <package>
+      <ref refid="DCE:99292C50-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+  </Package>
+  <Diagram id="DCE:281F0646-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[Overview]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:0F3F0D8A-EE30-11DD-94FB-2B51DCAEE417"/>
+    </package>
+    <canvas>
+      <item type="ComponentItem" id="DCE:2F7BE40E-EE30-11DD-94FB-2B51DCAEE417">
+        <drawing-style>
+          <val>2</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 242.0, 155.0)</val>
+        </matrix>
+        <width>
+          <val>148.0</val>
+        </width>
+        <height>
+          <val>71.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:2F7A0D14-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="InterfaceItem" id="DCE:C7E168D6-EE30-11DD-94FB-2B51DCAEE417">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>3</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 116.0, 213.0)</val>
+        </matrix>
+        <width>
+          <val>20.0</val>
+        </width>
+        <height>
+          <val>20.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="InterfaceItem" id="DCE:CA5179E4-EE30-11DD-94FB-2B51DCAEE417">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>3</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 114.0, 111.0)</val>
+        </matrix>
+        <width>
+          <val>20.0</val>
+        </width>
+        <height>
+          <val>20.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="ImplementationItem" id="DCE:D3454850-EE30-11DD-94FB-2B51DCAEE417">
+        <subject>
+          <ref refid="DCE:D45063EA-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 134.0, 121.0)</val>
+        </matrix>
+        <orthogonal>
+          <val>0</val>
+        </orthogonal>
+        <horizontal>
+          <val>0</val>
+        </horizontal>
+        <points>
+          <val>[(0.0, 0.0), (108.0, 56.0)]</val>
+        </points>
+        <head-connection>
+          <ref refid="DCE:CA5179E4-EE30-11DD-94FB-2B51DCAEE417"/>
+        </head-connection>
+        <tail-connection>
+          <ref refid="DCE:2F7BE40E-EE30-11DD-94FB-2B51DCAEE417"/>
+        </tail-connection>
+      </item>
+      <item type="ImplementationItem" id="DCE:D63FFBAE-EE30-11DD-94FB-2B51DCAEE417">
+        <subject>
+          <ref refid="DCE:D820B2CE-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 136.0, 223.0)</val>
+        </matrix>
+        <orthogonal>
+          <val>0</val>
+        </orthogonal>
+        <horizontal>
+          <val>0</val>
+        </horizontal>
+        <points>
+          <val>[(0.0, 0.0), (106.0, -36.0)]</val>
+        </points>
+        <head-connection>
+          <ref refid="DCE:C7E168D6-EE30-11DD-94FB-2B51DCAEE417"/>
+        </head-connection>
+        <tail-connection>
+          <ref refid="DCE:2F7BE40E-EE30-11DD-94FB-2B51DCAEE417"/>
+        </tail-connection>
+      </item>
+    </canvas>
+  </Diagram>
+  <Component id="DCE:2F7A0D14-EE30-11DD-94FB-2B51DCAEE417">
+    <clientDependency>
+      <reflist>
+        <ref refid="DCE:D45063EA-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:D820B2CE-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </clientDependency>
+    <name>
+      <val><![CDATA[OSTC Driver]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:0F3F0D8A-EE30-11DD-94FB-2B51DCAEE417"/>
+    </package>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:2F7BE40E-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:FF7E6974-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+  </Component>
+  <Property id="DCE:3F472E8E-EE30-11DD-94FB-2B51DCAEE417">
+    <class_>
+      <ref refid="DCE:B5111D60-EE2F-11DD-8ED3-68CB41721714"/>
+    </class_>
+    <defaultValue>
+      <ref refid="DCE:3F4DD0C2-EE30-11DD-94FB-2B51DCAEE417"/>
+    </defaultValue>
+    <lowerValue>
+      <ref refid="DCE:3F4CEC34-EE30-11DD-94FB-2B51DCAEE417"/>
+    </lowerValue>
+    <name>
+      <val><![CDATA[id]]></val>
+    </name>
+    <presentation>
+      <reflist/>
+    </presentation>
+    <typeValue>
+      <ref refid="DCE:3F4BDFE2-EE30-11DD-94FB-2B51DCAEE417"/>
+    </typeValue>
+    <upperValue>
+      <ref refid="DCE:3F4D5AF2-EE30-11DD-94FB-2B51DCAEE417"/>
+    </upperValue>
+  </Property>
+  <LiteralSpecification id="DCE:3F4BDFE2-EE30-11DD-94FB-2B51DCAEE417"/>
+  <LiteralSpecification id="DCE:3F4CEC34-EE30-11DD-94FB-2B51DCAEE417"/>
+  <LiteralSpecification id="DCE:3F4D5AF2-EE30-11DD-94FB-2B51DCAEE417"/>
+  <LiteralSpecification id="DCE:3F4DD0C2-EE30-11DD-94FB-2B51DCAEE417"/>
+  <Diagram id="DCE:5300AF72-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[Overview]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:13FD484E-EE30-11DD-94FB-2B51DCAEE417"/>
+    </package>
+    <canvas>
+      <item type="ComponentItem" id="DCE:57D8829A-EE30-11DD-94FB-2B51DCAEE417">
+        <drawing-style>
+          <val>2</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 281.0, 185.0)</val>
+        </matrix>
+        <width>
+          <val>148.0</val>
+        </width>
+        <height>
+          <val>74.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:57D7D730-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>1</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="InterfaceItem" id="DCE:A93FF618-EE30-11DD-94FB-2B51DCAEE417">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>3</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 144.0, 202.0)</val>
+        </matrix>
+        <width>
+          <val>20.0</val>
+        </width>
+        <height>
+          <val>20.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="ImplementationItem" id="DCE:B3161C6A-EE30-11DD-94FB-2B51DCAEE417">
+        <subject>
+          <ref refid="DCE:B593ACCA-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 164.0, 212.0)</val>
+        </matrix>
+        <orthogonal>
+          <val>0</val>
+        </orthogonal>
+        <horizontal>
+          <val>0</val>
+        </horizontal>
+        <points>
+          <val>[(0.0, 0.0), (117.0, -2.0)]</val>
+        </points>
+        <head-connection>
+          <ref refid="DCE:A93FF618-EE30-11DD-94FB-2B51DCAEE417"/>
+        </head-connection>
+        <tail-connection>
+          <ref refid="DCE:57D8829A-EE30-11DD-94FB-2B51DCAEE417"/>
+        </tail-connection>
+      </item>
+      <item type="InterfaceItem" id="DCE:BBAC0C60-EE30-11DD-94FB-2B51DCAEE417">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>3</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 339.0, 68.0)</val>
+        </matrix>
+        <width>
+          <val>20.0</val>
+        </width>
+        <height>
+          <val>20.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="ImplementationItem" id="DCE:C1ABEF42-EE30-11DD-94FB-2B51DCAEE417">
+        <subject>
+          <ref refid="DCE:C34DAF26-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 349.0, 88.0)</val>
+        </matrix>
+        <orthogonal>
+          <val>0</val>
+        </orthogonal>
+        <horizontal>
+          <val>0</val>
+        </horizontal>
+        <points>
+          <val>[(0.0, 0.0), (2.0, 97.0)]</val>
+        </points>
+        <head-connection>
+          <ref refid="DCE:BBAC0C60-EE30-11DD-94FB-2B51DCAEE417"/>
+        </head-connection>
+        <tail-connection>
+          <ref refid="DCE:57D8829A-EE30-11DD-94FB-2B51DCAEE417"/>
+        </tail-connection>
+      </item>
+    </canvas>
+  </Diagram>
+  <Component id="DCE:57D7D730-EE30-11DD-94FB-2B51DCAEE417">
+    <appliedStereotype>
+      <reflist>
+        <ref refid="DCE:39612E54-EEE7-11DD-9301-8CA75AED1AA2"/>
+      </reflist>
+    </appliedStereotype>
+    <clientDependency>
+      <reflist>
+        <ref refid="DCE:B593ACCA-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:C34DAF26-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </clientDependency>
+    <name>
+      <val><![CDATA[Dummy Driver]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:13FD484E-EE30-11DD-94FB-2B51DCAEE417"/>
+    </package>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:57D8829A-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:01CCD80A-EE31-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+  </Component>
+  <Diagram id="DCE:71546FE0-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[Driver Overview]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <canvas>
+      <item type="ComponentItem" id="DCE:FF7E6974-EE30-11DD-94FB-2B51DCAEE417">
+        <drawing-style>
+          <val>2</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 131.0, 90.0)</val>
+        </matrix>
+        <width>
+          <val>126.0</val>
+        </width>
+        <height>
+          <val>50.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:2F7A0D14-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="ComponentItem" id="DCE:01CCD80A-EE31-11DD-94FB-2B51DCAEE417">
+        <drawing-style>
+          <val>2</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 128.0, 204.0)</val>
+        </matrix>
+        <width>
+          <val>141.0</val>
+        </width>
+        <height>
+          <val>50.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:57D7D730-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+    </canvas>
+  </Diagram>
+  <Diagram id="DCE:8392EA24-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[Interfaces]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <canvas>
+      <item type="InterfaceItem" id="DCE:9029F82A-EE30-11DD-94FB-2B51DCAEE417">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>1</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 134.0, 152.0)</val>
+        </matrix>
+        <width>
+          <val>100.0</val>
+        </width>
+        <height>
+          <val>58.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+      <item type="InterfaceItem" id="DCE:97A4E5E4-EE30-11DD-94FB-2B51DCAEE417">
+        <show-attributes>
+          <val>1</val>
+        </show-attributes>
+        <show-operations>
+          <val>1</val>
+        </show-operations>
+        <drawing-style>
+          <val>1</val>
+        </drawing-style>
+        <matrix>
+          <val>(1.0, 0.0, 0.0, 1.0, 330.0, 150.0)</val>
+        </matrix>
+        <width>
+          <val>101.0</val>
+        </width>
+        <height>
+          <val>58.0</val>
+        </height>
+        <subject>
+          <ref refid="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417"/>
+        </subject>
+        <show_stereotypes_attrs>
+          <val>0</val>
+        </show_stereotypes_attrs>
+      </item>
+    </canvas>
+  </Diagram>
+  <Interface id="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[DeviceDriver]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:CA5179E4-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:A93FF618-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:9029F82A-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+    <supplierDependency>
+      <reflist>
+        <ref refid="DCE:B593ACCA-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:D45063EA-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </supplierDependency>
+  </Interface>
+  <Interface id="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417">
+    <name>
+      <val><![CDATA[Simulator]]></val>
+    </name>
+    <package>
+      <ref refid="DCE:3ADBF63C-EE2F-11DD-8ED3-68CB41721714"/>
+    </package>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:C7E168D6-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:BBAC0C60-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:97A4E5E4-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+    <supplierDependency>
+      <reflist>
+        <ref refid="DCE:C34DAF26-EE30-11DD-94FB-2B51DCAEE417"/>
+        <ref refid="DCE:D820B2CE-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </supplierDependency>
+  </Interface>
+  <Implementation id="DCE:B593ACCA-EE30-11DD-94FB-2B51DCAEE417">
+    <client>
+      <reflist>
+        <ref refid="DCE:57D7D730-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </client>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:B3161C6A-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+    <supplier>
+      <reflist>
+        <ref refid="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </supplier>
+  </Implementation>
+  <Implementation id="DCE:C34DAF26-EE30-11DD-94FB-2B51DCAEE417">
+    <client>
+      <reflist>
+        <ref refid="DCE:57D7D730-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </client>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:C1ABEF42-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+    <supplier>
+      <reflist>
+        <ref refid="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </supplier>
+  </Implementation>
+  <Implementation id="DCE:D45063EA-EE30-11DD-94FB-2B51DCAEE417">
+    <client>
+      <reflist>
+        <ref refid="DCE:2F7A0D14-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </client>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:D3454850-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+    <supplier>
+      <reflist>
+        <ref refid="DCE:90292E88-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </supplier>
+  </Implementation>
+  <Implementation id="DCE:D820B2CE-EE30-11DD-94FB-2B51DCAEE417">
+    <client>
+      <reflist>
+        <ref refid="DCE:2F7A0D14-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </client>
+    <presentation>
+      <reflist>
+        <ref refid="DCE:D63FFBAE-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </presentation>
+    <supplier>
+      <reflist>
+        <ref refid="DCE:97A40928-EE30-11DD-94FB-2B51DCAEE417"/>
+      </reflist>
+    </supplier>
+  </Implementation>
+  <InstanceSpecification id="DCE:39612E54-EEE7-11DD-9301-8CA75AED1AA2">
+    <classifier>
+      <reflist>
+        <ref refid="DCE:B5111D60-EE2F-11DD-8ED3-68CB41721714"/>
+      </reflist>
+    </classifier>
+    <slot>
+      <reflist>
+        <ref refid="DCE:F680713E-EEE7-11DD-8D5A-4D1AA419C503"/>
+      </reflist>
+    </slot>
+  </InstanceSpecification>
+  <Slot id="DCE:3EE8198A-EEE7-11DD-9301-8CA75AED1AA2">
+    <definingFeature>
+      <ref refid="DCE:3F472E8E-EE30-11DD-94FB-2B51DCAEE417"/>
+    </definingFeature>
+    <value>
+      <reflist>
+        <ref refid="DCE:3EE87D78-EEE7-11DD-9301-8CA75AED1AA2"/>
+      </reflist>
+    </value>
+  </Slot>
+  <LiteralSpecification id="DCE:3EE87D78-EEE7-11DD-9301-8CA75AED1AA2"/>
+  <Slot id="DCE:F680713E-EEE7-11DD-8D5A-4D1AA419C503">
+    <definingFeature>
+      <ref refid="DCE:3F472E8E-EE30-11DD-94FB-2B51DCAEE417"/>
+    </definingFeature>
+    <owningInstance>
+      <ref refid="DCE:39612E54-EEE7-11DD-9301-8CA75AED1AA2"/>
+    </owningInstance>
+    <presentation>
+      <reflist/>
+    </presentation>
+    <value>
+      <reflist>
+        <ref refid="DCE:F680C80A-EEE7-11DD-8D5A-4D1AA419C503"/>
+      </reflist>
+    </value>
+  </Slot>
+  <LiteralSpecification id="DCE:F680C80A-EEE7-11DD-8D5A-4D1AA419C503">
+    <value>
+      <val><![CDATA[dummy]]></val>
+    </value>
+  </LiteralSpecification>
+</gaphor>
