@@ -18,13 +18,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from docutils import nodes, utils
+import os.path
+from docutils import nodes
 
 def api_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
     basedir = 'api'
+    prefix = 'doc/_build/html/' # fixme: fetch it from configuration
+    exists = lambda f: os.path.exists(prefix + f)
 
     name = '%s' % text
     file = '%s/%s-module.html' % (basedir, text)
+    if not exists(file):
+        name = text.split('.')[-1]
+        file = '%s/%s-class.html' % (basedir, text)
+    if not exists(file):
+        chunks = text.split('.')
+        method = chunks[-1]
+        file = '%s/%s-module.html' % (basedir, '.'.join(chunks[:-1]))
+        if exists(file):
+            file = '%s#%s' % (file, method)
+        else:
+            file = '%s/%s-class.html' % (basedir, '.'.join(chunks[:-1]))
+            if exists(file):
+                file = '%s/%s-class.html#%s' % (basedir, '.'.join(chunks[:-1]), method)
+            #else:
+            #    # cannot find reference, just inline the text
+            #    return [nodes.literal(rawtext, text)], []
 
     node = nodes.reference(rawtext, name, refuri=file, **options)
     return [node], []
