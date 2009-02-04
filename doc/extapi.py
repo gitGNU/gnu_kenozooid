@@ -44,30 +44,31 @@ def api_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
 
     # assume module is references
     name = '%s' % text
-    file = '%s/%s-module.html' % (basedir, text)
+    uri = file = '%s/%s-module.html' % (basedir, text)
+    chunks = text.split('.')
 
     # if not module, then a class
     if not exists(file):
         name = text.split('.')[-1]
-        file = '%s/%s-class.html' % (basedir, text)
+        uri = file = '%s/%s-class.html' % (basedir, text)
 
     # if not a class, then function or class method 
     if not exists(file):
-        chunks = text.split('.')
         method = chunks[-1]
         fprefix = '.'.join(chunks[:-1])
         # assume function is referenced
         file = '%s/%s-module.html' % (basedir, fprefix)
         if exists(file):
-            file = '%s#%s' % (file, method)
+            uri = '%s#%s' % (file, method)
         else:
             # class method is references
             file = '%s/%s-class.html' % (basedir, fprefix)
             if exists(file):
-                file = '%s/%s-class.html#%s' % (basedir, fprefix, method)
+                name = '.'.join(chunks[-2:]) # name should be Class.method
+                uri = '%s/%s-class.html#%s' % (basedir, fprefix, method)
 
     if exists(file):
-        node = nodes.reference(rawtext, name, refuri=file, **options)
+        node = nodes.reference(rawtext, name, refuri=uri, **options)
     else:
         # cannot find reference, then just inline the text
         node = nodes.literal(rawtext, text)
