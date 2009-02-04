@@ -22,30 +22,56 @@ import os.path
 from docutils import nodes
 
 def api_role(role, rawtext, text, lineno, inliner, options={}, content=[]):
+    """
+    Role `:api:` bridges generated API documentation by tool like EpyDoc
+    with Sphinx Python Documentation Generator.
+
+    Other tools, other than EpyDoc, can be easily supported as well.
+
+    First generate the documentation to be referenced, i.e. with EpyDoc::
+
+        $ mkdir -p doc/_build/html/api
+        $ epydoc -o doc/_build/html/api ...
+
+    Next step is to generate documentation with Sphinx::
+
+        $ sphinx-build doc doc/_build/html
+
+    """
     basedir = 'api'
     prefix = 'doc/_build/html/' # fixme: fetch it from configuration
     exists = lambda f: os.path.exists(prefix + f)
 
+    # assume module is references
     name = '%s' % text
     file = '%s/%s-module.html' % (basedir, text)
+
+    # if not module, then a class
     if not exists(file):
         name = text.split('.')[-1]
         file = '%s/%s-class.html' % (basedir, text)
+
+    # if not a class, then function or class method 
     if not exists(file):
         chunks = text.split('.')
         method = chunks[-1]
-        file = '%s/%s-module.html' % (basedir, '.'.join(chunks[:-1]))
+        fprefix = '.'.join(chunks[:-1])
+        # assume function is referenced
+        file = '%s/%s-module.html' % (basedir, fprefix)
         if exists(file):
             file = '%s#%s' % (file, method)
         else:
-            file = '%s/%s-class.html' % (basedir, '.'.join(chunks[:-1]))
+            # class method is references
+            file = '%s/%s-class.html' % (basedir, fprefix)
             if exists(file):
-                file = '%s/%s-class.html#%s' % (basedir, '.'.join(chunks[:-1]), method)
-            #else:
-            #    # cannot find reference, just inline the text
-            #    return [nodes.literal(rawtext, text)], []
+                file = '%s/%s-class.html#%s' % (basedir, fprefix, method)
 
-    node = nodes.reference(rawtext, name, refuri=file, **options)
+    if exists(file):
+        node = nodes.reference(rawtext, name, refuri=file, **options)
+    else:
+        # cannot find reference, then just inline the text
+        node = nodes.literal(rawtext, text)
+
     return [node], []
 
 
