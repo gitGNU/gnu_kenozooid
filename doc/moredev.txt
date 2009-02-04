@@ -1,3 +1,5 @@
 Support for More Dive Computers
 ===============================
 
+Module :api:`kenozooid.driver`.
+
