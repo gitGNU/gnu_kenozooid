@@ -19,12 +19,13 @@
 #
 
 """
-Test interface injection mechanism.
+Test component interface injection mechanism and component repository.
 """
 
 import unittest
 
-from kenozooid.iface import _registry, _applies, inject, query, DeviceDriver
+from kenozooid.driver import DeviceDriver
+from kenozooid.component import _registry, _applies, inject, query
 
 
 class TestCase(unittest.TestCase):

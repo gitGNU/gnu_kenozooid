@@ -26,7 +26,8 @@ depth during dive simulation.
 
 from datetime import datetime
 
-from kenozooid.iface import DeviceDriver, Simulator, inject
+from kenozooid.driver import DeviceDriver, Simulator
+from kenozooid.component import inject
 
 @inject(DeviceDriver, id='dummy', name='Dummy Device Driver')
 class DummyDriver(object):

@@ -19,7 +19,8 @@
 #
 
 """
-Set of interfaces to be implemented by dive computers drivers.
+Simple component interface injection and component repository querying
+mechanism.
 
 Simple interface injection mechanism and searchable registry for classes
 implementing given interface are provided.
@@ -28,49 +29,9 @@ implementing given interface are provided.
 import itertools
 import logging
 
-log = logging.getLogger('kenozooid.iface')
+log = logging.getLogger('kenozooid.component')
 
-class DeviceDriver(object):
-    """
-    Device driver interface.
-
-    Every device driver implementation has to implement at least this
-    interface.
-
-    Software using this interface shall get driver instance using
-    `DeviceDriver.scan` method.
-    """
-    @staticmethod
-    def scan():
-        """
-        Scan for connected devices and return device driver instances.
-
-        Each connected dive computer should get one device driver instance.
-        """
-
-    def version(self):
-        """
-        Get version information from connected dive computer.
-        """
-
-
-class Simulator(object):
-    def start(self):
-        pass
-
-    def stop(self):
-        pass
-
-    def depth(self, d):
-        pass
-
-
-class DeviceError(BaseException):
-    """
-    Device communication error.
-    """
-
-
+# component registry
 _registry = {}
 
 def inject(iface, **params):

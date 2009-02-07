@@ -25,7 +25,8 @@ import math
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
-from kenozooid.iface import DeviceDriver, Simulator, DeviceError, inject
+from kenozooid.component import inject
+from kenozooid.driver import DeviceDriver, Simulator, DeviceError
 
 def byte(i):
     """

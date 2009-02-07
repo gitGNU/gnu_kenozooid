@@ -18,3 +18,50 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+Support for dive computer, dive data loggers and other measurment devices
+used in diving.
+
+The module specified set of interfaces to be implemented by device drivers.
+"""
+
+
+class DeviceDriver(object):
+    """
+    Device driver interface.
+
+    Every device driver implementation has to implement at least this
+    interface.
+
+    Software using this interface shall get driver instance using
+    `DeviceDriver.scan` method.
+    """
+    @staticmethod
+    def scan():
+        """
+        Scan for connected devices and return device driver instances.
+
+        Each connected dive computer should get one device driver instance.
+        """
+
+    def version(self):
+        """
+        Get version information from connected dive computer.
+        """
+
+
+class Simulator(object):
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
+
+    def depth(self, d):
+        pass
+
+
+class DeviceError(BaseException):
+    """
+    Device communication error.
+    """
