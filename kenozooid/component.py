@@ -21,9 +21,6 @@
 """
 Simple component interface injection and component repository querying
 mechanism.
-
-Simple interface injection mechanism and searchable registry for classes
-implementing given interface are provided.
 """
 
 import itertools
@@ -61,6 +58,16 @@ def inject(iface, **params):
 
 
 def _applies(p1, p2):
+    """
+    Check if values stored in two dictionaries are equal for all keys
+    stored in first dictionary.
+
+    :Parameters:
+     p1
+        First dictionary.
+     p2
+        Second dictionary.
+    """
     keys = set(p2.keys())
     return all(k in keys and p1[k] == p2[k] for k in p1.keys())
 
@@ -80,6 +87,15 @@ def query(iface=None, **params):
 
 
 def params(cls):
+    """
+    Get interface injection parameters for component realized with
+    specified class.
+
+    :Parameters:
+     cls
+        Class realizing component.
+    """
     for c, p in itertools.chain(*_registry.values()):
         if c == cls:
             return p
+
