@@ -22,7 +22,7 @@
 Support for dive computer, dive data loggers and other measurment devices
 used in diving.
 
-The module specified set of interfaces to be implemented by device drivers.
+The module specifies set of interfaces to be implemented by device drivers.
 """
 
 
@@ -51,13 +51,27 @@ class DeviceDriver(object):
 
 
 class Simulator(object):
+    """
+    Diving computer dive simulation interface.
+    """
     def start(self):
+        """
+        Start dive simulation on dive computer.
+        """
         pass
+
 
     def stop(self):
+        """
+        Stop dive simulation on dive computer.
+        """
         pass
 
+
     def depth(self, d):
+        """
+        Send simulated depth to a dive computer.
+        """
         pass
 
 
