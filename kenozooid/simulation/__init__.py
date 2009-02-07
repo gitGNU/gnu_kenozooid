@@ -49,10 +49,10 @@ def parse(spec):
     - seconds, i.e. 15, 20, 3600
     - minutes, i.e. 12:20, 14:00, 67:13
 
-    Depth is always specified in meteres.
+    Depth is always specified in meters.
 
     Iterator of time and depth pairs is returned. Returned time is always
-    in seconds since start of a dive. Depth is specified in meteres.
+    in seconds since start of a dive. Depth is specified in meters.
 
     :Parameters:
      spec
