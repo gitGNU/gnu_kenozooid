@@ -18,6 +18,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+Support for OSTC, an open source dive computer.
+
+OSTC dive computer specification and documentation of communication
+protocol can be found at address
+
+    http://www.heinrichsweikamp.net/ostc/en/
+
+"""
+
 from serial import Serial, SerialException
 import array
 import logging

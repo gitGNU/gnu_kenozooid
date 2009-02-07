@@ -18,11 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import time
-
 """
 Dive simulation routines.
 """
+
+import time
 
 def parse(spec):
     """

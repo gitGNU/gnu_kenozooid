@@ -19,7 +19,7 @@
 #
 
 """
-Support for dive computer, dive data loggers and other measurment devices
+Support for dive computers, dive data loggers and other measurment devices
 used in diving.
 
 The module specifies set of interfaces to be implemented by device drivers.

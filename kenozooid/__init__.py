@@ -18,3 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+Kenozooid is software stack to support different capabilities of dive
+computers.
+"""
+
