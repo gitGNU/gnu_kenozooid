@@ -73,9 +73,14 @@ def cmd_simulate(parser, options, args):
 
     try:
         cls = query(DeviceDriver, id=id).next()
-        drv = cls.scan().next()
     except StopIteration, ex:
         print 'Cannot find device driver for id %s' % id
+        sys.exit(3)
+
+    try:
+        drv = cls.scan().next()
+    except StopIteration, ex:
+        print 'Device with id %s seems to be not connected' % id
         sys.exit(3)
 
     try:
