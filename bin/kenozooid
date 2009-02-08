@@ -20,111 +20,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import logging
+import kenozooid
+import kenozooid.cli as cli
 
-import optparse
-import sys
+if __name__ == '__main__':
+    options, args = cli.parse_options()
+    assert len(args) > 0, 'command is expected as first parameter'
 
-commands = ('list', 'scan', 'simulate')
+    cmd = args[0]
+    assert cmd in cli.COMMANDS
 
-usage = """
-    %prog [options] list
-    %prog [options] scan
-    %prog [options] simulate <dev> <divespec>
-
-Commands description:
-    list - list available drivers and their capabilities
-    scan - scan for and display attached devices
-    simulate - simulate dive with dive specification using device
-"""
-
-parser = optparse.OptionParser(usage=usage)
-parser.add_option('-v', '--verbose',
-        action='store_true', dest='verbose', default=False,
-        help='explain what is being done')
-
-options, args = parser.parse_args()
-
-if len(args) < 1 or args[0] not in commands:
-    parser.print_help()
-    sys.exit(1)
-
-# configure logger
-logging.basicConfig()
-logging.Logger.manager.loggerDict.clear()
-log = logging.getLogger()
-log.setLevel(logging.INFO)
-
-if options.verbose:
-    log.setLevel(logging.DEBUG)
-
-# delayed import of kenozooid modules to support logging configuration
-# above
-from kenozooid.simulation import simulate
-from kenozooid.component import query, params
-from kenozooid.driver import DeviceDriver, Simulator, DeviceError
-
-# import modules implementing supported drivers
-# todo: support dynamic import of third party drivers
-import kenozooid.driver.ostc
-import kenozooid.driver.dummy
-
-cmd = args[0]
-
-if cmd == 'list':
-    drivers = query(DeviceDriver)
-    print 'Available drivers:\n'
-    for cls in drivers:
-        p = params(cls)
-        id = p['id']
-        name = p['name']
-        drivers = query(id=id)
-
-        # find capabilities
-        caps = []
-        if len(tuple(query(Simulator, id=id))) > 0:
-            caps.append('simulation')
-        #if len(tuple(query(DiveLog, id=id))) > 0:
-        #    caps.append('divelog')
-        # ... etc ...
-
-        print '%s (%s): %s' % (id, name, ', '.join(caps))
-
-elif cmd == 'scan':
-    print 'Scanning...\n'
-    for cls in query(DeviceDriver):
-        for drv in cls.scan():
-            p = params(cls)
-            id = p['id']
-            name = p['name']
-            try:
-                print 'Found %s (%s): %s' % (id, name, drv.version())
-            except DeviceError, ex:
-                print >> sys.stderr, 'Device %s (%s) error: %s' % (id, name, ex)
-
-
-elif cmd == 'simulate':
-    if len(args) != 3:
-        parser.print_help()
-        sys.exit(2)
-
-    id = args[1]
-    spec = args[2]
-
-    try:
-        cls = query(DeviceDriver, id=id).next()
-        drv = cls.scan().next()
-    except StopIteration, ex:
-        print 'Cannot find device driver for id %s' % id
-        sys.exit(3)
-
-    try:
-        cls = query(Simulator, id=id).next()
-        sim = cls(drv)
-    except StopIteration, ex:
-        print 'Device driver %s does not support simulation' % id
-        sys.exit(3)
-
-    simulate(sim, spec) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
-
+    cli.COMMANDS[cmd](args)
 

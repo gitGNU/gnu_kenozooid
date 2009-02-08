@@ -23,3 +23,16 @@ Kenozooid is software stack to support different capabilities of dive
 computers.
 """
 
+import logging
+
+# configure basic logger
+logging.basicConfig()
+logging.Logger.manager.loggerDict.clear()
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+
+# import modules implementing supported drivers
+# todo: support dynamic import of third party drivers
+import kenozooid.driver.ostc
+import kenozooid.driver.dummy
+
