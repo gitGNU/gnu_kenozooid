@@ -20,15 +20,51 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import kenozooid
+import logging
+import optparse
+import sys
+
+usage = """
+    %prog [options] list
+    %prog [options] scan
+    %prog [options] simulate <dev> <divespec>
+
+Commands description:
+    list - list available drivers and their capabilities
+    scan - scan for and display attached devices
+    simulate - simulate dive with dive specification using device
+"""
+
+parser = optparse.OptionParser(usage=usage)
+parser.add_option('-v', '--verbose',
+        action='store_true', dest='verbose', default=False,
+        help='explain what is being done')
+
+options, args = parser.parse_args()
+
+# configure basic logger
+logging.basicConfig()
+logging.Logger.manager.loggerDict.clear()
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+
+if options.verbose:
+    logging.root.setLevel(logging.DEBUG)
+
+# don't import kenozooid modules until logger is configured
 import kenozooid.cli as cli
 
-if __name__ == '__main__':
-    options, args = cli.parse_options()
-    assert len(args) > 0, 'command is expected as first parameter'
+# import modules implementing supported drivers
+# todo: support dynamic import of third party drivers
+import kenozooid.driver.ostc
+import kenozooid.driver.dummy
 
-    cmd = args[0]
-    assert cmd in cli.COMMANDS
+if len(args) < 1 or args[0] not in cli.COMMANDS:
+    parser.print_help()
+    sys.exit(1)
 
-    cli.COMMANDS[cmd](args)
+cmd = args[0]
+assert cmd in cli.COMMANDS
+
+cli.COMMANDS[cmd](parser, options, args)
 

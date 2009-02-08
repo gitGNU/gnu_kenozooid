@@ -23,8 +23,6 @@ Commmand line user interface.
 """
 
 import logging
-
-import optparse
 import sys
 
 from kenozooid.component import query, params
@@ -32,39 +30,7 @@ from kenozooid.simulation import simulate
 from kenozooid.driver import DeviceDriver, Simulator, DeviceError
 
 
-USAGE = """
-    %prog [options] list
-    %prog [options] scan
-    %prog [options] simulate <dev> <divespec>
-
-Commands description:
-    list - list available drivers and their capabilities
-    scan - scan for and display attached devices
-    simulate - simulate dive with dive specification using device
-"""
-
-def parse_options():
-    """
-    Parse command line interface options.
-    """
-    parser = optparse.OptionParser(usage=USAGE)
-    parser.add_option('-v', '--verbose',
-            action='store_true', dest='verbose', default=False,
-            help='explain what is being done')
-
-    options, args = parser.parse_args()
-
-    if options.verbose:
-        log.setLevel(logging.DEBUG)
-
-    if len(args) < 1 or args[0] not in COMMANDS:
-        parser.print_help()
-        sys.exit(1)
-
-    return options, args
-
-
-def cmd_list(args):
+def cmd_list(parser, options, args):
     drivers = query(DeviceDriver)
     print 'Available drivers:\n'
     for cls in drivers:
@@ -84,7 +50,7 @@ def cmd_list(args):
         print '%s (%s): %s' % (id, name, ', '.join(caps))
 
 
-def cmd_scan(args):
+def cmd_scan(parser, options, args):
     print 'Scanning...\n'
     for cls in query(DeviceDriver):
         for drv in cls.scan():
@@ -97,7 +63,7 @@ def cmd_scan(args):
                 print >> sys.stderr, 'Device %s (%s) error: %s' % (id, name, ex)
 
 
-def cmd_simulate(args):
+def cmd_simulate(parser, options, args):
     if len(args) != 3:
         parser.print_help()
         sys.exit(2)
