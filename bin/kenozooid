@@ -27,18 +27,31 @@ import sys
 usage = """
     %prog [options] list
     %prog [options] scan
-    %prog [options] simulate <dev> <divespec>
+    %prog [options] simulate <dev id> <divespec>
 
-Commands description:
+Commands Description:
     list - list available drivers and their capabilities
     scan - scan for and display attached devices
-    simulate - simulate dive with dive specification using device
+    simulate - simulate dive
 """
 
 parser = optparse.OptionParser(usage=usage)
 parser.add_option('-v', '--verbose',
         action='store_true', dest='verbose', default=False,
         help='explain what is being done')
+
+group = optparse.OptionGroup(parser, 'Dive Simulation Options')
+group.add_option('--no-start',
+        action='store_false',
+        dest='sim_start',
+        default=True,
+        help='assume simulation is started, don\'t start simulation')
+group.add_option('--no-stop',
+        action='store_false',
+        dest='sim_stop',
+        default=True,
+        help='don\'t stop simulation, leave dive computer in simulation mode')
+parser.add_option_group(group)
 
 options, args = parser.parse_args()
 
