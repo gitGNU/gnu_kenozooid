@@ -90,7 +90,7 @@ def cmd_simulate(parser, options, args):
         print 'Device driver %s does not support simulation' % id
         sys.exit(3)
 
-    simulate(sim, spec) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+    simulate(sim, spec, options.sim_start, options.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
 
 # map cli command names to command functions

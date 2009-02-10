@@ -116,9 +116,23 @@ def interpolate(spec):
         pdepth = depth
 
 
-def simulate(simulator, spec):
+def simulate(simulator, spec, start=True, stop=True):
+    """
+    Simulate dive with specified simulator and dive specification.
+
+    :Parameters:
+     simulator
+        Device driver simulator implementation.
+     spec
+        Dive simulation
+     start
+        If `False` then simulation is assumed to be started.
+     stop
+        If `False` then simulation won't be stopped.
+    """
     data = interpolate(tuple(parse(spec)))
-    simulator.start()
+    if start:
+        simulator.start()
     try:
         # start simulation
         pt, d = data.next()
@@ -130,4 +144,6 @@ def simulate(simulator, spec):
             pt = t
 
     finally:
-        simulator.stop()
+        if stop:
+            simulator.stop()
+

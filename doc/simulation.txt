@@ -13,7 +13,7 @@ depths for some period of time. Different scenarios can be performed
   at surface)
 
 - part of simulation, i.e. start simulation, dive to some depth starting
-  from surface and exit leaving dive computer in dive mode
+  from surface and exit leaving dive computer in simulation mode
 
 Please note, this is real time dive simulation, therefore real life rules
 may apply to some of dive computers
@@ -24,4 +24,53 @@ may apply to some of dive computers
 
 Please, read about dive simulation capabilities in your dive computer
 manual before starting to use Kenozooid software to simulate dives.
+
+Performing Simulation
+---------------------
+Dive simulation is performed using ``simulate`` command. There are two
+parameters required
+
+- device id
+- dive specification
+
+Sample dive plan could be described as follows
+
+- dive starts at zero meters
+- within 30 seconds diver reaches 10m
+- diver stays at 10m for 3 minutes
+- then reaches the surface with 10m/min. speed
+
+To perform above dive simulation with OSTC dive computer the command should
+be used::
+
+    kenozooid simulate ostc '0:30,10 3:30,10 13:30,0'
+
+Dive specification is space separated list of dive time and depth values. 
+
+Time can be specified in seconds (i.e. 15, 20, 3600) or in minutes (i.e.
+12:20, 14:00, 67:13). Depth is always specified in meters.
+
+Continuing Simulation
+---------------------
+Dive simulation can be executed in mixed manner. It can be started with
+aid of a (non-dive) computer and then performed manually using dive
+computer buttons.
+
+For example, dive simulation can be started with dive to 10m::
+
+    kenozooid --no-stop simulate ostc '0:30,10'
+
+Kenozooid exits after reaching 10m depth, dive computer buttons can be
+used to continue the dive.
+
+Simulation can be stopped manually or using Kenozooid. Assuming that diver
+is at 10m depth, to stop simulation the command shall be used::
+
+    kenozooid --no-start simulate ostc '0,10 1:00,0'
+
+Both options, these are no start and no stop options, can be used during
+dive simulation to execute part of dive plan. For example to ascend from
+30m to 20m within 2 minutes::
+
+    kenozooid --no-start --no-stop simulate ostc '0,30 120,20'
 
