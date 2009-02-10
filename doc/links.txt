@@ -1,0 +1,57 @@
+Useful Links
+============
+
+Open World
+----------
+- http://www.aquadivelog.org/
+- http://www.jdivelog.org/
+- http://gdivelog.sourceforge.net/, seems to be dead but still looks nice
+- http://www.divesoftware.org/libdc/#download, library supporting a lot of
+  different dive computers
+
+HeinrichsWeikamp's OSTC
+^^^^^^^^^^^^^^^^^^^^^^^
+OSTC is open source dive computer created by HeinrichsWeikamp GbR
+
+- http://www.heinrichsweikamp.net/ostc/en/
+- http://www.heinrichsweikamp.net/ostc/common/ostc_interface.pdf, OSTC dive
+  computer communication protocol
+
+UDDF File Format
+----------------
+UDDF format homepage
+
+    http://www.streit.cc/dive/
+
+UDDF format specification
+
+    http://www.streit.cc/extern/uddf_v220en/index.html
+
+UDDF XML Schema and examples of UDDF files
+
+    http://uddf-xsd.svn.sourceforge.net/viewvc/uddf-xsd/trunk/share/uddf.xsd?view=log 
+
+    http://uddf-xsd.svn.sourceforge.net/viewvc/uddf-xsd/trunk/test/
+
+Software supporting UDDF
+
+- http://www.aquadivelog.org/
+- http://www.divinglog.de/
+
+Other Devices
+-------------
+This section points to nice hardware with officially documented
+communication protocols.
+
+ReefNet Sensus Dive Logging Devices
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ReefNet's Sensus dive data recorders features
+
+    http://reefnet.ca/products/sensus/
+
+Documentation of ReefNet's Sensus devices communication protocols
+
+- http://reefnet.ca/downloads/public/doc/sensus_devguide_ultra.pdf
+- http://reefnet.ca/downloads/public/doc/sensus_devguide_pro.pdf
+- http://reefnet.ca/downloads/public/doc/sensus_devguide_original.pdf
+
