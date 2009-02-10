@@ -35,7 +35,10 @@ openess.
 
 Currently planned features are
 
+- dumping dive computer memory in binary format
 - fetch dive logbook data for dives made in specified period of time
   (using *ostc* driver)
 - create a dive graph
+- support for ReefNet's Sensus Ultra dive data logger using libdivecomputer
+  library
 
