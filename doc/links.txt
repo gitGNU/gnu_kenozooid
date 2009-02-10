@@ -18,7 +18,7 @@ OSTC is open source dive computer created by HeinrichsWeikamp GbR
   computer communication protocol
 
 UDDF File Format
-----------------
+^^^^^^^^^^^^^^^^
 UDDF format homepage
 
     http://www.streit.cc/dive/
@@ -38,14 +38,14 @@ Software supporting UDDF
 - http://www.aquadivelog.org/
 - http://www.divinglog.de/
 
-Other Devices
--------------
+Well Supported Hardware
+-----------------------
 This section points to nice hardware with officially documented
 communication protocols.
 
-ReefNet Sensus Dive Logging Devices
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ReefNet's Sensus dive data recorders features
+ReefNet Sensus Devices
+^^^^^^^^^^^^^^^^^^^^^^
+Features of ReefNet's Sensus dive logging devices
 
     http://reefnet.ca/products/sensus/
 
