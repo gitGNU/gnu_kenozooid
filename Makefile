@@ -6,3 +6,11 @@ build-doc:
 	epydoc $(EPYDOC_ARGS) -o doc/_build/html/api -n "Kenozooid Project" kenozooid
 	sphinx-build doc doc/_build/html
 
+upload-doc:
+	rsync --delete-after \
+		--delete-excluded \
+		-zcav --no-owner --no-group --progress \
+		--stats \
+		doc/_build/html/ \
+		wrobell@maszyna.it-zone.org:~/public_html/kenozooid
+
