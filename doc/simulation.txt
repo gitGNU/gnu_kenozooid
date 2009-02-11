@@ -18,6 +18,8 @@ depths for some period of time. Different scenarios can be performed
 Please note, this is real time dive simulation, therefore real life rules
 may apply to some of dive computers
 
+- when dive is started, then computer switches into dive mode at
+  appropriate depth; it depends on dive computer configuration
 - when you reach surface, then computer may wait some time before exiting
   dive mode, if another simulation is started too fast, then it is counted
   as one dive
@@ -31,7 +33,7 @@ Dive simulation is performed using ``simulate`` command. There are two
 parameters required
 
 - device id
-- dive specification
+- dive plan specification
 
 Sample dive plan could be described as follows
 
@@ -52,25 +54,28 @@ Time can be specified in seconds (i.e. 15, 20, 3600) or in minutes (i.e.
 
 Continuing Simulation
 ---------------------
-Dive simulation can be executed in mixed manner. It can be started with
-aid of a (non-dive) computer and then performed manually using dive
-computer buttons.
+Dive simulation can be executed in mixed manner. For example, it can be
+started with aid of a (non-dive) computer and then performed manually using
+dive computer buttons.
 
-For example, dive simulation can be started with dive to 10m::
+To support such flexiblity, two options are provided 
+
+- no start option allows to start Kenozooid without restarting dive
+  simulation
+- no stop option leaves dive simulation running on Kenozooid exit
+
+For example, to leave dive computer at 10m depth and then continue
+simulation with dive computer buttons::
 
     kenozooid --no-stop simulate ostc '0:30,10'
 
-Kenozooid exits after reaching 10m depth, dive computer buttons can be
-used to continue the dive.
-
-Simulation can be stopped manually or using Kenozooid. Assuming that diver
-is at 10m depth, to stop simulation the command shall be used::
+Above simulation can be continued manually or it can be stopped using
+Kenozooid::
 
     kenozooid --no-start simulate ostc '0,10 1:00,0'
 
-Both options, these are no start and no stop options, can be used during
-dive simulation to execute part of dive plan. For example to ascend from
-30m to 20m within 2 minutes::
+To execute part of dive plan, no start and no stop options can be used at
+once. For example, to ascend from 30m to 20m within 2 minutes::
 
     kenozooid --no-start --no-stop simulate ostc '0,30 120,20'
 
