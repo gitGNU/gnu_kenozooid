@@ -23,19 +23,18 @@ Kenozooid is under development but following features are already present
 
 Depending on dive computer driver capabilities
 
-- enter dive simulation mode and send specification of dive simulation to
+- enter dive simulation mode and send dive plan of dive simulation to
   a dive computer
+- dumping dive computer memory into file
 
 Planned Features
 ----------------
-
 Kenozooid development is driven by features of owned dive computers, access
 to hardware documentation and dive computer communication protocols
 openess. 
 
 Currently planned features are
 
-- dumping dive computer memory in binary format
 - fetch dive logbook data for dives made in specified period of time
   (using *ostc* driver)
 - create a dive graph

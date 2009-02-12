@@ -5,6 +5,7 @@ Kenozooid Documentation
    :maxdepth: 2
 
    intro
+   dump
    simulation
    moredev
    links

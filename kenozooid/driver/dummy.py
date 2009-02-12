@@ -45,10 +45,6 @@ class DummySimulator(object):
     """
     Dummy simulator implementation.
     """
-    def __init__(self, driver):
-        self.driver = driver
-
-
     def start(self):
         """
         Print information about starting dive simulation.

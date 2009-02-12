@@ -27,7 +27,8 @@ import sys
 
 from kenozooid.component import query, params
 from kenozooid.simulation import simulate
-from kenozooid.driver import DeviceDriver, Simulator, DeviceError
+from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, \
+    DeviceError, find_driver
 
 
 def cmd_list(parser, options, args):
@@ -43,6 +44,8 @@ def cmd_list(parser, options, args):
         caps = []
         if len(tuple(query(Simulator, id=id))) > 0:
             caps.append('simulation')
+        if len(tuple(query(MemoryDump, id=id))) > 0:
+            caps.append('dump')
         #if len(tuple(query(DiveLog, id=id))) > 0:
         #    caps.append('divelog')
         # ... etc ...
@@ -71,26 +74,28 @@ def cmd_simulate(parser, options, args):
     id = args[1]
     spec = args[2]
 
-    try:
-        cls = query(DeviceDriver, id=id).next()
-    except StopIteration, ex:
-        print 'Cannot find device driver for id %s' % id
-        sys.exit(3)
+    sim = find_driver(Simulator, id)
 
-    try:
-        drv = cls.scan().next()
-    except StopIteration, ex:
-        print 'Device with id %s seems to be not connected' % id
-        sys.exit(3)
-
-    try:
-        cls = query(Simulator, id=id).next()
-        sim = cls(drv)
-    except StopIteration, ex:
+    if sim is None:
         print 'Device driver %s does not support simulation' % id
         sys.exit(3)
-
     simulate(sim, spec, options.sim_start, options.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+
+
+def cmd_dump(parser, options, args):
+    """
+    Implementation fo memory dump command. 
+    """
+    if len(args) != 3:
+        parser.print_help()
+        sys.exit(2)
+
+    id = args[1]
+    filename = args[2]
+
+    dumper = find_driver(Simulator, id)
+    if dumper is None:
+        print 'Device driver %s does not support memory dump' % id
 
 
 # map cli command names to command functions
@@ -98,5 +103,6 @@ COMMANDS = {
     'list': cmd_list,
     'scan': cmd_scan,
     'simulate': cmd_simulate,
+    'dump': cmd_dump,
 }
 

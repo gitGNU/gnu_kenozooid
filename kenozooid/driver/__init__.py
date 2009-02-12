@@ -25,6 +25,9 @@ used in diving.
 The module specifies set of interfaces to be implemented by device drivers.
 """
 
+import sys
+
+from kenozooid.component import query
 
 class DeviceDriver(object):
     """
@@ -54,6 +57,8 @@ class Simulator(object):
     """
     Diving computer dive simulation interface.
     """
+    driver = None
+
     def start(self):
         """
         Start dive simulation on dive computer.
@@ -75,7 +80,66 @@ class Simulator(object):
         pass
 
 
+
+class MemoryDump(object):
+    """
+    Diving computer memory dump interface.
+
+    Depending on dive computer firmware capabilities, driver implementing
+    the interface shall dump all possible data from dive computer like
+
+    - dive computer settings
+    - all entries from dive logbook
+    - battery information
+
+    Dumped memory will be saved to a file.
+    """
+    driver = None
+
+    def dump(self):
+        """
+        Return iterator of binary data being memory dump.
+        """
+
+
 class DeviceError(BaseException):
     """
     Device communication error.
     """
+
+
+def find_driver(iface, id):
+    """
+    Find driver implementing an interface.
+
+    :Parameters:
+     iface
+        Interface of functionality.
+     id
+        Device driver id.
+
+    If device id is not known or device is not connected, then exception is
+    raised.
+
+    If device driver does not support functionality specified by an
+    interface, then None is returned.
+    """
+    try:
+        cls = query(DeviceDriver, id=id).next()
+    except StopIteration, ex:
+        print 'Unknown device driver id %s' % id
+        sys.exit(3)
+
+    try:
+        drv = cls.scan().next()
+    except StopIteration, ex:
+        print 'Device with id %s seems to be not connected' % id
+        sys.exit(3)
+
+    try:
+        cls = query(iface, id=id).next()
+        sim = cls()
+        sim.driver = drv
+    except StopIteration, ex:
+        return None
+

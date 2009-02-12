@@ -36,7 +36,7 @@ import math
 log = logging.getLogger('kenozooid.driver.ostc')
 
 from kenozooid.component import inject
-from kenozooid.driver import DeviceDriver, Simulator, DeviceError
+from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 
 def byte(i):
     """
@@ -115,17 +115,23 @@ class OSTCDriver(object):
 
 @inject(Simulator, id='ostc')
 class OSTCSimulator(object):
-    def __init__(self, driver):
-        super(OSTCSimulator, self).__init__()
-        self._driver = driver
-
     def start(self):
-        self._driver._write('c')
+        self.driver._write('c')
 
     def stop(self):
-        self._driver._write(byte(0))
+        self.driver._write(byte(0))
 
     def depth(self, depth):
         p = pressure(depth)
-        self._driver._write(byte(p))
+        self.driver._write(byte(p))
+
+
+@inject(MemoryDump, id='ostc')
+class OSTCMemoryDump(object):
+    """
+    OSTC dive computer memory dump.
+    """
+    def dump(self):
+        self.driver._write('a')
+
 

@@ -27,12 +27,14 @@ import sys
 usage = """
     %prog [options] list
     %prog [options] scan
-    %prog [options] simulate <dev id> <divespec>
+    %prog [options] simulate <dev id> <dive plan>
+    %prog [options] dump <dev id> <filename>
 
 Commands Description:
     list - list available drivers and their capabilities
     scan - scan for and display attached devices
     simulate - simulate dive
+    dump - dump dive computer memory (logbook, settings, etc.)
 """
 
 parser = optparse.OptionParser(usage=usage)
