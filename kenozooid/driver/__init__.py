@@ -124,22 +124,24 @@ def find_driver(iface, id):
     If device driver does not support functionality specified by an
     interface, then None is returned.
     """
+    # find device driver for device id
     try:
         cls = query(DeviceDriver, id=id).next()
     except StopIteration, ex:
-        print 'Unknown device driver id %s' % id
-        sys.exit(3)
+        raise DeviceError('Unknown device driver id %s' % id)
 
+    # scan for connected devices
     try:
         drv = cls.scan().next()
     except StopIteration, ex:
-        print 'Device with id %s seems to be not connected' % id
-        sys.exit(3)
+        raise DeviceError('Device with id %s seems to be not connected' % id)
 
+    # find class implementing specified interface (and functionality)
     try:
         cls = query(iface, id=id).next()
-        sim = cls()
-        sim.driver = drv
+        obj = cls()
+        obj.driver = drv
+        return obj
     except StopIteration, ex:
         return None
 

@@ -71,6 +71,7 @@ import kenozooid.cli as cli
 
 # import modules implementing supported drivers
 # todo: support dynamic import of third party drivers
+from kenozooid.driver import DeviceError
 import kenozooid.driver.ostc
 import kenozooid.driver.dummy
 
@@ -81,5 +82,9 @@ if len(args) < 1 or args[0] not in cli.COMMANDS:
 cmd = args[0]
 assert cmd in cli.COMMANDS
 
-cli.COMMANDS[cmd](parser, options, args)
+f = cli.COMMANDS[cmd]
+try:
+    f(parser, options, args)
+except DeviceError, ex:
+    print ex
 

@@ -93,7 +93,7 @@ def cmd_dump(parser, options, args):
     id = args[1]
     filename = args[2]
 
-    dumper = find_driver(Simulator, id)
+    dumper = find_driver(MemoryDump, id)
     if dumper is None:
         print 'Device driver %s does not support memory dump' % id
 
