@@ -133,5 +133,6 @@ class OSTCMemoryDump(object):
     """
     def dump(self):
         self.driver._write('a')
+        return self.driver._read(33034)
 
 

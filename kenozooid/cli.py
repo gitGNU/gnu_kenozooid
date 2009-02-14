@@ -29,6 +29,7 @@ from kenozooid.component import query, params
 from kenozooid.simulation import simulate
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, \
     DeviceError, find_driver
+from kenozooid.util import save
 
 
 def cmd_list(parser, options, args):
@@ -96,6 +97,10 @@ def cmd_dump(parser, options, args):
     dumper = find_driver(MemoryDump, id)
     if dumper is None:
         print 'Device driver %s does not support memory dump' % id
+
+    saved = save(filename, dumper.dump())
+    if not saved:
+        print 'File %s already exists' % filename
 
 
 # map cli command names to command functions
