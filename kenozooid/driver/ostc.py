@@ -66,7 +66,7 @@ class OSTCDriver(object):
                 bytesize=8,
                 stopbits=1,
                 parity='N',
-                timeout=1)
+                timeout=5) # 1s timeout is too short sometimes with 'a' command
 
     def _write(self, cmd):
         log.debug('sending command %s' % cmd)
