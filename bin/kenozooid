@@ -29,12 +29,14 @@ usage = """
     %prog [options] scan
     %prog [options] simulate <dev id> <dive plan>
     %prog [options] dump <dev id> <filename>
+    %prog [options] convert <file1> <file2>
 
 Commands Description:
     list - list available drivers and their capabilities
     scan - scan for and display attached devices
     simulate - simulate dive
     dump - dump dive computer memory (logbook, settings, etc.)
+    convert - convert dive computer memory dump into UDDF format
 """
 
 parser = optparse.OptionParser(usage=usage)

@@ -91,14 +91,29 @@ class MemoryDump(object):
     - dive computer settings
     - all entries from dive logbook
     - battery information
-
-    Dumped memory will be saved to a file.
     """
     driver = None
 
     def dump(self):
         """
         Return iterator of binary data being memory dump.
+
+        Dumped memory will be saved to a file by Kenozooid.
+        """
+
+    def convert(self, data, tree):
+        """
+        Convert dive computer dump data into UDFF format.
+
+        ElementTree parameter is prepared structure of UDDF format. It
+        shall be filled with data from memory dump. The structure is saved
+        by Kenozooid.
+
+        :Parameters:
+         data
+            Dive computer memory dump.
+         tree
+            ElementTree representing UDFF file.
         """
 
 

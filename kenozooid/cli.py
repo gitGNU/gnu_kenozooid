@@ -103,11 +103,22 @@ def cmd_dump(parser, options, args):
         print 'File %s already exists' % filename
 
 
+def cmd_convert(parser, options, args):
+    """
+    Implementation of file conversion command. The command handles all
+    supported data formats like dive computer memory dumps and UDDF.
+    """
+    # not implemented yet
+    parser.print_help()
+    sys.exit(2)
+
+
 # map cli command names to command functions
 COMMANDS = {
     'list': cmd_list,
     'scan': cmd_scan,
     'simulate': cmd_simulate,
     'dump': cmd_dump,
+    'convert': cmd_convert,
 }
 

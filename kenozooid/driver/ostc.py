@@ -78,7 +78,7 @@ class OSTCDriver(object):
         assert size > 0
         log.debug('reading %d byte(s)' % size)
         data = self._device.read(size)
-        log.debug('got %d data' % len(data))
+        log.debug('got %d byte(s) of data' % len(data))
         if len(data) != size:
             raise DeviceError('Device communication error')
         return data
@@ -132,7 +132,16 @@ class OSTCMemoryDump(object):
     OSTC dive computer memory dump.
     """
     def dump(self):
+        """
+        Download OSTC status and all dive profiles.
+        """
         self.driver._write('a')
         return self.driver._read(33034)
 
+
+    def convert(self, data, tree):
+        """
+        Convert dive profiles to UDDF format.
+        """
+        root = tree.getroot()
 
