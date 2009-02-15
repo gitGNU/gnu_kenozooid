@@ -115,15 +115,34 @@ class OSTCDriver(object):
 
 @inject(Simulator, id='ostc')
 class OSTCSimulator(object):
+    """
+    OSTC dive computer simulator support.
+    """
     def start(self):
+        """
+        Put OSTC dive computer into dive simulation mode. The dive computer
+        will not show dive mode screen until "dived" into configured depth
+        (option CF0).
+        """
         self.driver._write('c')
 
+
     def stop(self):
+        """
+        Stop OSTC dive simulation mode. OSTC stays in dive mode until
+        appropriate period of time passes, which is configured with option
+        CF2.
+        """
         self.driver._write(byte(0))
 
+
     def depth(self, depth):
+        """
+        Send dive computer to given depth.
+        """
         p = pressure(depth)
         self.driver._write(byte(p))
+
 
 
 @inject(MemoryDump, id='ostc')
