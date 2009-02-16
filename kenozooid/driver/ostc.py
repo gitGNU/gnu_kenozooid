@@ -28,15 +28,23 @@ protocol can be found at address
 
 """
 
-from serial import Serial, SerialException
 import array
 import logging
 import math
+from collections import namedtuple
+from lxml import etree as et
+from serial import Serial, SerialException
+from struct import unpack
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
 from kenozooid.component import inject
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
+
+# command 'a' output
+StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile')
+FMT_STATUS = '<6s256sHbb32768s'
+
 
 def byte(i):
     """
@@ -162,5 +170,10 @@ class OSTCMemoryDump(object):
         """
         Convert dive profiles to UDDF format.
         """
-        root = tree.getroot()
+        dump = StatusDump._make(unpack(FMT_STATUS, ''.join(data)))
+        log.debug('unpacked status dump, voltage %d, version %d.%d'
+            % (dump.voltage, dump.ver1, dump.ver2))
 
+        root = tree.getroot()
+        profile = tree.xpath('profiledata')[0]
+        group = et.SubElement(profile, 'repetitiongroup')

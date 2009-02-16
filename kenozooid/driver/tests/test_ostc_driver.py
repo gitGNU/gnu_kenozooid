@@ -21,6 +21,8 @@
 import unittest
 
 from kenozooid.driver.ostc import byte, pressure
+from kenozooid.driver.ostc import OSTCMemoryDump
+from kenozooid.uddf import create
 
 class ConversionTestCase(unittest.TestCase):
     def test_byte_conversion(self):
@@ -37,4 +39,21 @@ class ConversionTestCase(unittest.TestCase):
         self.assertEquals(11, pressure(1))
         self.assertEquals(30, pressure(20))
         self.assertEquals(25, pressure(15.5))
+
+
+class UDDFTestCase(unittest.TestCase):
+    """
+    OSTC data to UDDF format conversion tests.
+    """
+    def test_conversion(self):
+        dumper = OSTCMemoryDump()
+        f = open('dumps/ostc-01.dump')
+        tree = create()
+        dumper.convert(f, tree)
+        print
+        print
+        import lxml.etree
+        lxml.etree.dump(tree.getroot())
+        print
+
 
