@@ -45,6 +45,24 @@ class UDDFTestCase(unittest.TestCase):
     """
     OSTC data to UDDF format conversion tests.
     """
+    def test_status_parsing(self):
+        """Test status parsing
+        """
+        f = open('dumps/ostc-01.dump')
+        dump = OSTCMemoryDump._status(''.join(f))
+
+        self.assertEquals('\xaa' * 5 + '\x55', dump.preamble)
+
+        # first dive is deleted one so no \xfa\xfa
+        self.assertEquals('\xfa\x20', dump.profile[:2])
+
+        self.assertEquals(4142, dump.voltage)
+
+        # ver. 1.26
+        self.assertEquals(1, dump.ver1)
+        self.assertEquals(26, dump.ver2)
+
+
     def test_conversion(self):
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')

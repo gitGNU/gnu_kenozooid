@@ -166,14 +166,21 @@ class OSTCMemoryDump(object):
         return self.driver._read(33034)
 
 
+    @staticmethod
+    def _status(data):
+        dump = StatusDump._make(unpack(FMT_STATUS, data))
+        log.debug('unpacked status dump, voltage %d, version %d.%d'
+            % (dump.voltage, dump.ver1, dump.ver2))
+        return dump
+
+
     def convert(self, data, tree):
         """
         Convert dive profiles to UDDF format.
         """
-        dump = StatusDump._make(unpack(FMT_STATUS, ''.join(data)))
-        log.debug('unpacked status dump, voltage %d, version %d.%d'
-            % (dump.voltage, dump.ver1, dump.ver2))
+        dump = self._status(''.join(data))
 
         root = tree.getroot()
         profile = tree.xpath('profiledata')[0]
         group = et.SubElement(profile, 'repetitiongroup')
+
