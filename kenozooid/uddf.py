@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import xml.etree.ElementTree as et
+from lxml import etree as et
 from datetime import datetime
 
 GENERATOR = """
@@ -34,10 +34,13 @@ GENERATOR = """
 </generator>
 """
 
+NSMAP = {
+    'uddf': 'http://www.streit.cc/uddf',
+}
+
 def create():
     now = datetime.now()
-    et._namespace_map['http://www.streit.cc/uddf'] = 'uddf'
-    root = et.Element('{http://www.streit.cc/uddf}uddf', version='2.2.0')
+    root = et.Element('{%(uddf)s}uddf' % NSMAP, version='2.2.0', nsmap=NSMAP)
     generator = et.XML(GENERATOR % {
         'version': '0.1',
         'year': now.year,
