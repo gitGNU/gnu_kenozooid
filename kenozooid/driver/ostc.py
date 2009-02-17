@@ -46,8 +46,17 @@ from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile')
 FMT_STATUS = '<6s256sHbb32768s'
 
-# profile data is FA0FA..(42)..FBFB...FDFD
-PROFILE_RE = re.compile('(\xfa\xfa.{42,43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
+# profile data is FA0FA..(43)..FBFB...FDFD
+RE_PROFILE = re.compile('(\xfa\xfa.{43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
+
+# dive profile header
+DiveHeader = namedtuple('DiveHeader', """\
+start version month day year hour minute max_depth dive_time_m dive_time_s
+min_temp surface_pressure desaturation gas1 gas2 gas3 gas4 gas5 gas6 gas
+ver1 ver2 voltage sampling div_temp div_deco div_tank div_ppo2
+div_res1 div_res2 spare end
+""")
+FMT_DIVE_HEADER = '<H6BHHB' 'HHH6HB' 'BBHB4B' 'BBHH'
 
 
 def byte(i):
@@ -182,7 +191,7 @@ class OSTCMemoryDump(object):
     def _profile(data):
         """
         Split profile data into individual dive profiles using profile
-        regular expression `PROFILE_RE`.
+        regular expression `RE_PROFILE`.
 
         Collection of tuples (header, block) is returned
 
@@ -192,14 +201,18 @@ class OSTCMemoryDump(object):
             dive profile block data
 
         """
-        return PROFILE_RE.findall(data)
+        return RE_PROFILE.findall(data)
 
 
     @staticmethod
-    def _header(header):
+    def _header(data):
         """
         Parse OSTC header and data block of a dive profile.
         """
+        header = DiveHeader._make(unpack(FMT_DIVE_HEADER, data))
+        log.debug('parsed dive header {0.year:>02d}/{0.month:>02d}/{0.day:>02d},' \
+            ' max depth {0.max_depth}'.format(header))
+        return header
 
 
     def convert(self, data, tree):

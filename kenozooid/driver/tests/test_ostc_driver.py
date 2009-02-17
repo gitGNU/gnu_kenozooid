@@ -78,6 +78,47 @@ class UDDFTestCase(unittest.TestCase):
             self.assertEquals('\xfd\xfd', block[-2:])
 
 
+    def test_dive_profile_header_parsing(self):
+        """Test dive profile header parsing
+        """
+        f = open('dumps/ostc-01.dump')
+        dump = OSTCMemoryDump._status(''.join(f))
+        profile = tuple(OSTCMemoryDump._profile(dump.profile))
+        header = OSTCMemoryDump._header(profile[0][0])
+        self.assertEquals(0xfafa, header.start)
+        self.assertEquals(0xfbfb, header.end)
+        self.assertEquals(0x20, header.version)
+        self.assertEquals(1, header.month)
+        self.assertEquals(31, header.day)
+        self.assertEquals(9, header.year)
+        self.assertEquals(23, header.hour)
+        self.assertEquals(41, header.minute)
+        self.assertEquals(7500, header.max_depth)
+        self.assertEquals(32, header.dive_time_m)
+        self.assertEquals(9, header.dive_time_s)
+        self.assertEquals(275, header.min_temp)
+        self.assertEquals(1025, header.surface_pressure)
+        self.assertEquals(920, header.desaturation)
+        self.assertEquals(21, header.gas1)
+        self.assertEquals(32, header.gas2)
+        self.assertEquals(21, header.gas3)
+        self.assertEquals(21, header.gas4)
+        self.assertEquals(21, header.gas5)
+        self.assertEquals(32, header.gas6)
+        self.assertEquals(1, header.gas)
+        self.assertEquals(1, header.ver1)
+        self.assertEquals(26, header.ver2)
+        self.assertEquals(4066, header.voltage)
+        self.assertEquals(10, header.sampling)
+        self.assertEquals(38, header.div_temp)
+        self.assertEquals(38, header.div_deco)
+        self.assertEquals(32, header.div_tank)
+        self.assertEquals(48, header.div_ppo2)
+        self.assertEquals(0, header.div_res1)
+        self.assertEquals(0, header.div_res2)
+        self.assertEquals(0, header.spare)
+
+
     def test_conversion(self):
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')
