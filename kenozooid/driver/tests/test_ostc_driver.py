@@ -41,6 +41,7 @@ class ConversionTestCase(unittest.TestCase):
         self.assertEquals(25, pressure(15.5))
 
 
+
 class UDDFTestCase(unittest.TestCase):
     """
     OSTC data to UDDF format conversion tests.
@@ -61,6 +62,20 @@ class UDDFTestCase(unittest.TestCase):
         # ver. 1.26
         self.assertEquals(1, dump.ver1)
         self.assertEquals(26, dump.ver2)
+
+
+    def test_profile_split(self):
+        """Test profile splitting
+        """
+        f = open('dumps/ostc-01.dump')
+        dump = OSTCMemoryDump._status(''.join(f))
+        profile = tuple(OSTCMemoryDump._profile(dump.profile))
+        # five dives expected
+        self.assertEquals(5, len(profile))
+        for header, block in profile:
+            self.assertEquals('\xfa\xfa', header[:2])
+            self.assertEquals('\xfb\xfb', header[-2:])
+            self.assertEquals('\xfd\xfd', block[-2:])
 
 
     def test_conversion(self):

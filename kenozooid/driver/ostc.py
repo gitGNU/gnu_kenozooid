@@ -31,6 +31,7 @@ protocol can be found at address
 import array
 import logging
 import math
+import re
 from collections import namedtuple
 from lxml import etree as et
 from serial import Serial, SerialException
@@ -44,6 +45,9 @@ from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 # command 'a' output
 StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile')
 FMT_STATUS = '<6s256sHbb32768s'
+
+# profile data is FA0FA..(42)..FBFB...FDFD
+PROFILE_RE = re.compile('(\xfa\xfa.{42,43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
 
 
 def byte(i):
@@ -172,6 +176,30 @@ class OSTCMemoryDump(object):
         log.debug('unpacked status dump, voltage %d, version %d.%d'
             % (dump.voltage, dump.ver1, dump.ver2))
         return dump
+
+
+    @staticmethod
+    def _profile(data):
+        """
+        Split profile data into individual dive profiles using profile
+        regular expression `PROFILE_RE`.
+
+        Collection of tuples (header, block) is returned
+
+         header
+            dive profile header 
+         block 
+            dive profile block data
+
+        """
+        return PROFILE_RE.findall(data)
+
+
+    @staticmethod
+    def _header(header):
+        """
+        Parse OSTC header and data block of a dive profile.
+        """
 
 
     def convert(self, data, tree):
