@@ -224,6 +224,18 @@ class OSTCMemoryDump(object):
         return value & 0b1111, value >> 4
 
 
+    @staticmethod
+    def _flag_byte(value):
+        """
+        Split profile flag byte to
+
+        - amount of additional bytes of extended information
+        - event byte presence, which is zero or one
+
+        """
+        return value & 0x7f, value >> 7
+
+
     def convert(self, data, tree):
         """
         Convert dive profiles to UDDF format.

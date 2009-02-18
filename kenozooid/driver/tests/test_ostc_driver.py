@@ -135,6 +135,18 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals(3, size)
 
 
+    def test_flag_byte_split(self):
+        """Test splitting profile flag byte
+        """
+        size, event = OSTCMemoryDump._flag_byte(132)
+        self.assertEquals(4, size)
+        self.assertEquals(1, event)
+
+        size, event = OSTCMemoryDump._flag_byte(5)
+        self.assertEquals(5, size)
+        self.assertEquals(0, event)
+
+
     def test_conversion(self):
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')
