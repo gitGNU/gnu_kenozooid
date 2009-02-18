@@ -18,39 +18,26 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+OSTC driver binary parser routines tests.
+"""
+
 import unittest
 
 from kenozooid.driver.ostc import byte, pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
+import kenozooid.driver.ostc.parser as ostc_parser
 from kenozooid.uddf import create
 
-class ConversionTestCase(unittest.TestCase):
-    def test_byte_conversion(self):
-        """Test int to to byte conversion
-        """
-        self.assertEquals('\x00', byte(0))
-        self.assertEquals('\xff', byte(0xff))
-        self.assertEquals('\x0f', byte(15))
-
-
-    def test_pressure_conversion(self):
-        """Test depth to pressure conversion
-        """
-        self.assertEquals(11, pressure(1))
-        self.assertEquals(30, pressure(20))
-        self.assertEquals(25, pressure(15.5))
-
-
-
-class UDDFTestCase(unittest.TestCase):
+class ParserTestCase(unittest.TestCase):
     """
-    OSTC data to UDDF format conversion tests.
+    OSTC binary data parsing tests.
     """
     def test_status_parsing(self):
         """Test status parsing
         """
         f = open('dumps/ostc-01.dump')
-        dump = OSTCMemoryDump._status(''.join(f))
+        dump = ostc_parser.status(''.join(f))
 
         self.assertEquals('\xaa' * 5 + '\x55', dump.preamble)
 
@@ -68,8 +55,8 @@ class UDDFTestCase(unittest.TestCase):
         """Test profile splitting
         """
         f = open('dumps/ostc-01.dump')
-        dump = OSTCMemoryDump._status(''.join(f))
-        profile = tuple(OSTCMemoryDump._profile(dump.profile))
+        dump = ostc_parser.status(''.join(f))
+        profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
         for header, block in profile:
@@ -82,9 +69,9 @@ class UDDFTestCase(unittest.TestCase):
         """Test dive profile header parsing
         """
         f = open('dumps/ostc-01.dump')
-        dump = OSTCMemoryDump._status(''.join(f))
-        profile = tuple(OSTCMemoryDump._profile(dump.profile))
-        header = OSTCMemoryDump._header(profile[0][0])
+        dump = ostc_parser.status(''.join(f))
+        profile = tuple(ostc_parser.profile(dump.profile))
+        header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
         self.assertEquals(0xfbfb, header.end)
         self.assertEquals(0x20, header.version)
@@ -122,15 +109,15 @@ class UDDFTestCase(unittest.TestCase):
     def test_divisor(self):
         """Test getting divisor information
         """
-        divisor, size = OSTCMemoryDump._divisor(38)
+        divisor, size = ostc_parser.divisor(38)
         self.assertEquals(6, divisor)
         self.assertEquals(2, size)
 
-        divisor, size = OSTCMemoryDump._divisor(32)
+        divisor, size = ostc_parser.divisor(32)
         self.assertEquals(0, divisor)
         self.assertEquals(2, size)
 
-        divisor, size = OSTCMemoryDump._divisor(48)
+        divisor, size = ostc_parser.divisor(48)
         self.assertEquals(0, divisor)
         self.assertEquals(3, size)
 
@@ -138,24 +125,10 @@ class UDDFTestCase(unittest.TestCase):
     def test_flag_byte_split(self):
         """Test splitting profile flag byte
         """
-        size, event = OSTCMemoryDump._flag_byte(132)
+        size, event = ostc_parser.flag_byte(132)
         self.assertEquals(4, size)
         self.assertEquals(1, event)
 
-        size, event = OSTCMemoryDump._flag_byte(5)
+        size, event = ostc_parser.flag_byte(5)
         self.assertEquals(5, size)
         self.assertEquals(0, event)
-
-
-    def test_conversion(self):
-        dumper = OSTCMemoryDump()
-        f = open('dumps/ostc-01.dump')
-        tree = create()
-        dumper.convert(f, tree)
-        print
-        print
-        import lxml.etree
-        lxml.etree.dump(tree.getroot())
-        print
-
-
