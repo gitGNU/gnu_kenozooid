@@ -119,6 +119,22 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals(0, header.spare)
 
 
+    def test_divisor(self):
+        """Test getting divisor information
+        """
+        divisor, size = OSTCMemoryDump._divisor(38)
+        self.assertEquals(6, divisor)
+        self.assertEquals(2, size)
+
+        divisor, size = OSTCMemoryDump._divisor(32)
+        self.assertEquals(0, divisor)
+        self.assertEquals(2, size)
+
+        divisor, size = OSTCMemoryDump._divisor(48)
+        self.assertEquals(0, divisor)
+        self.assertEquals(3, size)
+
+
     def test_conversion(self):
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')

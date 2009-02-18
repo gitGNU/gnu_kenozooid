@@ -215,6 +215,15 @@ class OSTCMemoryDump(object):
         return header
 
 
+    @staticmethod
+    def _divisor(value):
+        """
+        Split divisor value into divisor sample information and divisor
+        byte count.
+        """
+        return value & 0b1111, value >> 4
+
+
     def convert(self, data, tree):
         """
         Convert dive profiles to UDDF format.
