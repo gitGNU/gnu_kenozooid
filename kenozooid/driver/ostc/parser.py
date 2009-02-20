@@ -140,14 +140,14 @@ def dive_data(header, data):
         div_bytes = 0
 
         temp = sample_data(data, i, j, div_temp_s, div_temp_c)
-        if temp:
+        if temp is not None:
             assert len(temp) == div_temp_c == 2
             temp = unpack('<H', temp)[0] / 10.0
             i += div_temp_c
             div_bytes += div_temp_c
 
         deco = sample_data(data, i, j, div_deco_s, div_deco_c)
-        if deco:
+        if deco is not None:
             assert len(deco) == div_deco_c
             deco_depth, deco_time = map(ord, deco)
             i += div_deco_c
@@ -156,12 +156,12 @@ def dive_data(header, data):
             deco_depth, deco_time = None, None
 
         tank = sample_data(data, i, j, div_tank_s, div_tank_c)
-        if tank:
+        if tank is not None:
             i += div_tank_c
             div_bytes += div_tank_c
 
         ppo2 = sample_data(data, i, j, div_ppo2_s, div_ppo2_c)
-        if ppo2:
+        if ppo2 is not None:
             i += div_ppo2_c
             div_bytes += div_ppo2_c
             
