@@ -106,6 +106,54 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(0, header.spare)
 
 
+    def test_dive_profile_block_parsing(self):
+        """Test dive profile data block parsing
+        """
+        f = open('dumps/ostc-01.dump')
+        dump = ostc_parser.status(''.join(f))
+        profile = tuple(ostc_parser.profile(dump.profile))
+        h, p = profile[0]
+        header = ostc_parser.header(h)
+        dive = tuple(ostc_parser.dive_data(header, p))
+
+        self.assertAlmostEquals(3.0, dive[0].depth, 0.001)
+        self.assertFalse(dive[0].alarm)
+        self.assertAlmostEquals(23.0, dive[1].depth, 0.001)
+        self.assertFalse(dive[1].alarm)
+
+        self.assertAlmostEquals(29.5, dive[5].temp, 0.001)
+        self.assertEquals(5, dive[5].alarm)
+        self.assertEquals(2, dive[5].current_gas)
+        self.assertEquals(0, dive[5].deco_depth)
+        self.assertEquals(7, dive[5].deco_time)
+
+        self.assertAlmostEquals(29.0, dive[23].temp, 0.001)
+        self.assertFalse(dive[23].alarm)
+        self.assertFalse(dive[23].current_gas)
+        self.assertEquals(3, dive[23].deco_depth)
+        self.assertEquals(1, dive[23].deco_time)
+
+
+    def test_sample_data_parsing(self):
+        """Test sample data parsing
+        """
+        # temp = 50 (5 degrees)
+        # deco = NDL/160
+        data = '\x2c\x01\x84\x32\x00\x00\xa0'
+        v = ostc_parser.sample_data(data, 3, 8, 4, 2)
+        from struct import unpack
+        self.assertEquals(50, unpack('<H', v)[0])
+
+        # 5th sample and divisor sampling == 4 => no data
+        v = ostc_parser.sample_data(data, 3, 5, 4, 2)
+        self.assertFalse(v)
+
+        v = ostc_parser.sample_data(data, 5, 8, 4, 2)
+        d, t = map(ord, v)
+        self.assertEquals(0, d)
+        self.assertEquals(0xa0, t)
+
+
     def test_divisor(self):
         """Test getting divisor information
         """
