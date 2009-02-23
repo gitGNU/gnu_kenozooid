@@ -2,13 +2,12 @@ Kenozooid Documentation
 =======================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    intro
-   dump
-   simulation
-   moredev
-   links
+   user
+   devel
+   hacking 
 
 * :ref:`genindex`
 * :ref:`modindex`

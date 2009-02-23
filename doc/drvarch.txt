@@ -1,5 +1,5 @@
-Support for More Dive Computers
-===============================
+Device Driver Architecture
+==========================
 
 ..
     Module :api:`kenozooid.driver`.

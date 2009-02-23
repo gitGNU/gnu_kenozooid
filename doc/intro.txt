@@ -7,6 +7,10 @@ The project allows to process data stored by dive computers and utilize
 their features like dumping dive computer memory, fetching dive log
 information or performing dive simulation. 
 
+Kenozooid can be used as a library for other dive related software
+including dive logbook management applications, see :ref:`part-devel`
+for more information.
+
 Kenozooid is free software licensed under terms of
 `GPL <http://www.fsf.org/licensing/licenses/gpl.html>`_ license.
 
