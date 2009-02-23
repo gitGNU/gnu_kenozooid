@@ -137,11 +137,12 @@ class ParserTestCase(unittest.TestCase):
     def test_sample_data_parsing(self):
         """Test sample data parsing
         """
+        from struct import unpack
+
         # temp = 50 (5 degrees)
         # deco = NDL/160
         data = '\x2c\x01\x84\x32\x00\x00\xa0'
         v = ostc_parser.sample_data(data, 3, 8, 4, 2)
-        from struct import unpack
         self.assertEquals(50, unpack('<H', v)[0])
 
         # 5th sample and divisor sampling == 4 => no data
