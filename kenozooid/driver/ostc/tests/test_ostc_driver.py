@@ -18,6 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+OSTC driver tests.
+"""
+
 import unittest
 
 from kenozooid.driver.ostc import byte, pressure
@@ -48,14 +52,16 @@ class UDDFTestCase(unittest.TestCase):
     OSTC data to UDDF format conversion tests.
     """
     def test_conversion(self):
+        """Test basic OSTC data to UDDF conversion
+        """
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')
         tree = create()
         dumper.convert(f, tree)
-        print
-        print
-        import lxml.etree
-        lxml.etree.dump(tree.getroot())
-        print
 
+        # five dives
+        self.assertEquals(5, len(tree.xpath('//repetitiongroup/dive')))
+
+        #data = tree.xpath('//repetitiongroup/dive[0]/samples/waypoint')
+        #self.assertEquals(5, len(data))
 

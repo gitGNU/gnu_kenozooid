@@ -32,6 +32,7 @@ import array
 import logging
 import math
 from lxml import etree as et
+from lxml.builder import E
 from serial import Serial, SerialException
 
 log = logging.getLogger('kenozooid.driver.ostc')
@@ -165,9 +166,30 @@ class OSTCMemoryDump(object):
         """
         Convert dive profiles to UDDF format.
         """
+        nodes = []
         dump = ostc_parser.status(''.join(data))
+        for h, p in ostc_parser.profile(dump.profile):
+            header = ostc_parser.header(h)
+            dive_data = ostc_parser.dive_data(header, p)
 
-        root = tree.getroot()
-        profile = tree.xpath('profiledata')[0]
-        group = et.SubElement(profile, 'repetitiongroup')
+            #from datetime import datetime, timedelta
+            #start_time = datetime(2000 + header.year, header.month, header.day) \
+            #    - timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
+
+            wps = []
+            for i, sample in enumerate(dive_data):
+                xml = [
+                    E.depth(str(sample.depth)),
+                    E.dive_time(str(i * header.sampling))
+                ]
+                if sample.temp is not None:
+                    xml.append(E.temperature('%.2f' % (273.15 - sample.temp)))
+                wps.append(E.waypoint(*xml))
+
+            nodes.append(E.dive(E.samples(*wps)))
+                    
+        node = tree.xpath('profiledata')[0]
+        rg = E.repetitiongroup(*nodes)
+        node.append(et.fromstring(et.tostring(rg)))
+
 
