@@ -27,7 +27,7 @@ import unittest
 from kenozooid.driver.ostc import byte, pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
-from kenozooid.uddf import create
+from kenozooid.uddf import create, validate
 
 class ConversionTestCase(unittest.TestCase):
     def test_byte_conversion(self):
@@ -66,3 +66,4 @@ class UDDFTestCase(unittest.TestCase):
         data = tree.xpath('//repetitiongroup/dive[1]/samples/waypoint')
         self.assertEquals(217, len(data))
 
+        validate(tree)

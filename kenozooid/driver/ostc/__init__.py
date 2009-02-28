@@ -180,7 +180,7 @@ class OSTCMemoryDump(object):
             for i, sample in enumerate(dive_data):
                 xml = [
                     E.depth(str(sample.depth)),
-                    E.dive_time(str(i * header.sampling))
+                    E.divetime(str(i * header.sampling))
                 ]
                 if sample.temp is not None:
                     xml.append(E.temperature('%.2f' % (273.15 - sample.temp)))

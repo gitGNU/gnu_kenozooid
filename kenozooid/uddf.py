@@ -54,3 +54,11 @@ def create():
     tree = et.ElementTree(root)
     return tree
 
+
+def validate(tree):
+    """
+    Validate UDDF file with UDDF XML Schema.
+    """
+    schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
+    schema.assertValid(tree.getroot())
+
