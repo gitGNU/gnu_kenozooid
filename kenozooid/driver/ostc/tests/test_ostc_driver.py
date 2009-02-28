@@ -62,6 +62,7 @@ class UDDFTestCase(unittest.TestCase):
         # five dives
         self.assertEquals(5, len(tree.xpath('//repetitiongroup/dive')))
 
-        #data = tree.xpath('//repetitiongroup/dive[0]/samples/waypoint')
-        #self.assertEquals(5, len(data))
+        # 217 samples for first dive
+        data = tree.xpath('//repetitiongroup/dive[1]/samples/waypoint')
+        self.assertEquals(217, len(data))
 

@@ -115,6 +115,7 @@ class ParserTestCase(unittest.TestCase):
         h, p = profile[0]
         header = ostc_parser.header(h)
         dive = tuple(ostc_parser.dive_data(header, p))
+        self.assertEquals(217, len(div))
 
         self.assertAlmostEquals(3.0, dive[0].depth, 0.001)
         self.assertFalse(dive[0].alarm)
