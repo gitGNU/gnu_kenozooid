@@ -102,7 +102,7 @@
     <xs:complexContent>
       <xs:extension base="UDDF_ROOT">
 	<xs:sequence>
-	  <xs:element name="name" type="xs:string">
+	  <xs:element name="name" type="xs:string" minOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;name&gt; the name (e.g. of a piece of equipment
