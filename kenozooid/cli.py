@@ -24,12 +24,14 @@ Commmand line user interface.
 
 import logging
 import sys
+import lxml.etree as et
 
 from kenozooid.component import query, params
 from kenozooid.simulation import simulate
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, \
     DeviceError, find_driver
 from kenozooid.util import save
+import kenozooid.uddf
 
 
 def cmd_list(parser, options, args):
@@ -108,9 +110,25 @@ def cmd_convert(parser, options, args):
     Implementation of file conversion command. The command handles all
     supported data formats like dive computer memory dumps and UDDF.
     """
-    # not implemented yet
-    parser.print_help()
-    sys.exit(2)
+    if len(args) != 3:
+        parser.print_help()
+        sys.exit(2)
+
+    # create uddf file
+    tree = kenozooid.uddf.create()
+
+    # convert ostc dump to uddf (so far only ostc dump is supported, in the
+    # future dump format detection and converter finding need to happen
+    # here)
+    cls = query(MemoryDump, id='ostc').next()
+    dumper = cls()
+    with open(args[1]) as f:
+        dumper.convert(f, tree)
+    kenozooid.uddf.validate(tree)
+
+    with open(args[2], 'w') as f:
+        data = et.tostring(tree, pretty_print=True)
+        f.write(data)
 
 
 # map cli command names to command functions
