@@ -3797,13 +3797,13 @@
 	    </xs:annotation>
 	  </xs:element>
 
-	  <xs:element name="date" type="dateType" minOccurs="0">
+	  <xs:element name="date" type="dateType" minOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="time" type="timeType" minOccurs="0">
+	  <xs:element name="time" type="timeType" minOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 	      </xs:documentation>

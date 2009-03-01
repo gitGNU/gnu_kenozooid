@@ -66,4 +66,12 @@ class UDDFTestCase(unittest.TestCase):
         data = tree.xpath('//repetitiongroup/dive[1]/samples/waypoint')
         self.assertEquals(217, len(data))
 
+        date = tree.xpath('//repetitiongroup/dive[1]/date')[0]
+        self.assertEquals('2009', date[0].text)
+        self.assertEquals('1', date[1].text)
+        self.assertEquals('30', date[2].text)
+        date = tree.xpath('//repetitiongroup/dive[1]/time')[0]
+        self.assertEquals('23', date[0].text)
+        self.assertEquals('27', date[1].text)
+
         validate(tree)

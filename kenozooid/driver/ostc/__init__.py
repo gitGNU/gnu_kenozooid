@@ -33,6 +33,7 @@ import logging
 import math
 from lxml import etree as et
 from lxml.builder import E
+from datetime import datetime, timedelta
 from serial import Serial, SerialException
 
 log = logging.getLogger('kenozooid.driver.ostc')
@@ -172,9 +173,8 @@ class OSTCMemoryDump(object):
             header = ostc_parser.header(h)
             dive_data = ostc_parser.dive_data(header, p)
 
-            #from datetime import datetime, timedelta
-            #start_time = datetime(2000 + header.year, header.month, header.day) \
-            #    - timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
+            st = datetime(2000 + header.year, header.month, header.day) \
+                - timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
             wps = []
             for i, sample in enumerate(dive_data):
@@ -186,7 +186,18 @@ class OSTCMemoryDump(object):
                     xml.append(E.temperature('%.2f' % (273.15 - sample.temp)))
                 wps.append(E.waypoint(*xml))
 
-            nodes.append(E.dive(E.samples(*wps)))
+            nodes.append(E.dive(
+                E.date(
+                    E.year('%s' % st.year),
+                    E.month('%s' % st.month),
+                    E.day('%s' % st.day)
+                ),
+                E.time(
+                    E.hour('%s' % st.hour),
+                    E.minute('%s' % st.minute)
+                ),
+                E.samples(*wps))
+            )
                     
         node = tree.xpath('profiledata')[0]
         rg = E.repetitiongroup(*nodes)
