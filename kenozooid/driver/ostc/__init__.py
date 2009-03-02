@@ -40,6 +40,7 @@ log = logging.getLogger('kenozooid.driver.ostc')
 
 from kenozooid.component import inject
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
+from kenozooid.units import C2K
 import parser as ostc_parser
 
 
@@ -183,7 +184,7 @@ class OSTCMemoryDump(object):
                     E.divetime(str(i * header.sampling))
                 ]
                 if sample.temp is not None:
-                    xml.append(E.temperature('%.2f' % (273.15 - sample.temp)))
+                    xml.append(E.temperature('%.2f' % C2K(sample.temp)))
                 wps.append(E.waypoint(*xml))
 
             nodes.append(E.dive(
