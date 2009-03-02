@@ -142,7 +142,7 @@
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="diver" type="diverType" minOccurs="0">
+	  <xs:element name="diver" type="diverType">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside the &lt;diver&gt; section all known data of the
@@ -968,6 +968,11 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:simpleType name="wordType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\w.*"/>
+    </xs:restriction>
+  </xs:simpleType> 
 
   <xs:simpleType name="dominanceType">
     <xs:annotation>
@@ -2265,7 +2270,7 @@
     <xs:complexContent>
       <xs:extension base="UDDF_ROOT">
 	<xs:sequence>
-	  <xs:element name="firstname" type="xs:string" minOccurs="0">
+	  <xs:element name="firstname" type="wordType">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;firstname&gt; the first name of a person is
@@ -2273,7 +2278,7 @@
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="middlename" type="xs:string" minOccurs="0">
+	  <xs:element name="middlename" type="wordType" minOccurs="0" maxOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;middlename&gt; the second Christian name of a
@@ -2281,28 +2286,28 @@
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="lastname" type="xs:string" minOccurs="0">
+	  <xs:element name="lastname" type="wordType">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;lastname&gt; a person's last name is given.
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="title" type="xs:string" minOccurs="0">
+	  <xs:element name="title" type="wordType" minOccurs="0" maxOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;title&gt; all titles of a person are given.
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="sex" type="sexType" minOccurs="0">
+	  <xs:element name="sex" type="sexType" minOccurs="0" maxOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;sex&gt; the sex of a person is given.
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="birthdate" type="encapsulatedDateType" minOccurs="0">
+	  <xs:element name="birthdate" type="encapsulatedDateType" minOccurs="0" maxOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;birthdate&gt; the date of birh of a person
@@ -2310,7 +2315,7 @@
 	      </xs:documentation>
 	    </xs:annotation>
 	  </xs:element>
-	  <xs:element name="passport" type="passportType" minOccurs="0">
+	  <xs:element name="passport" type="passportType" minOccurs="0" maxOccurs="1">
 	    <xs:annotation>
 	      <xs:documentation xml:lang="en">
 		Inside &lt;passport&gt; the number of the passport is
