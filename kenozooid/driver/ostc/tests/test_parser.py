@@ -117,18 +117,18 @@ class ParserTestCase(unittest.TestCase):
         dive = tuple(ostc_parser.dive_data(header, p))
         self.assertEquals(217, len(dive))
 
-        self.assertAlmostEquals(3.0, dive[0].depth, 0.001)
+        self.assertAlmostEquals(3.0, dive[0].depth, 3)
         self.assertFalse(dive[0].alarm)
-        self.assertAlmostEquals(23.0, dive[1].depth, 0.001)
+        self.assertAlmostEquals(23.0, dive[1].depth, 3)
         self.assertFalse(dive[1].alarm)
 
-        self.assertAlmostEquals(29.5, dive[5].temp, 0.001)
+        self.assertAlmostEquals(29.5, dive[5].temp, 3)
         self.assertEquals(5, dive[5].alarm)
         self.assertEquals(2, dive[5].current_gas)
         self.assertEquals(0, dive[5].deco_depth)
         self.assertEquals(7, dive[5].deco_time)
 
-        self.assertAlmostEquals(29.0, dive[23].temp, 0.001)
+        self.assertAlmostEquals(29.0, dive[23].temp, 3)
         self.assertFalse(dive[23].alarm)
         self.assertFalse(dive[23].current_gas)
         self.assertEquals(3, dive[23].deco_depth)
