@@ -20,6 +20,8 @@
 
 from lxml import etree as et
 from datetime import datetime
+import pwd
+import os
 
 GENERATOR = """
 <generator>
@@ -39,7 +41,18 @@ NSMAP = {
 }
 
 def create():
+    """
+    Create UDDF file for dive profile data.
+    """
     now = datetime.now()
+
+    name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(' ', 1)
+    if len(name) == 1:
+        fn = name
+        ln = name
+    else:
+        fn, ln = name
+
     root = et.Element('{%(uddf)s}uddf' % NSMAP, version='2.2.0', nsmap=NSMAP)
     generator = et.XML(GENERATOR % {
         'version': '0.1',
@@ -50,7 +63,14 @@ def create():
         'minute': now.minute,
     })
     root.append(generator)
-    profile = et.SubElement(root, 'profiledata')
+    el = et.SubElement(root, 'diver')
+    el = et.SubElement(el, 'owner')
+    el = et.SubElement(el, 'personal')
+    el1 = et.SubElement(el, 'firstname')
+    el1.text = fn
+    el2 = et.SubElement(el, 'lastname')
+    el2.text = ln
+    et.SubElement(root, 'profiledata')
     tree = et.ElementTree(root)
     return tree
 
