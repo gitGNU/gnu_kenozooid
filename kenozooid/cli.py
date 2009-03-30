@@ -32,6 +32,7 @@ from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, \
     DeviceError, find_driver
 from kenozooid.util import save
 import kenozooid.uddf
+import kenozooid.plot
 
 
 def cmd_list(parser, options, args):
@@ -131,6 +132,20 @@ def cmd_convert(parser, options, args):
         f.write(data)
 
 
+def cmd_plot(parser, options, args):
+    """
+    Implementation of dive profile plotting command.
+    """
+    if len(args) != 3:
+        parser.print_help()
+        sys.exit(2)
+
+    finput = args[1]
+    foutput = args[2]
+
+    kenozooid.plot.plot(finput, foutput)
+
+
 # map cli command names to command functions
 COMMANDS = {
     'list': cmd_list,
@@ -138,5 +153,6 @@ COMMANDS = {
     'simulate': cmd_simulate,
     'dump': cmd_dump,
     'convert': cmd_convert,
+    'plot': cmd_plot,
 }
 
