@@ -110,7 +110,7 @@ def dive_data(header, data):
         i += 1
         size, event = flag_byte(pfb)
         log.debug('sample %d info: depth = %.2f, pfb = %s, %s',
-                (j, depth, hex(pfb), map(hex, map(ord, data[i:i+size]))))
+                j, depth, hex(pfb), map(hex, map(ord, data[i:i+size])))
 
         alarm = None
         gas_set = 0
