@@ -41,7 +41,7 @@ DiveHeader = namedtuple('DiveHeader', """\
 start version month day year hour minute max_depth dive_time_m dive_time_s
 min_temp surface_pressure desaturation gas1 gas2 gas3 gas4 gas5 gas6 gas
 ver1 ver2 voltage sampling div_temp div_deco div_tank div_ppo2
-div_res1 div_res2 spare end
+div_deco_debug div_res2 spare end
 """)
 FMT_DIVE_HEADER = '<H6BHHB' 'HHH6HB' 'BBHB4B' 'BBHH'
 
@@ -94,9 +94,11 @@ def dive_data(header, data):
     div_deco_s, div_deco_c = divisor(header.div_deco)
     div_tank_s, div_tank_c = divisor(header.div_tank)
     div_ppo2_s, div_ppo2_c = divisor(header.div_ppo2)
+    div_deco_debug_s, div_deco_debug_c = divisor(header.div_deco_debug)
 
-    log.debug('header divisor values %x %x %x %x' % (header.div_temp, header.div_deco,
-            header.div_tank, header.div_ppo2))
+    log.debug('header divisor values %x %x %x %x %x' % (header.div_temp,
+        header.div_deco, header.div_tank, header.div_ppo2,
+        header.div_deco_debug))
 
     i = 0
     j = 1 # sample number 
@@ -164,11 +166,18 @@ def dive_data(header, data):
         if ppo2 is not None:
             i += div_ppo2_c
             div_bytes += div_ppo2_c
+
+        deco_debug = sample_data(data, i, j, div_deco_debug_s, div_deco_debug_c)
+        if deco_debug is not None:
+            i += div_deco_debug_c
+            div_bytes += div_deco_debug_c
             
         assert size == event + gas_set + gas_change + div_bytes, \
             'sample = %d, depth = %.2f, pfb = 0x%x, size = %d, event = %d,' \
-            ' alarm = %s, temp = %s, gas_set = %d, gas_change = %d, div_bytes = %d' \
-                    % (j, depth, pfb, size, event, alarm, temp, gas_set, gas_change, div_bytes)
+            ' alarm = %s, temp = %s, gas_set = %d, gas_change = %d,' \
+            ' div_bytes = %d, deco_debug = %s' \
+                    % (j, depth, pfb, size, event, alarm, temp, gas_set,
+                            gas_change, div_bytes, map(hex, map(ord, deco_debug)))
 
         yield DiveSample(depth, alarm, gas_set_o2, gas_set_he, current_gas,
                 temp, deco_depth, deco_time, tank, ppo2)
