@@ -73,7 +73,7 @@ def plot(finput, foutput):
     ax_depth.legend(loc='lower right', shadow=True)
     ax_depth.grid(True)
 
-    times = [int(float(s[1].text) / 60) for s in samples if len(s) == 3]
+    times = [float(s[1].text) / 60 for s in samples if len(s) == 3]
     temps = [float(s[2].text) - 273.15 for s in samples if len(s) == 3]
     ax_temp.set_ylim(math.floor(min(temps)), math.ceil(max(temps)))
     ax_temp.plot(times, temps)
