@@ -50,8 +50,8 @@ def plot(finput, foutput):
     f.close()
 
     samples = tree.xpath('//dive[1]//waypoint') 
-    depths = [int(float(s[0].text)) for s in samples]
-    times = [int(float(s[1].text) / 60) for s in samples]
+    depths = [float(s[0].text) for s in samples]
+    times = [float(s[1].text) / 60 for s in samples]
 
     left, width = 0.10, 0.85
     rect1 = [left, 0.25, width, 0.7]
@@ -68,8 +68,8 @@ def plot(finput, foutput):
     ymin, ymax = ax_depth.get_ylim()
     ax_depth.set_ylim([ymax, ymin])
 
-    ax_depth.set_xlabel('time [min]')
-    ax_depth.set_ylabel('depth [m]')
+    ax_depth.set_xlabel('Time [min]')
+    ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
     ax_depth.grid(True)
 
