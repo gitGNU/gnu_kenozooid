@@ -31,25 +31,23 @@ matplotlib.use('cairo')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-def plot(finput, foutput):
+def plot_dive(tree, no, fout):
     """
     Plot dive profile graph using Matplotlib library.
-    
-    Data is fetched from UDDF file and saved into graphical file. Type of
-    graphical file depends on output file extension and is handled by
-    Matplotlib library.
+
+    Dive data are fetched from parsed UDDF file (using ETree) and graph is
+    saved into graphical file. Type of graphical file depends on output
+    file extension and is handled by Matplotlib library.
 
     :Parameters:
-     finput
-        UDDF file containing dive profile.
-     foutput
-        Output, graphical file.
+     tree
+        XML file parsed with ETree API.
+     no
+        Number of dive to be plotted.
+     fout
+        Output filename.
     """
-    f = open(finput)
-    tree = etree.parse(f)
-    f.close()
-
-    samples = tree.xpath('//dive[1]//waypoint') 
+    samples = tree.xpath('//dive[%d]//waypoint' % no)
     depths = [float(s[0].text) for s in samples]
     times = [float(s[1].text) / 60 for s in samples]
 
@@ -89,6 +87,27 @@ def plot(finput, foutput):
     ax_temp.grid(True)
     ax_temp.yaxis.set_major_locator(MaxNLocator(4))
 
-    plt.savefig(foutput)
+    # save dive plot and clear matplotlib space
+    plt.savefig(fout, papertype='a4')
+    plt.clf()
 
+
+def plot(fin, fout):
+    """
+    Plot graphs of dive profiles using Matplotlib library.
+    
+    :Parameters:
+     fin
+        UDDF file containing dive profile.
+     fout
+        Output, graphical file.
+    """
+    f = open(fin)
+    tree = etree.parse(f)
+    f.close()
+
+    dives = len(tree.xpath('//dive'))
+    for i in range(dives):
+        k = i + 1
+        plot_dive(tree, k, fout.replace('.', '-%03d.' % k))
 
