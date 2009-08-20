@@ -174,8 +174,12 @@ class OSTCMemoryDump(object):
             header = ostc_parser.header(h)
             dive_data = ostc_parser.dive_data(header, p)
 
-            st = datetime(2000 + header.year, header.month, header.day) \
-                - timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
+            # set time of the start of dive
+            st = datetime(2000 + header.year, header.month, header.day,
+                    header.hour, header.minute)
+            # ostc dive computer saves time at the end of dive in its
+            # memory, so substract the dive time
+            st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
             wps = []
             for i, sample in enumerate(dive_data):
