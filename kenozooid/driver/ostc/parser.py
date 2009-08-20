@@ -81,7 +81,8 @@ def header(data):
     Parse OSTC dive profile header, see `DiveHeader` named tuple.
     """
     header = DiveHeader._make(unpack(FMT_DIVE_HEADER, data))
-    log.debug('parsed dive header {0.year:>02d}/{0.month:>02d}/{0.day:>02d},' \
+    log.debug('parsed dive header {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
+        ' {0.hour:>02d}:{0.minute:>02d}' \
         ' max depth {0.max_depth}'.format(header))
     return header
 
