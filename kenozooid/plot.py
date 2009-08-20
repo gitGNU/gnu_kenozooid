@@ -89,7 +89,7 @@ def plot_dive(tree, no, fout):
     ax_depth.text(0.75, 0.1,
         u'time: %.2fmin\ndepth: %.2fm\nT: %.2f\u00b0C' \
             % (times[-1], max(depths), min(temps)),
-        transform=ax_depth.transAxes, fontsize=9,
+        transform=ax_depth.transAxes,
         bbox=dict(facecolor='white', edgecolor='none'))
     ax_depth.grid(True)
 
