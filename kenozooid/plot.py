@@ -87,8 +87,9 @@ def plot_dive(tree, no, fout):
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
     ax_depth.text(0.75, 0.1,
-        u'time: %.2fmin\ndepth: %.2fm\nT: %.2f\u00b0C' \
+        u't = %.2fmin\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
             % (times[-1], max(depths), min(temps)),
+        family='monospace',
         transform=ax_depth.transAxes,
         bbox=dict(facecolor='white', edgecolor='none'))
     ax_depth.grid(True)
