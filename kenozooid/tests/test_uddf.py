@@ -23,9 +23,11 @@ UDDF file format tests.
 """
 
 import unittest
+from lxml import etree
+from datetime import datetime
+from StringIO import StringIO
 
-from kenozooid.uddf import create
-import xml.etree.ElementTree as et
+from kenozooid.uddf import create, get_time
 
 class UDDFTestCase(unittest.TestCase):
     """
@@ -35,8 +37,28 @@ class UDDFTestCase(unittest.TestCase):
         """Test UDDF creation
         """
         tree = create()
-        data = et.tostring(tree.getroot())
+        data = etree.tostring(tree.getroot())
         self.assertTrue('2.2.0' in data)
         self.assertTrue('Kenozooid' in data)
+
+
+    def test_time_parsing(self):
+        """Test UDDF time parsing
+        """
+        tree = etree.parse(StringIO("""
+<dive>
+    <date>
+        <year>2009</year>
+        <month>3</month>
+        <day>2</day>
+    </date>
+    <time>
+        <hour>23</hour>
+        <minute>2</minute>
+    </time>
+</dive>
+"""))
+        dt = get_time(tree.xpath('/dive')[0])
+        self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
 
 

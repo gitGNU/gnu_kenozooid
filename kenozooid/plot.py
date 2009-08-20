@@ -31,6 +31,9 @@ matplotlib.use('cairo')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
+from kenozooid.uddf import get_time
+
+
 def plot_dive(tree, no, fout):
     """
     Plot dive profile graph using Matplotlib library.
@@ -51,6 +54,8 @@ def plot_dive(tree, no, fout):
     depths = [float(s[0].text) for s in samples]
     times = [float(s[1].text) / 60 for s in samples]
 
+    dive_time = get_time(tree.xpath('//dive[%d]' % no)[0])
+
     left, width = 0.10, 0.85
     rect1 = [left, 0.25, width, 0.7]
     rect2 = [left, 0.05, width, 0.10]
@@ -66,6 +71,7 @@ def plot_dive(tree, no, fout):
     ymin, ymax = ax_depth.get_ylim()
     ax_depth.set_ylim([ymax, ymin])
 
+    ax_depth.set_title('%s' % dive_time)
     ax_depth.set_xlabel('Time [min]')
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)

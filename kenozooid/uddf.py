@@ -82,3 +82,21 @@ def validate(tree):
     schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
     schema.assertValid(tree.getroot())
 
+
+
+def get_time(node):
+    """
+    Get datetime instance from XML node parsed from UDDF file.
+
+    :Parameters:
+     node
+        Parsed XML node.
+    """
+    year = int(node.xpath('date/year')[0].text)
+    month = int(node.xpath('date/month')[0].text)
+    day = int(node.xpath('date/day')[0].text)
+    hour = int(node.xpath('time/hour')[0].text)
+    minute = int(node.xpath('time/minute')[0].text)
+    return datetime(year, month, day, hour, minute)
+
+
