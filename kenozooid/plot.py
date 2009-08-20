@@ -20,6 +20,15 @@
 
 """
 Plot dive profile graph.
+
+Basic dive information is shown
+
+- time of the dive
+- maximum depth
+- temperature
+
+Showing any statistical information (like average temperature or depth) is
+out of scope, now.
 """
 
 from lxml import etree
@@ -53,6 +62,8 @@ def plot_dive(tree, no, fout):
     samples = tree.xpath('//dive[%d]//waypoint' % no)
     depths = [float(s[0].text) for s in samples]
     times = [float(s[1].text) / 60 for s in samples]
+    temps = [float(s[2].text) - 273.15 for s in samples if len(s) == 3]
+    temp_times = [float(s[1].text) / 60 for s in samples if len(s) == 3]
 
     dive_time = get_time(tree.xpath('//dive[%d]' % no)[0])
 
@@ -75,19 +86,16 @@ def plot_dive(tree, no, fout):
     ax_depth.set_xlabel('Time [min]')
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
+    ax_depth.text(0.75, 0.1,
+        u'time: %.2fmin\ndepth: %.2fm\nT: %.2f\u00b0C' \
+            % (times[-1], max(depths), min(temps)),
+        transform=ax_depth.transAxes, fontsize=9,
+        bbox=dict(facecolor='white', edgecolor='none'))
     ax_depth.grid(True)
 
-    times = [float(s[1].text) / 60 for s in samples if len(s) == 3]
-    temps = [float(s[2].text) - 273.15 for s in samples if len(s) == 3]
     ax_temp.set_ylim(math.floor(min(temps)), math.ceil(max(temps)))
-    ax_temp.plot(times, temps)
-    ax_temp.text(0.58, 0.1,
-        # \u2103
-        u'min: %.2f\u00b0C  max: %.2f\u00b0C  avg: %.2f\u00b0C' % (min(temps), max(temps), sum(temps)/len(temps)),
-        transform=ax_temp.transAxes, fontsize=9,
-        bbox=dict(facecolor='white', edgecolor='none'))
     ax_temp.set_ylabel(u'T [\u00b0C]')
-    #ax_temp.set_yticks([round(min(temps), 2), round(sum(temps)/len(temps), 2), round(max(temps), 2)])
+    ax_temp.plot(temp_times, temps)
     for l in ax_temp.get_yticklabels():
         l.set_fontsize(9) 
     ax_temp.grid(True)
