@@ -101,7 +101,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(38, header.div_deco)
         self.assertEquals(32, header.div_tank)
         self.assertEquals(48, header.div_ppo2)
-        self.assertEquals(0, header.div_res1)
+        self.assertEquals(0, header.div_deco_debug)
         self.assertEquals(0, header.div_res2)
         self.assertEquals(0, header.spare)
 
