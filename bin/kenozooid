@@ -59,6 +59,19 @@ group.add_option('--no-stop',
         help='don\'t stop simulation, leave dive computer in simulation mode')
 parser.add_option_group(group)
 
+group = optparse.OptionGroup(parser, 'Dive Profile Plotting Options')
+group.add_option('--no-title',
+        action='store_false',
+        dest='plot_title',
+        default=True,
+        help='don\'t display plot title')
+group.add_option('--no-info',
+        action='store_false',
+        dest='plot_info',
+        default=True,
+        help='don\'t display dive information (depth, time, temperature)')
+parser.add_option_group(group)
+
 options, args = parser.parse_args()
 
 # configure basic logger

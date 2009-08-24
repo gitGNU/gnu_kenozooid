@@ -57,7 +57,7 @@ def min2str(s):
     return '%02d:%02d' % (int(s), math.modf(s)[0] * 60)
 
 
-def plot_dive(tree, no, fout):
+def plot_dive(tree, no, fout, title=True, info=True):
     """
     Plot dive profile graph using Matplotlib library.
 
@@ -72,6 +72,10 @@ def plot_dive(tree, no, fout):
         Number of dive to be plotted.
      fout
         Output filename.
+     title
+        Set plot title.
+     info
+        Display dive information (time, depth, temperature).
     """
     samples = tree.xpath('//dive[%d]//waypoint' % no)
     depths = [float(s[0].text) for s in samples]
@@ -96,16 +100,18 @@ def plot_dive(tree, no, fout):
     ymin, ymax = ax_depth.get_ylim()
     ax_depth.set_ylim([ymax, ymin])
 
-    ax_depth.set_title('%s' % dive_time)
+    if title:
+        ax_depth.set_title('%s' % dive_time)
     ax_depth.set_xlabel('Time [min]')
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
-    ax_depth.text(0.8, 0.1,
-        u't = %s\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
-            % (min2str(times[-1]), max(depths), min(temps)),
-        family='monospace',
-        transform=ax_depth.transAxes,
-        bbox=dict(facecolor='white', edgecolor='none'))
+    if info:
+        ax_depth.text(0.8, 0.1,
+            u't = %s\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
+                % (min2str(times[-1]), max(depths), min(temps)),
+            family='monospace',
+            transform=ax_depth.transAxes,
+            bbox=dict(facecolor='white', edgecolor='none'))
     ax_depth.grid(True)
 
     ax_temp.set_ylim(math.floor(min(temps)), math.ceil(max(temps)))
@@ -121,7 +127,7 @@ def plot_dive(tree, no, fout):
     plt.clf()
 
 
-def plot(fin, fout):
+def plot(fin, fout, title=True, info=True):
     """
     Plot graphs of dive profiles using Matplotlib library.
     
@@ -130,6 +136,10 @@ def plot(fin, fout):
         UDDF file containing dive profile.
      fout
         Output, graphical file.
+     title
+        Set plot title.
+     info
+        Display dive information (time, depth, temperature).
     """
     f = open(fin)
     tree = etree.parse(f)
@@ -138,5 +148,5 @@ def plot(fin, fout):
     dives = len(tree.xpath('//dive'))
     for i in range(dives):
         k = i + 1
-        plot_dive(tree, k, fout.replace('.', '-%03d.' % k))
+        plot_dive(tree, k, fout.replace('.', '-%03d.' % k), title, info)
 

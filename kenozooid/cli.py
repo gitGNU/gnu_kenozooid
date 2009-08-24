@@ -140,10 +140,10 @@ def cmd_plot(parser, options, args):
         parser.print_help()
         sys.exit(2)
 
-    finput = args[1]
-    foutput = args[2]
+    fin = args[1]
+    fout = args[2]
 
-    kenozooid.plot.plot(finput, foutput)
+    kenozooid.plot.plot(fin, fout, options.plot_title, options.plot_info)
 
 
 # map cli command names to command functions
