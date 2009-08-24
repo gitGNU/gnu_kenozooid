@@ -115,7 +115,8 @@ class ParserTestCase(unittest.TestCase):
         h, p = profile[0]
         header = ostc_parser.header(h)
         dive = tuple(ostc_parser.dive_data(header, p))
-        self.assertEquals(217, len(dive))
+        # 217 samples, but dive time is 32:09 (sampling 10)
+        self.assertEquals(193, len(dive))
 
         self.assertAlmostEquals(3.0, dive[0].depth, 3)
         self.assertFalse(dive[0].alarm)

@@ -101,6 +101,8 @@ def dive_data(header, data):
         header.div_deco, header.div_tank, header.div_ppo2,
         header.div_deco_debug))
 
+    dive_total_time = header.dive_time_m * 60 + header.dive_time_s
+
     i = 0
     j = 1 # sample number 
     while i < len(data) - 2: # skip profile block data end
@@ -180,9 +182,10 @@ def dive_data(header, data):
                     % (j, depth, pfb, size, event, alarm, temp, gas_set,
                             gas_change, div_bytes, map(hex, map(ord, deco_debug)))
 
-        yield DiveSample(depth, alarm, gas_set_o2, gas_set_he, current_gas,
-                temp, deco_depth, deco_time, tank, ppo2)
-
+        # is a sample within dive total time? if not, then skip sample
+        if header.sampling * (j - 1) <= dive_total_time:
+            yield DiveSample(depth, alarm, gas_set_o2, gas_set_he, current_gas,
+                    temp, deco_depth, deco_time, tank, ppo2)
         j += 1
 
     assert data[i:i + 2] == '\xfd\xfd'
