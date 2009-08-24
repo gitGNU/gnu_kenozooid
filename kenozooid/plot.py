@@ -107,7 +107,7 @@ def plot_dive(tree, no, fout, title=True, info=True):
     ax_depth.legend(loc='lower right', shadow=True)
     if info:
         ax_depth.text(0.8, 0.1,
-            u't = %s\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
+            u't = %s\n\u21a7 = %.2fm\nT = %.1f\u00b0C' \
                 % (min2str(times[-1]), max(depths), min(temps)),
             family='monospace',
             transform=ax_depth.transAxes,
