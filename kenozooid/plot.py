@@ -44,6 +44,19 @@ from kenozooid.uddf import get_time
 from kenozooid.units import K2C
 
 
+def min2str(s):
+    """
+    Convert decimal minutes (i.e. 38.84) into MM:SS string (i.e. 38:50).
+
+    >>> min2str(38.84)
+    '38:50'
+
+    >>> min2str(67.20)
+    '67:12'
+    """
+    return '%02d:%02d' % (int(s), math.modf(s)[0] * 60)
+
+
 def plot_dive(tree, no, fout):
     """
     Plot dive profile graph using Matplotlib library.
@@ -88,8 +101,8 @@ def plot_dive(tree, no, fout):
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
     ax_depth.text(0.75, 0.1,
-        u't = %.2fmin\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
-            % (times[-1], max(depths), min(temps)),
+        u't = %s\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
+            % (min2str(times[-1]), max(depths), min(temps)),
         family='monospace',
         transform=ax_depth.transAxes,
         bbox=dict(facecolor='white', edgecolor='none'))
