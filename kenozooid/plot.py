@@ -100,7 +100,7 @@ def plot_dive(tree, no, fout):
     ax_depth.set_xlabel('Time [min]')
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
-    ax_depth.text(0.75, 0.1,
+    ax_depth.text(0.8, 0.1,
         u't = %s\n\u21a7 = %.2fm\nT = %.2f\u00b0C' \
             % (min2str(times[-1]), max(depths), min(temps)),
         family='monospace',
