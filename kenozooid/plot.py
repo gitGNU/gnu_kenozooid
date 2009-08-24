@@ -41,6 +41,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
 from kenozooid.uddf import get_time
+from kenozooid.units import K2C
 
 
 def plot_dive(tree, no, fout):
@@ -62,7 +63,7 @@ def plot_dive(tree, no, fout):
     samples = tree.xpath('//dive[%d]//waypoint' % no)
     depths = [float(s[0].text) for s in samples]
     times = [float(s[1].text) / 60 for s in samples]
-    temps = [float(s[2].text) - 273.15 for s in samples if len(s) == 3]
+    temps = [K2C(float(s[2].text)) for s in samples if len(s) == 3]
     temp_times = [float(s[1].text) / 60 for s in samples if len(s) == 3]
 
     dive_time = get_time(tree.xpath('//dive[%d]' % no)[0])

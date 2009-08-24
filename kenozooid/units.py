@@ -29,4 +29,8 @@ def C2K(t):
     return t + 273.15
 
 
-
+def K2C(t):
+    """
+    Convert temperature from Kelvin to Celsius.
+    """
+    return t - 273.15

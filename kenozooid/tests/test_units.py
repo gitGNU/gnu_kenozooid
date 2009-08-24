@@ -30,3 +30,9 @@ class TemperatureTestCase(unittest.TestCase):
         self.assertAlmostEquals(282.05, C2K(8.9), 3)
 
 
+    def test_k2c(self):
+        """Test Kelvin to Celsius conversion
+        """
+        self.assertAlmostEquals(C2K(21), 294.15, 3)
+        self.assertAlmostEquals(C2K(8.9), 282.05, 3)
+
