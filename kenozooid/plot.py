@@ -133,7 +133,7 @@ def plot_dive(tree, no, fout, title=True, info=True, temp=True):
     plt.clf()
 
 
-def plot(fin, fout, title=True, info=True, temp=True):
+def plot(fin, fout, dives=None, title=True, info=True, temp=True):
     """
     Plot graphs of dive profiles using Matplotlib library.
     
@@ -148,13 +148,18 @@ def plot(fin, fout, title=True, info=True, temp=True):
         Display dive information (time, depth, temperature).
      temp
         Plot temperature graph.
+     dives
+        Dives to be plotted.
     """
     f = open(fin)
     tree = etree.parse(f)
     f.close()
 
-    dives = len(tree.xpath('//dive'))
-    for i in range(dives):
-        k = i + 1
-        plot_dive(tree, k, fout.replace('.', '-%03d.' % k), title, info, temp)
+    n = len(tree.xpath('//dive'))
+    if dives is None:
+        dives = range(1, n + 1)
+    for i in dives:
+        plot_dive(tree, i, fout.replace('.', '-%03d.' % i), title, info, temp)
+        if i == n: # dive range can be out of count of dives, pass then silently
+            break
 

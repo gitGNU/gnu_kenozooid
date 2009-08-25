@@ -30,7 +30,7 @@ usage = """
     %prog [options] simulate <dev id> <dive plan>
     %prog [options] dump <dev id> <filename>
     %prog [options] convert <file1> <file2>
-    %prog [options] plot <file1> <file2>
+    %prog [options] plot <file1> [dives] <file2>
 
 Commands Description:
     list - list available drivers and their capabilities
@@ -38,7 +38,8 @@ Commands Description:
     simulate - simulate dive
     dump - dump dive computer memory (logbook, settings, etc.)
     convert - convert dive computer memory dump into UDDF format
-    plot - plot dive profile graph
+    plot - plot dive profile graph with optional dive range, i.e. 1-3,6
+           plots dive 1, 2, 3 and 6
 """
 
 parser = optparse.OptionParser(usage=usage)

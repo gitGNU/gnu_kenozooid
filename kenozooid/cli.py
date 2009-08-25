@@ -34,6 +34,47 @@ from kenozooid.util import save
 import kenozooid.uddf
 import kenozooid.plot
 
+class RangeError(ValueError): pass
+
+def parse_range(s, infinity=100):
+    """
+    Parse textual representation of number range.
+
+    Example of a range
+
+    >>> parse_range('1-3,5')
+    (1, 2, 3, 5)
+
+    Example of infinite range
+
+    >>> parse_range('20-') # doctest:+ELLIPSIS
+    (20, 21, 22, ..., 99, 100)
+
+    :Parameters:
+     s
+        Textual representation of number range.
+     infinity
+        Maximum value when infinite range is specified.
+    """
+    def toint(d):
+        try:
+            return int(d)
+        except ValueError, ex:
+            raise RangeError('Invalid range %s' % s)
+
+    data = []
+    for r in s.split(','):
+        d = r.split('-')
+        if len(d) == 1:
+            data.append(toint(d[0]))
+        elif len(d) == 2:
+            a = toint(d[0])
+            b = infinity if d[1].strip() == '' else toint(d[1])
+            data.extend(range(a, b + 1))
+        else:
+            raise RangeError('Invalid range %s' % s)
+    return tuple(data)
+
 
 def cmd_list(parser, options, args):
     drivers = query(DeviceDriver)
@@ -136,15 +177,23 @@ def cmd_plot(parser, options, args):
     """
     Implementation of dive profile plotting command.
     """
-    if len(args) != 3:
+    if len(args) != 3 and len(args) != 4:
         parser.print_help()
         sys.exit(2)
 
-    fin = args[1]
-    fout = args[2]
+    if len(args) == 3:
+        fin = args[1]
+        fout = args[2]
+        dives = None
+    else:
+        fin =args[1]
+        dives = parse_range(args[2])
+        fout = args[3]
 
-    kenozooid.plot.plot(fin, fout, options.plot_title, options.plot_info,
-            options.plot_temp)
+    kenozooid.plot.plot(fin, fout, dives=dives,
+            title=options.plot_title,
+            info=options.plot_info,
+            temp=options.plot_temp)
 
 
 # map cli command names to command functions
