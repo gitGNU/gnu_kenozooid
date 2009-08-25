@@ -143,7 +143,8 @@ def cmd_plot(parser, options, args):
     fin = args[1]
     fout = args[2]
 
-    kenozooid.plot.plot(fin, fout, options.plot_title, options.plot_info)
+    kenozooid.plot.plot(fin, fout, options.plot_title, options.plot_info,
+            options.plot_temp)
 
 
 # map cli command names to command functions

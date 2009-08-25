@@ -70,6 +70,11 @@ group.add_option('--no-info',
         dest='plot_info',
         default=True,
         help='don\'t display dive information (depth, time, temperature)')
+group.add_option('--no-temp',
+        action='store_false',
+        dest='plot_temp',
+        default=True,
+        help='don\'t plot temperature graph')
 parser.add_option_group(group)
 
 options, args = parser.parse_args()
