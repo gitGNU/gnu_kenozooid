@@ -19,6 +19,7 @@
 #
 
 import os.path
+import math
 
 """
 Kenozooid utility funtions.
@@ -45,4 +46,17 @@ def save(filename, data):
             f.write(bits)
 
     return True
+
+
+def min2str(t):
+    """
+    Convert decimal minutes (i.e. 38.84) into MM:SS string (i.e. 38:50).
+
+    >>> min2str(38.84)
+    '38:50'
+
+    >>> min2str(67.20)
+    '67:12'
+    """
+    return '%02d:%02d' % (int(t), math.modf(t)[0] * 60)
 

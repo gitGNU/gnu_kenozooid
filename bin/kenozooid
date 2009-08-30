@@ -29,6 +29,7 @@ usage = """
     %prog [options] scan
     %prog [options] simulate <dev id> <dive plan>
     %prog [options] dump <dev id> <filename>
+    %prog [options] dives <file>
     %prog [options] convert <file1> <file2>
     %prog [options] plot <file1> [dives] <file2>
 
@@ -37,6 +38,7 @@ Commands Description:
     scan - scan for and display attached devices
     simulate - simulate dive
     dump - dump dive computer memory (logbook, settings, etc.)
+    dives - list dives stored in a file
     convert - convert dive computer memory dump into UDDF format
     plot - plot dive profile graph with optional dive range, i.e. 1-3,6
            plots dive 1, 2, 3 and 6

@@ -100,3 +100,21 @@ def get_time(node):
     return datetime(year, month, day, hour, minute)
 
 
+def get_dives(fin):
+    """
+    Get list of dives stored in a file.
+    :Parameters:
+     fin
+        UDDF file.
+    """
+    f = open(fin)
+    tree = et.parse(f)
+    f.close()
+    dives = tree.xpath('//dive')
+    for i, dive in enumerate(dives):
+        k = i + 1
+        samples = tree.xpath('//dive[%d]//waypoint' % k)
+        depths = [float(s[0].text) for s in samples]
+        times = [float(s[1].text) / 60 for s in samples]
+        
+        yield (k, get_time(dive), times[-1], max(depths))

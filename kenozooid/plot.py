@@ -42,19 +42,7 @@ from matplotlib.ticker import MaxNLocator
 
 from kenozooid.uddf import get_time
 from kenozooid.units import K2C
-
-
-def min2str(s):
-    """
-    Convert decimal minutes (i.e. 38.84) into MM:SS string (i.e. 38:50).
-
-    >>> min2str(38.84)
-    '38:50'
-
-    >>> min2str(67.20)
-    '67:12'
-    """
-    return '%02d:%02d' % (int(s), math.modf(s)[0] * 60)
+from kenozooid.util import min2str
 
 
 def plot_dive(tree, no, fout, title=True, info=True, temp=True):
