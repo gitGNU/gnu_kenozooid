@@ -33,6 +33,7 @@ out of scope, now.
 
 from lxml import etree
 import math
+import logging
 
 import matplotlib
 matplotlib.use('cairo')
@@ -43,6 +44,8 @@ from matplotlib.ticker import MaxNLocator
 from kenozooid.uddf import get_time
 from kenozooid.units import K2C
 from kenozooid.util import min2str
+
+log = logging.getLogger('kenozooid.plot')
 
 
 def plot_dive(tree, no, fout, title=True, info=True, temp=True):
@@ -147,7 +150,8 @@ def plot(fin, fout, dives=None, title=True, info=True, temp=True):
     if dives is None:
         dives = range(1, n + 1)
     for i in dives:
-        plot_dive(tree, i, fout.replace('.', '-%03d.' % i), title, info, temp)
-        if i == n: # dive range can be out of count of dives, pass then silently
+        if i > n: # i.e. range was 4-5 and there are only 4 dives
+            log.warn('dive number %02d does not exist' % i)
             break
+        plot_dive(tree, i, fout.replace('.', '-%03d.' % i), title, info, temp)
 
