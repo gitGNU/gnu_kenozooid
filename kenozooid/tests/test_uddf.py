@@ -58,7 +58,7 @@ class UDDFTestCase(unittest.TestCase):
     </time>
 </dive>
 """))
-        dt = get_time(tree.xpath('/dive')[0])
+        dt = get_time(tree.getroot())
         self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
 
 

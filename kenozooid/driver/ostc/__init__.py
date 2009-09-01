@@ -204,7 +204,7 @@ class OSTCMemoryDump(object):
                 E.samples(*wps))
             )
                     
-        node = tree.xpath('profiledata')[0]
+        node = tree.find('profiledata')
         rg = E.repetitiongroup(*nodes)
         node.append(et.fromstring(et.tostring(rg)))
 

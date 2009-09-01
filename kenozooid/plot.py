@@ -48,7 +48,7 @@ from kenozooid.util import min2str
 log = logging.getLogger('kenozooid.plot')
 
 
-def plot_dive(tree, no, fout, title=True, info=True, temp=True):
+def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     """
     Plot dive profile graph using Matplotlib library.
 
@@ -59,8 +59,8 @@ def plot_dive(tree, no, fout, title=True, info=True, temp=True):
     :Parameters:
      tree
         XML file parsed with ETree API.
-     no
-        Number of dive to be plotted.
+     dive
+        Dive node.
      fout
         Output filename.
      title
@@ -70,13 +70,13 @@ def plot_dive(tree, no, fout, title=True, info=True, temp=True):
      temp
         Plot temperature graph.
     """
-    samples = tree.xpath('//dive[%d]//waypoint' % no)
+    samples = dive.findall('samples/waypoint')
     depths = [float(s[0].text) for s in samples]
     times = [float(s[1].text) / 60 for s in samples]
     temps = [K2C(float(s[2].text)) for s in samples if len(s) == 3]
     temp_times = [float(s[1].text) / 60 for s in samples if len(s) == 3]
 
-    dive_time = get_time(tree.xpath('//dive[%d]' % no)[0])
+    dive_time = get_time(dive)
 
     left, width = 0.10, 0.85
     rect1 = [left, 0.25, width, 0.7]
@@ -146,12 +146,13 @@ def plot(fin, fout, dives=None, title=True, info=True, temp=True):
     tree = etree.parse(f)
     f.close()
 
-    n = len(tree.xpath('//dive'))
+    nodes = tree.findall('//dive')
+    n = len(nodes)
     if dives is None:
         dives = range(1, n + 1)
     for i in dives:
         if i > n: # i.e. range was 4-5 and there are only 4 dives
             log.warn('dive number %02d does not exist' % i)
             break
-        plot_dive(tree, i, fout.replace('.', '-%03d.' % i), title, info, temp)
+        plot_dive(tree, nodes[i - 1], fout.replace('.', '-%03d.' % i), title, info, temp)
 

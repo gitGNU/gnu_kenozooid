@@ -60,17 +60,18 @@ class UDDFTestCase(unittest.TestCase):
         dumper.convert(f, tree)
 
         # five dives
-        self.assertEquals(5, len(tree.xpath('//repetitiongroup/dive')))
+        self.assertEquals(5, len(tree.findall('//repetitiongroup/dive')))
 
         # 193 samples for first dive
-        data = tree.xpath('//repetitiongroup/dive[1]/samples/waypoint')
+        dive = tree.find('//repetitiongroup/dive')
+        data = dive.findall('samples/waypoint')
         self.assertEquals(193, len(data))
 
-        date = tree.xpath('//repetitiongroup/dive[1]/date')[0]
+        date = dive.find('date')
         self.assertEquals('2009', date[0].text)
         self.assertEquals('1', date[1].text)
         self.assertEquals('31', date[2].text)
-        date = tree.xpath('//repetitiongroup/dive[1]/time')[0]
+        date = dive.find('time')
         self.assertEquals('23', date[0].text)
         self.assertEquals('8', date[1].text)
 
