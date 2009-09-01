@@ -28,10 +28,10 @@ usage = """
     %prog [options] list
     %prog [options] scan
     %prog [options] simulate <dev id> <dive plan>
-    %prog [options] dump <dev id> <filename>
-    %prog [options] dives <file>
+    %prog [options] dump <dev id> <output>
+    %prog [options] dives <input>
     %prog [options] convert <dump1> [dump2 ...] <output>
-    %prog [options] plot <file1> [dives] <file2>
+    %prog [options] plot <input> [dives] <output>
 
 Commands Description:
     list - list available drivers and their capabilities
