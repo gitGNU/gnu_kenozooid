@@ -92,11 +92,11 @@ def get_time(node):
      node
         Parsed XML node.
     """
-    year = int(node.xpath('date/year')[0].text)
-    month = int(node.xpath('date/month')[0].text)
-    day = int(node.xpath('date/day')[0].text)
-    hour = int(node.xpath('time/hour')[0].text)
-    minute = int(node.xpath('time/minute')[0].text)
+    year = int(node.findtext('date/year'))
+    month = int(node.findtext('date/month'))
+    day = int(node.findtext('date/day'))
+    hour = int(node.findtext('time/hour'))
+    minute = int(node.findtext('time/minute'))
     return datetime(year, month, day, hour, minute)
 
 
@@ -110,10 +110,10 @@ def get_dives(fin):
     f = open(fin)
     tree = et.parse(f)
     f.close()
-    dives = tree.xpath('//dive')
+    dives = tree.findall('//dive')
     for i, dive in enumerate(dives):
         k = i + 1
-        samples = tree.xpath('//dive[%d]//waypoint' % k)
+        samples = dive.findall('samples/waypoint')
         depths = [float(s[0].text) for s in samples]
         times = [float(s[1].text) / 60 for s in samples]
         

@@ -167,9 +167,12 @@ def cmd_convert(parser, options, args):
     Implementation of file conversion command. The command handles all
     supported data formats like dive computer memory dumps and UDDF.
     """
-    if len(args) != 3:
+    if len(args) < 3:
         parser.print_help()
         sys.exit(2)
+
+    fin = args[1:-1]
+    fout = args[-1]
 
     # create uddf file
     tree = kenozooid.uddf.create()
@@ -179,11 +182,12 @@ def cmd_convert(parser, options, args):
     # here)
     cls = query(MemoryDump, id='ostc').next()
     dumper = cls()
-    with open(args[1]) as f:
-        dumper.convert(f, tree)
+    for fn in fin:
+        with open(fn) as f:
+            dumper.convert(f, tree)
     kenozooid.uddf.validate(tree)
 
-    with open(args[2], 'w') as f:
+    with open(fout, 'w') as f:
         data = et.tostring(tree, pretty_print=True)
         f.write(data)
 
