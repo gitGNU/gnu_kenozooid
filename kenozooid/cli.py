@@ -196,20 +196,27 @@ def cmd_plot(parser, options, args):
     """
     Implementation of dive profile plotting command.
     """
-    if len(args) != 3 and len(args) != 4:
+    if len(args) != 4 and len(args) != 5:
         parser.print_help()
         sys.exit(2)
 
-    if len(args) == 3:
+    if len(args) == 4:
         fin = args[1]
-        fout = args[2]
+        fprefix = args[2]
+        format = args[3]
         dives = None
     else:
         fin =args[1]
         dives = parse_range(args[2])
-        fout = args[3]
+        fprefix = args[3]
+        format = args[4]
 
-    kenozooid.plot.plot(fin, fout, dives=dives,
+    if format.lower() not in ('svg', 'pdf', 'png'):
+        print >> sys.stderr, 'Unknown format: %s' % format
+        sys.exit(2)
+
+    kenozooid.plot.plot(fin, fprefix, format,
+            dives=dives,
             title=options.plot_title,
             info=options.plot_info,
             temp=options.plot_temp)

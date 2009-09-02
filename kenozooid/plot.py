@@ -124,15 +124,17 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     plt.clf()
 
 
-def plot(fin, fout, dives=None, title=True, info=True, temp=True):
+def plot(fin, fprefix, format, dives=None, title=True, info=True, temp=True):
     """
     Plot graphs of dive profiles using Matplotlib library.
     
     :Parameters:
      fin
         UDDF file containing dive profile.
-     fout
-        Output, graphical file.
+     fprefix
+        Prefix of output file.
+     format
+        Format of output file (i.e. pdf, png, svg).
      title
         Set plot title.
      info
@@ -154,5 +156,6 @@ def plot(fin, fout, dives=None, title=True, info=True, temp=True):
         if i > n: # i.e. range was 4-5 and there are only 4 dives
             log.warn('dive number %02d does not exist' % i)
             break
-        plot_dive(tree, nodes[i - 1], fout.replace('.', '-%03d.' % i), title, info, temp)
+        fout = '%s-%03d.%s' % (fprefix, i, format)
+        plot_dive(tree, nodes[i - 1], fout, title, info, temp)
 
