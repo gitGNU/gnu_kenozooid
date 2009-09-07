@@ -51,6 +51,9 @@ parser = optparse.OptionParser(usage=usage)
 parser.add_option('-v', '--verbose',
         action='store_true', dest='verbose', default=False,
         help='explain what is being done')
+parser.add_option('--profile',
+        action='store_true', dest='profile', default=False,
+        help='run with profiler')
 
 group = optparse.OptionGroup(parser, 'Dive Simulation Options')
 group.add_option('--no-start',
@@ -112,7 +115,17 @@ assert cmd in cli.COMMANDS
 
 f = cli.COMMANDS[cmd]
 try:
-    f(parser, options, args)
+    if options.profile:
+        import hotshot, hotshot.stats
+        prof = hotshot.Profile('kenozooid.prof')
+        prof.runcall(f, parser, options, args)
+        prof.close()
+        stats = hotshot.stats.load('kenozooid.prof')
+        stats.strip_dirs()
+        stats.sort_stats('time', 'calls')
+        stats.print_stats(20)
+    else:
+        f(parser, options, args)
 except DeviceError, ex:
     print ex
 
