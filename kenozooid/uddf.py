@@ -19,26 +19,33 @@
 #
 
 from lxml import etree as et
+from lxml import objectify as eto
 from datetime import datetime
+from operator import itemgetter
 import pwd
 import os
+import re
 
-GENERATOR = """
+RE_Q = re.compile(r'(\b[a-z]+)')
+
+UDDF = """
+<uddf xmlns="http://www.streit.cc/uddf" version="2.2.0">
 <generator>
     <name>Kenozooid</name>
     <version>%(version)s</version>
-    <date>
-        <year>%(year)d</year><month>%(month)d</month><day>%(day)d</day>
-    </date>
-    <time>
-        <hour>%(hour)d</hour><minute>%(minute)d</minute>
-    </time>
+    <date></date>
+    <time></time>
 </generator>
+<diver>
+<owner>
+<personal></personal>
+</owner>
+</diver>
+<profiledata>
+</profiledata>
+</uddf>
 """
 
-NSMAP = {
-    'uddf': 'http://www.streit.cc/uddf',
-}
 
 def create():
     """
@@ -53,24 +60,19 @@ def create():
     else:
         fn, ln = name
 
-    root = et.Element('{%(uddf)s}uddf' % NSMAP, version='2.2.0', nsmap=NSMAP)
-    generator = et.XML(GENERATOR % {
+    root = eto.XML(UDDF % {
         'version': '0.1',
-        'year': now.year,
-        'month': now.month,
-        'day': now.day,
-        'hour': now.hour,
-        'minute': now.minute,
     })
-    root.append(generator)
-    el = et.SubElement(root, 'diver')
-    el = et.SubElement(el, 'owner')
-    el = et.SubElement(el, 'personal')
-    el1 = et.SubElement(el, 'firstname')
-    el1.text = fn
-    el2 = et.SubElement(el, 'lastname')
-    el2.text = ln
-    et.SubElement(root, 'profiledata')
+
+    root.generator.date.year = now.year
+    root.generator.date.month = now.month
+    root.generator.date.day = now.day
+    root.generator.time.hour = now.hour
+    root.generator.time.minute = now.minute
+    el = root.diver.owner.personal
+    el.firstname = fn
+    el.lastname = ln
+
     tree = et.ElementTree(root)
     return tree
 
@@ -83,6 +85,20 @@ def validate(tree):
     schema.assertValid(tree.getroot())
 
 
+def compact(tree):
+    """
+    Remove duplicate dives from UDDF file. Dives are sorted by dive time.
+    """
+    root = tree.getroot()
+    dives = {}
+    for dive in tree.findall(q('//dive')):
+        dt = get_time(dive)
+        if dt not in dives:
+            dives[dt] = dive
+    del root.profiledata.repetitiongroup[:]
+    n = et.SubElement(root.profiledata, q('repetitiongroup'))
+    n.dive = [d[1] for d in sorted(dives.items(), key=itemgetter(0))]
+
 
 def get_time(node):
     """
@@ -92,11 +108,11 @@ def get_time(node):
      node
         Parsed XML node.
     """
-    year = int(node.findtext('date/year'))
-    month = int(node.findtext('date/month'))
-    day = int(node.findtext('date/day'))
-    hour = int(node.findtext('time/hour'))
-    minute = int(node.findtext('time/minute'))
+    year = int(node.date.year)
+    month = int(node.date.month)
+    day = int(node.date.day)
+    hour = int(node.time.hour)
+    minute = int(node.time.minute)
     return datetime(year, month, day, hour, minute)
 
 
@@ -108,13 +124,22 @@ def get_dives(fin):
         UDDF file.
     """
     f = open(fin)
-    tree = et.parse(f)
+    tree = eto.parse(f)
     f.close()
-    dives = tree.findall('//dive')
+    dives = tree.findall(q('//dive'))
     for i, dive in enumerate(dives):
         k = i + 1
-        samples = dive.findall('samples/waypoint')
-        depths = [float(s[0].text) for s in samples]
-        times = [float(s[1].text) / 60 for s in samples]
+        samples = dive.findall(q('samples/waypoint'))
+        depths = [float(s.depth.text) for s in samples]
+        times = [float(s.divetime) / 60 for s in samples]
         
         yield (k, get_time(dive), times[-1], max(depths))
+
+
+def q(expr):
+    """
+    Convert tag names and ElementPath expressions to qualified ones. 
+    """
+    return RE_Q.sub('{http://www.streit.cc/uddf}\\1', expr)
+
+

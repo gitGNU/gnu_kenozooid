@@ -31,7 +31,7 @@ Showing any statistical information (like average temperature or depth) is
 out of scope, now.
 """
 
-from lxml import etree
+from lxml import objectify as eto
 import math
 import logging
 
@@ -41,7 +41,7 @@ matplotlib.use('cairo')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-from kenozooid.uddf import get_time
+from kenozooid.uddf import get_time, q
 from kenozooid.units import K2C
 from kenozooid.util import min2str
 
@@ -70,11 +70,11 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
      temp
         Plot temperature graph.
     """
-    samples = dive.findall('samples/waypoint')
-    depths = [float(s[0].text) for s in samples]
-    times = [float(s[1].text) / 60 for s in samples]
-    temps = [K2C(float(s[2].text)) for s in samples if len(s) == 3]
-    temp_times = [float(s[1].text) / 60 for s in samples if len(s) == 3]
+    samples = dive.findall(q('samples/waypoint'))
+    depths = [float(s.depth) for s in samples]
+    times = [float(s.divetime) / 60 for s in samples]
+    temps = [K2C(float(s.temperature)) for s in samples if hasattr(s, 'temperature')]
+    temp_times = [float(s.divetime) / 60 for s in samples if hasattr(s, 'temperature')]
 
     dive_time = get_time(dive)
 
@@ -145,10 +145,10 @@ def plot(fin, fprefix, format, dives=None, title=True, info=True, temp=True):
         Dives to be plotted.
     """
     f = open(fin)
-    tree = etree.parse(f)
+    tree = eto.parse(f)
     f.close()
 
-    nodes = tree.findall('//dive')
+    nodes = tree.findall(q('//dive'))
     n = len(nodes)
     if dives is None:
         dives = range(1, n + 1)

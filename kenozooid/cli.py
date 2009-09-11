@@ -25,6 +25,7 @@ Commmand line user interface.
 import logging
 import sys
 import lxml.etree as et
+import lxml.objectify as eto
 
 from kenozooid.component import query, params
 from kenozooid.simulation import simulate
@@ -185,10 +186,16 @@ def cmd_convert(parser, options, args):
     for fn in fin:
         with open(fn) as f:
             dumper.convert(f, tree)
+    kenozooid.uddf.compact(tree)
+    eto.deannotate(tree)
+    et.cleanup_namespaces(tree)
     kenozooid.uddf.validate(tree)
 
     with open(fout, 'w') as f:
-        data = et.tostring(tree, pretty_print=True)
+        data = et.tostring(tree,
+                encoding='utf-8',
+                xml_declaration=True,
+                pretty_print=True)
         f.write(data)
 
 

@@ -24,10 +24,11 @@ UDDF file format tests.
 
 import unittest
 from lxml import etree
+from lxml.objectify import parse as loparse
 from datetime import datetime
 from StringIO import StringIO
 
-from kenozooid.uddf import create, get_time
+from kenozooid.uddf import create, compact, get_time, q
 
 class UDDFTestCase(unittest.TestCase):
     """
@@ -45,7 +46,10 @@ class UDDFTestCase(unittest.TestCase):
     def test_time_parsing(self):
         """Test UDDF time parsing
         """
-        tree = etree.parse(StringIO("""
+        tree = loparse(StringIO("""
+<uddf xmlns="http://www.streit.cc/uddf">
+<profiledata>
+<repetitiongroup>
 <dive>
     <date>
         <year>2009</year>
@@ -57,8 +61,66 @@ class UDDFTestCase(unittest.TestCase):
         <minute>2</minute>
     </time>
 </dive>
+</repetitiongroup>
+</profiledata>
+</uddf>
 """))
-        dt = get_time(tree.getroot())
+        dt = get_time(tree.find(q('//dive')))
         self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
+
+
+    def test_q(self):
+        """Test conversion to qualified tag names and ElementPath expressions"""
+        self.assertEquals('{http://www.streit.cc/uddf}name', q('name'))
+        self.assertEquals('//{http://www.streit.cc/uddf}name', q('//name'))
+        self.assertEquals('{http://www.streit.cc/uddf}samples/' \
+                '{http://www.streit.cc/uddf}waypoint', q('samples/waypoint'))
+
+
+class UDDFCompactTestCase(unittest.TestCase):
+    def test_uddf_compact(self):
+        """Test UDDF compact
+        """
+        tree = loparse(StringIO("""
+<uddf xmlns="http://www.streit.cc/uddf">
+<profiledata>
+<repetitiongroup>
+<dive>
+    <date><year>2009</year><month>3</month><day>2</day></date>
+    <time><hour>23</hour><minute>2</minute></time>
+</dive>
+<dive>
+    <date><year>2009</year><month>4</month><day>2</day></date>
+    <time><hour>23</hour><minute>2</minute></time>
+</dive>
+<dive>
+    <date><year>2009</year><month>4</month><day>2</day></date>
+    <time><hour>23</hour><minute>2</minute></time>
+</dive>
+<dive>
+    <date><year>2009</year><month>3</month><day>2</day></date>
+    <time><hour>23</hour><minute>2</minute></time>
+</dive>
+</repetitiongroup>
+<repetitiongroup> <!-- one more repetition group which shall be removed -->
+<dive>
+    <date><year>2009</year><month>3</month><day>2</day></date>
+    <time><hour>23</hour><minute>2</minute></time>
+</dive>
+</repetitiongroup>
+</profiledata>
+</uddf>
+"""))
+        compact(tree)
+        self.assertEquals(1, len(tree.findall(q('//repetitiongroup'))))
+        dives = tree.findall(q('//dive'))
+        self.assertEquals(2, len(dives))
+
+        # check the order of dives (ordered by dive time)
+        dt = get_time(dives[0])
+        self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
+
+        dt = get_time(dives[1])
+        self.assertEquals(datetime(2009, 4, 2, 23, 2), dt)
 
 

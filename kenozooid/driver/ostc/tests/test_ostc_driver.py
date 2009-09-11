@@ -23,11 +23,12 @@ OSTC driver tests.
 """
 
 import unittest
+import lxml.objectify as eto
 
 from kenozooid.driver.ostc import byte, pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
-from kenozooid.uddf import create, validate
+from kenozooid.uddf import create, validate, q
 
 class ConversionTestCase(unittest.TestCase):
     def test_byte_conversion(self):
@@ -60,19 +61,18 @@ class UDDFTestCase(unittest.TestCase):
         dumper.convert(f, tree)
 
         # five dives
-        self.assertEquals(5, len(tree.findall('//repetitiongroup/dive')))
+        self.assertEquals(5, len(tree.findall(q('//dive'))))
 
         # 193 samples for first dive
-        dive = tree.find('//repetitiongroup/dive')
-        data = dive.findall('samples/waypoint')
+        dive = tree.find(q('//dive'))
+        data = dive.findall(q('samples/waypoint'))
         self.assertEquals(193, len(data))
 
-        date = dive.find('date')
-        self.assertEquals('2009', date[0].text)
-        self.assertEquals('1', date[1].text)
-        self.assertEquals('31', date[2].text)
-        date = dive.find('time')
-        self.assertEquals('23', date[0].text)
-        self.assertEquals('8', date[1].text)
+        self.assertEquals(2009, dive.date.year)
+        self.assertEquals(1, dive.date.month)
+        self.assertEquals(31, dive.date.day)
+        self.assertEquals(23, dive.time.hour)
+        self.assertEquals(8, dive.time.minute)
 
+        eto.deannotate(tree)
         validate(tree)

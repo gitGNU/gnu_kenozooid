@@ -38,6 +38,7 @@ from serial import Serial, SerialException
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
+from kenozooid.uddf import q
 from kenozooid.component import inject
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 from kenozooid.units import C2K
@@ -181,31 +182,23 @@ class OSTCMemoryDump(object):
             # memory, so substract the dive time
             st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
-            wps = []
+            pdn = tree.find(q('profiledata'))
+            n = et.SubElement(pdn, q('repetitiongroup'))
+            dn = et.SubElement(n, q('dive'))
+            n = et.SubElement(dn, q('date'))
+            n.year = st.year
+            n.month = st.month
+            n.day = st.day
+            n = et.SubElement(dn, q('time'))
+            n.hour = st.hour
+            n.minute = st.minute
+
+            sn = et.SubElement(dn, q('samples'))
+
             for i, sample in enumerate(dive_data):
-                xml = [
-                    E.depth(str(sample.depth)),
-                    E.divetime(str(i * header.sampling))
-                ]
+                n = et.SubElement(sn, q('waypoint'))
+                n.depth = sample.depth
+                n.divetime = i * header.sampling
                 if sample.temp is not None:
-                    xml.append(E.temperature('%.2f' % C2K(sample.temp)))
-                wps.append(E.waypoint(*xml))
-
-            nodes.append(E.dive(
-                E.date(
-                    E.year('%s' % st.year),
-                    E.month('%s' % st.month),
-                    E.day('%s' % st.day)
-                ),
-                E.time(
-                    E.hour('%s' % st.hour),
-                    E.minute('%s' % st.minute)
-                ),
-                E.samples(*wps))
-            )
-                    
-        node = tree.find('profiledata')
-        rg = E.repetitiongroup(*nodes)
-        node.append(et.fromstring(et.tostring(rg)))
-
+                    n.temperature = '%.2f' % C2K(sample.temp)
 
