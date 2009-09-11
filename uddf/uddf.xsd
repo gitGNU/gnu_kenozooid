@@ -11,6 +11,7 @@
 <!-- CVS-ID:      $Id$ -->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	   elementFormDefault="qualified"
 	   targetNamespace="http://www.streit.cc/uddf"
 	   xmlns="http://www.streit.cc/uddf"
 	   xmlns:uddf="http://www.streit.cc/uddf">
