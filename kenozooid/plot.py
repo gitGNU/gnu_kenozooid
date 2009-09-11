@@ -73,8 +73,15 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     samples = dive.findall(q('samples/waypoint'))
     depths = [float(s.depth) for s in samples]
     times = [float(s.divetime) / 60 for s in samples]
-    temps = [K2C(float(s.temperature)) for s in samples if hasattr(s, 'temperature')]
-    temp_times = [float(s.divetime) / 60 for s in samples if hasattr(s, 'temperature')]
+
+    def has_t(s): return hasattr(s, 'temperature')
+    temps = [K2C(float(s.temperature)) for s in samples if has_t(s)]
+    temp_times = [float(s.divetime) / 60 for s in samples if has_t(s)]
+
+    max_depth = max(depths)
+    max_time = times[-1]
+    min_temp = min(temps)
+    max_temp = max(temps)
 
     dive_time = get_time(dive)
 
@@ -104,14 +111,14 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     if info:
         ax_depth.text(0.8, 0.1,
             u't = %s\n\u21a7 = %.2fm\nT = %.1f\u00b0C' \
-                % (min2str(times[-1]), max(depths), min(temps)),
+                % (min2str(max_time), max_depth, min_temp),
             family='monospace',
             transform=ax_depth.transAxes,
             bbox=dict(facecolor='white', edgecolor='none'))
     ax_depth.grid(True)
 
     if temp:
-        ax_temp.set_ylim(math.floor(min(temps)), math.ceil(max(temps)))
+        ax_temp.set_ylim(math.floor(min_temp), math.ceil(max_temp))
         ax_temp.set_ylabel(u'T [\u00b0C]')
         ax_temp.plot(temp_times, temps)
         for l in ax_temp.get_yticklabels():
