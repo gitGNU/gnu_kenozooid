@@ -32,7 +32,6 @@ import array
 import logging
 import math
 from lxml import etree as et
-from lxml.builder import E
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
 
@@ -171,6 +170,10 @@ class OSTCMemoryDump(object):
         """
         nodes = []
         dump = ostc_parser.status(''.join(data))
+
+        pdn = tree.find(q('profiledata'))
+        rdn = et.SubElement(pdn, q('repetitiongroup'))
+
         for h, p in ostc_parser.profile(dump.profile):
             header = ostc_parser.header(h)
             dive_data = ostc_parser.dive_data(header, p)
@@ -182,18 +185,16 @@ class OSTCMemoryDump(object):
             # memory, so substract the dive time
             st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
-            pdn = tree.find(q('profiledata'))
-            n = et.SubElement(pdn, q('repetitiongroup'))
-            dn = et.SubElement(n, q('dive'))
-            n = et.SubElement(dn, q('date'))
-            n.year = st.year
-            n.month = st.month
-            n.day = st.day
-            n = et.SubElement(dn, q('time'))
-            n.hour = st.hour
-            n.minute = st.minute
-
+            dn = et.SubElement(rdn, q('dive'))
+            et.SubElement(dn, q('date'))
+            et.SubElement(dn, q('time'))
             sn = et.SubElement(dn, q('samples'))
+
+            dn.date.year = st.year
+            dn.date.month = st.month
+            dn.date.day = st.day
+            dn.time.hour = st.hour
+            dn.time.minute = st.minute
 
             for i, sample in enumerate(dive_data):
                 n = et.SubElement(sn, q('waypoint'))
