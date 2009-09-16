@@ -76,3 +76,26 @@ class UDDFTestCase(unittest.TestCase):
 
         eto.deannotate(tree)
         validate(tree)
+
+
+    def test_deco(self):
+        """Test OSTC deco data to UDDF conversion
+        """
+        dumper = OSTCMemoryDump()
+        f = open('dumps/ostc-01.dump')
+        tree = create()
+        dumper.convert(f, tree)
+
+        # get first dive, there are two deco periods
+        dive = tree.find(q('//dive'))
+        wps = dive.findall(q('samples/waypoint'))
+        d1 = wps[155:161]
+        d2 = wps[167:185]
+
+        # check if all deco waypoints has appropriate alarms
+        t1 = list(hasattr(d, 'alarm') and d.alarm.text == 'deco' for d in d1)
+        t2 = list(hasattr(d, 'alarm') and d.alarm.text == 'deco' for d in d2)
+        self.assertTrue(all(t1), t1)
+        self.assertTrue(all(t2), t2)
+
+

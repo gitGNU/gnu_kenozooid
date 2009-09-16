@@ -196,10 +196,50 @@ class OSTCMemoryDump(object):
             dn.time.hour = st.hour
             dn.time.minute = st.minute
 
+            deco = False
             for i, sample in enumerate(dive_data):
                 n = et.SubElement(sn, q('waypoint'))
+
+                # deco info is not stored in each ostc sample, but each
+                # uddf waypoint shall be annotated with deco alarm
+                if deco and deco_end(sample):
+                    deco = False
+                elif not deco and deco_start(sample):
+                    deco = True
+
+                if deco:
+                    n.alarm = 'deco'
+
                 n.depth = sample.depth
                 n.divetime = i * header.sampling
                 if sample.temp is not None:
                     n.temperature = '%.2f' % C2K(sample.temp)
+
+
+def deco_start(sample):
+    """
+    Check if a dive sample start deco period.
+
+    :Parameters:
+     sample
+        Dive sample.
+    """
+    return sample.deco_depth > 0 \
+        and sample.deco_time > 0 \
+        and sample.depth - sample.deco_depth <= 1.0
+
+
+def deco_end(sample):
+    """
+    Check if a dive sample ends deco period.
+
+    :Parameters:
+     sample
+        Dive sample.
+    """
+    return sample.deco_time is not None \
+        and (sample.depth - sample.deco_depth > 1.0
+            or sample.deco_depth == 0
+            or sample.deco_time == 160
+            or sample.deco_time == 0)
 
