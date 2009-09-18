@@ -24,11 +24,11 @@ UDDF file format tests.
 
 import unittest
 from lxml import etree
-from lxml.objectify import parse as loparse
+import lxml.objectify as eto
 from datetime import datetime
 from StringIO import StringIO
 
-from kenozooid.uddf import create, compact, get_time, q
+from kenozooid.uddf import create, compact, get_time, q, has_deco, has_temp
 
 class UDDFTestCase(unittest.TestCase):
     """
@@ -46,7 +46,7 @@ class UDDFTestCase(unittest.TestCase):
     def test_time_parsing(self):
         """Test UDDF time parsing
         """
-        tree = loparse(StringIO("""
+        tree = eto.parse(StringIO("""
 <uddf xmlns="http://www.streit.cc/uddf">
 <profiledata>
 <repetitiongroup>
@@ -77,11 +77,35 @@ class UDDFTestCase(unittest.TestCase):
                 '{http://www.streit.cc/uddf}waypoint', q('samples/waypoint'))
 
 
+    def test_has_deco(self):
+        """Test checking deco waypoint.
+        """
+        w = eto.XML('<waypoint><alarm>deco</alarm></waypoint>')
+        self.assertTrue(has_deco(w))
+
+        w = eto.XML('<waypoint><alarm>error</alarm></waypoint>')
+        self.assertFalse(has_deco(w))
+
+        w = eto.XML('<waypoint></waypoint>')
+        self.assertFalse(has_deco(w))
+
+
+    def test_has_temp(self):
+        """Test checking waypoint with temperature.
+        """
+        w = eto.XML('<waypoint><temperature>12</temperature></waypoint>')
+        self.assertTrue(has_temp(w))
+
+        w = eto.XML('<waypoint></waypoint>')
+        self.assertFalse(has_temp(w))
+
+
+
 class UDDFCompactTestCase(unittest.TestCase):
     def test_uddf_compact(self):
         """Test UDDF compact
         """
-        tree = loparse(StringIO("""
+        tree = eto.parse(StringIO("""
 <uddf xmlns="http://www.streit.cc/uddf">
 <profiledata>
 <repetitiongroup>

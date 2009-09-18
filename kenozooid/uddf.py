@@ -143,3 +143,16 @@ def q(expr):
     return RE_Q.sub('{http://www.streit.cc/uddf}\\1', expr)
 
 
+def has_deco(w):
+    """
+    Check if a waypoint has deco information.
+    """
+    return hasattr(w, 'alarm') and w.alarm.text == 'deco'
+
+
+def has_temp(w):
+    """
+    Check if a waypoint has temperature information.
+    """
+    return hasattr(w, 'temperature')
+

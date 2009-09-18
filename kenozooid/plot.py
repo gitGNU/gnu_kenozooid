@@ -40,12 +40,28 @@ matplotlib.use('cairo')
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from matplotlib.patches import Rectangle
 
-from kenozooid.uddf import get_time, q
+from kenozooid.uddf import get_time, q, has_deco, has_temp
 from kenozooid.units import K2C
 from kenozooid.util import min2str
 
 log = logging.getLogger('kenozooid.plot')
+
+
+def get_deco(samples):
+    """
+    Get iterator of lists containing deco waypoints.
+    """
+    deco = []
+    for s1, s2 in zip(samples[:-1], samples[1:]):
+        if has_deco(s1) and not has_deco(s2):
+            yield deco
+            deco = []
+        elif not deco and has_deco(s1):
+            deco.append((float(s1.divetime) / 60, float(s1.depth)))
+        if has_deco(s2):
+            deco.append((float(s2.divetime) / 60, float(s2.depth)))
 
 
 def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
@@ -74,9 +90,8 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     depths = [float(s.depth) for s in samples]
     times = [float(s.divetime) / 60 for s in samples]
 
-    def has_t(s): return hasattr(s, 'temperature')
-    temps = [K2C(float(s.temperature)) for s in samples if has_t(s)]
-    temp_times = [float(s.divetime) / 60 for s in samples if has_t(s)]
+    temps = [K2C(float(s.temperature)) for s in samples if has_temp(s)]
+    temp_times = [float(s.divetime) / 60 for s in samples if has_temp(s)]
 
     max_depth = max(depths)
     max_time = times[-1]
@@ -96,7 +111,9 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
         ax_depth = plt.axes(axisbg=axesBG)
 
     #ax_depth.plot(times, depths, label='air')
-    ax_depth.plot(times, depths)
+    ax_depth.plot(times, depths, color='blue')
+    for deco in get_deco(samples):
+        ax_depth.plot(*zip(*deco), color='red')
 
     # reverse y-axis, to put 0m depth at top and max depth at the bottom of
     # graph
