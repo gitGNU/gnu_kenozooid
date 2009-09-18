@@ -147,7 +147,7 @@ def has_deco(w):
     """
     Check if a waypoint has deco information.
     """
-    return hasattr(w, 'alarm') and w.alarm.text == 'deco'
+    return hasattr(w, 'alarm') and any(a.text == 'deco' for a in w.alarm)
 
 
 def has_temp(w):

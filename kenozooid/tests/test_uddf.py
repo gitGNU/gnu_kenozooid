@@ -89,6 +89,10 @@ class UDDFTestCase(unittest.TestCase):
         w = eto.XML('<waypoint></waypoint>')
         self.assertFalse(has_deco(w))
 
+        # there can be different alarms
+        w = eto.XML('<waypoint><alarm>error</alarm><alarm>deco</alarm></waypoint>')
+        self.assertTrue(has_deco(w))
+
 
     def test_has_temp(self):
         """Test checking waypoint with temperature.
