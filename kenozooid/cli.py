@@ -186,6 +186,7 @@ def cmd_convert(parser, options, args):
     for fn in fin:
         with open(fn) as f:
             dumper.convert(f, tree)
+
     kenozooid.uddf.compact(tree)
     eto.deannotate(tree)
     et.cleanup_namespaces(tree)

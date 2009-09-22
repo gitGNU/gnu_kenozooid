@@ -144,7 +144,7 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
         ax_temp.yaxis.set_major_locator(MaxNLocator(4))
 
     # save dive plot and clear matplotlib space
-    plt.savefig(fout, papertype='a4')
+    plt.savefig(fout)
     plt.clf()
 
 
