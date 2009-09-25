@@ -19,18 +19,17 @@
 #
 
 """
-Support for OSTC, an open source dive computer.
+Driver for OSTC, an open source dive computer.
 
 OSTC dive computer specification and documentation of communication
 protocol can be found at address
 
-    http://www.heinrichsweikamp.net/ostc/en/
+    http://www.heinrichsweikamp.net/
 
 """
 
 import array
 import logging
-import math
 from lxml import etree as et
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
@@ -74,6 +73,7 @@ class OSTCDriver(object):
                 parity='N',
                 timeout=5) # 1s timeout is too short sometimes with 'a' command
 
+
     def _write(self, cmd):
         log.debug('sending command %s' % cmd)
         self._device.write(cmd)
@@ -93,7 +93,7 @@ class OSTCDriver(object):
     @staticmethod
     def scan():
         """
-        Look for OSTC dive computer connected to one of USB serial ports.
+        Look for OSTC dive computer connected to one of USB ports.
         """
         for i in range(10):
             port = '/dev/ttyUSB%d' % i
