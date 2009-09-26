@@ -103,6 +103,7 @@ import kenozooid.cli as cli
 from kenozooid.driver import DeviceError
 import kenozooid.driver.dummy
 import kenozooid.driver.ostc
+import kenozooid.driver.su
 
 if len(args) < 1 or args[0] not in cli.COMMANDS:
     parser.print_help()
