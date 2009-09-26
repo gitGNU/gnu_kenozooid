@@ -113,17 +113,18 @@ def cmd_scan(parser, options, args):
 
 
 def cmd_simulate(parser, options, args):
-    if len(args) != 3:
+    if len(args) != 4:
         parser.print_help()
         sys.exit(2)
 
-    id = args[1]
-    spec = args[2]
+    drv = args[1]
+    port = args[2]
+    spec = args[3]
 
-    sim = find_driver(Simulator, id)
+    sim = find_driver(Simulator, drv, port)
 
     if sim is None:
-        print 'Device driver %s does not support simulation' % id
+        print 'Device driver %s does not support simulation' % drv
         sys.exit(3)
     simulate(sim, spec, options.sim_start, options.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
@@ -132,16 +133,18 @@ def cmd_dump(parser, options, args):
     """
     Implementation fo memory dump command. 
     """
-    if len(args) != 3:
+    if len(args) != 4:
         parser.print_help()
         sys.exit(2)
 
-    id = args[1]
-    filename = args[2]
+    drv = args[1]
+    port = args[2]
+    filename = args[3]
 
-    dumper = find_driver(MemoryDump, id)
+    dumper = find_driver(MemoryDump, drv, port)
     if dumper is None:
-        print 'Device driver %s does not support memory dump' % id
+        print 'Device driver %s does not support memory dump' % drv
+        sys.exit(3)
 
     saved = save(filename, dumper.dump())
     if not saved:
@@ -233,7 +236,7 @@ def cmd_plot(parser, options, args):
 # map cli command names to command functions
 COMMANDS = {
     'list': cmd_list,
-    'scan': cmd_scan,
+#    'scan': cmd_scan,
     'simulate': cmd_simulate,
     'dump': cmd_dump,
     'dives': cmd_dives,

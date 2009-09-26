@@ -26,16 +26,14 @@ import sys
 
 usage = """
     %prog [options] list
-    %prog [options] scan
-    %prog [options] simulate <dev id> <dive plan>
-    %prog [options] dump <dev id> <output>
+    %prog [options] simulate <drv> <port> <dive plan>
+    %prog [options] dump <drv> <port> <output>
     %prog [options] dives <input>
     %prog [options] convert <dump1> [dump2 ...] <output>
     %prog [options] plot <input> [dives] <prefix> <format>
 
 Commands Description:
     list - list available drivers and their capabilities
-    scan - scan for and display attached devices
     simulate - simulate dive
     dump - dump dive computer memory (logbook, settings, etc.)
     dives - list dives stored in a file
@@ -103,8 +101,8 @@ import kenozooid.cli as cli
 # import modules implementing supported drivers
 # todo: support dynamic import of third party drivers
 from kenozooid.driver import DeviceError
-import kenozooid.driver.ostc
 import kenozooid.driver.dummy
+import kenozooid.driver.ostc
 
 if len(args) < 1 or args[0] not in cli.COMMANDS:
     parser.print_help()

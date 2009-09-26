@@ -91,19 +91,19 @@ class OSTCDriver(object):
 
 
     @staticmethod
-    def scan():
+    def scan(port=None):
         """
         Look for OSTC dive computer connected to one of USB ports.
+
+        Library pySerial is used, therefore no scanning and port shall be
+        specified.
         """
-        for i in range(10):
-            port = '/dev/ttyUSB%d' % i
-            log.debug('trying port %s' % port)
-            try:
-                drv = OSTCDriver(port)
-                log.debug('found port %s' % port)
-                yield drv
-            except SerialException, ex:
-                log.debug('%s' % ex)
+        try:
+            drv = OSTCDriver(port)
+            log.debug('connected ostc to port %s' % port)
+            yield drv
+        except SerialException, ex:
+            log.debug('%s' % ex)
 
 
     def version(self):

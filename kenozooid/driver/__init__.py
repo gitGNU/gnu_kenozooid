@@ -38,13 +38,31 @@ class DeviceDriver(object):
 
     Software using this interface shall get driver instance using
     `DeviceDriver.scan` method.
+
+    There is only one known method for platform independent device scanning
+    and it applies to USB devices only. Library pyUSB can be used to find
+    devices, i.e.::
+
+        import usb.core
+        dev = usb.core.find(idVendor=0x0403, idProduct=0x6001)
+        dev.write(...)
+        dev.read(...)
+
+    Above code uses not released yet pyUSB 1.0 interfaces. Device's `write`
+    and `read' methods can be used to communicate with a device. It is not yet
+    possible to determine port of a device (i.e. /dev/ttyUSB0, COM1, etc.),
+    so it is not possible to bind this method with pySerial usage when
+    required.
     """
     @staticmethod
-    def scan():
+    def scan(port=None):
         """
         Scan for connected devices and return device driver instances.
 
         Each connected dive computer should get one device driver instance.
+
+        If port is specified, then a driver instance should be returned,
+        which connects to the port.
         """
 
     def version(self):
@@ -123,7 +141,7 @@ class DeviceError(BaseException):
     """
 
 
-def find_driver(iface, id):
+def find_driver(iface, id, port):
     """
     Find driver implementing an interface.
 
@@ -132,6 +150,8 @@ def find_driver(iface, id):
         Interface of functionality.
      id
         Device driver id.
+     port
+        Device port (i.e. /dev/ttyUSB0, COM1).
 
     If device id is not known or device is not connected, then exception is
     raised.
@@ -139,7 +159,7 @@ def find_driver(iface, id):
     If device driver does not support functionality specified by an
     interface, then None is returned.
     """
-    # find device driver for device id
+    # find device driver for device driver id
     try:
         cls = query(DeviceDriver, id=id).next()
     except StopIteration, ex:
@@ -147,7 +167,7 @@ def find_driver(iface, id):
 
     # scan for connected devices
     try:
-        drv = cls.scan().next()
+        drv = cls.scan(port).next()
     except StopIteration, ex:
         raise DeviceError('Device with id %s seems to be not connected' % id)
 
