@@ -40,7 +40,7 @@ matplotlib.use('cairo')
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from matplotlib.patches import Rectangle
+from matplotlib.font_manager import FontProperties
 
 from kenozooid.uddf import get_time, q, has_deco, has_temp
 from kenozooid.units import K2C
@@ -102,7 +102,7 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
 
     left, width = 0.10, 0.85
     rect1 = [left, 0.25, width, 0.7]
-    rect2 = [left, 0.05, width, 0.10]
+    rect2 = [left, 0.08, width, 0.10]
     axesBG  = '#f6f6f6'
     if temp:
         ax_depth = plt.axes(rect1, axisbg=axesBG)
@@ -142,6 +142,17 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
             l.set_fontsize(9) 
         ax_temp.grid(True)
         ax_temp.yaxis.set_major_locator(MaxNLocator(4))
+
+    # put info about software used to generate the plot
+    font = FontProperties()
+    font.set_style('italic')
+    font.set_size('xx-small')
+
+    f = plt.gcf()
+    f.text(left + width, 0.03, 'generated with kenozooid v. 0.1',
+            fontproperties=font,
+            horizontalalignment='right',
+            verticalalignment='top')
 
     # save dive plot and clear matplotlib space
     plt.savefig(fout)
