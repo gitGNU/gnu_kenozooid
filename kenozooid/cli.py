@@ -184,7 +184,8 @@ def cmd_convert(parser, options, args):
     # convert ostc dump to uddf (so far only ostc dump is supported, in the
     # future dump format detection and converter finding need to happen
     # here)
-    cls = query(MemoryDump, id='ostc').next()
+    #dumper = find_driver(MemoryDump, 'su', port)
+    cls = query(MemoryDump, id='su').next()
     dumper = cls()
     for fn in fin:
         with open(fn) as f:
