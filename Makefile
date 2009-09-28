@@ -3,6 +3,6 @@ upload-doc:
 		--delete-excluded \
 		-zcav --no-owner --no-group --progress \
 		--stats \
-		doc/_build/html/ \
+		build/sphinx/html/ \
 		wrobell@maszyna.it-zone.org:~/public_html/kenozooid
 
