@@ -18,12 +18,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import os.path
-import math
-
 """
 Kenozooid utility funtions.
 """
+
+import os.path
+import math
 
 def save(filename, data):
     """

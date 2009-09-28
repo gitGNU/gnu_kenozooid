@@ -18,6 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+UDDF file format support.
+"""
+
 from lxml import etree as et
 from lxml import objectify as eto
 from datetime import datetime
