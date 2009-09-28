@@ -35,7 +35,7 @@ class DummyDriver(object):
         return 'Dummy Device 1.0'
 
     @staticmethod
-    def scan():
+    def scan(port=None):
         yield DummyDriver()
 
         

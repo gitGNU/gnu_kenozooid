@@ -141,9 +141,15 @@ class DeviceError(BaseException):
     """
 
 
-def find_driver(iface, id, port):
+def find_driver(iface, id, port=None):
     """
     Find driver implementing an interface.
+
+    If device id is not known or device is not connected, then exception is
+    raised.
+
+    If device driver does not support functionality specified by an
+    interface, then None is returned.
 
     :Parameters:
      iface
@@ -152,12 +158,6 @@ def find_driver(iface, id, port):
         Device driver id.
      port
         Device port (i.e. /dev/ttyUSB0, COM1).
-
-    If device id is not known or device is not connected, then exception is
-    raised.
-
-    If device driver does not support functionality specified by an
-    interface, then None is returned.
     """
     # find device driver for device driver id
     try:
