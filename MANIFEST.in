@@ -1,5 +1,5 @@
 include bin/kenozooid
-include doc/Makefile
-include doc/*.txt
 include doc/*.gaphor
+include doc/*.py
+include doc/*.txt
 include dumps/*.dump
