@@ -218,7 +218,7 @@ def cmd_plot(parser, options, args):
         format = args[3]
         dives = None
     else:
-        fin =args[1]
+        fin = args[1]
         dives = parse_range(args[2])
         fprefix = args[3]
         format = args[4]
