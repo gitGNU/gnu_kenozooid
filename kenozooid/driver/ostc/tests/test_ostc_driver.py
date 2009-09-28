@@ -25,20 +25,12 @@ OSTC driver tests.
 import unittest
 import lxml.objectify as eto
 
-from kenozooid.driver.ostc import byte, pressure
+from kenozooid.driver.ostc import pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
 from kenozooid.uddf import create, validate, q
 
 class ConversionTestCase(unittest.TestCase):
-    def test_byte_conversion(self):
-        """Test int to to byte conversion
-        """
-        self.assertEquals('\x00', byte(0))
-        self.assertEquals('\xff', byte(0xff))
-        self.assertEquals('\x0f', byte(15))
-
-
     def test_pressure_conversion(self):
         """Test depth to pressure conversion
         """

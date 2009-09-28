@@ -43,14 +43,6 @@ from kenozooid.units import C2K
 import parser as ostc_parser
 
 
-def byte(i):
-    """
-    Convert integer to a byte.
-    """
-    b = array.array('B', [i])
-    return b.tostring()
-
-
 def pressure(depth):
     """
     Convert depth in meters to pressure in mBars.
@@ -139,7 +131,7 @@ class OSTCSimulator(object):
         appropriate period of time passes, which is configured with option
         CF2.
         """
-        self.driver._write(byte(0))
+        self.driver._write(chr(0))
 
 
     def depth(self, depth):
@@ -147,7 +139,7 @@ class OSTCSimulator(object):
         Send dive computer to given depth.
         """
         p = pressure(depth)
-        self.driver._write(byte(p))
+        self.driver._write(chr(p))
 
 
 
