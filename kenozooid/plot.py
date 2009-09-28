@@ -64,7 +64,7 @@ def get_deco(samples):
             deco.append((float(s2.divetime) / 60, float(s2.depth)))
 
 
-def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
+def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
     """
     Plot dive profile graph using Matplotlib library.
 
@@ -100,15 +100,22 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
 
     dive_time = get_time(dive)
 
-    left, width = 0.10, 0.85
-    rect1 = [left, 0.25, width, 0.7]
-    rect2 = [left, 0.08, width, 0.10]
+    left, width = 0.07, 0.90
+    bottom, height = 0.08, 0.87
+    if not title:
+        height = 0.89
+    rect1 = [left, bottom + 0.2, width, height - 0.2]
+    rect2 = [left, bottom, width, 0.1]
     axesBG  = '#f6f6f6'
+
+    plt.rc('font', 10)
     if temp:
         ax_depth = plt.axes(rect1, axisbg=axesBG)
         ax_temp = plt.axes(rect2, axisbg=axesBG, sharex=ax_depth)
     else:
-        ax_depth = plt.axes(axisbg=axesBG)
+        rect1[1] = bottom
+        rect1[-1] = height
+        ax_depth = plt.axes(rect1, axisbg=axesBG)
 
     #ax_depth.plot(times, depths, label='air')
     ax_depth.plot(times, depths, color='blue')
@@ -139,9 +146,9 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
         ax_temp.set_ylabel(u'T [\u00b0C]')
         ax_temp.plot(temp_times, temps)
         for l in ax_temp.get_yticklabels():
-            l.set_fontsize(9) 
+            l.set_fontsize(8) 
         ax_temp.grid(True)
-        ax_temp.yaxis.set_major_locator(MaxNLocator(4))
+        ax_temp.yaxis.set_major_locator(MaxNLocator(3))
 
     # put info about software used to generate the plot
     font = FontProperties()
@@ -149,7 +156,7 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     font.set_size('xx-small')
 
     f = plt.gcf()
-    f.text(left + width, 0.03, 'generated with kenozooid v. 0.1',
+    f.text(left + width, 0.03, 'generated with kenozooid ver. 0.1',
             fontproperties=font,
             horizontalalignment='right',
             verticalalignment='top')
@@ -159,7 +166,7 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True):
     plt.clf()
 
 
-def plot(fin, fprefix, format, dives=None, title=True, info=True, temp=True):
+def plot(fin, fprefix, format, dives=None, **params):
     """
     Plot graphs of dive profiles using Matplotlib library.
     
@@ -170,14 +177,10 @@ def plot(fin, fprefix, format, dives=None, title=True, info=True, temp=True):
         Prefix of output file.
      format
         Format of output file (i.e. pdf, png, svg).
-     title
-        Set plot title.
-     info
-        Display dive information (time, depth, temperature).
-     temp
-        Plot temperature graph.
      dives
         Dives to be plotted.
+     params
+        Additional keyword parameters for `plot_dive` function.
     """
     f = open(fin)
     tree = eto.parse(f)
@@ -192,5 +195,6 @@ def plot(fin, fprefix, format, dives=None, title=True, info=True, temp=True):
             log.warn('dive number %02d does not exist' % i)
             break
         fout = '%s-%03d.%s' % (fprefix, i, format)
-        plot_dive(tree, nodes[i - 1], fout, title, info, temp)
+        plot_dive(tree, nodes[i - 1], fout, **params)
+
 
