@@ -36,5 +36,5 @@ computers.
         ],
     },
     test_suite='nose.collector',
-
 )
+
