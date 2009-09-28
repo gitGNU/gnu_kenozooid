@@ -17,7 +17,7 @@ class EpydocBuildDoc(Command):
         pass
 
     def run(self):
-        epydoc_conf = 'epydoc.conf'
+        epydoc_conf = 'doc/epydoc.conf'
 
         try:
             import sys
