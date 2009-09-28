@@ -40,7 +40,7 @@ class UDDFTestCase(unittest.TestCase):
         tree = create()
         data = etree.tostring(tree.getroot())
         self.assertTrue('2.2.0' in data)
-        self.assertTrue('Kenozooid' in data)
+        self.assertTrue('kenozooid' in data)
 
 
     def test_time_parsing(self):
