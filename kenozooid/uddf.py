@@ -26,13 +26,15 @@ import pwd
 import os
 import re
 
+import kenozooid
+
 RE_Q = re.compile(r'(\b[a-z]+)')
 
 UDDF = """
 <uddf xmlns="http://www.streit.cc/uddf" version="2.2.0">
 <generator>
-    <name>Kenozooid</name>
-    <version>%(version)s</version>
+    <name>kenozooid</name>
+    <version>%s</version>
     <date></date>
     <time></time>
 </generator>
@@ -44,7 +46,7 @@ UDDF = """
 <profiledata>
 </profiledata>
 </uddf>
-"""
+""" % kenozooid.__version__
 
 
 def create():
@@ -60,9 +62,7 @@ def create():
     else:
         fn, ln = name
 
-    root = eto.XML(UDDF % {
-        'version': '0.1',
-    })
+    root = eto.XML(UDDF)
 
     root.generator.date.year = now.year
     root.generator.date.month = now.month

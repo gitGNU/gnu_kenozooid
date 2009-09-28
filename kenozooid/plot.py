@@ -42,6 +42,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from matplotlib.font_manager import FontProperties
 
+import kenozooid
 from kenozooid.uddf import get_time, q, has_deco, has_temp
 from kenozooid.units import K2C
 from kenozooid.util import min2str
@@ -108,7 +109,7 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
     rect2 = [left, bottom, width, 0.1]
     axesBG  = '#f6f6f6'
 
-    plt.rc('font', 10)
+    plt.rc('font', size=10)
     if temp:
         ax_depth = plt.axes(rect1, axisbg=axesBG)
         ax_temp = plt.axes(rect2, axisbg=axesBG, sharex=ax_depth)
@@ -156,10 +157,11 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
     font.set_size('xx-small')
 
     f = plt.gcf()
-    f.text(left + width, 0.03, 'generated with kenozooid ver. 0.1',
-            fontproperties=font,
-            horizontalalignment='right',
-            verticalalignment='top')
+    f.text(left + width, 0.03,
+        'generated with kenozooid ver. %s' % kenozooid.__version__,
+        fontproperties=font,
+        horizontalalignment='right',
+        verticalalignment='top')
 
     # save dive plot and clear matplotlib space
     plt.savefig(fout)

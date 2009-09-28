@@ -2,9 +2,11 @@
 
 from setuptools import setup, find_packages
 
+version = __import__('kenozooid').__version__
+
 setup(
     name='kenozooid',
-    version='0.1',
+    version=version,
     description='Software stack to support different capabilities of dive computers',
     author='Artur Wroblewski',
     author_email='wrobell@pld-linux.org',
@@ -21,7 +23,7 @@ computers.
         'Development Status :: 3 - Alpha',
         'Topic :: Internet',
     ],
-    keywords='diving plot dump uddf',
+    keywords='diving dive computer logger plot dump uddf',
     license='GPL',
     install_requires=[
         'lxml >= 2.2.2',
