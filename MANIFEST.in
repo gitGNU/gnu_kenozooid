@@ -2,3 +2,4 @@ include bin/kenozooid
 include doc/Makefile
 include doc/*.txt
 include doc/*.gaphor
+include dumps/*.dump
