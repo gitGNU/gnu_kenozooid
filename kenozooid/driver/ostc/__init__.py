@@ -33,6 +33,7 @@ import logging
 from lxml import etree as et
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
+import binascii
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
@@ -106,7 +107,7 @@ class OSTCDriver(object):
         data = self._read(2)
         v1, v2 = tuple(map(ord, data))
         data = self._read(16)
-        fingerprint = ''.join('%x' % ord(c) for c in data)
+        fingerprint = binascii.hexlify(data)
         return 'OSTC %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
 
 
