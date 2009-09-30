@@ -43,7 +43,7 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.font_manager import FontProperties
 
 import kenozooid
-from kenozooid.uddf import get_time, q, has_deco, has_temp
+from kenozooid.uddf import UDDFProfileData, q, has_deco, has_temp
 from kenozooid.units import K2C
 from kenozooid.util import min2str
 
@@ -65,7 +65,7 @@ def get_deco(samples):
             deco.append((float(s2.divetime) / 60, float(s2.depth)))
 
 
-def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
+def plot_dive(dive, fout, title=True, info=True, temp=True, sig=True):
     """
     Plot dive profile graph using Matplotlib library.
 
@@ -74,8 +74,6 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
     file extension and is handled by Matplotlib library.
 
     :Parameters:
-     tree
-        XML file parsed with ETree API.
      dive
         Dive node.
      fout
@@ -99,7 +97,7 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
     min_temp = min(temps)
     max_temp = max(temps)
 
-    dive_time = get_time(dive)
+    dive_time = UDDFProfileData.get_time(dive)
 
     left, width = 0.07, 0.90
     bottom, height = 0.08, 0.87
@@ -168,13 +166,13 @@ def plot_dive(tree, dive, fout, title=True, info=True, temp=True, sig=True):
     plt.clf()
 
 
-def plot(fin, fprefix, format, dives=None, **params):
+def plot(tree, fprefix, format, dives=None, **params):
     """
     Plot graphs of dive profiles using Matplotlib library.
     
     :Parameters:
-     fin
-        UDDF file containing dive profile.
+     tree
+        XML file (UDDF data) parsed with ETree API.
      fprefix
         Prefix of output file.
      format
@@ -184,10 +182,6 @@ def plot(fin, fprefix, format, dives=None, **params):
      params
         Additional keyword parameters for `plot_dive` function.
     """
-    f = open(fin)
-    tree = eto.parse(f)
-    f.close()
-
     nodes = tree.findall(q('//dive'))
     n = len(nodes)
     if dives is None:
@@ -197,6 +191,6 @@ def plot(fin, fprefix, format, dives=None, **params):
             log.warn('dive number %02d does not exist' % i)
             break
         fout = '%s-%03d.%s' % (fprefix, i, format)
-        plot_dive(tree, nodes[i - 1], fout, **params)
+        plot_dive(nodes[i - 1], fout, **params)
 
 

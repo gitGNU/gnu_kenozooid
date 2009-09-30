@@ -34,7 +34,8 @@ import kenozooid
 
 RE_Q = re.compile(r'(\b[a-z]+)')
 
-UDDF = """
+# minimal data for an UDDF file
+UDDF_TMPL = """
 <uddf xmlns="http://www.streit.cc/uddf" version="2.2.0">
 <generator>
     <name>kenozooid</name>
@@ -42,6 +43,138 @@ UDDF = """
     <date></date>
     <time></time>
 </generator>
+%%s
+</uddf>
+""" % kenozooid.__version__
+
+
+class UDDFFile(object):
+    """
+    Basic class for UDDF files.
+
+    The XML tree representing UDDF file is created and can be accessed
+    using Objetify API from lxml library.
+
+    The UDDF template needs to be set by all deriving, non-abstract
+    classes.
+
+    :Variables:
+     tree
+        XML tree representing UDDF file.
+    :CVariables:
+     UDDF
+        UDDF template to be parsed by during UDDF file creation.
+    """
+
+    # to be set
+    UDDF = UDDF_TMPL % ''
+
+    def __init__(self):
+        """
+        Create an instance of UDDF file with no data.
+        """
+        self.tree = None
+
+
+    def create(self):
+        """
+        Create new UDDF file.
+        """
+        root = eto.XML(self.UDDF)
+
+        now = datetime.now()
+        root.generator.date.year = now.year
+        root.generator.date.month = now.month
+        root.generator.date.day = now.day
+        root.generator.time.hour = now.hour
+        root.generator.time.minute = now.minute
+
+        self.tree = et.ElementTree(root)
+
+
+    def open(self, fn, validate=True):
+        """
+        Open and parse UDDF file.
+
+        :Parameters:
+         fn
+            Name of a file containing UDDF data.
+         validate
+            Validate UDDF file after parsing if set to True.
+        """
+        f = open(fn)
+        self.parse(f)
+        f.close()
+        if validate:
+            self.validate()
+
+
+    def parse(self, f):
+        """
+        Parse UDDF file.
+
+        :Parameters:
+         f
+            File object containing UDDF data.
+        """
+        self.tree = eto.parse(f)
+
+
+    def save(self, fn, validate=True):
+        """
+        Save UDDF data to a file.
+
+        :Parameters:
+         fn
+            Name of output file to save UDDF data in.
+         validate
+            Validate UDDF file before saving if set to True.
+        """
+        if validate:
+            self.validate()
+
+        with open(fn, 'w') as f:
+            data = et.tostring(self.tree,
+                    encoding='utf-8',
+                    xml_declaration=True,
+                    pretty_print=True)
+            f.write(data)
+
+
+    def validate(self):
+        """
+        Validate UDDF file with UDDF XML Schema.
+        """
+        eto.deannotate(self.tree)
+        et.cleanup_namespaces(self.tree)
+
+        schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
+        schema.assertValid(self.tree.getroot())
+
+
+    @staticmethod
+    def get_time(node):
+        """
+        Get datetime instance from XML node parsed from UDDF file.
+
+        :Parameters:
+         node
+            Parsed XML node.
+        """
+        year = int(node.date.year)
+        month = int(node.date.month)
+        day = int(node.date.day)
+        hour = int(node.time.hour)
+        minute = int(node.time.minute)
+        return datetime(year, month, day, hour, minute)
+
+
+
+class UDDFProfileData(UDDFFile):
+    """
+    UDDF file containing dive profile data.
+    """
+    UDDF = UDDF_TMPL % """\
 <diver>
 <owner>
 <personal></personal>
@@ -49,95 +182,67 @@ UDDF = """
 </diver>
 <profiledata>
 </profiledata>
-</uddf>
-""" % kenozooid.__version__
+"""
+    def create(self):
+        """
+        Create an UDDF file suitable for storing dive profile data.
+        """
+        super(UDDFProfileData, self).create()
+
+        root = self.tree.getroot()
+
+        name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(' ', 1)
+        if len(name) == 1:
+            fn = name
+            ln = name
+        else:
+            fn, ln = name
+
+        el = root.diver.owner.personal
+        el.firstname = fn
+        el.lastname = ln
 
 
-def create():
-    """
-    Create UDDF file for dive profile data.
-    """
-    now = datetime.now()
+    def save(self, fn):
+        """
+        Save UDDF data to a file.
 
-    name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(' ', 1)
-    if len(name) == 1:
-        fn = name
-        ln = name
-    else:
-        fn, ln = name
-
-    root = eto.XML(UDDF)
-
-    root.generator.date.year = now.year
-    root.generator.date.month = now.month
-    root.generator.date.day = now.day
-    root.generator.time.hour = now.hour
-    root.generator.time.minute = now.minute
-    el = root.diver.owner.personal
-    el.firstname = fn
-    el.lastname = ln
-
-    tree = et.ElementTree(root)
-    return tree
+        :Parameters:
+         fn
+            Name of output file to save UDDF data in.
+        """
+        self.compact()
+        super(UDDFProfileData, self).save(fn)
 
 
-def validate(tree):
-    """
-    Validate UDDF file with UDDF XML Schema.
-    """
-    schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
-    schema.assertValid(tree.getroot())
+    def compact(self):
+        """
+        Remove duplicate dives from UDDF file. Dives are sorted by dive
+        time.
+        """
+        root = self.tree.getroot()
+        dives = {}
+        for dive in self.tree.findall(q('//dive')):
+            dt = self.get_time(dive)
+            if dt not in dives:
+                dives[dt] = dive
+        del root.profiledata.repetitiongroup[:]
+        n = et.SubElement(root.profiledata, q('repetitiongroup'))
+        n.dive = [d[1] for d in sorted(dives.items(), key=itemgetter(0))]
 
 
-def compact(tree):
-    """
-    Remove duplicate dives from UDDF file. Dives are sorted by dive time.
-    """
-    root = tree.getroot()
-    dives = {}
-    for dive in tree.findall(q('//dive')):
-        dt = get_time(dive)
-        if dt not in dives:
-            dives[dt] = dive
-    del root.profiledata.repetitiongroup[:]
-    n = et.SubElement(root.profiledata, q('repetitiongroup'))
-    n.dive = [d[1] for d in sorted(dives.items(), key=itemgetter(0))]
-
-
-def get_time(node):
-    """
-    Get datetime instance from XML node parsed from UDDF file.
-
-    :Parameters:
-     node
-        Parsed XML node.
-    """
-    year = int(node.date.year)
-    month = int(node.date.month)
-    day = int(node.date.day)
-    hour = int(node.time.hour)
-    minute = int(node.time.minute)
-    return datetime(year, month, day, hour, minute)
-
-
-def get_dives(fin):
-    """
-    Get list of dives stored in a file.
-    :Parameters:
-     fin
-        UDDF file.
-    """
-    f = open(fin)
-    tree = eto.parse(f)
-    f.close()
-    dives = tree.findall(q('//dive'))
-    for i, dive in enumerate(dives):
-        k = i + 1
-        samples = dive.findall(q('samples/waypoint'))
-        depths = [float(s.depth.text) for s in samples]
-        times = [float(s.divetime) / 60 for s in samples]
-        
-        yield (k, get_time(dive), times[-1], max(depths))
+    def get_dives(self):
+        """
+        Get list of dives stored in an UDDF file.
+        """
+        dives = self.tree.findall(q('//dive'))
+        for i, dive in enumerate(dives):
+            k = i + 1
+            samples = dive.findall(q('samples/waypoint'))
+            depths = [float(s.depth.text) for s in samples]
+            times = [float(s.divetime) / 60 for s in samples]
+            
+            yield (k, self.get_time(dive), times[-1], max(depths))
 
 
 def q(expr):

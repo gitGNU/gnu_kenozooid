@@ -27,7 +27,6 @@ import unittest
 from kenozooid.driver.ostc import pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
-from kenozooid.uddf import create
 
 class ParserTestCase(unittest.TestCase):
     """

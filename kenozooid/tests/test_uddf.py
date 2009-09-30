@@ -28,7 +28,8 @@ import lxml.objectify as eto
 from datetime import datetime
 from StringIO import StringIO
 
-from kenozooid.uddf import create, compact, get_time, q, has_deco, has_temp
+import kenozooid
+from kenozooid.uddf import UDDFFile, UDDFProfileData, q, has_deco, has_temp
 
 class UDDFTestCase(unittest.TestCase):
     """
@@ -37,16 +38,21 @@ class UDDFTestCase(unittest.TestCase):
     def test_creation(self):
         """Test UDDF creation
         """
-        tree = create()
-        data = etree.tostring(tree.getroot())
-        self.assertTrue('2.2.0' in data)
-        self.assertTrue('kenozooid' in data)
+        uf = UDDFFile()
+        uf.create()
+        self.assertTrue(uf.tree)
+
+        root = uf.tree.getroot()
+        self.assertEquals('2.2.0', root.get('version')) # check UDDF version
+        self.assertEquals('kenozooid', root.generator.name.text)
+        self.assertEquals(kenozooid.__version__, root.generator.version.text)
 
 
     def test_time_parsing(self):
         """Test UDDF time parsing
         """
-        tree = eto.parse(StringIO("""
+        uf = UDDFProfileData()
+        uf.parse(StringIO("""
 <uddf xmlns="http://www.streit.cc/uddf">
 <profiledata>
 <repetitiongroup>
@@ -65,7 +71,7 @@ class UDDFTestCase(unittest.TestCase):
 </profiledata>
 </uddf>
 """))
-        dt = get_time(tree.find(q('//dive')))
+        dt = uf.get_time(uf.tree.find(q('//dive')))
         self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
 
 
@@ -109,7 +115,8 @@ class UDDFCompactTestCase(unittest.TestCase):
     def test_uddf_compact(self):
         """Test UDDF compact
         """
-        tree = eto.parse(StringIO("""
+        pd = UDDFProfileData()
+        pd.parse(StringIO("""
 <uddf xmlns="http://www.streit.cc/uddf">
 <profiledata>
 <repetitiongroup>
@@ -139,16 +146,19 @@ class UDDFCompactTestCase(unittest.TestCase):
 </profiledata>
 </uddf>
 """))
-        compact(tree)
+        pd.compact()
+
+        tree = pd.tree
+
         self.assertEquals(1, len(tree.findall(q('//repetitiongroup'))))
         dives = tree.findall(q('//dive'))
         self.assertEquals(2, len(dives))
 
         # check the order of dives (ordered by dive time)
-        dt = get_time(dives[0])
+        dt = pd.get_time(dives[0])
         self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
 
-        dt = get_time(dives[1])
+        dt = pd.get_time(dives[1])
         self.assertEquals(datetime(2009, 4, 2, 23, 2), dt)
 
 

@@ -161,7 +161,10 @@ def cmd_dives(parser, options, args):
 
     fin = args[1]
 
-    for dive in kenozooid.uddf.get_dives(fin):
+    pd = kenozooid.uddf.UDDFProfileData()
+    pd.open(fin)
+
+    for dive in pd.get_dives(fin):
         print u'%02d: %s   t=%s   \u21a7%.2fm' \
             % (dive[0], dive[1], min2str(dive[2]), dive[3])
 
@@ -179,7 +182,8 @@ def cmd_convert(parser, options, args):
     fout = args[-1]
 
     # create uddf file
-    tree = kenozooid.uddf.create()
+    pd = kenozooid.uddf.UDDFProfileData()
+    pd.create()
 
     # convert ostc dump to uddf (so far only ostc dump is supported, in the
     # future dump format detection and converter finding need to happen
@@ -189,19 +193,9 @@ def cmd_convert(parser, options, args):
     dumper = cls()
     for fn in fin:
         with open(fn) as f:
-            dumper.convert(f, tree)
+            dumper.convert(f, pd.tree)
 
-    kenozooid.uddf.compact(tree)
-    eto.deannotate(tree)
-    et.cleanup_namespaces(tree)
-    kenozooid.uddf.validate(tree)
-
-    with open(fout, 'w') as f:
-        data = et.tostring(tree,
-                encoding='utf-8',
-                xml_declaration=True,
-                pretty_print=True)
-        f.write(data)
+    pd.save(fout)
 
 
 def cmd_plot(parser, options, args):
@@ -227,7 +221,9 @@ def cmd_plot(parser, options, args):
         print >> sys.stderr, 'Unknown format: %s' % format
         sys.exit(2)
 
-    kenozooid.plot.plot(fin, fprefix, format,
+    pd = kenozooid.uddf.UDDFProfileData()
+    pd.open(fin)
+    kenozooid.plot.plot(pd.tree, fprefix, format,
             dives=dives,
             title=options.plot_title,
             info=options.plot_info,

@@ -24,10 +24,9 @@ Reefnet Sensus Ultra driver tests.
 """
 
 import unittest
-import lxml.objectify as eto
 
 from kenozooid.driver.su import SensusUltraMemoryDump
-from kenozooid.uddf import create, validate, q
+from kenozooid.uddf import UDDFProfileData, q
 
 
 class SensusUltraUDDFTestCase(unittest.TestCase):
@@ -37,9 +36,12 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
     def test_conversion(self):
         """Test basic Sensus Ultra data to UDDF conversion
         """
-        dumper = SensusUltraMemoryDump()
+        pd = UDDFProfileData()
+        pd.create()
+        tree = pd.tree
+
         f = open('dumps/su-01.dump')
-        tree = create()
+        dumper = SensusUltraMemoryDump()
         dumper.convert(f, tree)
 
         # three dives
@@ -56,6 +58,5 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         self.assertEquals(13, dive.time.hour)
         self.assertEquals(10, dive.time.minute)
 
-        eto.deannotate(tree)
-        validate(tree)
+        pd.validate()
 

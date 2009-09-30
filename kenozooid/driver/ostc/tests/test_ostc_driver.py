@@ -28,7 +28,7 @@ import lxml.objectify as eto
 from kenozooid.driver.ostc import pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
-from kenozooid.uddf import create, validate, q
+from kenozooid.uddf import UDDFProfileData, q
 
 class ConversionTestCase(unittest.TestCase):
     def test_pressure_conversion(self):
@@ -47,9 +47,12 @@ class UDDFTestCase(unittest.TestCase):
     def test_conversion(self):
         """Test basic OSTC data to UDDF conversion
         """
+        pd = UDDFProfileData()
+        pd.create()
+        tree = pd.tree
+
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')
-        tree = create()
         dumper.convert(f, tree)
 
         # five dives
@@ -66,16 +69,18 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals(23, dive.time.hour)
         self.assertEquals(8, dive.time.minute)
 
-        eto.deannotate(tree)
-        validate(tree)
+        pd.validate()
 
 
     def test_deco(self):
         """Test OSTC deco data to UDDF conversion
         """
+        pd = UDDFProfileData()
+        pd.create()
+        tree = pd.tree
+
         dumper = OSTCMemoryDump()
         f = open('dumps/ostc-01.dump')
-        tree = create()
         dumper.convert(f, tree)
 
         # get first dive, there are two deco periods
