@@ -22,19 +22,12 @@
 Commmand line user interface.
 """
 
+import optparse
 import logging
 import sys
 import lxml.etree as et
 import lxml.objectify as eto
 from cStringIO import StringIO
-
-from kenozooid.component import query, params
-from kenozooid.simulation import simulate
-from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, \
-    DeviceError, find_driver
-from kenozooid.util import min2str
-import kenozooid.uddf
-import kenozooid.plot
 
 class RangeError(ValueError): pass
 
@@ -79,6 +72,9 @@ def parse_range(s, infinity=100):
 
 
 def cmd_list(parser, options, args):
+    from kenozooid.component import query, params
+    from kenozooid.driver import DeviceDriver, Simulator, MemoryDump
+
     drivers = query(DeviceDriver)
     print 'Available drivers:\n'
     for cls in drivers:
@@ -101,6 +97,9 @@ def cmd_list(parser, options, args):
 
 
 def cmd_scan(parser, options, args):
+    from kenozooid.component import query, params
+    from kenozooid.driver import DeviceDriver, DeviceError
+
     print 'Scanning...\n'
     for cls in query(DeviceDriver):
         for drv in cls.scan():
@@ -114,6 +113,9 @@ def cmd_scan(parser, options, args):
 
 
 def cmd_simulate(parser, options, args):
+    from kenozooid.simulation import simulate
+    from kenozooid.driver import Simulator, find_driver
+
     if len(args) != 4:
         parser.print_help()
         sys.exit(2)
@@ -134,6 +136,9 @@ def cmd_dump(parser, options, args):
     """
     Implementation fo memory dump command. 
     """
+    from kenozooid.driver import MemoryDump, find_driver
+    import kenozooid.uddf
+
     if len(args) != 4:
         parser.print_help()
         sys.exit(2)
@@ -159,6 +164,9 @@ def cmd_dives(parser, options, args):
     """
     Implementation of dive listing command.
     """
+    import kenozooid.uddf
+    from kenozooid.util import min2str
+
     if len(args) != 2:
         parser.print_help()
         sys.exit(2)
@@ -178,6 +186,9 @@ def cmd_convert(parser, options, args):
     Implementation of file conversion command. The command handles all
     supported data formats like dive computer memory dumps and UDDF.
     """
+    from kenozooid.driver import MemoryDump, find_driver
+    import kenozooid.uddf
+
     if len(args) < 3:
         parser.print_help()
         sys.exit(2)
@@ -206,6 +217,9 @@ def cmd_plot(parser, options, args):
     """
     Implementation of dive profile plotting command.
     """
+    import kenozooid.plot
+    import kenozooid.uddf
+
     if len(args) != 4 and len(args) != 5:
         parser.print_help()
         sys.exit(2)
@@ -232,6 +246,111 @@ def cmd_plot(parser, options, args):
             title=options.plot_title,
             info=options.plot_info,
             temp=options.plot_temp)
+
+
+def main():
+    usage = """
+        %prog [options] list
+        %prog [options] simulate <drv> <port> <dive plan>
+        %prog [options] dump <drv> <port> <output>
+        %prog [options] dives <input>
+        %prog [options] convert <dump1> [dump2 ...] <output>
+        %prog [options] plot <input> [dives] <prefix> <format>
+
+    Commands Description:
+        list - list available drivers and their capabilities
+        simulate - simulate dive
+        dump - dump dive computer memory (logbook, settings, etc.)
+        dives - list dives stored in a file
+        convert - convert dive computer memory dumps into UDDF format
+        plot - plot profiles of dives (all by default) into files
+               named <prefix>-<no>.<format>' (no is number of a dive from input
+               file, and format is one of pdf, svg or png)
+               
+        [dives] - dive range, i.e. 1-3,6 indicates dive 1, 2, 3 and 6
+    """
+
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option('-v', '--verbose',
+            action='store_true', dest='verbose', default=False,
+            help='explain what is being done')
+    parser.add_option('--profile',
+            action='store_true', dest='profile', default=False,
+            help='run with profiler')
+
+    group = optparse.OptionGroup(parser, 'Dive Simulation Options')
+    group.add_option('--no-start',
+            action='store_false',
+            dest='sim_start',
+            default=True,
+            help='assume simulation is started, don\'t start simulation')
+    group.add_option('--no-stop',
+            action='store_false',
+            dest='sim_stop',
+            default=True,
+            help='don\'t stop simulation, leave dive computer in simulation mode')
+    parser.add_option_group(group)
+
+    group = optparse.OptionGroup(parser, 'Dive Profile Plotting Options')
+    group.add_option('--no-title',
+            action='store_false',
+            dest='plot_title',
+            default=True,
+            help='don\'t display plot title')
+    group.add_option('--no-info',
+            action='store_false',
+            dest='plot_info',
+            default=True,
+            help='don\'t display dive information (depth, time, temperature)')
+    group.add_option('--no-temp',
+            action='store_false',
+            dest='plot_temp',
+            default=True,
+            help='don\'t plot temperature graph')
+    parser.add_option_group(group)
+
+    options, args = parser.parse_args()
+
+    # configure basic logger
+    logging.basicConfig()
+    logging.Logger.manager.loggerDict.clear()
+    log = logging.getLogger()
+    log.setLevel(logging.INFO)
+
+    if options.verbose:
+        logging.root.setLevel(logging.DEBUG)
+
+    # don't import kenozooid modules until logger is configured
+
+    # import modules implementing supported drivers
+    # todo: support dynamic import of third party drivers
+    from kenozooid.driver import DeviceError
+    import kenozooid.driver.dummy
+    import kenozooid.driver.ostc
+    import kenozooid.driver.su
+
+    if len(args) < 1 or args[0] not in COMMANDS:
+        parser.print_help()
+        sys.exit(1)
+
+    cmd = args[0]
+    assert cmd in COMMANDS
+
+    f = COMMANDS[cmd]
+    try:
+        if options.profile:
+            import hotshot, hotshot.stats
+            prof = hotshot.Profile('kenozooid.prof')
+            prof.runcall(f, parser, options, args)
+            prof.close()
+            stats = hotshot.stats.load('kenozooid.prof')
+            stats.strip_dirs()
+            stats.sort_stats('time', 'calls')
+            stats.print_stats(20)
+        else:
+            f(parser, options, args)
+    except DeviceError, ex:
+        print ex
 
 
 # map cli command names to command functions

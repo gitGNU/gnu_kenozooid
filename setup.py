@@ -101,7 +101,7 @@ computers.
     ],
     entry_points={
         'console_scripts': [
-            'kenozooid = bin.kenozooid:__main__',
+            'kenozooid = kenozooid.cli:main',
         ],
     },
     test_suite='nose.collector',
