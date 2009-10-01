@@ -2,4 +2,4 @@ include bin/kenozooid
 include doc/*.gaphor
 include doc/*.py
 include doc/*.txt
-include dumps/*.dump
+include dumps/*.uddf

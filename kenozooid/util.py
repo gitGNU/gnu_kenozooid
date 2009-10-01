@@ -22,31 +22,7 @@
 Kenozooid utility funtions.
 """
 
-import os.path
 import math
-
-def save(filename, data):
-    """
-    Save data to a file.
-
-    `True` is returned when file is saved. If file already exists, then it
-    is not saved and `False` is returned.
-
-    :Parameters:
-     filename
-        Name of file to be saved.
-     data
-        Iterator of data to be saved.
-    """
-    if os.path.exists(filename):
-        return False
-
-    with open(filename, 'w') as f:
-        for bits in data:
-            f.write(bits)
-
-    return True
-
 
 def min2str(t):
     """

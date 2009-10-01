@@ -27,16 +27,16 @@ It uses libdivecomputer library from
 """
 
 import ctypes as ct
-import time
 from datetime import datetime
 from struct import unpack, pack
 from collections import namedtuple
 from lxml import etree as et
+import time
 
 import logging
 log = logging.getLogger('kenozooid.driver.su')
 
-from kenozooid.uddf import q
+from kenozooid.uddf import q, UDDFFile
 from kenozooid.component import inject
 from kenozooid.driver import DeviceDriver, MemoryDump, DeviceError
 from kenozooid.units import C2K
@@ -125,7 +125,9 @@ class SensusUltraDriver(object):
         lib = ct.CDLL('libdivecomputer.so.0')
 
         dev = ct.c_void_p()
-        rc = lib.reefnet_sensusultra_device_open(ct.byref(dev), port)
+        rc = 0
+        if port is not None:
+            rc = lib.reefnet_sensusultra_device_open(ct.byref(dev), port)
         if rc == 0:
             drv = SensusUltraDriver(dev, lib)
             log.debug('found Reefnet Sensus Ultra driver using' \
@@ -166,7 +168,6 @@ class SensusUltraMemoryDump(object):
         - handshake packet
         - user data 
         - data of all dive profiles
-        - time of download (epoch, 8 bytes)
         """
         dev = self.driver.dev
         lib = self.driver.lib
@@ -174,8 +175,6 @@ class SensusUltraMemoryDump(object):
         hd = ct.create_string_buffer('\000' * SIZE_MEM_HANDSHAKE)
         ud = ct.create_string_buffer('\000' * SIZE_MEM_USER)
         dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
-
-        t = int(time.time())
 
         rc = lib.reefnet_sensusultra_device_read_user(dev, ud, SIZE_MEM_USER)
         if rc != 0:
@@ -189,12 +188,12 @@ class SensusUltraMemoryDump(object):
         if rc != 0:
             raise DeviceError('Device communication error')
 
-        return hd.raw[:-1] + ud.raw[:-1] + dd.raw[:-1] + pack('<q', t)
+        return hd.raw[:-1] + ud.raw[:-1] + dd.raw[:-1]
 
 
-    def convert(self, data, tree):
+    def convert(self, dtree, data, tree):
         """
-        Convert dive profiles to UDDF format.
+        Convert Reefnet Sensus Ultra dive profiles data into UDDF format.
         """
         pdn = tree.find(q('profiledata'))
         self.rdn = rdn = et.SubElement(pdn, q('repetitiongroup'))
@@ -216,9 +215,10 @@ class SensusUltraMemoryDump(object):
         dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
         dd.raw = data.read(SIZE_MEM_DATA)
 
+        dtime = UDDFFile.get_time(dtree.getroot().generator)
         data = {
-            'dtime': unpack('<q', data.read(8))[0], # download time
-            'stime': hdp.time,                      # sensus time at download time
+            'dtime': time.mktime(dtime.timetuple()),  # download time
+            'stime': hdp.time,                        # sensus time at download time
         }
 
         rc = lib.reefnet_sensusultra_extract_dives(None,

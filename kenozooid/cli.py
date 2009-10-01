@@ -26,12 +26,13 @@ import logging
 import sys
 import lxml.etree as et
 import lxml.objectify as eto
+from cStringIO import StringIO
 
 from kenozooid.component import query, params
 from kenozooid.simulation import simulate
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, \
     DeviceError, find_driver
-from kenozooid.util import save, min2str
+from kenozooid.util import min2str
 import kenozooid.uddf
 import kenozooid.plot
 
@@ -139,16 +140,19 @@ def cmd_dump(parser, options, args):
 
     drv = args[1]
     port = args[2]
-    filename = args[3]
+    fout = args[3]
 
     dumper = find_driver(MemoryDump, drv, port)
     if dumper is None:
         print 'Device driver %s does not support memory dump' % drv
         sys.exit(3)
 
-    saved = save(filename, dumper.dump())
-    if not saved:
-        print 'File %s already exists' % filename
+    data = dumper.dump()
+    dd = kenozooid.uddf.UDDFDeviceDump()
+    dd.create()
+    dd.set_id(drv)
+    dd.set_data(dumper.dump())
+    dd.save(fout)
 
 
 def cmd_dives(parser, options, args):
@@ -181,19 +185,19 @@ def cmd_convert(parser, options, args):
     fin = args[1:-1]
     fout = args[-1]
 
-    # create uddf file
+    # create uddf file with profile data
     pd = kenozooid.uddf.UDDFProfileData()
     pd.create()
 
-    # convert ostc dump to uddf (so far only ostc dump is supported, in the
-    # future dump format detection and converter finding need to happen
-    # here)
-    #dumper = find_driver(MemoryDump, 'su', port)
-    cls = query(MemoryDump, id='su').next()
-    dumper = cls()
     for fn in fin:
-        with open(fn) as f:
-            dumper.convert(f, pd.tree)
+        # read uddf file containing device dump
+        dd = kenozooid.uddf.UDDFDeviceDump()
+        dd.open(fn)
+        drv = dd.get_id()
+        data = dd.get_data()
+
+        dumper = find_driver(MemoryDump, drv, None)
+        dumper.convert(dd.tree, StringIO(data), pd.tree)
 
     pd.save(fout)
 

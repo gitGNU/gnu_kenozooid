@@ -29,7 +29,8 @@ from datetime import datetime
 from StringIO import StringIO
 
 import kenozooid
-from kenozooid.uddf import UDDFFile, UDDFProfileData, q, has_deco, has_temp
+from kenozooid.uddf import UDDFFile, UDDFProfileData, UDDFDeviceDump, \
+        q, has_deco, has_temp
 
 class UDDFTestCase(unittest.TestCase):
     """
@@ -40,7 +41,7 @@ class UDDFTestCase(unittest.TestCase):
         """
         uf = UDDFFile()
         uf.create()
-        self.assertTrue(uf.tree)
+        self.assertFalse(uf.tree is None)
 
         root = uf.tree.getroot()
         self.assertEquals('2.2.0', root.get('version')) # check UDDF version
@@ -161,4 +162,81 @@ class UDDFCompactTestCase(unittest.TestCase):
         dt = pd.get_time(dives[1])
         self.assertEquals(datetime(2009, 4, 2, 23, 2), dt)
 
+
+
+class UDDFDeviceDumpTestCase(unittest.TestCase):
+    """
+    Tests for UDDF file containing device dump data.
+    """
+    def test_creation(self):
+        """Test UDDF device dump file creation
+        """
+        uf = UDDFDeviceDump()
+        uf.create()
+        self.assertFalse(uf.tree is None)
+
+        root = uf.tree.getroot()
+        self.assertEquals('2.2.0', root.get('version')) # check UDDF version
+        self.assertEquals('kenozooid', root.generator.name.text)
+        self.assertEquals(kenozooid.__version__, root.generator.version.text)
+        self.assertTrue(q('divecomputercontrol') in [el.tag for el in root.iterchildren()])
+        dc = root.divecomputercontrol
+        self.assertTrue(q('dcdata') in [el.tag for el in dc.iterchildren()])
+
+
+    def test_encoding(self):
+        """Test data encoding
+        """
+        s = UDDFDeviceDump.encode('01234567890abcdef')
+        self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
+
+
+    def test_decoding(self):
+        """Test data decoding
+        """
+        s = UDDFDeviceDump.decode('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=')
+        self.assertEquals('01234567890abcdef', s)
+
+
+    def test_setting_data(self):
+        """Test data setting
+        """
+        dd = UDDFDeviceDump()
+        dd.create()
+
+        dd.set_data('01234567890abcdef')
+        self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=',
+                dd._get_data_node().dcdata.text)
+
+
+    def test_getting_data(self):
+        """Test data getting
+        """
+        dd = UDDFDeviceDump()
+        dd.create()
+
+        s = UDDFDeviceDump.encode('01234567890abcdef')
+        dd._get_data_node().dcdata = s
+
+        self.assertEquals('01234567890abcdef', dd.get_data())
+
+
+    def test_setting_id(self):
+        """Test id setting
+        """
+        dd = UDDFDeviceDump()
+        dd.create()
+
+        dd.set_id('ostc')
+        self.assertEquals('ostc', dd._get_data_node().dcdata.get('id'))
+
+
+    def test_getting_id(self):
+        """Test id getting
+        """
+        dd = UDDFDeviceDump()
+        dd.create()
+
+        dd._get_data_node().dcdata.set('id', 'ostc')
+        self.assertEquals('ostc', dd.get_id())
 

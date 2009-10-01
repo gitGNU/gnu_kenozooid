@@ -119,7 +119,7 @@ class MemoryDump(object):
         Dumped memory will be saved to a file by Kenozooid.
         """
 
-    def convert(self, data, tree):
+    def convert(self, dtree, data, tree):
         """
         Convert dive computer dump data into UDFF format.
 
@@ -128,6 +128,8 @@ class MemoryDump(object):
         by Kenozooid.
 
         :Parameters:
+         dtree
+            XML data coming from UDDF file containing device data.
          data
             Dive computer memory dump.
          tree

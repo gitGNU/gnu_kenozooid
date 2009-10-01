@@ -29,6 +29,8 @@ from operator import itemgetter
 import pwd
 import os
 import re
+import bz2
+import base64
 
 import kenozooid
 
@@ -130,6 +132,8 @@ class UDDFFile(object):
          validate
             Validate UDDF file before saving if set to True.
         """
+        self.clean()
+
         if validate:
             self.validate()
 
@@ -141,13 +145,19 @@ class UDDFFile(object):
             f.write(data)
 
 
-    def validate(self):
+    def clean(self):
         """
-        Validate UDDF file with UDDF XML Schema.
+        Clean UDDF XML data structures from unnecessary annotations and
+        namespaces.
         """
         eto.deannotate(self.tree)
         et.cleanup_namespaces(self.tree)
 
+
+    def validate(self):
+        """
+        Validate UDDF file with UDDF XML Schema.
+        """
         schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
         schema.assertValid(self.tree.getroot())
 
@@ -243,6 +253,97 @@ class UDDFProfileData(UDDFFile):
             times = [float(s.divetime) / 60 for s in samples]
             
             yield (k, self.get_time(dive), times[-1], max(depths))
+
+
+
+class UDDFDeviceDump(UDDFFile):
+    """
+    UDDF device dump file contains all data fetched from a device.
+
+    The binary data fetched from a device is compressed with bzip2 and then
+    encoded with base64. Decoding the data is very simple in Python::
+
+        s = base64.b64decode(encoded) # encoded = getdcalldata text
+        decoded = bz2.decompress(s)
+
+    """
+    UDDF = UDDF_TMPL % """\
+<divecomputercontrol>
+    <!--
+        data is compressed with bzip2, then encoded with base64; to
+        decode in Python
+            s = base64.b64decode(encoded) # encoded = dcdata text
+            decoded = bz2.decompress(s)
+        WARNING! dcdata is not part of the standard
+    -->
+    <dcdata id=''/>
+</divecomputercontrol>
+"""
+    def _get_data_node(self):
+        """
+        Get node, which stores the data of a device.
+        """
+        return self.tree.getroot().divecomputercontrol
+
+
+    def set_data(self, data):
+        """
+        Encode and set data of a device into appropriate node of UDDF file.
+
+        :Parameters:
+         data
+            Device data to be stored in UDDF file.
+        """
+        node = self._get_data_node()
+        node.dcdata = self.encode(data)
+
+
+    def get_data(self):
+        """
+        Get and decode data of a device.
+        """
+        node = self._get_data_node()
+        return self.decode(node.dcdata.text)
+
+
+    def set_id(self, id):
+        """
+        Set id of a device, which data is supposed to be stored in UDDF
+        file.
+        """
+        node = self._get_data_node()
+        node.dcdata.set('id', id)
+
+
+    def get_id(self):
+        """
+        Get id of device, which data is stored in UDDF file.
+        """
+        node = self._get_data_node()
+        return node.dcdata.get('id')
+
+
+    @staticmethod
+    def encode(data):
+        """
+        Encode device data, so it can be stored in UDDF file.
+
+        The encoded string is returned.
+        """
+        s = bz2.compress(data)
+        return base64.b64encode(s)
+
+
+    @staticmethod
+    def decode(data):
+        """
+        Decode device data, which is stored in UDDF file.
+
+        Decoded device data is returned.
+        """
+        s = base64.b64decode(data)
+        return bz2.decompress(s)
+
 
 
 def q(expr):

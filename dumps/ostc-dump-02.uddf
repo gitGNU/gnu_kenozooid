@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf" version="2.2.0">
+  <generator>
+    <name>kenozooid</name>
+    <version>0.1.0</version>
+    <date>
+      <year>2009</year>
+      <month>3</month>
+      <day>2</day>
+    </date>
+    <time>
+      <hour>21</hour>
+      <minute>25</minute>
+    </time>
+  </generator>
+  <divecomputercontrol>
+    <!--
+        data is compressed with bzip2, then encoded with base64; to
+        decode in Python
+            s = base64.b64decode(encoded) # encoded = dcdata text
+            decoded = bz2.decompress(s)
+        WARNING! dcdata is not part of the standard
+    -->
+    <dcdata id = 'ostc'>QlpoOTFBWSZTWfuk/SkAGIX/////////1XUU6AQCcAVFQkF2AAXIQHBAQABEQEwUBEP/4AzOAAAAA+6YV2TbOBGDIK6lUqio3bbAxJEap7KeEamaGk2qbFNNoj0QAxMjRo9EA0ABoA9QaDQkmk0QZNGgNpNGJppoGgaAAAAAAAyHDEaaaDQBoAAAAaDINNA0AGjQBiGgEnqlKUgIyYm0IGIxMmAAmTJiNMmTQYhk0YTABwxGmmg0AaAAAAGgyDTQNABo0AYhoBCkiCKn5GiRhHqDTaQDQDeqAADQMgA09T1Gg9NqiA2QoeZgk/7bDgfuICQX1/UQkP8uNtDjb2bhZUJpHNcEU7ru7vTtxMyJnuXejsjNXY7rA7pr3Tcria88uHl0lvLzc3Qu7p3LHit2bO7W5Rckd1id2TSaU25uGjXOVjOcWuY1yk5uR0100d3Yxod1zWC7OHd2uc2A0kY2TJtzc5uRV0LFuVdGPUt3jzuiijYtP5HeKKI7yO/l83gYXiud3FLGI00d6XbySSPRrtkYymXduilCY9OrorxHMiI0nk9HRsnqXp5AKUyRnqddMyiTd3BiacjmiDRGLlw10q5RqALc5bGMzuu3E5uSa5bLGTTcJzrs25Td2uRul3dG3Ou65uWuUDDpqi5rq/mpzoJhJfzq5nOprzrslDZMZLSA8cpKRQGJGiTy651eieeV6dxhSSExy4BUskkSlL0cKEjXnnXi0JvLu7u3NXZygMy3LEbcCjIAc3aSBJdKoW65JgXOIT+h0TKZMbJRJGpaUTHnV2XjrRrxUVJkSZcRjEoxvG88uUykVy883VGUZDlrpkSwkwwyDZIxiQEjcjlBy6bRR12d0mmTFBsG5rkZNudo3h1y3i5UZKKJmSEYDljNXgAzi9jQ0Idfem7DuzWjNd22rbCzK5baUAiNtxKgiWDEPACqDDBgQWhXdc4ZazRZasmvTOfSpHiQLrMDXubONe7mU3juvqeoo32nvvZFE0hE+CKUiyOmJHd0BjYSL2y4V/HebmKd0lzXLF3dES7sXK5rhEaZCmFL2/GRT1euFRd3QaR3a5wjXLm25b3DWihwiokuXOOYdkvRMSVkOThYyRBRSE9HEaREb/v+n1g1DVq3Khopv04LohEWNhNdcQ4RiT18rtD4gSABF9N42UVw/NiAqZIKvw0zEUEpFVDj6WalFX04BCcwH1CCD2WDtk39vtNHW+W3YAsIIlEkkVefPRRX2QCRWQBIrcscCiuPSXX9GtLRmYEHoyEAMDCRlRIsfSOlqbhJIIEBQCBMUJszUpGqEqKqPZ+rxDUCvqyDQoeiuggA70CDWdcNAIPXQBJJlgABZKuDPp1xH3N2rfwvcW0b/V3d7uw78nBGNeWTggy3KcHBTq2RLhhisvPRtHTqXp6Z1St7h8PFV4vBnz8fIqxJATiYsQVmbJV3VXZGdlZXyt7ljNx2XOoVmnOq6McOainWYJx20LgbJhF2BcEtYRc0X3yIh7w98PVCwkTWdBrCotY4JC3NAe/gJo327TKQx1uPGM8V6nHFWnQNWuky02ciH1xdFwwNc0zN0TF11TYVguWFEibIDFoaW0VUQ6laV5i6Ep41NJRpFtMLznDvEBVL6qqVXWkhXks8EFgXal1XeRTipUxZ0YIQ1CBFkWCDPMZHiCyQ7VrEoA/DFZHOsifSiC0g9ne0803HHtcm3FlIpQJ0KzpP4osmLGMWs85wSoov2r9+qvgnyQu1TDjw48NAyWrE/Q19gK86SzXmkyCaPAlgDmvDmvB11iAzyZMTMxMF9HNfwPdUYBTxI+x06EN/JtZHMzosSo5jYHRw4HRu68ghdIvSqaY2iaaI5nPo2xgjUnB0L8dz3uMAAYDspsYGKYSkZoM0pmbbaQ/zA7boUpbYpmWCb4YJrMExwxD6WYJtrBNHh0YeuQAXXKR0QOJXLcIM+TYojXMEFSZaoQA+6XQCZl0AnFjdEcTOiQgOFyQARkKJtUAAgSTmwG2/Rtsha1hpcxwDRrALWLo0YhaxdGYujIoqOBHODz9nr9Ph5hy9TpOzJ2CgClKBmEeoLCRx6taE0x51HQknl5HwD5fA0yf2OIvPREMLEIH+t+OxhdaeYBQM4o4A6JV2N9zD3OCOv+XOTamhpGgEkDp6jVr2oqE+tgiNvxDf0IiAAgJ1GAXY29ru8pDxR2z1bDdkqJpoKIiLRsVemqbdLSWJMVaJUjSBQj8QdA92eXZ3gohikoa2mVTKLKaVprTK1NmNbSVFmVVGWUm0WihUTcQ6zB83/sN5pgICkiFmatkoU0YtlEpptG1kqWqaBpqZSIUTu9/ir+TY9aDnPrUmk1SSbNNqkZsySk2mTSplNUqmasVUWoEahkoCgaBA8fnQOKEGtoxJGgjaSMRaJpFkgxDE0jMxJJCtKpoXfNZSVGxFTJTa0UptlSpmVSqNrNJmtTNJSFtFWxFZYzaZKUykwoGlKnCmKWSVJhIpYFKpS0Sy2NSjSszNSxSsQATApTQqHs6xlLhJsS0ieH2MN0fJAPLjiAdEDokcIShfoa4BoEnbFPKeTby+0dGuCnGQy1HKdz6JiVhVpUE62LFOfKJLOZ08qgAAkbAUJockjmKm7rYrIftidykfkEssvWSinhhiABInRtIewLhUaDMwIrIgd+XvRrbv77K9vbiGt99C+aD35EEfBdf33bdBhzMxhhQXowSFd8OTACAAGGRWWHaCWiqvy9O3RVsZsuCYgEAQygzFxRRTTMQgxYEJCWWsmOzY4HEBQPQgy1jy0ieKDq1j+/jhttySkH1j3ju9vYHxnI5oIaR6oAPQ5HRq20aQDdQV9LfknLhh09uLkouv/i7kinChIfdJ+lI=</dcdata>
+  </divecomputercontrol>
+</uddf>
