@@ -31,6 +31,9 @@ import os
 import re
 import bz2
 import base64
+import logging
+
+log = logging.getLogger('kenozooid.plot')
 
 import kenozooid
 
@@ -150,6 +153,7 @@ class UDDFFile(object):
         Clean UDDF XML data structures from unnecessary annotations and
         namespaces.
         """
+        log.debug('cleaning uddf file')
         eto.deannotate(self.tree)
         et.cleanup_namespaces(self.tree)
 
@@ -158,6 +162,7 @@ class UDDFFile(object):
         """
         Validate UDDF file with UDDF XML Schema.
         """
+        log.debug('validating uddf file')
         schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
         schema.assertValid(self.tree.getroot())
 
