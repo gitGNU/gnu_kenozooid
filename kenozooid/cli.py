@@ -176,7 +176,7 @@ def cmd_dives(parser, options, args):
     pd = kenozooid.uddf.UDDFProfileData()
     pd.open(fin)
 
-    for dive in pd.get_dives(fin):
+    for dive in pd.get_dives():
         print u'%02d: %s   t=%s   \u21a7%.2fm' \
             % (dive[0], dive[1], min2str(dive[2]), dive[3])
 
