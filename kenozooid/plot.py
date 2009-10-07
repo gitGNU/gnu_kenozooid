@@ -45,7 +45,7 @@ from matplotlib.font_manager import FontProperties
 import kenozooid
 from kenozooid.uddf import UDDFProfileData, q, has_deco, has_temp
 from kenozooid.units import K2C
-from kenozooid.util import min2str
+from kenozooid.util import min2str, FMT_DIVETIME
 
 log = logging.getLogger('kenozooid.plot')
 
@@ -127,7 +127,7 @@ def plot_dive(dive, fout, title=True, info=True, temp=True, sig=True):
     ax_depth.set_ylim([ymax, ymin])
 
     if title:
-        ax_depth.set_title('%s' % dive_time)
+        ax_depth.set_title(dive_time.strftime(FMT_DIVETIME))
     ax_depth.set_xlabel('Time [min]')
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)

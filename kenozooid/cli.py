@@ -165,7 +165,7 @@ def cmd_dives(parser, options, args):
     Implementation of dive listing command.
     """
     import kenozooid.uddf
-    from kenozooid.util import min2str
+    from kenozooid.util import min2str, FMT_DIVETIME
 
     if len(args) != 2:
         parser.print_help()
@@ -178,7 +178,7 @@ def cmd_dives(parser, options, args):
 
     for dive in pd.get_dives():
         print u'%02d: %s   t=%s   \u21a7%.2fm' \
-            % (dive[0], dive[1], min2str(dive[2]), dive[3])
+            % (dive[0], dive[1].strftime(FMT_DIVETIME), min2str(dive[2]), dive[3])
 
 
 def cmd_convert(parser, options, args):
