@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 version = __import__('kenozooid').__version__
 
 from distutils.cmd import Command
+import os.path
 
 class EpydocBuildDoc(Command):
     description = 'Builds the documentation with epydoc'
@@ -60,15 +61,23 @@ class build_doc(Command):
 
 
     def finalize_options(self):
+        build = self.get_finalized_command('build')
+        d1 = os.path.join(build.build_base, 'homepage', 'doc', 'api')
+        self.mkpath(d1)
+
         if self.sphinx:
+            self.sphinx.build_dir = os.path.join(build.build_base,
+                'homepage', 'doc')
             self.sphinx.finalize_options()
         self.epydoc.finalize_options()
 
 
     def run(self):
+        self.epydoc.run()
         if self.sphinx:
             self.sphinx.run()
-        self.epydoc.run()
+        # fixme
+        os.system('cp -r doc/homepage build')
 
 
 setup(
