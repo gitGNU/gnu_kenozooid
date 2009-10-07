@@ -1,0 +1,22 @@
+/* remove top border for body defined by typogridphy */
+body {
+    border-top: none;
+}
+
+/* redefine top border defined by typogridphy */
+.generic {
+	border-top: 0.2em solid #666;
+}
+
+/* remove top border for header defined by typogridphy */
+.generic {
+	margin-top: 2em;
+}
+
+div#header {
+    text-align: right;
+}
+
+.kz {
+    font-variant: small-caps;
+}
