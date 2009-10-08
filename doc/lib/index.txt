@@ -1,5 +1,5 @@
 
-.. _part-devel:
+.. _part-lib:
 
 Application Development
 =======================
@@ -7,3 +7,5 @@ Application Development
 .. toctree::
    :maxdepth: 2
 
+* :ref:`genindex`
+* :ref:`search`

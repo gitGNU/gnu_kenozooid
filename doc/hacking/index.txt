@@ -1,3 +1,6 @@
+
+.. _part-hacking:
+
 Extending Kenozooid
 ===================
 
@@ -5,3 +8,6 @@ Extending Kenozooid
    :maxdepth: 2
 
    drvarch
+
+* :ref:`genindex`
+* :ref:`search`
