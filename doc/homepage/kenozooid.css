@@ -8,15 +8,22 @@ body {
 	border-top: 0.2em solid #666;
 }
 
-/* remove top border for header defined by typogridphy */
-.generic {
-	margin-top: 2em;
+div#header {
+    text-align: right;
 }
 
-div#header div {
-    text-align: right;
+div#header span {
+    font-size: 1.4em;
 }
 
 .kz {
     font-variant: small-caps;
+}
+
+div.generic h2 {
+    font-variant: small-caps;
+}
+
+div.nineforty h2 {
+    font-variant: normal;
 }
