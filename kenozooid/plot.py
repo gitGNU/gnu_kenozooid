@@ -132,12 +132,15 @@ def plot_dive(dive, fout, title=True, info=True, temp=True, sig=True):
     ax_depth.set_ylabel('Depth [m]')
     ax_depth.legend(loc='lower right', shadow=True)
     if info:
-        ax_depth.text(0.8, 0.1,
+        ax_depth.text(0.95, 0.05,
             u't = %s\n\u21a7 = %.2fm\nT = %.1f\u00b0C' \
                 % (min2str(max_time), max_depth, min_temp),
             family='monospace',
             transform=ax_depth.transAxes,
-            bbox=dict(facecolor='white', edgecolor='none'))
+            bbox=dict(facecolor='white', edgecolor='none'),
+            multialignment='left',
+            horizontalalignment='right',
+            verticalalignment='bottom')
     ax_depth.grid(True)
 
     if temp:
