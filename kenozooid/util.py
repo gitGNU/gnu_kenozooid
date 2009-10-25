@@ -25,7 +25,7 @@ Kenozooid utility funtions.
 import math
 
 # format for dive time presentation
-FMT_DIVETIME = '%y-%m-%d %H:%M'
+FMT_DIVETIME = '%Y-%m-%d %H:%M'
 
 def min2str(t):
     """
