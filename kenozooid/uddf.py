@@ -300,7 +300,10 @@ class UDDFDeviceDump(UDDFFile):
             Device data to be stored in UDDF file.
         """
         node = self._get_data_node()
+        id = node.dcdata.get('id')
         node.dcdata = self.encode(data)
+        if id:
+            node.dcdata.set('id', id)
 
 
     def get_data(self):

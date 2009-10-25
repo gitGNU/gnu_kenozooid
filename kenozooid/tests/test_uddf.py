@@ -230,6 +230,9 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         dd.set_id('ostc')
         self.assertEquals('ostc', dd._get_data_node().dcdata.get('id'))
 
+        dd.set_data('123')
+        self.assertEquals('ostc', dd._get_data_node().dcdata.get('id'))
+
 
     def test_getting_id(self):
         """Test id getting
