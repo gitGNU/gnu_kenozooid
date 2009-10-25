@@ -24,9 +24,20 @@ OSTC driver binary parser routines tests.
 
 import unittest
 
+from kenozooid.uddf import UDDFDeviceDump
 from kenozooid.driver.ostc import pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
+
+
+def get_data(fn):
+    """
+    Get binary data from memory dump file.
+    """
+    dd = UDDFDeviceDump()
+    dd.open(fn)
+    return dd.get_data()
+
 
 class ParserTestCase(unittest.TestCase):
     """
@@ -35,8 +46,7 @@ class ParserTestCase(unittest.TestCase):
     def test_status_parsing(self):
         """Test status parsing
         """
-        f = open('dumps/ostc-01.dump')
-        dump = ostc_parser.status(''.join(f))
+        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
 
         self.assertEquals('\xaa' * 5 + '\x55', dump.preamble)
 
@@ -53,8 +63,7 @@ class ParserTestCase(unittest.TestCase):
     def test_profile_split(self):
         """Test profile splitting
         """
-        f = open('dumps/ostc-01.dump')
-        dump = ostc_parser.status(''.join(f))
+        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
         profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
@@ -67,8 +76,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        f = open('dumps/ostc-01.dump')
-        dump = ostc_parser.status(''.join(f))
+        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
         profile = tuple(ostc_parser.profile(dump.profile))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -108,8 +116,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        f = open('dumps/ostc-01.dump')
-        dump = ostc_parser.status(''.join(f))
+        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
         profile = tuple(ostc_parser.profile(dump.profile))
         h, p = profile[0]
         header = ostc_parser.header(h)

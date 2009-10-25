@@ -24,11 +24,13 @@ OSTC driver tests.
 
 import unittest
 import lxml.objectify as eto
+from cStringIO import StringIO
 
 from kenozooid.driver.ostc import pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
-from kenozooid.uddf import UDDFProfileData, q
+from kenozooid.uddf import UDDFProfileData, UDDFDeviceDump, q
+
 
 class ConversionTestCase(unittest.TestCase):
     def test_pressure_conversion(self):
@@ -44,22 +46,29 @@ class UDDFTestCase(unittest.TestCase):
     """
     OSTC data to UDDF format conversion tests.
     """
+    def setUp(self):
+        super(UDDFTestCase, self).setUp()
+
+        pd = UDDFProfileData()
+        pd.create()
+
+        dd = UDDFDeviceDump()
+        dd.open('dumps/ostc-dump-01.uddf')
+
+        dumper = OSTCMemoryDump()
+        dumper.convert(dd.tree, StringIO(dd.get_data()), pd.tree)
+        self.pd = pd
+        self.tree = pd.tree
+
+
     def test_conversion(self):
         """Test basic OSTC data to UDDF conversion
         """
-        pd = UDDFProfileData()
-        pd.create()
-        tree = pd.tree
-
-        dumper = OSTCMemoryDump()
-        f = open('dumps/ostc-01.dump')
-        dumper.convert(f, tree)
-
         # five dives
-        self.assertEquals(5, len(tree.findall(q('//dive'))))
+        self.assertEquals(5, len(self.tree.findall(q('//dive'))))
 
         # 193 samples for first dive
-        dive = tree.find(q('//dive'))
+        dive = self.tree.find(q('//dive'))
         data = dive.findall(q('samples/waypoint'))
         self.assertEquals(193, len(data))
 
@@ -69,22 +78,15 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals(23, dive.time.hour)
         self.assertEquals(8, dive.time.minute)
 
-        pd.validate()
+        self.pd.clean()
+        self.pd.validate()
 
 
     def test_deco(self):
         """Test OSTC deco data to UDDF conversion
         """
-        pd = UDDFProfileData()
-        pd.create()
-        tree = pd.tree
-
-        dumper = OSTCMemoryDump()
-        f = open('dumps/ostc-01.dump')
-        dumper.convert(f, tree)
-
         # get first dive, there are two deco periods
-        dive = tree.find(q('//dive'))
+        dive = self.tree.find(q('//dive'))
         wps = dive.findall(q('samples/waypoint'))
         d1 = wps[155:161]
         d2 = wps[167:185]

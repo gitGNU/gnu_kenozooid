@@ -23,10 +23,11 @@
 Reefnet Sensus Ultra driver tests.
 """
 
+from cStringIO import StringIO
 import unittest
 
 from kenozooid.driver.su import SensusUltraMemoryDump
-from kenozooid.uddf import UDDFProfileData, q
+from kenozooid.uddf import UDDFProfileData, UDDFDeviceDump, q
 
 
 class SensusUltraUDDFTestCase(unittest.TestCase):
@@ -38,17 +39,18 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         """
         pd = UDDFProfileData()
         pd.create()
-        tree = pd.tree
 
-        f = open('dumps/su-01.dump')
+        dd = UDDFDeviceDump()
+        dd.open('dumps/su-dump-01.uddf')
+
         dumper = SensusUltraMemoryDump()
-        dumper.convert(f, tree)
+        dumper.convert(dd.tree, StringIO(dd.get_data()), pd.tree)
 
         # three dives
-        self.assertEquals(3, len(tree.findall(q('//dive'))))
+        self.assertEquals(3, len(pd.tree.findall(q('//dive'))))
 
         # 247 samples for first dive
-        dive = tree.find(q('//dive'))
+        dive = pd.tree.find(q('//dive'))
         data = dive.findall(q('samples/waypoint'))
         self.assertEquals(247, len(data))
 
@@ -58,5 +60,6 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         self.assertEquals(13, dive.time.hour)
         self.assertEquals(10, dive.time.minute)
 
+        pd.clean()
         pd.validate()
 
