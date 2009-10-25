@@ -121,9 +121,12 @@ def plot_dive(dive, fout, title=True, info=True, temp=True, sig=True):
     for deco in get_deco(samples):
         ax_depth.plot(*zip(*deco), color='red')
 
+    # check depth axis limits
+    ymin, ymax = ax_depth.get_ylim()
+    # some devices may report negative depth (i.e. sensus ultra)
+    ymin = max(0, ymin)
     # reverse y-axis, to put 0m depth at top and max depth at the bottom of
     # graph
-    ymin, ymax = ax_depth.get_ylim()
     ax_depth.set_ylim([ymax, ymin])
 
     if title:
