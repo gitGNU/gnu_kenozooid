@@ -157,6 +157,7 @@ def dive_data(header, data):
             deco_depth, deco_time = map(ord, deco)
             i += div_deco_c
             div_bytes += div_deco_c
+            log.debug('deco time %d, depth %d' % (deco_time, deco_depth))
         else:
             deco_depth, deco_time = None, None
 
@@ -169,6 +170,7 @@ def dive_data(header, data):
         if ppo2 is not None:
             i += div_ppo2_c
             div_bytes += div_ppo2_c
+            log.debug('ppo2 %d' % ppo2)
 
         deco_debug = sample_data(data, i, j, div_deco_debug_s, div_deco_debug_c)
         if deco_debug is not None:
@@ -186,6 +188,8 @@ def dive_data(header, data):
         if header.sampling * (j - 1) <= dive_total_time:
             yield DiveSample(depth, alarm, gas_set_o2, gas_set_he, current_gas,
                     temp, deco_depth, deco_time, tank, ppo2)
+        else:
+            log.debug('skipped sample %d (out of dive time), seek %d' % (j, i))
         j += 1
 
     assert data[i:i + 2] == '\xfd\xfd'
