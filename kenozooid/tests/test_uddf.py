@@ -44,7 +44,7 @@ class UDDFTestCase(unittest.TestCase):
         self.assertFalse(uf.tree is None)
 
         root = uf.tree.getroot()
-        self.assertEquals('2.2.0', root.get('version')) # check UDDF version
+        self.assertEquals('3.0.0', root.get('version')) # check UDDF version
         self.assertEquals('kenozooid', root.generator.name.text)
         self.assertEquals(kenozooid.__version__, root.generator.version.text)
 
@@ -58,21 +58,13 @@ class UDDFTestCase(unittest.TestCase):
 <profiledata>
 <repetitiongroup>
 <dive>
-    <date>
-        <year>2009</year>
-        <month>3</month>
-        <day>2</day>
-    </date>
-    <time>
-        <hour>23</hour>
-        <minute>2</minute>
-    </time>
+    <datetime>2009-03-02 23:02</datetime>
 </dive>
 </repetitiongroup>
 </profiledata>
 </uddf>
 """))
-        dt = uf.get_time(uf.tree.find(q('//dive')))
+        dt = uf.get_datetime(uf.tree.find(q('//dive')))
         self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
 
 
@@ -122,26 +114,21 @@ class UDDFCompactTestCase(unittest.TestCase):
 <profiledata>
 <repetitiongroup>
 <dive>
-    <date><year>2009</year><month>3</month><day>2</day></date>
-    <time><hour>23</hour><minute>2</minute></time>
+    <datetime>2009-03-02 23:02</datetime>
 </dive>
 <dive>
-    <date><year>2009</year><month>4</month><day>2</day></date>
-    <time><hour>23</hour><minute>2</minute></time>
+    <datetime>2009-04-02 23:02</datetime>
 </dive>
 <dive>
-    <date><year>2009</year><month>4</month><day>2</day></date>
-    <time><hour>23</hour><minute>2</minute></time>
+    <datetime>2009-04-02 23:02</datetime>
 </dive>
 <dive>
-    <date><year>2009</year><month>3</month><day>2</day></date>
-    <time><hour>23</hour><minute>2</minute></time>
+    <datetime>2009-03-02 23:02</datetime>
 </dive>
 </repetitiongroup>
 <repetitiongroup> <!-- one more repetition group which shall be removed -->
 <dive>
-    <date><year>2009</year><month>3</month><day>2</day></date>
-    <time><hour>23</hour><minute>2</minute></time>
+    <datetime>2009-03-02 23:02</datetime>
 </dive>
 </repetitiongroup>
 </profiledata>
@@ -156,10 +143,10 @@ class UDDFCompactTestCase(unittest.TestCase):
         self.assertEquals(2, len(dives))
 
         # check the order of dives (ordered by dive time)
-        dt = pd.get_time(dives[0])
+        dt = pd.get_datetime(dives[0])
         self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
 
-        dt = pd.get_time(dives[1])
+        dt = pd.get_datetime(dives[1])
         self.assertEquals(datetime(2009, 4, 2, 23, 2), dt)
 
 
@@ -176,12 +163,12 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         self.assertFalse(uf.tree is None)
 
         root = uf.tree.getroot()
-        self.assertEquals('2.2.0', root.get('version')) # check UDDF version
+        self.assertEquals('3.0.0', root.get('version')) # check UDDF version
         self.assertEquals('kenozooid', root.generator.name.text)
         self.assertEquals(kenozooid.__version__, root.generator.version.text)
         self.assertTrue(q('divecomputercontrol') in [el.tag for el in root.iterchildren()])
         dc = root.divecomputercontrol
-        self.assertTrue(q('dcdata') in [el.tag for el in dc.iterchildren()])
+        self.assertTrue(q('divecomputerdump') in [el.tag for el in dc.iterchildren()])
 
 
     def test_encoding(self):
@@ -203,10 +190,13 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         """
         dd = UDDFDeviceDump()
         dd.create()
+        dd.set_model('tt', 'Test Model')
 
         dd.set_data('01234567890abcdef')
+        
+        dump = dd.tree.find(q('//divecomputerdump'))
         self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=',
-                dd._get_data_node().dcdata.text)
+                dump.dcdata.text)
 
 
     def test_getting_data(self):
@@ -216,30 +206,9 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         dd.create()
 
         s = UDDFDeviceDump.encode('01234567890abcdef')
-        dd._get_data_node().dcdata = s
+        dump = dd.tree.find(q('//divecomputerdump'))
+        dump.dcdata = s
 
         self.assertEquals('01234567890abcdef', dd.get_data())
 
-
-    def test_setting_id(self):
-        """Test id setting
-        """
-        dd = UDDFDeviceDump()
-        dd.create()
-
-        dd.set_id('ostc')
-        self.assertEquals('ostc', dd._get_data_node().dcdata.get('id'))
-
-        dd.set_data('123')
-        self.assertEquals('ostc', dd._get_data_node().dcdata.get('id'))
-
-
-    def test_getting_id(self):
-        """Test id getting
-        """
-        dd = UDDFDeviceDump()
-        dd.create()
-
-        dd._get_data_node().dcdata.set('id', 'ostc')
-        self.assertEquals('ostc', dd.get_id())
 

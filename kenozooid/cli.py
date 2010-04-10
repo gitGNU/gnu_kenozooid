@@ -29,6 +29,16 @@ import lxml.etree as et
 import lxml.objectify as eto
 from cStringIO import StringIO
 
+
+# fixme: store model on driver level
+DRIVERS = {
+    'su': 'Sensus Ultra',
+    'Sensus Ultra': 'su',
+    'OSTC Mk.1': 'ostc',
+    'ostc': 'OSTC Mk.1',
+}
+
+
 class RangeError(ValueError): pass
 
 def parse_range(s, infinity=100):
@@ -155,7 +165,7 @@ def cmd_dump(parser, options, args):
     data = dumper.dump()
     dd = kenozooid.uddf.UDDFDeviceDump()
     dd.create()
-    dd.set_id(drv)
+    dd.set_model(drv, DRIVERS[drv])
     dd.set_data(dumper.dump())
     dd.save(fout)
 
@@ -177,6 +187,8 @@ def cmd_dives(parser, options, args):
     pd.open(fin)
 
     for dive in pd.get_dives():
+        #print u'%02d,%s,%s,%.2f' \
+        #    % (dive[0], dive[1].strftime(FMT_DIVETIME), dive[2], dive[3])
         print u'%02d: %s   t=%s   \u21a7%.2fm' \
             % (dive[0], dive[1].strftime(FMT_DIVETIME), min2str(dive[2]), dive[3])
 
@@ -204,8 +216,11 @@ def cmd_convert(parser, options, args):
         # read uddf file containing device dump
         dd = kenozooid.uddf.UDDFDeviceDump()
         dd.open(fn)
-        drv = dd.get_id()
+        model = dd.get_model()
+        drv = DRIVERS[model] # fixme
         data = dd.get_data()
+
+        pd.set_model(drv, model)
 
         dumper = find_driver(MemoryDump, drv, None)
         dumper.convert(dd.tree, StringIO(data), pd.tree)

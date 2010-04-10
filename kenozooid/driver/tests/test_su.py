@@ -47,18 +47,14 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         dumper.convert(dd.tree, StringIO(dd.get_data()), pd.tree)
 
         # three dives
-        self.assertEquals(3, len(pd.tree.findall(q('//dive'))))
+        self.assertEquals(43, len(pd.tree.findall(q('//dive'))))
 
         # 247 samples for first dive
-        dive = pd.tree.find(q('//dive'))
+        dive = pd.tree.findall(q('//dive'))[-3]
         data = dive.findall(q('samples/waypoint'))
         self.assertEquals(247, len(data))
 
-        self.assertEquals(2009, dive.date.year)
-        self.assertEquals(9, dive.date.month)
-        self.assertEquals(20, dive.date.day)
-        self.assertEquals(13, dive.time.hour)
-        self.assertEquals(10, dive.time.minute)
+        self.assertEquals('2009-09-20 13:18:08', dive.datetime)
 
         pd.clean()
         pd.validate()

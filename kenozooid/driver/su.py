@@ -36,7 +36,7 @@ import time
 import logging
 log = logging.getLogger('kenozooid.driver.su')
 
-from kenozooid.uddf import q, UDDFFile
+from kenozooid.uddf import q, UDDFFile, FMT_DATETIME
 from kenozooid.component import inject
 from kenozooid.driver import DeviceDriver, MemoryDump, DeviceError
 from kenozooid.units import C2K
@@ -215,7 +215,7 @@ class SensusUltraMemoryDump(object):
         dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
         dd.raw = data.read(SIZE_MEM_DATA)
 
-        dtime = UDDFFile.get_time(dtree.getroot().generator)
+        dtime = UDDFFile.get_datetime(dtree.getroot().generator)
         data = {
             'dtime': time.mktime(dtime.timetuple()),  # download time
             'stime': hdp.time,                        # sensus time at download time
@@ -247,18 +247,13 @@ class SensusUltraMemoryDump(object):
         parser = self.parser
 
         dn = et.SubElement(self.rdn, q('dive'))
-        et.SubElement(dn, q('date'))
-        et.SubElement(dn, q('time'))
+        et.SubElement(dn, q('datetime'))
         self.sn = et.SubElement(dn, q('samples'))
 
         # get dive time
         dive_time = unpack('<L', buffer[4:8])[0]
         dt = datetime.fromtimestamp(data['dtime'] + dive_time - data['stime'])
-        dn.date.year = dt.year
-        dn.date.month = dt.month
-        dn.date.day = dt.day
-        dn.time.hour = dt.hour
-        dn.time.minute = dt.minute
+        dn.datetime = dt.strftime(FMT_DATETIME)
 
         lib.parser_set_data(parser, buffer, size)
         lib.parser_samples_foreach(parser,
@@ -290,7 +285,7 @@ class SensusUltraMemoryDump(object):
             data['depth'] = sample.depth
 
             n = et.SubElement(self.sn, q('waypoint'))
-            n.depth = data['depth']
+            n.depth = round(data['depth'], 2)
             n.divetime = data['time']
             if data['temp'] != None:
                 n.temperature = C2K(data['temp'])

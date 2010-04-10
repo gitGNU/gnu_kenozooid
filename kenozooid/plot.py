@@ -97,7 +97,7 @@ def plot_dive(dive, fout, title=True, info=True, temp=True, sig=True):
     min_temp = min(temps)
     max_temp = max(temps)
 
-    dive_time = UDDFProfileData.get_time(dive)
+    dive_time = UDDFProfileData.get_datetime(dive)
 
     left, width = 0.07, 0.90
     bottom, height = 0.08, 0.87

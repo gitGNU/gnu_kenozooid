@@ -25,6 +25,7 @@ UDDF file format support.
 from lxml import etree as et
 from lxml import objectify as eto
 from datetime import datetime
+from dateutil.parser import parse as dparse
 from operator import itemgetter
 import pwd
 import os
@@ -33,21 +34,43 @@ import bz2
 import base64
 import logging
 
-log = logging.getLogger('kenozooid.plot')
+log = logging.getLogger('kenozooid.uddf')
 
 import kenozooid
 
 RE_Q = re.compile(r'(\b[a-z]+)')
 
+# format for datetime
+FMT_DATETIME = '%Y-%m-%d %H:%M:%S%z'
+
+
 # minimal data for an UDDF file
 UDDF_TMPL = """
-<uddf xmlns="http://www.streit.cc/uddf" version="2.2.0">
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
 <generator>
     <name>kenozooid</name>
     <version>%s</version>
-    <date></date>
-    <time></time>
+    <manufacturer>
+      <name>Kenozooid Team</name>
+      <contact>
+        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
+      </contact>
+    </manufacturer>
+    <datetime></datetime>
 </generator>
+<diver>
+    <owner>
+        <personal>
+            <firstname>Anonymous</firstname>
+            <lastname>Guest</lastname>
+        </personal>
+        <equipment>
+            <divecomputer id=''>
+                <model></model>
+            </divecomputer>
+        </equipment>
+    </owner>
+</diver>
 %%s
 </uddf>
 """ % kenozooid.__version__
@@ -88,11 +111,7 @@ class UDDFFile(object):
         root = eto.XML(self.UDDF)
 
         now = datetime.now()
-        root.generator.date.year = now.year
-        root.generator.date.month = now.month
-        root.generator.date.day = now.day
-        root.generator.time.hour = now.hour
-        root.generator.time.minute = now.minute
+        root.generator.datetime = now.strftime(FMT_DATETIME)
 
         self.tree = et.ElementTree(root)
 
@@ -163,12 +182,34 @@ class UDDFFile(object):
         Validate UDDF file with UDDF XML Schema.
         """
         log.debug('validating uddf file')
-        schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
-        schema.assertValid(self.tree.getroot())
+        #schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
+        #schema.assertValid(self.tree.getroot())
+
+
+    def set_model(self, id, model):
+        """
+        Set dive computer model, from which data was dumped.
+        """
+        tree = self.tree
+        root = tree.getroot()
+        dc = tree.find(q('//diver/owner//divecomputer'))
+        dc.set('id', id)
+        dc.model = model
+
+
+    def get_model(self):
+        """
+        Get model of dive computer, which data is stored in UDDF file.
+        """
+        tree = self.tree
+        #root = tree.getroot()
+        #id = root.divecomputercontrol.divecomputerdump.link.get('ref')
+        model = tree.find(q('//diver/owner//divecomputer/model'))
+        return model.text
 
 
     @staticmethod
-    def get_time(node):
+    def get_datetime(node):
         """
         Get datetime instance from XML node parsed from UDDF file.
 
@@ -176,12 +217,7 @@ class UDDFFile(object):
          node
             Parsed XML node.
         """
-        year = int(node.date.year)
-        month = int(node.date.month)
-        day = int(node.date.day)
-        hour = int(node.time.hour)
-        minute = int(node.time.minute)
-        return datetime(year, month, day, hour, minute)
+        return dparse(node.datetime.text)
 
 
 
@@ -190,11 +226,6 @@ class UDDFProfileData(UDDFFile):
     UDDF file containing dive profile data.
     """
     UDDF = UDDF_TMPL % """\
-<diver>
-<owner>
-<personal></personal>
-</owner>
-</diver>
 <profiledata>
 </profiledata>
 """
@@ -203,19 +234,6 @@ class UDDFProfileData(UDDFFile):
         Create an UDDF file suitable for storing dive profile data.
         """
         super(UDDFProfileData, self).create()
-
-        root = self.tree.getroot()
-
-        name = pwd.getpwnam(os.environ['USER']).pw_gecos.split(' ', 1)
-        if len(name) == 1:
-            fn = name
-            ln = name
-        else:
-            fn, ln = name
-
-        el = root.diver.owner.personal
-        el.firstname = fn
-        el.lastname = ln
 
 
     def save(self, fn):
@@ -238,7 +256,7 @@ class UDDFProfileData(UDDFFile):
         root = self.tree.getroot()
         dives = {}
         for dive in self.tree.findall(q('//dive')):
-            dt = self.get_time(dive)
+            dt = self.get_datetime(dive)
             if dt not in dives:
                 dives[dt] = dive
         del root.profiledata.repetitiongroup[:]
@@ -257,7 +275,7 @@ class UDDFProfileData(UDDFFile):
             depths = [float(s.depth.text) for s in samples]
             times = [float(s.divetime) / 60 for s in samples]
             
-            yield (k, self.get_time(dive), times[-1], max(depths))
+            yield (k, self.get_datetime(dive), times[-1], max(depths))
 
 
 
@@ -274,21 +292,22 @@ class UDDFDeviceDump(UDDFFile):
     """
     UDDF = UDDF_TMPL % """\
 <divecomputercontrol>
-    <!--
-        data is compressed with bzip2, then encoded with base64; to
-        decode in Python
-            s = base64.b64decode(encoded) # encoded = dcdata text
-            decoded = bz2.decompress(s)
-        WARNING! dcdata is not part of the standard
-    -->
-    <dcdata id=''/>
+    <divecomputerdump>
+        <link ref=''/>
+        <datetime></datetime>
+        <dcdata></dcdata>
+    </divecomputerdump>
 </divecomputercontrol>
 """
-    def _get_data_node(self):
+    def create(self):
         """
-        Get node, which stores the data of a device.
+        Create an UDDF file suitable for storing dive profile data.
         """
-        return self.tree.getroot().divecomputercontrol
+        super(UDDFDeviceDump, self).create()
+        tree = self.tree
+        root = tree.getroot()
+        dump = root.divecomputercontrol.divecomputerdump
+        dump.datetime = datetime.now().strftime(FMT_DATETIME)
 
 
     def set_data(self, data):
@@ -299,36 +318,25 @@ class UDDFDeviceDump(UDDFFile):
          data
             Device data to be stored in UDDF file.
         """
-        node = self._get_data_node()
-        id = node.dcdata.get('id')
-        node.dcdata = self.encode(data)
-        if id:
-            node.dcdata.set('id', id)
+        tree = self.tree
+        root = tree.getroot()
+        dump = root.divecomputercontrol.divecomputerdump
+
+        dc = tree.find(q('//diver/owner//divecomputer'))
+        dc_id = dc.get('id')
+        assert dc_id
+        dump.link.set('ref', dc_id)
+
+        dump.dcdata = self.encode(data)
 
 
     def get_data(self):
         """
         Get and decode data of a device.
         """
-        node = self._get_data_node()
-        return self.decode(node.dcdata.text)
-
-
-    def set_id(self, id):
-        """
-        Set id of a device, which data is supposed to be stored in UDDF
-        file.
-        """
-        node = self._get_data_node()
-        node.dcdata.set('id', id)
-
-
-    def get_id(self):
-        """
-        Get id of device, which data is stored in UDDF file.
-        """
-        node = self._get_data_node()
-        return node.dcdata.get('id')
+        root = self.tree.getroot()
+        dcdata = root.divecomputercontrol.divecomputerdump.dcdata
+        return self.decode(dcdata.text)
 
 
     @staticmethod
