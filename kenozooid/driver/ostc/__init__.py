@@ -37,7 +37,7 @@ import binascii
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
-from kenozooid.uddf import q
+from kenozooid.uddf import q, FMT_DATETIME
 from kenozooid.component import inject
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 from kenozooid.units import C2K
@@ -183,11 +183,7 @@ class OSTCMemoryDump(object):
             et.SubElement(dn, q('time'))
             sn = et.SubElement(dn, q('samples'))
 
-            dn.date.year = st.year
-            dn.date.month = st.month
-            dn.date.day = st.day
-            dn.time.hour = st.hour
-            dn.time.minute = st.minute
+            dn.datetime = st.strftime(FMT_DATETIME)
 
             deco = False
             for i, sample in enumerate(dive_data):

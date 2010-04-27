@@ -196,7 +196,7 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         
         dump = dd.tree.find(q('//divecomputerdump'))
         self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=',
-                dump.dcdata.text)
+                dump.dcdump.text)
 
 
     def test_getting_data(self):
@@ -207,7 +207,7 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
 
         s = UDDFDeviceDump.encode('01234567890abcdef')
         dump = dd.tree.find(q('//divecomputerdump'))
-        dump.dcdata = s
+        dump.dcdump = s
 
         self.assertEquals('01234567890abcdef', dd.get_data())
 

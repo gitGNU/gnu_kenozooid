@@ -295,7 +295,7 @@ class UDDFDeviceDump(UDDFFile):
     <divecomputerdump>
         <link ref=''/>
         <datetime></datetime>
-        <dcdata></dcdata>
+        <dcdump></dcdump>
     </divecomputerdump>
 </divecomputercontrol>
 """
@@ -327,7 +327,7 @@ class UDDFDeviceDump(UDDFFile):
         assert dc_id
         dump.link.set('ref', dc_id)
 
-        dump.dcdata = self.encode(data)
+        dump.dcdump = self.encode(data)
 
 
     def get_data(self):
@@ -335,8 +335,8 @@ class UDDFDeviceDump(UDDFFile):
         Get and decode data of a device.
         """
         root = self.tree.getroot()
-        dcdata = root.divecomputercontrol.divecomputerdump.dcdata
-        return self.decode(dcdata.text)
+        dcdump = root.divecomputercontrol.divecomputerdump.dcdump
+        return self.decode(dcdump.text)
 
 
     @staticmethod

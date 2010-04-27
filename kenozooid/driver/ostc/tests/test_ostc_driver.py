@@ -72,11 +72,7 @@ class UDDFTestCase(unittest.TestCase):
         data = dive.findall(q('samples/waypoint'))
         self.assertEquals(193, len(data))
 
-        self.assertEquals(2009, dive.date.year)
-        self.assertEquals(1, dive.date.month)
-        self.assertEquals(31, dive.date.day)
-        self.assertEquals(23, dive.time.hour)
-        self.assertEquals(8, dive.time.minute)
+        self.assertEquals('2009-01-31 23:08:51', dive.datetime)
 
         self.pd.clean()
         self.pd.validate()
