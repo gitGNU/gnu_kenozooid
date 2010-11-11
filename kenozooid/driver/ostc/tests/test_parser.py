@@ -31,9 +31,74 @@ from kenozooid.driver.ostc import pressure
 from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
 
+OSTC_DATA = \
+   r'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'
+
+
 # 32 dives in total, including broken dive no 30 started at 2010-06-05 11:49
 # (dives are not in order)
-PROFILE_BROKEN = \
+OSTC_DATA_BROKEN = \
    r'QlpoOTFBWSZTWQmRDagAOnT/////////////////////////////////////////////4D' \
     '0bgIDgHWG77klQaaoAAAH11oAAAAAAIAgAAAAAG8D5sD2PvZtC9AHAjSDduUAgPTSoqqjf' \
     'PgA++PkUBIEH1hQAC6CgB0UendhX0M65VUAABQAAAAAAAAAAAAAFU9JqaGmExGTRoAAATA' \
@@ -362,13 +427,13 @@ PROFILE_BROKEN = \
     'IbUA==' \
 
 
-def get_data(fn):
+def get_data(data):
     """
     Get binary data from memory dump file.
     """
-    dd = UDDFDeviceDump()
-    dd.open(fn)
-    return dd.get_data()
+    s = base64.b64decode(data)
+    decoded = bz2.decompress(s)
+    return decoded
 
 
 class ParserTestCase(unittest.TestCase):
@@ -378,7 +443,7 @@ class ParserTestCase(unittest.TestCase):
     def test_status_parsing(self):
         """Test status parsing
         """
-        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
+        dump = ostc_parser.status(get_data(OSTC_DATA))
 
         self.assertEquals('\xaa' * 5 + '\x55', dump.preamble)
 
@@ -395,7 +460,7 @@ class ParserTestCase(unittest.TestCase):
     def test_profile_split(self):
         """Test profile splitting
         """
-        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
+        dump = ostc_parser.status(get_data(OSTC_DATA))
         profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
@@ -408,7 +473,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
+        dump = ostc_parser.status(get_data(OSTC_DATA))
         profile = tuple(ostc_parser.profile(dump.profile))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -448,7 +513,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        dump = ostc_parser.status(get_data('dumps/ostc-dump-01.uddf'))
+        dump = ostc_parser.status(get_data(OSTC_DATA))
         profile = tuple(ostc_parser.profile(dump.profile))
         h, p = profile[0]
         header = ostc_parser.header(h)
@@ -526,13 +591,11 @@ class ParserTestCase(unittest.TestCase):
     def test_invalid_profile(self):
         """Test parsing invalid profile
         """
-        s = base64.b64decode(PROFILE_BROKEN)
-        decoded = bz2.decompress(s)
-        profiles = tuple(ostc_parser.profile(decoded))
-        assert 32 == len(profiles)
+        data = tuple(ostc_parser.profile(get_data(OSTC_DATA_BROKEN)))
+        assert 32 == len(data)
 
         # dive no 31 is broken (count from 0)
-        h, p = profiles[30]
+        h, p = data[30]
         header = ostc_parser.header(h)
         dive_data = ostc_parser.dive_data(header, p)
         self.assertRaises(ValueError, tuple, dive_data)

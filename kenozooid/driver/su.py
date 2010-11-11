@@ -215,7 +215,8 @@ class SensusUltraMemoryDump(object):
         dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
         dd.raw = data.read(SIZE_MEM_DATA)
 
-        dtime = UDDFFile.get_datetime(dtree.getroot().generator)
+        root = dtree.getroot()
+        dtime = UDDFFile.get_datetime(root.divecomputercontrol.divecomputerdump)
         data = {
             'dtime': time.mktime(dtime.timetuple()),  # download time
             'stime': hdp.time,                        # sensus time at download time
