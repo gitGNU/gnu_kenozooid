@@ -26,6 +26,7 @@ import logging
 import re
 from collections import namedtuple
 from struct import unpack
+from binascii import hexlify
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
@@ -34,7 +35,7 @@ StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile
 FMT_STATUS = '<6s256sHbb32768s'
 
 # profile data is FA0FA..(43)..FBFB...FDFD
-RE_PROFILE = re.compile('(\xfa\xfa.{43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
+RE_PROFILE = re.compile('(\xfa\xfa[^\xfa].{41}[^\xfb]\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
 
 # dive profile header
 DiveHeader = namedtuple('DiveHeader', """\
@@ -106,7 +107,6 @@ def dive_data(header, data):
     i = 0
     j = 1 # sample number 
     while i < len(data) - 2: # skip profile block data end
-
         depth = unpack('<H', data[i:i + 2])[0] / 100.0
         i += 2
 
@@ -115,7 +115,7 @@ def dive_data(header, data):
         i += 1
         size, event = flag_byte(pfb)
         log.debug('sample %d info: depth = %.2f, pfb = %s, %s',
-                j, depth, hex(pfb), map(hex, map(ord, data[i:i+size])))
+                j, depth, hex(pfb), hexlify(data[i:i+size]))
 
         alarm = None
         gas_set = 0
@@ -177,12 +177,14 @@ def dive_data(header, data):
             i += div_deco_debug_c
             div_bytes += div_deco_debug_c
             
-        assert size == event + gas_set + gas_change + div_bytes, \
-            'sample = %d, depth = %.2f, pfb = 0x%x, size = %d, event = %d,' \
-            ' alarm = %s, temp = %s, gas_set = %d, gas_change = %d,' \
-            ' div_bytes = %d, deco_debug = %s' \
+        if size != event + gas_set + gas_change + div_bytes:
+            log.debug('invalid dive data, sample = %d, depth = %.2f, pfb = 0x%x, size = %d, event = %d,' \
+                ' alarm = %s, temp = %s, gas_set = %d, gas_change = %d,' \
+                ' div_bytes = %d, deco_debug = %s' \
                     % (j, depth, pfb, size, event, alarm, temp, gas_set,
-                            gas_change, div_bytes, map(hex, map(ord, deco_debug)))
+                            gas_change, div_bytes,
+                            hexlify(deco_debug if deco_depth else '[]')))
+            raise ValueError('Invalid dive')
 
         # is a sample within dive total time? if not, then skip sample
         if header.sampling * (j - 1) <= dive_total_time:

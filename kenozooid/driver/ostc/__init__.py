@@ -33,7 +33,7 @@ import logging
 from lxml import etree as et
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
-import binascii
+from binascii import hexlify
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
@@ -107,7 +107,7 @@ class OSTCDriver(object):
         data = self._read(2)
         v1, v2 = tuple(map(ord, data))
         data = self._read(16)
-        fingerprint = binascii.hexlify(data)
+        fingerprint = hexlify(data)
         return 'OSTC %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
 
 
@@ -168,6 +168,9 @@ class OSTCMemoryDump(object):
         rdn = et.SubElement(pdn, q('repetitiongroup'))
 
         for h, p in ostc_parser.profile(dump.profile):
+            log.debug('header: %s' % hexlify(h))
+            log.debug('profile: %s' % hexlify(p))
+
             header = ostc_parser.header(h)
             dive_data = ostc_parser.dive_data(header, p)
 
@@ -179,30 +182,34 @@ class OSTCMemoryDump(object):
             st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
             dn = et.SubElement(rdn, q('dive'))
-            et.SubElement(dn, q('date'))
-            et.SubElement(dn, q('time'))
+            dn.datetime = st.strftime(FMT_DATETIME)
             sn = et.SubElement(dn, q('samples'))
 
-            dn.datetime = st.strftime(FMT_DATETIME)
-
             deco = False
-            for i, sample in enumerate(dive_data):
-                n = et.SubElement(sn, q('waypoint'))
+            try:
+                for i, sample in enumerate(dive_data):
+                    n = et.SubElement(sn, q('waypoint'))
 
-                # deco info is not stored in each ostc sample, but each
-                # uddf waypoint shall be annotated with deco alarm
-                if deco and deco_end(sample):
-                    deco = False
-                elif not deco and deco_start(sample):
-                    deco = True
+                    # deco info is not stored in each ostc sample, but each
+                    # uddf waypoint shall be annotated with deco alarm
+                    if deco and deco_end(sample):
+                        deco = False
+                    elif not deco and deco_start(sample):
+                        deco = True
 
-                if deco:
-                    n.alarm = 'deco'
+                    if deco:
+                        n.alarm = 'deco'
 
-                n.depth = sample.depth
-                n.divetime = i * header.sampling
-                if sample.temp is not None:
-                    n.temperature = '%.2f' % C2K(sample.temp)
+                    n.depth = sample.depth
+                    n.divetime = i * header.sampling
+                    if sample.temp is not None:
+                        n.temperature = '%.2f' % C2K(sample.temp)
+            except ValueError, ex:
+                log.error('invalid dive {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
+                    ' {0.hour:>02d}:{0.minute:>02d}' \
+                    ' max depth={0.max_depth}'.format(header))
+                rdn.remove(dn)
+                continue
 
 
 def deco_start(sample):
@@ -232,3 +239,4 @@ def deco_end(sample):
             or sample.deco_time == 160
             or sample.deco_time == 0)
 
+# vim: sw=4:et:ai
