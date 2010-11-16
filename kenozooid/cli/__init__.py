@@ -74,6 +74,7 @@ def main():
     """
     Find Kenozooid command line modules and execute them.
     """
+    import kenozooid.cli.calc
     import kenozooid.cli.dc
     import kenozooid.cli.uddf
 
