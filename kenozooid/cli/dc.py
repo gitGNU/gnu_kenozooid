@@ -30,13 +30,13 @@ from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump
 
 
-@inject(CLIModule, name='list')
+@inject(CLIModule, name='drivers')
 class ListDrivers(object):
     """
     Dive computers drivers listing command line module.
     """
     usage = ''
-    description = 'list available drivers and their capabilities'
+    description = 'list available dive computer drivers and their capabilities'
 
     def add_options(self, parser):
         """
