@@ -170,8 +170,8 @@ class Dump(object):
         data = dumper.dump()
         dd = kenozooid.uddf.UDDFDeviceDump()
         dd.create()
-        dd.set_model(drv, DRIVERS[drv])
-        dd.set_data(dumper.dump())
+        dd.set_model(drv, dumper.driver.get_model())
+        dd.set_data(data)
         dd.save(fout)
 
 

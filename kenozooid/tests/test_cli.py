@@ -24,7 +24,7 @@ Test command line routines.
 
 import unittest
 
-from kenozooid.cli import parse_range, RangeError
+from kenozooid.cli.uddf import parse_range, RangeError
 
 
 class RangeTestCase(unittest.TestCase):

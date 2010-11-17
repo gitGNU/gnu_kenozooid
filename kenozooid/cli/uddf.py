@@ -29,14 +29,6 @@ from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError
 from kenozooid.component import query, params
 
-# fixme: store model on driver level
-DRIVERS = {
-    'su': 'Sensus Ultra',
-    'Sensus Ultra': 'su',
-    'OSTC Mk.1': 'ostc',
-    'ostc': 'OSTC Mk.1',
-}
-
 
 class RangeError(ValueError): pass
 
@@ -153,8 +145,9 @@ class ConvertFile(object):
             # read uddf file containing device dump
             dd = kenozooid.uddf.UDDFDeviceDump()
             dd.open(fn)
+
+            drv = dd.get_model_id()
             model = dd.get_model()
-            drv = DRIVERS[model] # fixme
             data = dd.get_data()
 
             pd.set_model(drv, model)

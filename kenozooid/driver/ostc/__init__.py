@@ -111,6 +111,13 @@ class OSTCDriver(object):
         return 'OSTC %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
 
 
+    def get_model(self):
+        """
+        At the moment, this code is tested with OSTC Mk.1 only.
+        """
+        return 'OSTC Mk.1'
+
+
 
 @inject(Simulator, id='ostc')
 class OSTCSimulator(object):

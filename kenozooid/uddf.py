@@ -197,13 +197,19 @@ class UDDFFile(object):
         dc.model = model
 
 
+    def get_model_id(self):
+        """
+        Get dive computer model id, which data is stored in UDDF file.
+        """
+        dc = self.tree.find(q('//diver/owner//divecomputer'))
+        return dc.get('id')
+
+
     def get_model(self):
         """
         Get model of dive computer, which data is stored in UDDF file.
         """
         tree = self.tree
-        #root = tree.getroot()
-        #id = root.divecomputercontrol.divecomputerdump.link.get('ref')
         model = tree.find(q('//diver/owner//divecomputer/model'))
         return model.text
 

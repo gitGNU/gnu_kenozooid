@@ -155,6 +155,13 @@ class SensusUltraDriver(object):
         return 'Sensus Ultra %d.%d (serial %d)' % (dump.ver2, dump.ver1, dump.serial)
 
 
+    def get_model(self):
+        """
+        At the moment this driver is tested only with Sensus Ultra.
+        """
+        return 'Sensus Ultra'
+
+
 
 @inject(MemoryDump, id='su')
 class SensusUltraMemoryDump(object):
