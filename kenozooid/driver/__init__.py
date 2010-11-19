@@ -67,14 +67,8 @@ class DeviceDriver(object):
 
     def version(self):
         """
-        Get version information from connected dive computer.
-        """
-
-    def get_model(self):
-        """
-        Get dive computer model information. The driver may be able to
-        fetch data from different dive computers models, i.e. OSTC Mk.1 and
-        OSTC Mk.2 may be handled by the same driver.
+        Get model and firmware version information about connected dive
+        computer.
         """
 
 

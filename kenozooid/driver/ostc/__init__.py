@@ -108,14 +108,7 @@ class OSTCDriver(object):
         v1, v2 = tuple(map(ord, data))
         data = self._read(16)
         fingerprint = hexlify(data)
-        return 'OSTC %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
-
-
-    def get_model(self):
-        """
-        At the moment, this code is tested with OSTC Mk.1 only.
-        """
-        return 'OSTC Mk.1'
+        return 'OSTC Mk.1 %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
 
 
 
