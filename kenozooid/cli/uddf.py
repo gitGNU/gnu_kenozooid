@@ -22,54 +22,15 @@
 UDDF related Kenozooid command line commands.
 """
 
+import sys
 import optparse
+import itertools
 from cStringIO import StringIO
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError
 from kenozooid.component import query, params
-
-
-class RangeError(ValueError): pass
-
-def parse_range(s, infinity=100):
-    """
-    Parse textual representation of number range.
-
-    Example of a range
-
-    >>> parse_range('1-3,5')
-    (1, 2, 3, 5)
-
-    Example of infinite range
-
-    >>> parse_range('20-') # doctest:+ELLIPSIS
-    (20, 21, 22, ..., 99, 100)
-
-    :Parameters:
-     s
-        Textual representation of number range.
-     infinity
-        Maximum value when infinite range is specified.
-    """
-    def toint(d):
-        try:
-            return int(d)
-        except ValueError, ex:
-            raise RangeError('Invalid range %s' % s)
-
-    data = []
-    for r in s.split(','):
-        d = r.split('-')
-        if len(d) == 1:
-            data.append(toint(d[0]))
-        elif len(d) == 2:
-            a = toint(d[0])
-            b = infinity if d[1].strip() == '' else toint(d[1])
-            data.extend(range(a, b + 1))
-        else:
-            raise RangeError('Invalid range %s' % s)
-    return tuple(data)
+from kenozooid.uddf import node_range
 
 
 
@@ -78,35 +39,56 @@ class ListDives(object):
     """
     List dives from UDDF file.
     """
-    usage = '<input>'
+    usage = '<input> ...'
     description = 'list dives stored in UDDF file'
 
     def add_options(self, parser):
         """
-        No options for UDDF file dive list.
+        Add options for dive list fetched from UDDF file.
         """
+        group = optparse.OptionGroup(parser, 'Dive List Options')
+        group.add_option('--csv',
+                action='store_true',
+                dest='dives_csv',
+                default=False,
+                help='list dives in CSV format')
+        parser.add_option_group(group)
 
 
     def __call__(self, options, *args):
         """
         Execute command for list of dives in UDDF file.
         """
-        import kenozooid.uddf
+        from kenozooid.uddf import parse, dive_data, dive_profile
         from kenozooid.util import min2str, FMT_DIVETIME
 
-        if len(args) != 2:
+        if len(args) < 2:
             raise ArgumentError()
 
-        fin = args[1]
+        csv = options.dives_csv
 
-        pd = kenozooid.uddf.UDDFProfileData()
-        pd.open(fin)
+        if csv:
+            print 'file,number,start_time,time,depth'
+        for fin in args[1:]:
+            nodes = parse(fin, '//uddf:dive')
+            dives = ((dive_data(n), dive_profile(n)) for n in nodes)
 
-        for dive in pd.get_dives():
-            #print u'%02d,%s,%s,%.2f' \
-            #    % (dive[0], dive[1].strftime(FMT_DIVETIME), dive[2], dive[3])
-            print u'%02d: %s   t=%s   \u21a7%.2fm' \
-                % (dive[0], dive[1].strftime(FMT_DIVETIME), min2str(dive[2]), dive[3])
+            if not csv:
+                print fin + ':'
+            for i, (d, dp) in enumerate(dives):
+                vtime, vdepth, vtemp = zip(*dp)
+                depth = max(vdepth)
+                if csv:
+                    fmt = u'{file},{no},{stime},{dtime},{depth:.1f}'
+                    dtime = max(vtime)
+                else:
+                    fmt = u'{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
+                    dtime = min2str(max(vtime) / 60.0)
+                print fmt.format(no=i + 1,
+                        stime=d.time.strftime(FMT_DIVETIME),
+                        dtime=dtime,
+                        depth=depth,
+                        file=fin)
 
 
 
@@ -164,7 +146,7 @@ class PlotProfiles(object):
     """
     Plot profiles of dives command.
     """
-    usage = '<input> [dives] <prefix> <format>'
+    usage = '[dives] <input> ... <output>'
     description = 'plot profiles of dives ([dives] - dive range, i.e. 1-3,6 ' \
         'indicates\n        dive 1, 2, 3 and 6)'
 
@@ -173,21 +155,41 @@ class PlotProfiles(object):
         Add options for plotting profiles of dives command.
         """
         group = optparse.OptionGroup(parser, 'Dive Profile Plotting Options')
-        group.add_option('--no-title',
-                action='store_false',
+        group.add_option('--title',
+                action='store_true',
                 dest='plot_title',
-                default=True,
-                help='don\'t display plot title')
-        group.add_option('--no-info',
-                action='store_false',
+                default=False,
+                help='display plot title')
+        group.add_option('--info',
+                action='store_true',
                 dest='plot_info',
-                default=True,
-                help='don\'t display dive information (depth, time, temperature)')
-        group.add_option('--no-temp',
-                action='store_false',
+                default=False,
+                help='display dive information (depth, time, temperature)')
+        group.add_option('--temp',
+                action='store_true',
                 dest='plot_temp',
+                default=False,
+                help='plot temperature graph')
+        group.add_option('--no-sig',
+                action='store_false',
+                dest='plot_sig',
                 default=True,
-                help='don\'t plot temperature graph')
+                help='do not display Kenozooid signature')
+        group.add_option('--no-legend',
+                action='store_false',
+                dest='plot_legend',
+                default=True,
+                help='do not display graph legend')
+        group.add_option('--overlay',
+                action='store_true',
+                dest='plot_overlay',
+                default=False,
+                help='overlay plots in one graph')
+        group.add_option('--labels',
+                action='store',
+                type='string',
+                dest='plot_labels',
+                help='override dives labels')
         parser.add_option_group(group)
 
 
@@ -195,34 +197,61 @@ class PlotProfiles(object):
         """
         Execute dives' profiles plotting command.
         """
-        import kenozooid.plot
-        import kenozooid.uddf
+        import os.path
+        import itertools
+        from kenozooid.plot import plot, plot_overlay
+        from kenozooid.uddf import parse, dive_data, dive_profile
 
-        if len(args) != 4 and len(args) != 5:
+        if len(args) < 3:
             raise ArgumentError()
 
-        if len(args) == 4:
-            fin = args[1]
-            fprefix = args[2]
-            format = args[3]
-            dives = None
-        else:
-            fin = args[1]
-            dives = parse_range(args[2])
-            fprefix = args[3]
-            format = args[4]
+        fout = args[-1]
 
-        if format.lower() not in ('svg', 'pdf', 'png'):
-            print >> sys.stderr, 'Unknown format: %s' % format
+        _, ext = os.path.splitext(fout)
+        ext = ext.replace('.', '')
+        if ext.lower() not in ('svg', 'pdf', 'png'):
+            print >> sys.stderr, 'Unknown format: %s' % ext
             sys.exit(2)
 
-        pd = kenozooid.uddf.UDDFProfileData()
-        pd.open(fin)
-        kenozooid.plot.plot(pd.tree, fprefix, format,
-                dives=dives,
-                title=options.plot_title,
-                info=options.plot_info,
-                temp=options.plot_temp)
+        args = args[1 : -1]
+        def fetch(args):
+            i = 0
+            while i < len(args):
+                q = '//uddf:dive'
+                if os.path.exists(args[i]):
+                    f = args[i] # no range spec, just filename; take all
+                else:
+                    q += '[' + node_range(args[i]) + ']'
+                    i += 1 # skip range spec
+                    f = args[i]
+                    if not os.path.exists(f):
+                        print >> sys.stderr, 'File does not exist: %s' % f
+                        sys.exit(2)
+
+                # return generator of dive data and its profile data tuples
+                nodes = parse(f, q)
+                yield ((dive_data(n), dive_profile(n)) for n in nodes)
+                i += 1
+
+        # fetch dives and profiles from every file
+        data = itertools.chain(*fetch(args))
+        if options.plot_overlay:
+            plotf = plot_overlay
+
+            params = {}
+            if options.plot_labels:
+                params = { 'labels': options.plot_labels.split(',') }
+        else:
+            plotf = plot
+            params = {}
+
+        plotf(fout, data, format=ext,
+            title=options.plot_title,
+            info=options.plot_info,
+            temp=options.plot_temp,
+            sig=options.plot_sig,
+            legend=options.plot_legend,
+            **params)
 
 
 # vim: sw=4:et:ai

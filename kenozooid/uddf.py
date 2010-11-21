@@ -23,7 +23,6 @@ UDDF file format support.
 """
 
 from lxml import etree as et
-from lxml import objectify as eto
 from datetime import datetime
 from dateutil.parser import parse as dparse
 from operator import itemgetter
@@ -279,7 +278,7 @@ class UDDFProfileData(UDDFFile):
             k = i + 1
             samples = dive.findall(q('samples/waypoint'))
             depths = [float(s.depth.text) for s in samples]
-            times = [float(s.divetime) / 60 for s in samples]
+            times = [float(s.time) / 60 for s in samples]
             
             yield (k, self.get_datetime(dive), times[-1], max(depths))
 
@@ -388,3 +387,107 @@ def has_temp(w):
     """
     return hasattr(w, 'temperature')
 
+
+#
+# lib API
+#
+from collections import namedtuple
+
+_NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
+
+def parse(f, query):
+    doc = et.parse(f)
+    return xpath(doc, query)
+
+
+def xpath(node, query):
+    log.debug('xpath lookup with query: {0}'.format(query))
+    for n in node.xpath(query, namespaces=_NSMAP):
+        yield n
+
+
+def find_data(name, node, fields, types, paths, query=None):
+    T = namedtuple(name, ' '.join(fields))._make
+    if query:
+        data = xpath(node, query)
+        return (_scalars(n, T, paths, types) for n in data)
+    else:
+        return _scalars(node, T, paths, types)
+
+
+def dive_data(node, fields=None, types=None, paths=None):
+    if fields is None:
+        fields = ('time', )
+        types = (dparse, )
+        paths = ('uddf:datetime', )
+
+    return find_data('Dive', node, fields, types, paths)
+
+
+def dive_profile(node, fields=None, types=None, paths=None):
+    if fields is None:
+        fields = ('time', 'depth', 'temp')
+        types = (float, ) * 3
+        paths = ('uddf:divetime', 'uddf:depth', 'uddf:temperature')
+
+    return find_data('Sample', node, fields, types, paths,
+            query='.//uddf:waypoint')
+
+
+class RangeError(ValueError): pass
+
+def node_range(s):
+    """
+    Parse textual representation of number range.
+
+    Example of a range
+
+    >>> node_range('1-3,5')
+    (1, 2, 3, 5)
+
+    Example of infinite range
+
+    >>> node_range('20-') # doctest:+ELLIPSIS
+    (20, 21, 22, ..., 9999, 10000)
+
+    :Parameters:
+     s
+        Textual representation of number range.
+    """
+    data = []
+    try:
+        for r in s.split(','):
+            d = r.split('-')
+            if len(d) == 1:
+                data.append('position() = %d' % int(d[0]))
+            elif len(d) == 2:
+                p1 = d[0].strip()
+                p2 = d[1].strip()
+                if p1 and p2:
+                    data.append('%d <= position() and position() <= %d' \
+                            % (int(p1), int(p2)))
+                elif p1 and not p2:
+                    data.append('%d <= position()' % int(p1))
+                elif not p1 and p2:
+                    data.append('position() <= %d' % int(p2))
+            else:
+                raise RangeError('Invalid range %s' % s)
+    except ValueError, ex:
+        raise RangeError('Invalid range %s' % s)
+    return ' or '.join(data)
+
+
+def _sxpath(node, q, t=float):
+    nodes = node.xpath(q, namespaces=_NSMAP)
+    if nodes:
+        return t(nodes[0].text)
+    else:
+        return None
+
+
+def _scalars(node, T, fields, types):
+    return T(_sxpath(node, f, t) for f, t in zip(fields, types))
+
+
+
+# vim: sw=4:et:ai
