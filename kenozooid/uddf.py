@@ -415,11 +415,17 @@ TODO: More research is needed to cache results of some of the queries.
 """
 
 from collections import namedtuple
+from lxml import etree as et
+from functools import partial
 
 #
 # Default UDDF namespace mapping.
 #
 _NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
+xpath = partial(et.XPath, namespaces=_NSMAP)
+XP_DEFAULT_DIVE_DATA = (xpath('uddf:datetime/text()'), )
+XP_DEFAULT_PROFILE_DATA =  (xpath('uddf:divetime/text()'), xpath('uddf:depth/text()'), xpath('uddf:temperature/text()'))
+XP_WAYPOINT = xpath('.//uddf:waypoint')
 
 
 class RangeError(ValueError):
@@ -445,44 +451,29 @@ def parse(f, query):
      query
         XPath expression.
     """
+    log.debug('parsing and searching with with query: {0}'.format(query))
     doc = et.parse(f)
-    return xpath(doc, query)
-
-
-def xpath(node, query):
-    """
-    Run XPath query starting from specfied XML node.
-
-    Generator of selected nodes is returned.
-
-    :Parameters:
-     node
-        XML node.
-     query
-        XPath expression.
-    """
-    log.debug('xpath lookup with query: {0}'.format(query))
-    for n in node.xpath(query, namespaces=_NSMAP):
+    for n in doc.xpath(query, namespaces=_NSMAP):
         yield n
 
 
-def find_data(name, node, fields, paths, types, query=None):
+def find_data(name, node, fields, fqueries, types, nquery=None):
     """
     Find data records starting from specified XML node.
 
     A record type (namedtuple) is created with specified fields. The data
-    of a record is retrieved with XPath expressions, which is converted
-    from string to appropriate type using types information.
+    of a record is retrieved with XPath expression objects, which is
+    converted from string to appropriate type using types information.
 
     A type converter can be any function, i.e. `float`, `int` or
     `dateutil.parser.parse`.
 
-    If XML node is too high to execture XPath expressions, then the basis
-    for paths can be relocated with `query` parameter. If `query` parameter
-    is not specified, then only one record is returned. Otherwise it is
-    generator of records.
+    If XML node is too high to execture XPath expression objects, then the
+    basis for field queries can be relocated with `nquery` parameter. If
+    `nquery` parameter is not specified, then only one record is returned.
+    Otherwise it is generator of records.
 
-    The length of fields, types and paths should be the same.
+    The length of fields, types and field queries should be the same.
 
     :Parameters:
      name
@@ -491,27 +482,27 @@ def find_data(name, node, fields, paths, types, query=None):
         XML node.
      fields
         Names of fields to be created in a record.
-     paths
-        XPath expression for each field to retrieve its value.
+     fqueries
+        XPath expression objects for each field to retrieve its value.
      types
         Type converters of field values to be created in a record.
-     query
-        XPath expression to relocate from node to more appropriate position
-        in XML document for record data retrieval.
+     nquery
+        XPath expression object to relocate from node to more appropriate
+        position in XML document for record data retrieval.
 
     .. seealso::
         dive_data
         dive_profile
     """
     T = namedtuple(name, ' '.join(fields))._make
-    if query:
-        data = xpath(node, query)
-        return (_record(T, n, paths, types) for n in data)
+    if nquery:
+        data = nquery(node)
+        return (_record(T, n, fqueries, types) for n in data)
     else:
-        return _record(T, node, paths, types)
+        return _record(T, node, fqueries, types)
 
 
-def dive_data(node, fields=None, paths=None, types=None):
+def dive_data(node, fields=None, fqueries=None, types=None):
     """
     Specialized function to return record of a dive data.
 
@@ -520,15 +511,15 @@ def dive_data(node, fields=None, paths=None, types=None):
     record.
 
     Dive record data can be reconfigured with optional fields, types and
-    paths parameters.
+    field queries parameters.
 
     :Parameters:
      node
         XML node.
      fields
         Names of fields to be created in a record.
-     paths
-        XPath expression for each field to retrieve its value.
+     fqueries
+        XPath expression object for each field to retrieve its value.
      types
         Type converters of field values to be created in a record.
 
@@ -538,13 +529,13 @@ def dive_data(node, fields=None, paths=None, types=None):
 
     if fields is None:
         fields = ('time', )
-        paths = ('uddf:datetime', )
+        fqueries = XP_DEFAULT_DIVE_DATA
         types = (dparse, )
 
-    return find_data('Dive', node, fields, paths, types)
+    return find_data('Dive', node, fields, fqueries, types)
 
 
-def dive_profile(node, fields=None, paths=None, types=None):
+def dive_profile(node, fields=None, fqueries=None, types=None):
     """
     Specialized function to return generator of dive profiles records.
 
@@ -558,15 +549,15 @@ def dive_profile(node, fields=None, paths=None, types=None):
         temperature in Kelvins
 
     Dive profile record data can be reconfigured with optional fields,
-    types and paths parameters.
+    types and field queries parameters.
 
     :Parameters:
      node
         XML node.
      fields
         Names of fields to be created in a record.
-     paths
-        XPath expression for each field to retrieve its value.
+     fqueries
+        XPath expression objects for each field to retrieve its value.
      types
         Type converters of field values to be created in a record.
 
@@ -575,11 +566,11 @@ def dive_profile(node, fields=None, paths=None, types=None):
     """
     if fields is None:
         fields = ('time', 'depth', 'temp')
-        paths = ('uddf:divetime', 'uddf:depth', 'uddf:temperature')
+        fqueries = XP_DEFAULT_PROFILE_DATA
         types = (float, ) * 3
 
-    return find_data('Sample', node, fields, paths, types,
-            query='.//uddf:waypoint')
+    return find_data('Sample', node, fields, fqueries, types,
+            query=XP_WAYPOINT)
 
 
 def node_range(s):
@@ -635,35 +626,34 @@ def _record_data(node, query, t=float):
      node
         XML node.
      query
-        XPath expression to find node with text value.
+        XPath expression object to find node with text value.
      t
         Function to convert text value to requested type.
     """
-    nodes = node.xpath(query, namespaces=_NSMAP)
-    if nodes:
-        return t(nodes[0].text)
-    else:
-        return None
+    data = query(node)
+    if data:
+        return t(data[0])
 
 
-def _record(rt, node, paths, types):
+def _record(rt, node, fqueries, types):
     """
     Create record with data.
 
-    The record data is found with XPath expressions starting from XML node.
-    The data is converted using functions specified in `types` parameters.
+    The record data is found with XPath expressions objects starting from
+    XML node.  The data is converted using functions specified in `types`
+    parameters.
 
     :Parameters:
     rt
         Record type (named tuple) of record data.
     node
         XML node.
-     paths
-        XPath expression for each field to retrieve its value.
+     fqueries
+        XPath expression objects for each field to retrieve its value.
      types
         Type converters of field values to be created in a record.
     """
-    return rt(_record_data(node, f, t) for f, t in zip(paths, types))
+    return rt(_record_data(node, f, t) for f, t in zip(fqueries, types))
 
 
 # vim: sw=4:et:ai
