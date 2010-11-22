@@ -147,7 +147,7 @@ def main():
         if options.profile:
             import hotshot, hotshot.stats
             prof = hotshot.Profile('kenozooid.prof')
-            prof.runcall(cmd, parser, options, *args)
+            prof.runcall(cmd, options, *args)
             prof.close()
             stats = hotshot.stats.load('kenozooid.prof')
             stats.strip_dirs()
