@@ -570,7 +570,7 @@ def dive_profile(node, fields=None, fqueries=None, types=None):
         types = (float, ) * 3
 
     return find_data('Sample', node, fields, fqueries, types,
-            query=XP_WAYPOINT)
+            nquery=XP_WAYPOINT)
 
 
 def node_range(s):
