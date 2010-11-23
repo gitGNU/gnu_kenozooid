@@ -212,3 +212,122 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         self.assertEquals('01234567890abcdef', dd.get_data())
 
 
+from lxml import etree as et
+from cStringIO import StringIO
+
+import kenozooid.uddf as ku
+
+
+UDDF_SAMPLE = """\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+  <generator>
+    <name>kenozooid</name>
+    <version>0.1.0</version>
+    <manufacturer>
+      <name>Kenozooid Team</name>
+      <contact>
+        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
+      </contact>
+    </manufacturer>
+    <datetime>2010-11-16 23:55:13</datetime>
+  </generator>
+  <diver>
+    <owner>
+      <personal>
+        <firstname>Anonymous</firstname>
+        <lastname>Guest</lastname>
+      </personal>
+      <equipment>
+        <divecomputer id="su">
+          <model>Sensus Ultra</model>
+        </divecomputer>
+      </equipment>
+    </owner>
+  </diver>
+  <profiledata>
+    <repetitiongroup>
+      <dive>
+        <datetime>2009-09-19 13:10:23</datetime>
+        <samples>
+          <waypoint>
+            <depth>1.48</depth>
+            <divetime>0</divetime>
+            <temperature>289.02</temperature>
+          </waypoint>
+          <waypoint>
+            <depth>2.43</depth>
+            <divetime>10</divetime>
+            <temperature>288.97</temperature>
+          </waypoint>
+          <waypoint>
+            <depth>3.58</depth>
+            <divetime>20</divetime>
+          </waypoint>
+        </samples>
+      </dive>
+      <dive>
+        <datetime>2010-10-30 13:24:43</datetime>
+        <samples>
+          <waypoint>
+            <depth>2.61</depth>
+            <divetime>0</divetime>
+            <temperature>296.73</temperature>
+          </waypoint>
+          <waypoint>
+            <depth>4.18</depth>
+            <divetime>10</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.25</depth>
+            <divetime>20</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.32</depth>
+            <divetime>30</divetime>
+            <temperature>297.26</temperature>
+          </waypoint>
+        </samples>
+      </dive>
+    </repetitiongroup>
+  </profiledata>
+</uddf>
+"""
+
+
+class FindDataTestCase(unittest.TestCase):
+    """
+    Data search within UDDF tests.
+    """
+    def test_parsing(self):
+        """Test basic XML parsing routine"""
+        f = StringIO(UDDF_SAMPLE)
+        depths = list(ku.parse(f, '//uddf:waypoint//uddf:depth/text()'))
+        self.assertEqual(7, len(depths))
+
+        expected = ['1.48', '2.43', '3.58', '2.61', '4.18', '6.25', '8.32']
+        self.assertEqual(expected, depths)
+
+
+    def test_dive_data(self):
+        """Test parsing UDDF default dive data"""
+        f = StringIO(UDDF_SAMPLE)
+        node = ku.parse(f, '//uddf:dive[1]').next()
+        dive = ku.dive_data(node)
+        self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.time)
+
+
+    def test_profile_data(self):
+        """Test parsing UDDF default dive profile data"""
+        f = StringIO(UDDF_SAMPLE)
+        node = ku.parse(f, '//uddf:dive[2]').next()
+        profile = list(ku.dive_profile(node))
+        self.assertEquals(4, len(profile))
+
+        self.assertEquals((0, 2.61, 296.73), profile[0])
+        self.assertEquals((10, 4.18, None), profile[1])
+        self.assertEquals((20, 6.25, None), profile[2])
+        self.assertEquals((30, 8.32, 297.26), profile[3])
+
+
+# vim: sw=4:et:ai

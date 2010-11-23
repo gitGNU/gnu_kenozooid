@@ -422,10 +422,21 @@ from functools import partial
 # Default UDDF namespace mapping.
 #
 _NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
-xpath = partial(et.XPath, namespaces=_NSMAP)
-XP_DEFAULT_DIVE_DATA = (xpath('uddf:datetime/text()'), )
-XP_DEFAULT_PROFILE_DATA =  (xpath('uddf:divetime/text()'), xpath('uddf:depth/text()'), xpath('uddf:temperature/text()'))
-XP_WAYPOINT = xpath('.//uddf:waypoint')
+
+
+# XPath query constructor for UDDF data.
+XPath = partial(et.XPath, namespaces=_NSMAP)
+
+# XPath query for default dive data
+XP_DEFAULT_DIVE_DATA = (XPath('uddf:datetime/text()'), )
+
+# XPath query for default dive profile sample data
+XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
+        XPath('uddf:depth/text()'),
+        XPath('uddf:temperature/text()'))
+
+# XPath query to locate dive profile sample
+XP_WAYPOINT = XPath('.//uddf:waypoint')
 
 
 class RangeError(ValueError):
@@ -577,15 +588,18 @@ def node_range(s):
     """
     Parse textual representation of number range into XPath expression.
 
-    Example of a range
+    Examples of a ranges
 
     >>> node_range('1-3,5')
-    (1, 2, 3, 5)
+    '1 <= position() and position() <= 3 or position() = 5'
+
+    >>> node_range('-3,10')
+    'position() <= 3 or position() = 10'
 
     Example of infinite range
 
-    >>> node_range('20-') # doctest:+ELLIPSIS
-    (20, 21, 22, ..., 9999, 10000)
+    >>> node_range('20-')
+    '20 <= position()'
 
     :Parameters:
      s
