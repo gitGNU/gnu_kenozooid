@@ -104,50 +104,6 @@ class UDDFTestCase(unittest.TestCase):
 
 
 
-class UDDFCompactTestCase(unittest.TestCase):
-    def test_uddf_compact(self):
-        """Test UDDF compact
-        """
-        pd = UDDFProfileData()
-        pd.parse(StringIO("""
-<uddf xmlns="http://www.streit.cc/uddf">
-<profiledata>
-<repetitiongroup>
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
-</dive>
-<dive>
-    <datetime>2009-04-02 23:02</datetime>
-</dive>
-<dive>
-    <datetime>2009-04-02 23:02</datetime>
-</dive>
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
-</dive>
-</repetitiongroup>
-<repetitiongroup> <!-- one more repetition group which shall be removed -->
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
-</dive>
-</repetitiongroup>
-</profiledata>
-</uddf>
-"""))
-        pd.compact()
-
-        tree = pd.tree
-
-        self.assertEquals(1, len(tree.findall(q('//repetitiongroup'))))
-        dives = tree.findall(q('//dive'))
-        self.assertEquals(2, len(dives))
-
-        # check the order of dives (ordered by dive time)
-        dt = pd.get_datetime(dives[0])
-        self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
-
-        dt = pd.get_datetime(dives[1])
-        self.assertEquals(datetime(2009, 4, 2, 23, 2), dt)
 
 
 
@@ -364,6 +320,56 @@ class CreateDataTestCase(unittest.TestCase):
 <uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">\
 """
         self.assertTrue(s.startswith(preamble), s)
+
+
+
+class PostprocessingTestCase(unittest.TestCase):
+    """
+    UDDF postprocessing tests.
+    """
+    def test_reorder(self):
+        """Test UDDF reordering
+        """
+        doc = et.parse(StringIO("""
+<uddf xmlns="http://www.streit.cc/uddf">
+<profiledata>
+<repetitiongroup>
+<dive>
+    <datetime>2009-03-02 23:02</datetime>
+</dive>
+<dive>
+    <datetime>2009-04-02 23:02</datetime>
+</dive>
+<dive>
+    <datetime>2009-04-02 23:02</datetime>
+</dive>
+<dive>
+    <datetime>2009-03-02 23:02</datetime>
+</dive>
+</repetitiongroup>
+<repetitiongroup> <!-- one more repetition group which shall be removed -->
+<dive>
+    <datetime>2009-03-02 23:02</datetime>
+</dive>
+</repetitiongroup>
+</profiledata>
+</uddf>
+"""))
+        ku.reorder(doc)
+
+        f = StringIO()
+        ku.save(doc, f)
+
+        f = StringIO(f.getvalue())
+
+        nodes = list(ku.parse(f, '//uddf:repetitiongroup'))
+        self.assertEquals(1, len(nodes))
+        nodes = list(ku.parse(f, '//uddf:dive'))
+        self.assertEquals(2, len(nodes))
+
+        # check the order of dives
+        times = list(ku.parse(f, '//uddf:dive/uddf:datetime/text()'))
+        self.assertEquals(['2009-03-02 23:02', '2009-04-02 23:02'], times)
 
 
 # vim: sw=4:et:ai

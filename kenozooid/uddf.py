@@ -39,122 +39,9 @@ import kenozooid
 
 RE_Q = re.compile(r'(\b[a-z]+)')
 
-# format for datetime
-FMT_DATETIME = '%Y-%m-%d %H:%M:%S%z'
-
-
-# minimal data for an UDDF file
-UDDF_TMPL = """
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
-<generator>
-    <name>kenozooid</name>
-    <version>%s</version>
-    <manufacturer>
-      <name>Kenozooid Team</name>
-      <contact>
-        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
-      </contact>
-    </manufacturer>
-    <datetime></datetime>
-</generator>
-<diver>
-    <owner>
-        <personal>
-            <firstname>Anonymous</firstname>
-            <lastname>Guest</lastname>
-        </personal>
-        <equipment>
-            <divecomputer id=''>
-                <model></model>
-            </divecomputer>
-        </equipment>
-    </owner>
-</diver>
-%%s
-</uddf>
-""" % kenozooid.__version__
-
 
 class UDDFFile(object):
-    """
-    Basic class for UDDF files.
-
-    The XML tree representing UDDF file is created and can be accessed
-    using Objetify API from lxml library.
-
-    The UDDF template needs to be set by all deriving, non-abstract
-    classes.
-
-    :Variables:
-     tree
-        XML tree representing UDDF file.
-    :CVariables:
-     UDDF
-        UDDF template to be parsed by during UDDF file creation.
-    """
-
-    # to be set
-    UDDF = UDDF_TMPL % ''
-
-    def __init__(self):
-        """
-        Create an instance of UDDF file with no data.
-        """
-        self.tree = None
-
-
-    def open(self, fn, validate=True):
-        """
-        Open and parse UDDF file.
-
-        :Parameters:
-         fn
-            Name of a file containing UDDF data.
-         validate
-            Validate UDDF file after parsing if set to True.
-        """
-        f = open(fn)
-        self.parse(f)
-        f.close()
-        if validate:
-            self.validate()
-
-
-    def parse(self, f):
-        """
-        Parse UDDF file.
-
-        :Parameters:
-         f
-            File object containing UDDF data.
-        """
-        self.tree = eto.parse(f)
-
-
-    def save(self, fn, validate=True):
-        """
-        Save UDDF data to a file.
-
-        :Parameters:
-         fn
-            Name of output file to save UDDF data in.
-         validate
-            Validate UDDF file before saving if set to True.
-        """
-        self.clean()
-
-        if validate:
-            self.validate()
-
-        with open(fn, 'w') as f:
-            data = et.tostring(self.tree,
-                    encoding='utf-8',
-                    xml_declaration=True,
-                    pretty_print=True)
-            f.write(data)
-
-
-
+    pass
     def set_model(self, id, model):
         """
         Set dive computer model, from which data was dumped.
@@ -200,10 +87,10 @@ class UDDFProfileData(UDDFFile):
     """
     UDDF file containing dive profile data.
     """
-    UDDF = UDDF_TMPL % """\
-<profiledata>
-</profiledata>
-"""
+#    UDDF = UDDF_TMPL % """\
+#<profiledata>
+#</profiledata>
+#"""
     def create(self):
         """
         Create an UDDF file suitable for storing dive profile data.
@@ -221,22 +108,6 @@ class UDDFProfileData(UDDFFile):
         """
         self.compact()
         super(UDDFProfileData, self).save(fn)
-
-
-    def compact(self):
-        """
-        Remove duplicate dives from UDDF file. Dives are sorted by dive
-        time.
-        """
-        root = self.tree.getroot()
-        dives = {}
-        for dive in self.tree.findall(q('//dive')):
-            dt = self.get_datetime(dive)
-            if dt not in dives:
-                dives[dt] = dive
-        del root.profiledata.repetitiongroup[:]
-        n = et.SubElement(root.profiledata, q('repetitiongroup'))
-        n.dive = [d[1] for d in sorted(dives.items(), key=itemgetter(0))]
 
 
     def get_dives(self):
@@ -265,15 +136,15 @@ class UDDFDeviceDump(UDDFFile):
         decoded = bz2.decompress(s)
 
     """
-    UDDF = UDDF_TMPL % """\
-<divecomputercontrol>
-    <divecomputerdump>
-        <link ref=''/>
-        <datetime></datetime>
-        <dcdump></dcdump>
-    </divecomputerdump>
-</divecomputercontrol>
-"""
+#    UDDF = UDDF_TMPL % """\
+#<divecomputercontrol>
+#    <divecomputerdump>
+#        <link ref=''/>
+#        <datetime></datetime>
+#        <dcdump></dcdump>
+#    </divecomputerdump>
+#</divecomputercontrol>
+#"""
     def create(self):
         """
         Create an UDDF file suitable for storing dive profile data.
@@ -734,6 +605,49 @@ def save(doc, f, validate=True):
 
     if fopened:
         f.close()
+
+
+def reorder(doc):
+    """
+    Reorder and cleanup dives in UDDF document.
+
+    Following operations are being performed
+
+    - dives are sorted by dive start time 
+    - duplicate dives and repetition groups are removed
+
+    :Parameters:
+     doc
+        UDDF document.
+
+    TODO: Put dives into appropriate repetition groups.
+    """
+    find = partial(doc.xpath, namespaces=_NSMAP)
+
+    profiles = find('//uddf:profiledata')
+    rgroups = find('//uddf:profiledata/uddf:repetitiongroup')
+    if not profiles or not rgroups:
+        raise ValueError('No profile data to reorder')
+    pd = profiles[0]
+
+    nodes = find('//uddf:dive')
+    times = find('//uddf:dive/uddf:datetime/text()')
+
+    dives = {}
+    for n, t in zip(nodes, times):
+        dt = dparse(t) # don't rely on string representation for sorting
+        if dt not in dives:
+            dives[dt] = n
+
+    log.debug('removing old repetition groups')
+    for rg in rgroups: # cleanup old repetition groups
+        pd.remove(rg)
+    rg = et.SubElement(pd, 'repetitiongroup')
+
+    # sort dive nodes by dive time
+    log.debug('sorting dives')
+    for dt, n in sorted(dives.items(), key=itemgetter(0)):
+        rg.append(n)
 
 
 # vim: sw=4:et:ai
