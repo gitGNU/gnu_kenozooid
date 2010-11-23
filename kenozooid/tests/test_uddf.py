@@ -214,6 +214,7 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
 
 from lxml import etree as et
 from cStringIO import StringIO
+from datetime import datetime
 
 import kenozooid.uddf as ku
 
@@ -328,6 +329,41 @@ class FindDataTestCase(unittest.TestCase):
         self.assertEquals((10, 4.18, None), profile[1])
         self.assertEquals((20, 6.25, None), profile[2])
         self.assertEquals((30, 8.32, 297.26), profile[3])
+
+
+
+class CreateDataTestCase(unittest.TestCase):
+    """
+    UDDF creation and saving tests
+    """
+    def test_create_basic(self):
+        """
+        Test basic UDDF file creation.
+        """
+        now = datetime.now()
+        doc = ku.create(time=now)
+        q = '//uddf:generator/uddf:datetime/text()'
+        dt = doc.xpath(q, namespaces=ku._NSMAP)
+
+        self.assertEquals(now.strftime(ku.FMT_DATETIME), dt[0])
+
+
+    def test_save(self):
+        """
+        Test UDDF data saving
+        """
+        doc = ku.create()
+        f = StringIO()
+        ku.save(doc, f)
+        s = f.getvalue()
+        self.assertFalse('uddf:' in s)
+        f.close() # check if file closing is possible
+
+        preamble = """\
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">\
+"""
+        self.assertTrue(s.startswith(preamble), s)
 
 
 # vim: sw=4:et:ai

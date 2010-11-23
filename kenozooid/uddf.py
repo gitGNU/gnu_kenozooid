@@ -103,18 +103,6 @@ class UDDFFile(object):
         self.tree = None
 
 
-    def create(self):
-        """
-        Create new UDDF file.
-        """
-        root = eto.XML(self.UDDF)
-
-        now = datetime.now()
-        root.generator.datetime = now.strftime(FMT_DATETIME)
-
-        self.tree = et.ElementTree(root)
-
-
     def open(self, fn, validate=True):
         """
         Open and parse UDDF file.
@@ -165,24 +153,6 @@ class UDDFFile(object):
                     pretty_print=True)
             f.write(data)
 
-
-    def clean(self):
-        """
-        Clean UDDF XML data structures from unnecessary annotations and
-        namespaces.
-        """
-        log.debug('cleaning uddf file')
-        eto.deannotate(self.tree)
-        et.cleanup_namespaces(self.tree)
-
-
-    def validate(self):
-        """
-        Validate UDDF file with UDDF XML Schema.
-        """
-        log.debug('validating uddf file')
-        #schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
-        #schema.assertValid(self.tree.getroot())
 
 
     def set_model(self, id, model):
@@ -423,6 +393,9 @@ from functools import partial
 #
 _NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
 
+#
+# Parsing and searching.
+#
 
 # XPath query constructor for UDDF data.
 XPath = partial(et.XPath, namespaces=_NSMAP)
@@ -668,6 +641,99 @@ def _record(rt, node, fqueries, types):
         Type converters of field values to be created in a record.
     """
     return rt(_record_data(node, f, t) for f, t in zip(fqueries, types))
+
+
+#
+# Creating UDDF data.
+#
+
+# default format for timestamps within UDDF file
+FMT_DATETIME = '%Y-%m-%d %H:%M:%S%z'
+
+# basic data for an UDDF file
+UDDF_BASIC = """\
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<generator>
+    <name>kenozooid</name>
+    <version>{kzver}</version>
+    <manufacturer>
+      <name>Kenozooid Team</name>
+      <contact>
+        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
+      </contact>
+    </manufacturer>
+    <datetime></datetime>
+</generator>
+<diver>
+    <owner>
+        <personal>
+            <firstname>Anonymous</firstname>
+            <lastname>Guest</lastname>
+        </personal>
+    </owner>
+</diver>
+</uddf>
+""".format(kzver=kenozooid.__version__)
+
+###<equipment>
+###    <divecomputer id=''>
+###        <model></model>
+###    </divecomputer>
+###</equipment>
+
+
+def create(time=datetime.now()):
+    """
+    Create basic UDDF structure.
+
+    :Parameters:
+     time
+        Timestamp of file creation, current time by default.
+    """
+    root = et.XML(UDDF_BASIC)
+
+    now = datetime.now()
+    n = root.xpath('//uddf:generator/uddf:datetime', namespaces=_NSMAP)[0]
+    n.text = time.strftime(FMT_DATETIME)
+    return root
+
+
+def save(doc, f, validate=True):
+    """
+    Save UDDF data to a file.
+
+    A file can be a file name or file like object.
+
+    :Parameters:
+     doc
+        UDDF document to save.
+     f
+        UDDF output file.
+     validate
+        Validate UDDF file before saving if set to True.
+    """
+    log.debug('cleaning uddf file')
+    #et.deannotate(doc)
+    et.cleanup_namespaces(doc)
+
+    if validate:
+        log.debug('validating uddf file')
+        #schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
+        #schema.assertValid(doc.getroot())
+
+    fopened = False
+    if isinstance(f, basestring):
+        fopened = True
+        f = open(f)
+
+    data = et.tostring(doc,
+            encoding='utf-8',
+            xml_declaration=True,
+            pretty_print=True)
+    f.write(data)
+
+    if fopened:
+        f.close()
 
 
 # vim: sw=4:et:ai
