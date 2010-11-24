@@ -27,10 +27,8 @@ from lxml import etree
 import lxml.objectify as eto
 from datetime import datetime
 from StringIO import StringIO
+from functools import partial
 
-import kenozooid
-from kenozooid.uddf import UDDFFile, UDDFProfileData, UDDFDeviceDump, \
-        q, has_deco, has_temp
 
 class UDDFTestCase(unittest.TestCase):
     """
@@ -111,22 +109,6 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
     """
     Tests for UDDF file containing device dump data.
     """
-    def test_creation(self):
-        """Test UDDF device dump file creation
-        """
-        uf = UDDFDeviceDump()
-        uf.create()
-        self.assertFalse(uf.tree is None)
-
-        root = uf.tree.getroot()
-        self.assertEquals('3.0.0', root.get('version')) # check UDDF version
-        self.assertEquals('kenozooid', root.generator.name.text)
-        self.assertEquals(kenozooid.__version__, root.generator.version.text)
-        self.assertTrue(q('divecomputercontrol') in [el.tag for el in root.iterchildren()])
-        dc = root.divecomputercontrol
-        self.assertTrue(q('divecomputerdump') in [el.tag for el in dc.iterchildren()])
-
-
     def test_encoding(self):
         """Test data encoding
         """
@@ -134,11 +116,6 @@ class UDDFDeviceDumpTestCase(unittest.TestCase):
         self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
 
 
-    def test_decoding(self):
-        """Test data decoding
-        """
-        s = UDDFDeviceDump.decode('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=')
-        self.assertEquals('01234567890abcdef', s)
 
 
     def test_setting_data(self):
@@ -175,7 +152,7 @@ from datetime import datetime
 import kenozooid.uddf as ku
 
 
-UDDF_SAMPLE = """\
+UDDF_PROFILE = """\
 <?xml version="1.0" encoding="utf-8"?>
 <uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
   <generator>
@@ -251,6 +228,43 @@ UDDF_SAMPLE = """\
 </uddf>
 """
 
+UDDF_DUMP = """\
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+  <generator>
+    <name>kenozooid</name>
+    <version>0.1.0</version>
+    <manufacturer>
+      <name>Kenozooid Team</name>
+      <contact>
+        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
+      </contact>
+    </manufacturer>
+    <datetime>2010-11-07 21:13:24</datetime>
+  </generator>
+  <diver>
+    <owner>
+      <personal>
+        <firstname>Anonymous</firstname>
+        <lastname>Guest</lastname>
+      </personal>
+      <equipment>
+        <divecomputer id="ostc">
+          <model>OSTC Mk.1</model>
+        </divecomputer>
+      </equipment>
+    </owner>
+  </diver>
+  <divecomputercontrol>
+    <divecomputerdump>
+      <link ref="ostc"/>
+      <datetime>2010-11-07 21:13:24</datetime>
+      <!-- dcdump: '01234567890abcdef' -->
+      <dcdump>QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=</dcdump>
+    </divecomputerdump>
+  </divecomputercontrol>
+</uddf>
+"""
 
 class FindDataTestCase(unittest.TestCase):
     """
@@ -258,7 +272,7 @@ class FindDataTestCase(unittest.TestCase):
     """
     def test_parsing(self):
         """Test basic XML parsing routine"""
-        f = StringIO(UDDF_SAMPLE)
+        f = StringIO(UDDF_PROFILE)
         depths = list(ku.parse(f, '//uddf:waypoint//uddf:depth/text()'))
         self.assertEqual(7, len(depths))
 
@@ -268,7 +282,7 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_dive_data(self):
         """Test parsing UDDF default dive data"""
-        f = StringIO(UDDF_SAMPLE)
+        f = StringIO(UDDF_PROFILE)
         node = ku.parse(f, '//uddf:dive[1]').next()
         dive = ku.dive_data(node)
         self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.time)
@@ -276,7 +290,7 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_profile_data(self):
         """Test parsing UDDF default dive profile data"""
-        f = StringIO(UDDF_SAMPLE)
+        f = StringIO(UDDF_PROFILE)
         node = ku.parse(f, '//uddf:dive[2]').next()
         profile = list(ku.dive_profile(node))
         self.assertEquals(4, len(profile))
@@ -285,6 +299,27 @@ class FindDataTestCase(unittest.TestCase):
         self.assertEquals((10, 4.18, None), profile[1])
         self.assertEquals((20, 6.25, None), profile[2])
         self.assertEquals((30, 8.32, 297.26), profile[3])
+
+
+    def test_dump_data(self):
+        """Test parsing UDDF dive computer dump data"""
+        f = StringIO(UDDF_DUMP)
+        node = ku.parse(f, '//uddf:divecomputerdump').next()
+        dump = ku.dump_data(node)
+
+        expected = ('ostc',
+                'OSTC Mk.1',
+                datetime(2010, 11, 7, 21, 13, 24),
+                '01234567890abcdef')
+        self.assertEquals(expected, dump)
+
+
+    def test_dump_data_decode(self):
+        """Test dive computer data decoding stored in UDDF dive computer dump file
+        """
+        data = 'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA='
+        s = ku._dump_decode(data)
+        self.assertEquals('01234567890abcdef', s)
 
 
 
@@ -297,10 +332,12 @@ class CreateDataTestCase(unittest.TestCase):
         Test basic UDDF file creation.
         """
         now = datetime.now()
+
         doc = ku.create(time=now)
+        self.assertEquals('3.0.0', doc.get('version'))
+
         q = '//uddf:generator/uddf:datetime/text()'
         dt = doc.xpath(q, namespaces=ku._NSMAP)
-
         self.assertEquals(now.strftime(ku.FMT_DATETIME), dt[0])
 
 
@@ -321,6 +358,99 @@ class CreateDataTestCase(unittest.TestCase):
 """
         self.assertTrue(s.startswith(preamble), s)
 
+
+    def test_create_data(self):
+        """
+        Test generic method for creating XML data
+        """
+        doc = et.XML('<uddf><diver></diver></uddf>')
+        fq = {
+            'fname': 'diver/firstname',
+            'lname': 'diver/lastname',
+        }
+        ku.create_data(doc, fq, fname='A', lname='B')
+
+        sd = et.tostring(doc)
+
+        divers = doc.xpath('//diver')
+        self.assertEquals(1, len(divers), sd)
+        self.assertTrue(divers[0].text is None, sd)
+
+        fnames = doc.xpath('//firstname/text()')
+        self.assertEquals(1, len(fnames), sd)
+        self.assertEquals('A', fnames[0], sd)
+
+        lnames = doc.xpath('//lastname/text()')
+        self.assertEquals(1, len(lnames), sd)
+        self.assertEquals('B', lnames[0], sd)
+
+
+    def test_create_node(self):
+        """
+        Test generic method for creating XML nodes
+        """
+        doc = et.XML('<uddf><diver></diver></uddf>')
+
+        dq = et.XPath('//diver')
+        tq = et.XPath('//test')
+
+        d, t = ku.create_node('diver/test')
+        self.assertEquals('diver', d.tag)
+        self.assertEquals('test', t.tag)
+
+        list(ku.create_node('diver/test', parent=doc))
+        sd = et.tostring(doc, pretty_print=True)
+        self.assertEquals(1, len(dq(doc)), sd)
+        self.assertEquals(1, len(tq(doc)), sd)
+
+        list(ku.create_node('diver/test', parent=doc))
+        sd = et.tostring(doc, pretty_print=True)
+        self.assertEquals(1, len(dq(doc)), sd)
+        self.assertEquals(2, len(tq(doc)), sd)
+
+
+    def test_create_dc_data(self):
+        """
+        Test creating dive computer information data in UDDF file
+        """
+        doc = ku.create()
+        xpath = partial(doc.xpath, namespaces=ku._NSMAP)
+        owner = xpath('//uddf:owner')[0]
+
+        ku.create_dc_data(owner, dc_model='Test 1')
+        sd = et.tostring(doc, pretty_print=True)
+
+        id_q = '//uddf:owner//uddf:divecomputer/@id'
+        ids = xpath(id_q)
+        self.assertEquals(1, len(ids), sd)
+        self.assertEquals('id206a9b642b3e16c89a61696ab28f3d5c', ids[0], sd)
+
+        model_q = '//uddf:owner//uddf:divecomputer/uddf:model/text()'
+        models = xpath(model_q)
+        self.assertEquals('Test 1', models[0], sd)
+
+        # update again with the same model
+        ku.create_dc_data(owner, dc_model='Test 1')
+        sd = et.tostring(doc, pretty_print=True)
+        ids = xpath(id_q)
+        self.assertEquals(1, len(ids), sd)
+
+        # add different model
+        ku.create_dc_data(owner, dc_model='Test 2')
+        sd = et.tostring(doc, pretty_print=True)
+
+        eqs = xpath('//uddf:equipment')
+        self.assertEquals(1, len(eqs), sd)
+
+        ids = xpath(id_q)
+        self.assertEquals(2, len(ids), sd)
+        expected = ['id206a9b642b3e16c89a61696ab28f3d5c',
+                'id605e79544a68819ce664c088aba92658']
+        self.assertEquals(expected, ids, sd)
+
+        models = xpath(model_q)
+        expected = ['Test 1', 'Test 2']
+        self.assertEquals(expected, models, sd)
 
 
 class PostprocessingTestCase(unittest.TestCase):

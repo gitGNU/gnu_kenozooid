@@ -29,11 +29,6 @@ from operator import itemgetter
 import pwd
 import os
 import re
-import bz2
-import base64
-import logging
-
-log = logging.getLogger('kenozooid.uddf')
 
 import kenozooid
 
@@ -41,150 +36,6 @@ RE_Q = re.compile(r'(\b[a-z]+)')
 
 
 class UDDFFile(object):
-    pass
-    def set_model(self, id, model):
-        """
-        Set dive computer model, from which data was dumped.
-        """
-        tree = self.tree
-        root = tree.getroot()
-        dc = tree.find(q('//diver/owner//divecomputer'))
-        dc.set('id', id)
-        dc.model = model
-
-
-    def get_model_id(self):
-        """
-        Get dive computer model id, which data is stored in UDDF file.
-        """
-        dc = self.tree.find(q('//diver/owner//divecomputer'))
-        return dc.get('id')
-
-
-    def get_model(self):
-        """
-        Get model of dive computer, which data is stored in UDDF file.
-        """
-        tree = self.tree
-        model = tree.find(q('//diver/owner//divecomputer/model'))
-        return model.text
-
-
-    @staticmethod
-    def get_datetime(node):
-        """
-        Get datetime instance from XML node parsed from UDDF file.
-
-        :Parameters:
-         node
-            Parsed XML node.
-        """
-        return dparse(node.datetime.text)
-
-
-
-class UDDFProfileData(UDDFFile):
-    """
-    UDDF file containing dive profile data.
-    """
-#    UDDF = UDDF_TMPL % """\
-#<profiledata>
-#</profiledata>
-#"""
-    def create(self):
-        """
-        Create an UDDF file suitable for storing dive profile data.
-        """
-        super(UDDFProfileData, self).create()
-
-
-    def save(self, fn):
-        """
-        Save UDDF data to a file.
-
-        :Parameters:
-         fn
-            Name of output file to save UDDF data in.
-        """
-        self.compact()
-        super(UDDFProfileData, self).save(fn)
-
-
-    def get_dives(self):
-        """
-        Get list of dives stored in an UDDF file.
-        """
-        dives = self.tree.findall(q('//dive'))
-        for i, dive in enumerate(dives):
-            k = i + 1
-            samples = dive.findall(q('samples/waypoint'))
-            depths = [float(s.depth.text) for s in samples]
-            times = [float(s.time) / 60 for s in samples]
-            
-            yield (k, self.get_datetime(dive), times[-1], max(depths))
-
-
-
-class UDDFDeviceDump(UDDFFile):
-    """
-    UDDF device dump file contains all data fetched from a device.
-
-    The binary data fetched from a device is compressed with bzip2 and then
-    encoded with base64. Decoding the data is very simple in Python::
-
-        s = base64.b64decode(encoded) # encoded = getdcalldata text
-        decoded = bz2.decompress(s)
-
-    """
-#    UDDF = UDDF_TMPL % """\
-#<divecomputercontrol>
-#    <divecomputerdump>
-#        <link ref=''/>
-#        <datetime></datetime>
-#        <dcdump></dcdump>
-#    </divecomputerdump>
-#</divecomputercontrol>
-#"""
-    def create(self):
-        """
-        Create an UDDF file suitable for storing dive profile data.
-        """
-        super(UDDFDeviceDump, self).create()
-        tree = self.tree
-        root = tree.getroot()
-        dump = root.divecomputercontrol.divecomputerdump
-        dump.datetime = datetime.now().strftime(FMT_DATETIME)
-
-
-    def set_data(self, data):
-        """
-        Encode and set data of a device into appropriate node of UDDF file.
-
-        :Parameters:
-         data
-            Device data to be stored in UDDF file.
-        """
-        tree = self.tree
-        root = tree.getroot()
-        dump = root.divecomputercontrol.divecomputerdump
-
-        dc = tree.find(q('//diver/owner//divecomputer'))
-        dc_id = dc.get('id')
-        assert dc_id
-        dump.link.set('ref', dc_id)
-
-        dump.dcdump = self.encode(data)
-
-
-    def get_data(self):
-        """
-        Get and decode data of a device.
-        """
-        root = self.tree.getroot()
-        dcdump = root.divecomputercontrol.divecomputerdump.dcdump
-        return self.decode(dcdump.text)
-
-
     @staticmethod
     def encode(data):
         """
@@ -207,29 +58,9 @@ class UDDFDeviceDump(UDDFFile):
         return bz2.decompress(s)
 
 
-
-def q(expr):
-    """
-    Convert tag names and ElementPath expressions to qualified ones. 
-    """
-    return RE_Q.sub('{http://www.streit.cc/uddf}\\1', expr)
-
-
-def has_deco(w):
-    """
-    Check if a waypoint has deco information.
-    """
-    return hasattr(w, 'alarm') and any(a.text == 'deco' for a in w.alarm)
-
-
-def has_temp(w):
-    """
-    Check if a waypoint has temperature information.
-    """
-    return hasattr(w, 'temperature')
-
 """
-UDDF file format support.
+UDDF file format support. The code below is divided into data lookup, data
+creation and data post-processing sections.
 
 UDDF files are basis for Kenozooid data model.
 
@@ -258,6 +89,14 @@ TODO: More research is needed to cache results of some of the queries.
 from collections import namedtuple
 from lxml import etree as et
 from functools import partial
+import base64
+import bz2
+import hashlib
+import logging
+
+import kenozooid
+
+log = logging.getLogger('kenozooid.uddf')
 
 #
 # Default UDDF namespace mapping.
@@ -271,16 +110,25 @@ _NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
 # XPath query constructor for UDDF data.
 XPath = partial(et.XPath, namespaces=_NSMAP)
 
-# XPath query for default dive data
+# XPath queries for default dive data
 XP_DEFAULT_DIVE_DATA = (XPath('uddf:datetime/text()'), )
 
-# XPath query for default dive profile sample data
+# XPath queries for default dive profile sample data
 XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
         XPath('uddf:depth/text()'),
         XPath('uddf:temperature/text()'))
 
 # XPath query to locate dive profile sample
 XP_WAYPOINT = XPath('.//uddf:waypoint')
+
+# XPath queries for default dive computer dump data
+XP_DEFAULT_DUMP_DATA = (XPath('uddf:link/@ref'),
+        # //uddf:divecomputerdump[position()] gives current()
+        XPath('../../uddf:diver/uddf:owner//uddf:divecomputer[' \
+                '@id = //uddf:divecomputerdump[position()]/uddf:link/@ref' \
+            ']/uddf:model/text()'),
+        XPath('uddf:datetime/text()'),
+        XPath('uddf:dcdump/text()'))
 
 
 class RangeError(ValueError):
@@ -428,6 +276,41 @@ def dive_profile(node, fields=None, fqueries=None, types=None):
             nquery=XP_WAYPOINT)
 
 
+def dump_data(node, fields=None, fqueries=None, types=None):
+    """
+    Get dive computer dump data.
+
+    The data is returned.
+
+    dc_id
+        Dive computer id.
+    dc_model
+        Dive computer model information.
+    time
+        Time when dive computer dump was obtained.
+    data
+        Dive computer dump data.
+
+    :Parameters:
+     node
+        XML node.
+     fields
+        Names of fields to be created in a record.
+     fqueries
+        XPath expression objects for each field to retrieve its value.
+     types
+        Type converters of field values to be created in a record.
+
+    .. seealso::
+        find_data
+    """
+    if fields is None:
+        fields = ('dc_id', 'dc_model', 'time', 'data')
+        fqueries = XP_DEFAULT_DUMP_DATA
+        types = (str, str, dparse, _dump_decode)
+    return find_data('DiveComputerDump', node, fields, fqueries, types)
+
+
 def node_range(s):
     """
     Parse textual representation of number range into XPath expression.
@@ -472,7 +355,7 @@ def node_range(s):
     return ' or '.join(data)
 
 
-def _record_data(node, query, t=float):
+def _field(node, query, t=float):
     """
     Find text value of a node starting from specified XML node.
 
@@ -511,7 +394,16 @@ def _record(rt, node, fqueries, types):
      types
         Type converters of field values to be created in a record.
     """
-    return rt(_record_data(node, f, t) for f, t in zip(fqueries, types))
+    return rt(_field(node, f, t) for f, t in zip(fqueries, types))
+
+
+def _dump_decode(data):
+    """
+    Decode dive computer data, which is stored in UDDF dive computer dump
+    file.
+    """
+    s = base64.b64decode(data)
+    return bz2.decompress(s)
 
 
 #
@@ -573,7 +465,8 @@ def save(doc, f, validate=True):
     """
     Save UDDF data to a file.
 
-    A file can be a file name or file like object.
+    A file can be a file name, file like object or anything supported by
+    `lxml` for writing.
 
     :Parameters:
      doc
@@ -592,19 +485,134 @@ def save(doc, f, validate=True):
         #schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
         #schema.assertValid(doc.getroot())
 
-    fopened = False
-    if isinstance(f, basestring):
-        fopened = True
-        f = open(f)
-
-    data = et.tostring(doc,
+    et.ElementTree(doc).write(f,
             encoding='utf-8',
             xml_declaration=True,
             pretty_print=True)
-    f.write(data)
 
-    if fopened:
-        f.close()
+
+def create_data(node, fqueries, **data):
+    """
+    Create XML data relative to specified XML node.
+
+    :Parameters:
+     node
+        XML node.
+     fqueries
+        Path-like expressions of XML structure to be created.
+     data
+        Data values to be set within XML document.
+    """
+    for key, p in fqueries.items():
+        value = data[key]
+
+        if value is None:
+            continue
+
+        attr = None
+        tags = p.rsplit('/', 1)
+        if tags[-1].startswith('@'):
+            attr = tags[-1][1:]
+            p = tags[0] if len(tags) > 1 else None
+
+        n = node
+        if p:
+            nodes = list(create_node(p, parent=node))
+            n = nodes[-1]
+        if attr:
+            n.set(attr, str(value))
+        else:
+            n.text = str(value)
+
+
+def create_node(path, parent=None):
+    # preserve namespace prefix option... please?!? :/
+    T = lambda tag: tag.replace('uddf:', '{' + _NSMAP['uddf'] + '}')
+    tags = path.split('/')
+    n = parent
+    for t in tags:
+        is_last = tags[-1] == t
+        exists = False
+
+        t = T(t)
+
+        if n is not None:
+            for k in n:
+                if k.tag == t:
+                    exists = True
+                    break
+        if is_last or not exists:
+            k = et.Element(t)
+        if n is not None:
+            n.append(k)
+        n = k
+        yield n
+
+
+def create_dc_data(node, fqueries=None, dc_id=None, dc_model=None, **data):
+    """
+    Create dive computer information data in UDDF file.
+    """
+    _fqueries = {
+        'dc_id': '@id',
+        'dc_model': 'uddf:model',
+    }
+    if fqueries is not None:
+        _fqueries.update(fqueries)
+
+    data['dc_id'] = dc_id
+    data['dc_model'] = dc_model
+
+    dc = None
+
+    if dc_id:
+        xp = XPath('uddf:equipment/uddf:divecomputer[id@$dc_id]')
+        nodes = xp(node, dc_id=dc_id)
+        if nodes:
+            dc = nodes[0]
+    else:
+        xp = XPath('uddf:equipment/uddf:divecomputer[uddf:model/text() = $dc_model]')
+        nodes = xp(node, dc_model=dc_model)
+        if nodes:
+            dc = nodes[0]
+
+    if dc is None:
+        if not dc_id:
+            dc_id = 'id' + hashlib.md5(str(dc_model)).hexdigest()
+            data['dc_id'] = dc_id
+
+        # create new dive computer node
+        _, dc = create_node('uddf:equipment/uddf:divecomputer', parent=node)
+        create_data(dc, _fqueries, **data)
+    return dc
+
+
+def create_dive_data(node, fqueries=None, **data):
+    if fqueries == None:
+        fqueries = {
+            'time': 'uddf:datetime',
+        }
+    _, _, dn = create_node(node, 'uddf:profiledata/uddf:repetitiongroup/uddf:dive')
+    create_data(dn, fqueries, **data)
+    return dn
+
+
+def create_dive_profile_sample(node, fqueries=None, **data):
+    if fqueries == None:
+        fqueries = {
+            'depth': 'uddf:depth',
+            'time': 'uddf:divetime',
+            'temp': 'uddf:temperature',
+        }
+
+    _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
+    create_data(wn, fqueries, **data)
+    return wn
+        
+
+#
+# Processing UDDF data.
+#
 
 
 def reorder(doc):
@@ -642,7 +650,7 @@ def reorder(doc):
     log.debug('removing old repetition groups')
     for rg in rgroups: # cleanup old repetition groups
         pd.remove(rg)
-    rg = et.SubElement(pd, 'repetitiongroup')
+    rg, = create_node('uddf:repetitiongroup', parent=pd)
 
     # sort dive nodes by dive time
     log.debug('sorting dives')

@@ -26,13 +26,15 @@ import sys
 import optparse
 import itertools
 from cStringIO import StringIO
+from lxml import etree as et
+import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError
 from kenozooid.component import query, params
 from kenozooid.uddf import node_range
 
-
+log = logging.getLogger('kenozooid.cli.uddf')
 
 @inject(CLIModule, name='dives')
 class ListDives(object):
@@ -111,7 +113,7 @@ class ConvertFile(object):
         Execute file conversion command.
         """
         from kenozooid.driver import MemoryDump, find_driver
-        import kenozooid.uddf
+        import kenozooid.uddf as ku
 
         if len(args) < 3:
             raise ArgumentError()
@@ -119,25 +121,43 @@ class ConvertFile(object):
         fin = args[1:-1]
         fout = args[-1]
 
-        # create uddf file with profile data
-        pd = kenozooid.uddf.UDDFProfileData()
-        pd.create()
+        pd = ku.create()
+
+        xp_dc = ku.XPath('//uddf:divecomputerdump')
+        xp_owner = ku.XPath('//uddf:diver/uddf:owner')
 
         for fn in fin:
-            # read uddf file containing device dump
-            dd = kenozooid.uddf.UDDFDeviceDump()
-            dd.open(fn)
+            dd = et.parse(fn)
+            nodes = xp_dc(dd)
 
-            drv = dd.get_model_id()
-            model = dd.get_model()
-            data = dd.get_data()
+            if not nodes:
+                log.warn('no dive computer dump data found in ' + fn)
+                continue
 
-            pd.set_model(drv, model)
+            assert len(nodes) == 1
 
-            dumper = find_driver(MemoryDump, drv, None)
-            dumper.convert(dd.tree, StringIO(data), pd.tree)
+            dump = ku.dump_data(nodes[0])
 
-        pd.save(fout)
+            log.debug('dive computer dump data found: ' \
+                    '{dc_id}, {dc_model}, {time}'.format(**dump._asdict()))
+
+            dc = ku.create_dc_data(xp_owner(pd)[0], dc_model=dump.dc_model)
+            dc_id = dc.get('id')
+            dump = dump._replace(dc_id=dc_id, data=StringIO(dump.data))
+
+            # determine device driver to parse the dump and convert dump
+            # data into UDDF profile data
+            dumper = find_driver(MemoryDump, dump.dc_model, None)
+            dnodes = dumper.convert(dump)
+            _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup', parent=pd)
+            for n in dnodes:
+                equ, l = ku.create_node('uddf:equipmentused/uddf:link')
+                l.set('ref', dc_id)
+                n.insert(1, equ) # append after datetime element
+                rg.append(n)
+
+        ku.reorder(pd)
+        ku.save(pd, fout)
 
 
 

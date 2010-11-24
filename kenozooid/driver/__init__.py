@@ -26,8 +26,11 @@ The module specifies set of interfaces to be implemented by device drivers.
 """
 
 import sys
+import logging
 
-from kenozooid.component import query
+import kenozooid.component as kc
+
+log = logging.getLogger('kenozooid.driver')
 
 class DeviceDriver(object):
     """
@@ -144,12 +147,12 @@ class DeviceError(BaseException):
     """
 
 
-def find_driver(iface, id, port=None):
+def find_driver(iface, query, port=None):
     """
-    Find driver implementing an interface.
+    Find device driver implementing an interface.
 
-    If device id is not known or device is not connected, then exception is
-    raised.
+    Query parameter is used to find driver by its id or device model.
+    Device error exception is raised if driver is not found.
 
     If device driver does not support functionality specified by an
     interface, then None is returned.
@@ -157,16 +160,20 @@ def find_driver(iface, id, port=None):
     :Parameters:
      iface
         Interface of functionality.
-     id
-        Device driver id.
+     query
+        Device driver id or device model string.
      port
         Device port (i.e. /dev/ttyUSB0, COM1).
     """
-    # find device driver for device driver id
-    try:
-        cls = query(DeviceDriver, id=id).next()
-    except StopIteration, ex:
-        raise DeviceError('Unknown device driver id %s' % id)
+    found = False
+    for cls in kc.query(DeviceDriver):
+        p = kc.params(cls)
+        id = p['id']
+        models = p['models']
+        if id == query or any(query.startswith(m) for m in models):
+            found = True
+            log.debug('found device driver for query: {0}'.format(query))
+            break
 
     # scan for connected devices
     try:
@@ -176,10 +183,12 @@ def find_driver(iface, id, port=None):
 
     # find class implementing specified interface (and functionality)
     try:
-        cls = query(iface, id=id).next()
+        cls = kc.query(iface, id=id).next()
         obj = cls()
         obj.driver = drv
         return obj
     except StopIteration, ex:
         return None
 
+
+# vim: sw=4:et:ai

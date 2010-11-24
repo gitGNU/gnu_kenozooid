@@ -29,7 +29,8 @@ from datetime import datetime
 from kenozooid.driver import DeviceDriver, Simulator
 from kenozooid.component import inject
 
-@inject(DeviceDriver, id='dummy', name='Dummy Device Driver')
+@inject(DeviceDriver, id='dummy', name='Dummy Device Driver',
+        models=('Dummy',))
 class DummyDriver(object):
     def version(self):
         return 'Dummy Device 1.0'

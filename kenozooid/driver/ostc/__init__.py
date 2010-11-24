@@ -30,15 +30,14 @@ protocol can be found at address
 
 import array
 import logging
-from lxml import etree as et
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
 from binascii import hexlify
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
-from kenozooid.uddf import q, FMT_DATETIME
-from kenozooid.component import inject
+import kenozooid.uddf as ku
+import kenozooid.component as kc
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 from kenozooid.units import C2K
 import parser as ostc_parser
@@ -51,7 +50,8 @@ def pressure(depth):
     return int(depth + 10)
 
 
-@inject(DeviceDriver, id='ostc', name='OSTC Driver')
+@kc.inject(DeviceDriver, id='ostc', name='OSTC Mk.1 Driver',
+        models=('OSTC Mk.1',))
 class OSTCDriver(object):
     """
     OSTC dive computer driver.
@@ -112,7 +112,7 @@ class OSTCDriver(object):
 
 
 
-@inject(Simulator, id='ostc')
+@kc.inject(Simulator, id='ostc')
 class OSTCSimulator(object):
     """
     OSTC dive computer simulator support.
@@ -144,7 +144,7 @@ class OSTCSimulator(object):
 
 
 
-@inject(MemoryDump, id='ostc')
+@kc.inject(MemoryDump, id='ostc')
 class OSTCMemoryDump(object):
     """
     OSTC dive computer memory dump.
@@ -157,17 +157,22 @@ class OSTCMemoryDump(object):
         return self.driver._read(33034)
 
 
-    def convert(self, dtree, data, tree):
+    def convert(self, dump):
         """
         Convert dive profiles to UDDF format.
         """
         nodes = []
-        dump = ostc_parser.status(''.join(data))
+        dive_data = ostc_parser.status(''.join(dump.data))
 
-        pdn = tree.find(q('profiledata'))
-        rdn = et.SubElement(pdn, q('repetitiongroup'))
+        # uddf dive profile sample
+        uddf_sample = {
+            'depth': 'uddf:depth',
+            'time': 'uddf:divetime',
+            'temp': 'uddf:temperature',
+            'alarm': 'uddf:alarm',
+        }
 
-        for h, p in ostc_parser.profile(dump.profile):
+        for h, p in ostc_parser.profile(dive_data.profile):
             log.debug('header: %s' % hexlify(h))
             log.debug('profile: %s' % hexlify(p))
 
@@ -181,15 +186,11 @@ class OSTCMemoryDump(object):
             # memory, so substract the dive time
             st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
-            dn = et.SubElement(rdn, q('dive'))
-            dn.datetime = st.strftime(FMT_DATETIME)
-            sn = et.SubElement(dn, q('samples'))
-
-            deco = False
             try:
+                dn, dt = ku.create_node('uddf:dive/uddf:datetime')
+                dt.text = st.strftime(ku.FMT_DATETIME)
+                deco = False
                 for i, sample in enumerate(dive_data):
-                    n = et.SubElement(sn, q('waypoint'))
-
                     # deco info is not stored in each ostc sample, but each
                     # uddf waypoint shall be annotated with deco alarm
                     if deco and deco_end(sample):
@@ -197,19 +198,18 @@ class OSTCMemoryDump(object):
                     elif not deco and deco_start(sample):
                         deco = True
 
-                    if deco:
-                        n.alarm = 'deco'
+                    temp = round(sample.temp, 2) if sample.temp else None
+                    ku.create_dive_profile_sample(dn, fqueries=uddf_sample,
+                            time=i * header.sampling,
+                            depth=sample.depth,
+                            alarm='deco' if deco else None,
+                            temp=temp)
+                yield dn
 
-                    n.depth = sample.depth
-                    n.divetime = i * header.sampling
-                    if sample.temp is not None:
-                        n.temperature = '%.2f' % C2K(sample.temp)
             except ValueError, ex:
                 log.error('invalid dive {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
                     ' {0.hour:>02d}:{0.minute:>02d}' \
                     ' max depth={0.max_depth}'.format(header))
-                rdn.remove(dn)
-                continue
 
 
 def deco_start(sample):

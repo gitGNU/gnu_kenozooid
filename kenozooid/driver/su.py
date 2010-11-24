@@ -28,6 +28,7 @@ It uses libdivecomputer library from
 
 import ctypes as ct
 from datetime import datetime
+from dateutil.parser import parse as dparse
 from struct import unpack, pack
 from collections import namedtuple
 from lxml import etree as et
@@ -36,8 +37,8 @@ import time
 import logging
 log = logging.getLogger('kenozooid.driver.su')
 
-from kenozooid.uddf import q, UDDFFile, FMT_DATETIME
-from kenozooid.component import inject
+import kenozooid.uddf as ku
+import kenozooid.component as kc
 from kenozooid.driver import DeviceDriver, MemoryDump, DeviceError
 from kenozooid.units import C2K
 
@@ -103,7 +104,8 @@ FuncDive = ct.CFUNCTYPE(ct.c_int, ct.POINTER(ct.c_char), ct.c_int, ct.py_object)
 FuncSample = ct.CFUNCTYPE(ct.c_int, ct.c_int, SampleValue, ct.py_object)
 
 
-@inject(DeviceDriver, id='su', name='Sensus Ultra Driver')
+@kc.inject(DeviceDriver, id='su', name='Sensus Ultra Driver',
+        models=('Sensus Ultra',))
 class SensusUltraDriver(object):
     """
     Sensus Ultra dive logger driver.
@@ -156,11 +158,16 @@ class SensusUltraDriver(object):
 
 
 
-@inject(MemoryDump, id='su')
+@kc.inject(MemoryDump, id='su')
 class SensusUltraMemoryDump(object):
     """
     Reefnet Sensus Ultra dive logger memory dump.
     """
+    UDDF_SAMPLE = {
+        'depth': 'uddf:depth',
+        'time': 'uddf:divetime',
+        'temp': 'uddf:temperature',
+    }
     def dump(self):
         """
         Download Sensus Ultra
@@ -191,13 +198,11 @@ class SensusUltraMemoryDump(object):
         return hd.raw[:-1] + ud.raw[:-1] + dd.raw[:-1]
 
 
-    def convert(self, dtree, data, tree):
+    def convert(self, dump):
         """
-        Convert Reefnet Sensus Ultra dive profiles data into UDDF format.
+        Convert Reefnet Sensus Ultra dive profiles data into UDDF format
+        dive nodes.
         """
-        pdn = tree.find(q('profiledata'))
-        self.rdn = rdn = et.SubElement(pdn, q('repetitiongroup'))
-
         #dev = self.driver.dev
         #lib = self.driver.lib
         lib = ct.CDLL('libdivecomputer.so.0')
@@ -207,21 +212,20 @@ class SensusUltraMemoryDump(object):
         if rc != 0:
             raise DeviceError('Cannot create data parser')
         
-        hd = data.read(SIZE_MEM_HANDSHAKE)
+        hd = dump.data.read(SIZE_MEM_HANDSHAKE)
         hdp = HandshakeDump._make(unpack(FMT_HANDSHAKE, hd[:8]))
 
-        ud = data.read(SIZE_MEM_USER)
+        ud = dump.data.read(SIZE_MEM_USER)
 
         dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
-        dd.raw = data.read(SIZE_MEM_DATA)
+        dd.raw = dump.data.read(SIZE_MEM_DATA)
 
-        root = dtree.getroot()
-        dtime = UDDFFile.get_datetime(root.divecomputercontrol.divecomputerdump)
         data = {
-            'dtime': time.mktime(dtime.timetuple()),  # download time
-            'stime': hdp.time,                        # sensus time at download time
+            'dtime': time.mktime(dump.time.timetuple()), # download time
+            'stime': hdp.time,                           # sensus time at download time
         }
 
+        self.dives = []
         rc = lib.reefnet_sensusultra_extract_dives(None,
                 dd,
                 SIZE_MEM_DATA,
@@ -229,6 +233,7 @@ class SensusUltraMemoryDump(object):
                 ct.py_object(data))
         if rc != 0:
             raise DeviceError('Cannot extract dives')
+        return self.dives
 
     
     def parse_dive(self, buffer, size, data):
@@ -247,19 +252,20 @@ class SensusUltraMemoryDump(object):
         lib = ct.CDLL('libdivecomputer.so.0')
         parser = self.parser
 
-        dn = et.SubElement(self.rdn, q('dive'))
-        et.SubElement(dn, q('datetime'))
-        self.sn = et.SubElement(dn, q('samples'))
-
         # get dive time
         dive_time = unpack('<L', buffer[4:8])[0]
-        dt = datetime.fromtimestamp(data['dtime'] + dive_time - data['stime'])
-        dn.datetime = dt.strftime(FMT_DATETIME)
+        st = datetime.fromtimestamp(data['dtime'] + dive_time - data['stime'])
+
+        self.dive_node, dt = ku.create_node('uddf:dive/uddf:datetime')
+        dt.text = st.strftime(ku.FMT_DATETIME)
 
         lib.parser_set_data(parser, buffer, size)
         lib.parser_samples_foreach(parser,
                 FuncSample(self.parse_sample),
                 ct.py_object({'time': None, 'depth': None, 'temp': None}))
+
+        self.dives.append(self.dive_node)
+
         return 1
 
 
@@ -283,13 +289,9 @@ class SensusUltraMemoryDump(object):
         elif st == SampleType.temperature:
             data['temp'] = sample.temperature
         elif st == SampleType.depth:
-            data['depth'] = sample.depth
+            data['depth'] = round(sample.depth, 2)
 
-            n = et.SubElement(self.sn, q('waypoint'))
-            n.depth = round(data['depth'], 2)
-            n.divetime = data['time']
-            if data['temp'] != None:
-                n.temperature = C2K(data['temp'])
+            ku.create_dive_profile_sample(self.dive_node, self.UDDF_SAMPLE, **data)
 
             # clear cached data
             data['depth'] = None
