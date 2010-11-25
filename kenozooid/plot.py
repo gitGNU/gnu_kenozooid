@@ -116,9 +116,16 @@ def plot(fout, dives, title=False, info=False, temp=False, sig=True,
         Format of output file (i.e. pdf, png, svg).
     """
     R("""
-library('ggplot2')
+library(Hmisc)
+library(grid)
+
 cairo_pdf('%s', width=10, height=5, onefile=T)
-""" % fout)
+    """ % fout)
+
+    if not title:
+        R("""
+par(mar=c(5, 4, 1, 2) + 0.1)
+        """)
 
     for dive, dp in dives:
         log.debug('plotting dive profile') 
@@ -127,19 +134,18 @@ cairo_pdf('%s', width=10, height=5, onefile=T)
         max_time = R('max(dp$time) / 60.0')[0]
 
         R(r"""
-p = ggplot(dp, aes(time / 60.0, depth))
-p = p + geom_line(aes(colour='blue'))
-p = p + xlab('Time [min]') + ylab('Depth [m]')
-p = p + scale_y_reverse()
-p = p + scale_colour_manual(values='blue')
-p = p + opts(legend.position='none')
+ylim = rev(range(dp$depth))
+plot(dp$time / 60.0, dp$depth, ylim=ylim,
+    type='l', col='blue',
+    xlab='Time [min]', ylab='Depth [min]')
+minor.tick(nx=5, ny=2)
+grid()
         """)
         if title:
-            R("""
-p = p + opts(title='Dive {0}')
-            """.format(dive.time.strftime(FMT_DIVETIME)))
+            st = dive.time.strftime(FMT_DIVETIME)
+            R("""title('Dive {0}')""".format(st))
 
-        R('print(p)') # trigger R plotting procedure
+        #R('print(p)') # trigger R plotting procedure
 
         if info:
             R("""
@@ -147,16 +153,16 @@ info = sprintf('t = %%s\n\u21a7 = %%.1fm\nT = %%.1f\u00b0C',
     '%s',
     max(dp$depth),
     min(dp$temp, na.rm=T) - 273.15)
-grid.text(info, x=0.85, y=0.2, just=c('left', 'bottom'),
+
+usr = par( "usr" )
+grid.text(info, x=0.85, y=0.25, just=c('left', 'bottom'),
     gp=gpar(cex=0.8, fontfamily='monospace'))
             """ % min2str(max_time))
 
         if sig:
             _plot_sig()
 
-    R("""
-dev.off()
-    """)
+    R('dev.off()')
 
 
 def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
