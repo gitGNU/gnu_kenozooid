@@ -289,7 +289,7 @@ class SensusUltraMemoryDump(object):
         elif st == SampleType.temperature:
             data['temp'] = sample.temperature
         elif st == SampleType.depth:
-            data['depth'] = round(sample.depth, 2)
+            data['depth'] = round(C2K(sample.depth), 2)
 
             ku.create_dive_profile_sample(self.dive_node, self.UDDF_SAMPLE, **data)
 

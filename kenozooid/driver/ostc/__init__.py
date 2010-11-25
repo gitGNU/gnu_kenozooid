@@ -198,7 +198,7 @@ class OSTCMemoryDump(object):
                     elif not deco and deco_start(sample):
                         deco = True
 
-                    temp = round(sample.temp, 2) if sample.temp else None
+                    temp = round(C2K(sample.temp), 2) if sample.temp else None
                     ku.create_dive_profile_sample(dn, fqueries=uddf_sample,
                             time=i * header.sampling,
                             depth=sample.depth,
