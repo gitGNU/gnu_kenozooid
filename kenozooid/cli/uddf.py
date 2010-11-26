@@ -260,7 +260,8 @@ class PlotProfiles(object):
 
             params = {}
             if options.plot_labels:
-                params = { 'labels': options.plot_labels.split(',') }
+                labels = [l.strip() for l in options.plot_labels.split(',')]
+                params = { 'labels': labels }
         else:
             plotf = plot
             params = {}
