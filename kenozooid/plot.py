@@ -123,9 +123,7 @@ cairo_pdf('%s', width=10, height=5, onefile=T)
     """ % fout)
 
     if not title:
-        R("""
-par(mar=c(5, 4, 1, 2) + 0.1)
-        """)
+        R('par(mar=c(5, 4, 1, 2) + 0.1)')
 
     for dive, dp in dives:
         log.debug('plotting dive profile') 
@@ -154,7 +152,6 @@ info = sprintf('t = %%s\n\u21a7 = %%.1fm\nT = %%.1f\u00b0C',
     max(dp$depth),
     min(dp$temp, na.rm=T) - 273.15)
 
-usr = par( "usr" )
 grid.text(info, x=0.85, y=0.25, just=c('left', 'bottom'),
     gp=gpar(cex=0.8, fontfamily='monospace'))
             """ % min2str(max_time))
@@ -192,28 +189,29 @@ def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
     """
 
     R("""
-library('ggplot2')
-library('colorspace')
+library(Hmisc)
+library(grid)
+library(colorspace)
+
 cairo_pdf('%s', width=10, height=5, onefile=T)
 """ % fout)
 
+    if not title:
+        R('par(mar=c(5, 4, 1, 2) + 0.1)')
+
     R("""
-p = ggplot(data.frame(), aes(time / 60.0, depth))
-p = p + xlab('Time [min]') + ylab('Depth [m]')
-p = p + scale_y_reverse()
+times = list()
+depths = list()
     """)
-    if not legend:
-        R("""
-p = p + opts(legend.position='none')
-        """)
 
     lstr = []
     for k, (dive, dp) in enumerate(dives):
         log.debug('plotting dive profile') 
         _inject_profile(dp)
         R("""
-p = p + geom_line(data=dp, aes(colour='%d'))
-        """ % (k + 1))
+times[[{k}]] = dp$time / 60.0
+depths[[{k}]] = dp$depth
+        """.format(k=k + 1))
 
         lstr.append(dive.time.strftime(FMT_DIVETIME))
 
@@ -230,19 +228,33 @@ p = p + geom_line(data=dp, aes(colour='%d'))
     ro.globalenv['labels'] = ro.StrVector(lstr)
 
     R("""
-p = p + scale_colour_manual(name='Dives',
-    values=rainbow({nd}),
-    breaks=sprintf('%d', 1:{nd}),
-    labels=labels)
-print(p)
+cols = diverge_hcl({nd})
+
+r_time = range(sapply(times, range))
+r_depth = range(sapply(depths, range))
+plot(NA, xlim=r_time, ylim=rev(r_depth),
+    xlab='Time [min]', ylab='Depth [m]')
+for (i in 1:{nd}) {{
+    lines(times[[i]], depths[[i]], col=cols[i])
+}}
+minor.tick(nx=5, ny=2)
+grid()
 """.format(nd=k))
+    if legend:
+        R("""
+if ({nd} > 10) {{
+    lscale = 0.7
+}} else {{
+    lscale = 1.0
+}}
+legend('bottomright', labels, col=cols, lwd=1, inset=c(0.02, 0.05),
+    ncol=ceiling({nd} / 10), cex=lscale)
+        """.format(nd=k))
 
     if sig:
         _plot_sig()
 
-    R("""
-dev.off()
-    """)
+    R('dev.off()')
 
 
 # vim: sw=4:et:ai
