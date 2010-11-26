@@ -195,11 +195,11 @@ class PlotProfiles(object):
                 dest='plot_sig',
                 default=True,
                 help='do not display Kenozooid signature')
-        group.add_option('--no-legend',
-                action='store_false',
+        group.add_option('--legend',
+                action='store_true',
                 dest='plot_legend',
-                default=True,
-                help='do not display graph legend')
+                default=False,
+                help='display graph legend')
         group.add_option('--overlay',
                 action='store_true',
                 dest='plot_overlay',
