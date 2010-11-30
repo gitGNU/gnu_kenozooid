@@ -154,7 +154,7 @@ class SensusUltraDriver(object):
 
         # take 8 bytes for now (version, serial and time)
         dump = HandshakeDump._make(unpack(FMT_HANDSHAKE, hd.raw[:8]))
-        return 'Sensus Ultra %d.%d (serial %d)' % (dump.ver2, dump.ver1, dump.serial)
+        return 'Sensus Ultra %d.%d' % (dump.ver2, dump.ver1)
 
 
 
@@ -256,8 +256,7 @@ class SensusUltraMemoryDump(object):
         dive_time = unpack('<L', buffer[4:8])[0]
         st = datetime.fromtimestamp(data['dtime'] + dive_time - data['stime'])
 
-        self.dive_node, dt = ku.create_node('uddf:dive/uddf:datetime')
-        dt.text = st.strftime(ku.FMT_DATETIME)
+        self.dive_node = ku.create_dive_data(time=st)
 
         lib.parser_set_data(parser, buffer, size)
         lib.parser_samples_foreach(parser,
@@ -289,7 +288,7 @@ class SensusUltraMemoryDump(object):
         elif st == SampleType.temperature:
             data['temp'] = round(C2K(sample.temperature), 2)
         elif st == SampleType.depth:
-            data['depth'] = sample.depth
+            data['depth'] = round(sample.depth, 2)
 
             ku.create_dive_profile_sample(self.dive_node, self.UDDF_SAMPLE, **data)
 

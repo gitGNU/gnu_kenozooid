@@ -153,7 +153,8 @@ class Dump(object):
         Execute dive computer memory dump command.
         """
         from kenozooid.driver import MemoryDump, find_driver
-        import kenozooid.uddf
+        import kenozooid.uddf as ku
+        from datetime import datetime
 
         if len(args) != 4:
             raise ArgumentError()
@@ -167,12 +168,17 @@ class Dump(object):
             print 'Device driver %s does not support memory dump' % drv
             sys.exit(3)
 
+        xp_owner = ku.XPath('//uddf:diver/uddf:owner')
+
+        model = dumper.driver.version()
         data = dumper.dump()
-        dd = kenozooid.uddf.UDDFDeviceDump()
-        dd.create()
-        dd.set_model(drv, dumper.driver.version())
-        dd.set_data(data)
-        dd.save(fout)
+
+        dd = ku.create()
+        dc = ku.create_dc_data(xp_owner(dd)[0], dc_model=model)
+        dc_id = dc.get('id')
+        ku.create_dump_data(dd, dc_id=dc_id, time=datetime.now(), data=data)
+
+        ku.save(dd, fout)
 
 
 # vim: sw=4:et:ai

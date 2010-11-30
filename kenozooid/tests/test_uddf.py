@@ -384,6 +384,22 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(1, len(lnames), sd)
         self.assertEquals('B', lnames[0], sd)
 
+        # create first name but not last name
+        ku.create_data(doc, fq, fname='X')
+        sd = et.tostring(doc)
+
+        divers = doc.xpath('//diver')
+        self.assertEquals(1, len(divers), sd)
+        self.assertTrue(divers[0].text is None, sd)
+
+        fnames = doc.xpath('//firstname/text()')
+        self.assertEquals(2, len(fnames), sd)
+        self.assertEquals(['A', 'X'], fnames, sd)
+
+        lnames = doc.xpath('//lastname/text()')
+        self.assertEquals(1, len(lnames), sd)
+        self.assertEquals('B', lnames[0], sd)
+
 
     def test_create_node(self):
         """

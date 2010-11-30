@@ -19,46 +19,6 @@
 #
 
 """
-UDDF file format support.
-"""
-
-from lxml import etree as et
-from datetime import datetime
-from dateutil.parser import parse as dparse
-from operator import itemgetter
-import pwd
-import os
-import re
-
-import kenozooid
-
-RE_Q = re.compile(r'(\b[a-z]+)')
-
-
-class UDDFFile(object):
-    @staticmethod
-    def encode(data):
-        """
-        Encode device data, so it can be stored in UDDF file.
-
-        The encoded string is returned.
-        """
-        s = bz2.compress(data)
-        return base64.b64encode(s)
-
-
-    @staticmethod
-    def decode(data):
-        """
-        Decode device data, which is stored in UDDF file.
-
-        Decoded device data is returned.
-        """
-        s = base64.b64decode(data)
-        return bz2.decompress(s)
-
-
-"""
 UDDF file format support. The code below is divided into data lookup, data
 creation and data post-processing sections.
 
@@ -89,6 +49,9 @@ TODO: More research is needed to cache results of some of the queries.
 from collections import namedtuple
 from lxml import etree as et
 from functools import partial
+from datetime import datetime
+from dateutil.parser import parse as dparse
+from operator import itemgetter
 import base64
 import bz2
 import hashlib
@@ -160,15 +123,15 @@ def parse(f, query):
         yield n
 
 
-def find_data(name, node, fields, fqueries, types, nquery=None):
+def find_data(name, node, fields, queries, parsers, nquery=None):
     """
     Find data records starting from specified XML node.
 
     A record type (namedtuple) is created with specified fields. The data
     of a record is retrieved with XPath expression objects, which is
-    converted from string to appropriate type using types information.
+    converted from string to appropriate type using parsers.
 
-    A type converter can be any function, i.e. `float`, `int` or
+    A parser can be any type or function, i.e. `float`, `int` or
     `dateutil.parser.parse`.
 
     If XML node is too high to execture XPath expression objects, then the
@@ -176,7 +139,7 @@ def find_data(name, node, fields, fqueries, types, nquery=None):
     `nquery` parameter is not specified, then only one record is returned.
     Otherwise it is generator of records.
 
-    The length of fields, types and field queries should be the same.
+    The length of fields, field queries and field parsers should be the same.
 
     :Parameters:
      name
@@ -185,10 +148,10 @@ def find_data(name, node, fields, fqueries, types, nquery=None):
         XML node.
      fields
         Names of fields to be created in a record.
-     fqueries
+     queries
         XPath expression objects for each field to retrieve its value.
-     types
-        Type converters of field values to be created in a record.
+     parsers
+        Parsers of field values to be created in a record.
      nquery
         XPath expression object to relocate from node to more appropriate
         position in XML document for record data retrieval.
@@ -200,12 +163,12 @@ def find_data(name, node, fields, fqueries, types, nquery=None):
     T = namedtuple(name, ' '.join(fields))._make
     if nquery:
         data = nquery(node)
-        return (_record(T, n, fqueries, types) for n in data)
+        return (_record(T, n, queries, parsers) for n in data)
     else:
-        return _record(T, node, fqueries, types)
+        return _record(T, node, queries, parsers)
 
 
-def dive_data(node, fields=None, fqueries=None, types=None):
+def dive_data(node, fields=None, queries=None, parsers=None):
     """
     Specialized function to return record of a dive data.
 
@@ -213,18 +176,18 @@ def dive_data(node, fields=None, fqueries=None, types=None):
     default. It should be enhanced in the future to return more rich data
     record.
 
-    Dive record data can be reconfigured with optional fields, types and
-    field queries parameters.
+    Dive record data can be reconfigured with optional fields, field
+    queries and field parsers parameters.
 
     :Parameters:
      node
         XML node.
      fields
         Names of fields to be created in a record.
-     fqueries
+     queries
         XPath expression object for each field to retrieve its value.
-     types
-        Type converters of field values to be created in a record.
+     parsers
+        Parsers field values to be created in a record.
 
     .. seealso::
         find_data
@@ -232,13 +195,13 @@ def dive_data(node, fields=None, fqueries=None, types=None):
 
     if fields is None:
         fields = ('time', )
-        fqueries = XP_DEFAULT_DIVE_DATA
-        types = (dparse, )
+        queries = XP_DEFAULT_DIVE_DATA
+        parsers = (dparse, )
 
-    return find_data('Dive', node, fields, fqueries, types)
+    return find_data('Dive', node, fields, queries, parsers)
 
 
-def dive_profile(node, fields=None, fqueries=None, types=None):
+def dive_profile(node, fields=None, queries=None, parsers=None):
     """
     Specialized function to return generator of dive profiles records.
 
@@ -252,35 +215,35 @@ def dive_profile(node, fields=None, fqueries=None, types=None):
         temperature in Kelvins
 
     Dive profile record data can be reconfigured with optional fields,
-    types and field queries parameters.
+    field queries and field parsers parameters.
 
     :Parameters:
      node
         XML node.
      fields
         Names of fields to be created in a record.
-     fqueries
+     queries
         XPath expression objects for each field to retrieve its value.
-     types
-        Type converters of field values to be created in a record.
+     parsers
+        Parsers of field values to be created in a record.
 
     .. seealso::
         find_data
     """
     if fields is None:
         fields = ('time', 'depth', 'temp')
-        fqueries = XP_DEFAULT_PROFILE_DATA
-        types = (float, ) * 3
+        queries = XP_DEFAULT_PROFILE_DATA
+        parsers = (float, ) * 3
 
-    return find_data('Sample', node, fields, fqueries, types,
+    return find_data('Sample', node, fields, queries, parsers,
             nquery=XP_WAYPOINT)
 
 
-def dump_data(node, fields=None, fqueries=None, types=None):
+def dump_data(node, fields=None, queries=None, parsers=None):
     """
     Get dive computer dump data.
 
-    The data is returned.
+    The following data is returned
 
     dc_id
         Dive computer id.
@@ -296,19 +259,19 @@ def dump_data(node, fields=None, fqueries=None, types=None):
         XML node.
      fields
         Names of fields to be created in a record.
-     fqueries
+     queries
         XPath expression objects for each field to retrieve its value.
-     types
-        Type converters of field values to be created in a record.
+     parsers
+        Parsers of field values to be created in a record.
 
     .. seealso::
         find_data
     """
     if fields is None:
         fields = ('dc_id', 'dc_model', 'time', 'data')
-        fqueries = XP_DEFAULT_DUMP_DATA
-        types = (str, str, dparse, _dump_decode)
-    return find_data('DiveComputerDump', node, fields, fqueries, types)
+        queries = XP_DEFAULT_DUMP_DATA
+        parsers = (str, str, dparse, _dump_decode)
+    return find_data('DiveComputerDump', node, fields, queries, parsers)
 
 
 def node_range(s):
@@ -355,7 +318,7 @@ def node_range(s):
     return ' or '.join(data)
 
 
-def _field(node, query, t=float):
+def _field(node, query, parser=float):
     """
     Find text value of a node starting from specified XML node.
 
@@ -368,33 +331,33 @@ def _field(node, query, t=float):
         XML node.
      query
         XPath expression object to find node with text value.
-     t
-        Function to convert text value to requested type.
+     parser
+        Parser to convert text value to requested type.
     """
     data = query(node)
     if data:
-        return t(data[0])
+        return parser(data[0])
 
 
-def _record(rt, node, fqueries, types):
+def _record(rt, node, queries, parsers):
     """
     Create record with data.
 
     The record data is found with XPath expressions objects starting from
-    XML node.  The data is converted using functions specified in `types`
-    parameters.
+    XML node.  The data is converted to their appropriate type using
+    parsers.
 
     :Parameters:
     rt
         Record type (named tuple) of record data.
     node
         XML node.
-     fqueries
+     queries
         XPath expression objects for each field to retrieve its value.
-     types
-        Type converters of field values to be created in a record.
+     parsers
+        Parsers of field values to be created in a record.
     """
-    return rt(_field(node, f, t) for f, t in zip(fqueries, types))
+    return rt(_field(node, f, p) for f, p in zip(queries, parsers))
 
 
 def _dump_decode(data):
@@ -457,7 +420,7 @@ def create(time=datetime.now()):
 
     now = datetime.now()
     n = root.xpath('//uddf:generator/uddf:datetime', namespaces=_NSMAP)[0]
-    n.text = time.strftime(FMT_DATETIME)
+    n.text = _format_time(time)
     return root
 
 
@@ -491,23 +454,33 @@ def save(doc, f, validate=True):
             pretty_print=True)
 
 
-def create_data(node, fqueries, **data):
+def create_data(node, queries, formatters=None, **data):
     """
     Create XML data relative to specified XML node.
+
+    The data values are converted to string with formatters functions.
 
     :Parameters:
      node
         XML node.
-     fqueries
+     queries
         Path-like expressions of XML structure to be created.
+     formatters
+        Data formatters.
      data
         Data values to be set within XML document.
     """
-    for key, p in fqueries.items():
-        value = data[key]
+    if formatters is None:
+        formatters = {}
 
+    for key, p in queries.items():
+
+        value = data.get(key)
         if value is None:
             continue
+
+        f = formatters.get(key, str)
+        value = f(value)
 
         attr = None
         tags = p.rsplit('/', 1)
@@ -520,9 +493,9 @@ def create_data(node, fqueries, **data):
             nodes = list(create_node(p, parent=node))
             n = nodes[-1]
         if attr:
-            n.set(attr, str(value))
+            n.set(attr, value)
         else:
-            n.text = str(value)
+            n.text = value
 
 
 def create_node(path, parent=None):
@@ -549,16 +522,17 @@ def create_node(path, parent=None):
         yield n
 
 
-def create_dc_data(node, fqueries=None, dc_id=None, dc_model=None, **data):
+def create_dc_data(node, queries=None, formatters=None,
+        dc_id=None, dc_model=None, **data):
     """
     Create dive computer information data in UDDF file.
     """
-    _fqueries = {
+    _queries = {
         'dc_id': '@id',
         'dc_model': 'uddf:model',
     }
-    if fqueries is not None:
-        _fqueries.update(fqueries)
+    if queries is not None:
+        _queries.update(queries)
 
     data['dc_id'] = dc_id
     data['dc_model'] = dc_model
@@ -583,32 +557,73 @@ def create_dc_data(node, fqueries=None, dc_id=None, dc_model=None, **data):
 
         # create new dive computer node
         _, dc = create_node('uddf:equipment/uddf:divecomputer', parent=node)
-        create_data(dc, _fqueries, **data)
+        create_data(dc, _queries, formatters, **data)
     return dc
 
 
-def create_dive_data(node, fqueries=None, **data):
-    if fqueries == None:
-        fqueries = {
+def create_dive_data(node=None, queries=None, formatters=None, **data):
+    if queries == None:
+        queries = {
             'time': 'uddf:datetime',
         }
-    _, _, dn = create_node(node, 'uddf:profiledata/uddf:repetitiongroup/uddf:dive')
-    create_data(dn, fqueries, **data)
+    if formatters == None:
+        formatters = {
+            'time': _format_time,
+        }
+    _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
+            parent=node)
+    create_data(dn, queries, formatters, **data)
     return dn
 
 
-def create_dive_profile_sample(node, fqueries=None, **data):
-    if fqueries == None:
-        fqueries = {
+def create_dive_profile_sample(node, queries=None, formatters=None, **data):
+    if queries == None:
+        queries = {
             'depth': 'uddf:depth',
             'time': 'uddf:divetime',
             'temp': 'uddf:temperature',
         }
 
     _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
-    create_data(wn, fqueries, **data)
+    create_data(wn, queries, **data)
     return wn
+
+
+def create_dump_data(node, queries=None, formatters=None, **data):
+    if queries == None:
+        queries = {
+            'dc_id': 'uddf:link/@ref',
+            'time': 'uddf:datetime',
+            'data': 'uddf:dcdump',
+        }
+    if formatters == None:
+        formatters = {
+            'time': _format_time,
+            'data': _dump_encode,
+        }
         
+    _, dcd = create_node('uddf:divecomputercontrol/uddf:divecomputerdump',
+            parent=node)
+    create_data(dcd, queries, formatters, **data)
+    return dcd
+        
+
+def _format_time(t):
+    """
+    Format timestamp into ISO 8601 string compatible with UDDF.
+    """
+    return t.strftime(FMT_DATETIME)
+
+
+def _dump_encode(data):
+    """
+    Encode dive computer data, so it can be stored in UDDF file.
+
+    The encoded string is returned.
+    """
+    s = bz2.compress(data)
+    return base64.b64encode(s)
+
 
 #
 # Processing UDDF data.

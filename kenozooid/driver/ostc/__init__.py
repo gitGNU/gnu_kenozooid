@@ -187,8 +187,7 @@ class OSTCMemoryDump(object):
             st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
 
             try:
-                dn, dt = ku.create_node('uddf:dive/uddf:datetime')
-                dt.text = st.strftime(ku.FMT_DATETIME)
+                dn = ku.create_dive_data(time=st)
                 deco = False
                 for i, sample in enumerate(dive_data):
                     # deco info is not stored in each ostc sample, but each
@@ -201,7 +200,7 @@ class OSTCMemoryDump(object):
                     temp = round(C2K(sample.temp), 2) if sample.temp else None
                     ku.create_dive_profile_sample(dn, fqueries=uddf_sample,
                             time=i * header.sampling,
-                            depth=sample.depth,
+                            depth=round(sample.depth, 2),
                             alarm='deco' if deco else None,
                             temp=temp)
                 yield dn
