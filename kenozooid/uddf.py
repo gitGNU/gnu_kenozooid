@@ -376,6 +376,11 @@ def _dump_decode(data):
 # default format for timestamps within UDDF file
 FMT_DATETIME = '%Y-%m-%d %H:%M:%S%z'
 
+DEFAULT_FMT_DIVE_PROFILE = {
+    'depth': lambda d: str.format('{0:.1f}', max(d, 0)),
+    'temp': partial(str.format, '{0:.1f}'),
+}
+
 # basic data for an UDDF file
 UDDF_BASIC = """\
 <uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
@@ -583,9 +588,11 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
             'time': 'uddf:divetime',
             'temp': 'uddf:temperature',
         }
+    if formatters == None:
+        formatters = DEFAULT_FMT_DIVE_PROFILE
 
     _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
-    create_data(wn, queries, **data)
+    create_data(wn, queries, formatters, **data)
     return wn
 
 

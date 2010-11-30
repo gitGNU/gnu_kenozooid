@@ -210,9 +210,9 @@ class OSTCMemoryDump(object):
                     elif not deco and deco_start(sample):
                         deco = True
 
-                    temp = round(C2K(sample.temp), 2) if sample.temp else None
+                    temp = C2K(sample.temp) if sample.temp else None
                     create_sample(time=(i + 1) * header.sampling,
-                            depth=round(sample.depth, 2),
+                            depth=sample.depth,
                             alarm='deco' if deco else None,
                             temp=temp)
 
