@@ -33,6 +33,7 @@ import logging
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
 from binascii import hexlify
+from functools import partial
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
@@ -183,12 +184,24 @@ class OSTCMemoryDump(object):
             st = datetime(2000 + header.year, header.month, header.day,
                     header.hour, header.minute)
             # ostc dive computer saves time at the end of dive in its
-            # memory, so substract the dive time
-            st -= timedelta(minutes=header.dive_time_m, seconds=header.dive_time_s)
+            # memory, so substract the dive time;
+            # sampling amount is substracted as well as below (0, 0)
+            # waypoint is added
+            st -= timedelta(minutes=header.dive_time_m,
+                    seconds=header.dive_time_s + header.sampling)
 
             try:
                 dn = ku.create_dive_data(time=st)
+
+                create_sample = partial(ku.create_dive_profile_sample, dn,
+                        fqueries=uddf_sample)
+
                 deco = False
+
+                # ostc start dive below zero, add (0, 0) waypoint to
+                # comply with uddf
+                create_sample(time=0, depth=0.0)
+
                 for i, sample in enumerate(dive_data):
                     # deco info is not stored in each ostc sample, but each
                     # uddf waypoint shall be annotated with deco alarm
@@ -198,11 +211,13 @@ class OSTCMemoryDump(object):
                         deco = True
 
                     temp = round(C2K(sample.temp), 2) if sample.temp else None
-                    ku.create_dive_profile_sample(dn, fqueries=uddf_sample,
-                            time=i * header.sampling,
+                    create_sample(time=(i + 1) * header.sampling,
                             depth=round(sample.depth, 2),
                             alarm='deco' if deco else None,
                             temp=temp)
+
+                create_sample(time=(i + 2) * header.sampling, depth=0.0)
+
                 yield dn
 
             except ValueError, ex:
