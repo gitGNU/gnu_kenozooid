@@ -135,7 +135,7 @@ cairo_pdf('%s', width=10, height=5, onefile=T)
 ylim = rev(range(dp$depth))
 plot(dp$time / 60.0, dp$depth, ylim=ylim,
     type='l', col='blue',
-    xlab='Time [min]', ylab='Depth [min]')
+    xlab='Time [min]', ylab='Depth [m]')
 minor.tick(nx=5, ny=2)
 grid()
         """)
