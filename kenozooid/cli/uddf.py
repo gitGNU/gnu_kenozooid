@@ -25,6 +25,7 @@ UDDF related Kenozooid command line commands.
 import sys
 import optparse
 import itertools
+import os.path
 from cStringIO import StringIO
 from lxml import etree as et
 import logging
@@ -220,7 +221,6 @@ class PlotProfiles(object):
         import os.path
         import itertools
         from kenozooid.plot import plot, plot_overlay
-        from kenozooid.uddf import parse, dive_data, dive_profile
 
         if len(args) < 3:
             raise ArgumentError()
@@ -233,28 +233,8 @@ class PlotProfiles(object):
             print >> sys.stderr, 'Unknown format: %s' % ext
             sys.exit(2)
 
-        args = args[1 : -1]
-        def fetch(args):
-            i = 0
-            while i < len(args):
-                q = '//uddf:dive'
-                if os.path.exists(args[i]):
-                    f = args[i] # no range spec, just filename; take all
-                else:
-                    q += '[' + node_range(args[i]) + ']'
-                    i += 1 # skip range spec
-                    f = args[i]
-                    if not os.path.exists(f):
-                        print >> sys.stderr, 'File does not exist: %s' % f
-                        sys.exit(2)
-
-                # return generator of dive data and its profile data tuples
-                nodes = parse(f, q)
-                yield ((dive_data(n), dive_profile(n)) for n in nodes)
-                i += 1
-
-        # fetch dives and profiles from every file
-        data = itertools.chain(*fetch(args))
+        # fetch dives and profiles from files provided on command line
+        data = itertools.chain(*_fetch(args[1:-1]))
         if options.plot_overlay:
             plotf = plot_overlay
 
@@ -273,6 +253,59 @@ class PlotProfiles(object):
             sig=options.plot_sig,
             legend=options.plot_legend,
             **params)
+
+
+
+@inject(CLIModule, name='analyze')
+class Analyze(object):
+    """
+    Analyze dives with R script.
+    """
+    usage = '<script> [dives] <input> ...'
+    description = 'analyze dives with R script ([dives] - dive range, i.e. 1-3,6 ' \
+        'indicates\n        dive 1, 2, 3 and 6)'
+
+    def add_options(self, parser):
+        """
+        There are no options for dive analyze command.
+        """
+
+
+    def __call__(self, options, *args):
+        """
+        Execute dives' analyze command.
+        """
+        from kenozooid.analyze import analyze
+
+        if len(args) < 3:
+            raise ArgumentError()
+
+        script = args[1]
+
+        # fetch dives and profiles from files provided on command line
+        data = itertools.chain(*_fetch(args[2:]))
+        analyze(script, data)
+
+
+def _fetch(args):
+    from kenozooid.uddf import parse, dive_data, dive_profile
+    i = 0
+    while i < len(args):
+        q = '//uddf:dive'
+        if os.path.exists(args[i]):
+            f = args[i] # no range spec, just filename; take all
+        else:
+            q += '[' + node_range(args[i]) + ']'
+            i += 1 # skip range spec
+            f = args[i]
+            if not os.path.exists(f):
+                print >> sys.stderr, 'File does not exist: %s' % f
+                sys.exit(2)
+
+        # return generator of dive data and its profile data tuples
+        nodes = parse(f, q)
+        yield ((dive_data(n), dive_profile(n)) for n in nodes)
+        i += 1
 
 
 # vim: sw=4:et:ai
