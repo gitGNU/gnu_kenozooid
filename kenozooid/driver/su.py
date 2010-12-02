@@ -32,6 +32,9 @@ from dateutil.parser import parse as dparse
 from struct import unpack, pack
 from collections import namedtuple
 from lxml import etree as et
+from functools import partial
+from Queue import Queue, Full, Empty
+from threading import Thread
 import time
 
 import logging
@@ -207,7 +210,7 @@ class SensusUltraMemoryDump(object):
         #lib = self.driver.lib
         lib = ct.CDLL('libdivecomputer.so.0')
 
-        parser = self.parser = ct.c_void_p()
+        parser = ct.c_void_p()
         rc = lib.reefnet_sensusultra_parser_create(ct.byref(parser))
         if rc != 0:
             raise DeviceError('Cannot create data parser')
@@ -220,55 +223,81 @@ class SensusUltraMemoryDump(object):
         dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
         dd.raw = dump.data.read(SIZE_MEM_DATA)
 
-        data = {
-            'dtime': time.mktime(dump.time.timetuple()), # download time
-            'stime': hdp.time,                           # sensus time at download time
-        }
+        # boot time = host time - device time (sensus time)
+        btime = time.mktime(dump.time.timetuple()) - hdp.time
 
-        self.dives = []
-        rc = lib.reefnet_sensusultra_extract_dives(None,
-                dd,
-                SIZE_MEM_DATA,
-                FuncDive(self.parse_dive),
-                ct.py_object(data))
-        if rc != 0:
-            raise DeviceError('Cannot extract dives')
-        return self.dives
+        dq = Queue(5)
+        parse_dive = partial(self.parse_dive,
+                parser=parser, boot_time=btime, dives=dq)
+        extract_dives = partial(lib.reefnet_sensusultra_extract_dives,
+                None, dd, SIZE_MEM_DATA, FuncDive(parse_dive), ct.py_object(None))
+        t = Thread(target=extract_dives)
+        t.start()
+        while t.is_alive():
+            try:
+                dn = dq.get(False)
+            except Empty:
+                time.sleep(0.1)
+            else:
+                yield dn
+
+        # there still can be some dive nodes left in the queue
+        while not dq.empty():
+            yield dq.get()
+
+        # http://bugs.python.org/issue1395552
+        #if t.result == 0:
+        #    raise StopIteration()
+        #else:
+        #    raise DeviceError('Failed to extract dives properly')
 
     
-    def parse_dive(self, buffer, size, data):
+    def parse_dive(self, buffer, size, pdata, parser, boot_time, dives):
         """
         Callback used by libdivecomputer's library function to extract
-        dives from a device.
+        dives from a device and put it into dives queue.
 
         :Parameters:
          buffer
             Buffer with binary dive data.
          size
             Size of buffer dive data.
-         data
-            User data (UTC download time, Sensus Ultra download time).
+         pdata
+            Parser user data (nothing at the moment).
+         boot_time
+            Sensus Ultra boot time.
+         dives
+            Queue of dives to be consumed by caller.
         """
+        log.debug('parsing dive')
+
         lib = ct.CDLL('libdivecomputer.so.0')
-        parser = self.parser
-
-        # get dive time
-        dive_time = unpack('<L', buffer[4:8])[0]
-        st = datetime.fromtimestamp(data['dtime'] + dive_time - data['stime'])
-
-        self.dive_node = ku.create_dive_data(time=st)
-
         lib.parser_set_data(parser, buffer, size)
-        lib.parser_samples_foreach(parser,
-                FuncSample(self.parse_sample),
-                ct.py_object({'time': None, 'depth': None, 'temp': None}))
 
-        self.dives.append(self.dive_node)
+        # dive time is in seconds since boot time 
+        dive_time = unpack('<L', buffer[4:8])[0]
+        log.debug('got divetime: {0}'.format(dive_time))
+        st = datetime.fromtimestamp(boot_time + dive_time)
+
+        dn = ku.create_dive_data(time=st)
+
+        parse_sample = partial(self.parse_sample,
+                dive_node=dn,
+                sdata={})
+        lib.parser_samples_foreach(parser,
+                FuncSample(parse_sample),
+                ct.py_object(None))
+
+        try:
+            dives.put(dn, timeout=30)
+        except Full:
+            log.error('could not parse dives due to internal queue timeout')
+            return 0
 
         return 1
 
 
-    def parse_sample(self, st, sample, data):
+    def parse_sample(self, st, sample, pdata, dive_node, sdata):
         """
         Convert sample data generated with libdivecomputer library into
         UDDF waypoint structure.
@@ -278,27 +307,27 @@ class SensusUltraMemoryDump(object):
             Sample type as specified in parser.h.
          sample
             Sample data.
-         data
-            User data (current time, depth and temperature).
+         pdata
+            Parser user data (nothing at the moment).
+         dive_node
+            UDDF dive node to which to be created sample belongs.
+         sdata
+            Temporary sample data.
         """
         # depth is the last sample type generated by libdivecomputer,
         # create the waypoint then
         if st == SampleType.time:
-            data['time'] = sample.time
+            sdata['time'] = sample.time
         elif st == SampleType.temperature:
-            data['temp'] = C2K(sample.temperature)
+            sdata['temp'] = C2K(sample.temperature)
         elif st == SampleType.depth:
-            data['depth'] = sample.depth
+            sdata['depth'] = sample.depth
 
-            ku.create_dive_profile_sample(self.dive_node, self.UDDF_SAMPLE, **data)
-
-            # clear cached data
-            data['depth'] = None
-            data['time'] = None
-            data['temp'] = None
+            ku.create_dive_profile_sample(dive_node, self.UDDF_SAMPLE, **sdata)
+            sdata.clear() # clear temporary data
         else:
             log.warn('unknown sample type', st)
         return 1
 
 
-
+# vim: sw=4:et:ai
