@@ -231,7 +231,14 @@ class SensusUltraMemoryDump(object):
                 parser=parser, boot_time=btime, dives=dq)
         extract_dives = partial(lib.reefnet_sensusultra_extract_dives,
                 None, dd, SIZE_MEM_DATA, FuncDive(parse_dive), ct.py_object(None))
-        t = Thread(target=extract_dives)
+
+        # http://bugs.python.org/issue1395552
+        def run(self):
+            self.result = extract_dives()
+        Thread.run = run
+        t = Thread()
+        #t = Thread(target=extract_dives)
+
         t.start()
         while t.is_alive():
             try:
@@ -245,11 +252,10 @@ class SensusUltraMemoryDump(object):
         while not dq.empty():
             yield dq.get()
 
-        # http://bugs.python.org/issue1395552
-        #if t.result == 0:
-        #    raise StopIteration()
-        #else:
-        #    raise DeviceError('Failed to extract dives properly')
+        if t.result == 0:
+            raise StopIteration()
+        else:
+            raise DeviceError('Failed to extract dives properly')
 
     
     def parse_dive(self, buffer, size, pdata, parser, boot_time, dives):
