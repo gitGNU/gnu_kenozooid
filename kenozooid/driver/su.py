@@ -59,6 +59,15 @@ HandshakeDump = namedtuple('HandshakeDump', 'ver1 ver2 serial time')
 # libdivecomputer data structures and constants
 #
 
+# see buffer.c, buffer.h
+class DCBuffer(ct.Structure):
+    _fields_ = [
+        ('data', ct.c_char_p),
+        ('capacity', ct.c_size_t),
+        ('offset', ct.c_size_t),
+        ('size', ct.c_size_t),
+    ]
+
 # see parser.h:parser_sample_type_t
 SampleType = namedtuple('SampleType', 'time depth pressure temperature' \
     ' event rbt heartbeat bearing vendor')._make(range(9))
@@ -66,45 +75,47 @@ SampleType = namedtuple('SampleType', 'time depth pressure temperature' \
 
 class Pressure(ct.Structure):
     _fields_ = [
-        ('tank', ct.c_int),
+        ('tank', ct.c_uint),
         ('value', ct.c_double),
     ]
 
 
 class Event(ct.Structure):
     _fields_ = [
-        ('type', ct.c_int),
-        ('time', ct.c_int),
-        ('flags', ct.c_int),
-        ('value', ct.c_int),
+        ('type', ct.c_uint),
+        ('time', ct.c_uint),
+        ('flags', ct.c_uint),
+        ('value', ct.c_uint),
     ]
 
 
 class Vendor(ct.Structure):
     _fields_ = [
-        ('type', ct.c_int),
-        ('size', ct.c_int),
+        ('type', ct.c_uint),
+        ('size', ct.c_uint),
         ('data', ct.c_void_p), 
     ]
 
 
 class SampleValue(ct.Union):
     _fields_ = [
-        ('time', ct.c_int),
+        ('time', ct.c_uint),
         ('depth', ct.c_double),
         ('pressure', Pressure),
         ('temperature', ct.c_double),
-        ('event', Event),
-        ('rbt', ct.c_int),
-        ('heartbeat', ct.c_int),
-        ('bearing', ct.c_int),
-        ('vendor', Vendor),
+# at the moment one of fields below causes segmentation fault
+#        ('event', Event),
+#        ('rbt', ct.c_uint),
+#        ('heartbeat', ct.c_uint),
+#        ('bearing', ct.c_uint),
+#        ('vendor', Vendor),
     ]
 
 
 # dive and sample data callbacks 
-FuncDive = ct.CFUNCTYPE(ct.c_int, ct.POINTER(ct.c_char), ct.c_int, ct.py_object)
-FuncSample = ct.CFUNCTYPE(ct.c_int, ct.c_int, SampleValue, ct.py_object)
+FuncDive = ct.CFUNCTYPE(ct.c_uint, ct.POINTER(ct.c_char), ct.c_uint,
+    ct.POINTER(ct.c_char), ct.c_uint, ct.c_void_p)
+FuncSample = ct.CFUNCTYPE(None, ct.c_int, SampleValue, ct.c_void_p)
 
 
 @kc.inject(DeviceDriver, id='su', name='Sensus Ultra Driver',
@@ -182,19 +193,27 @@ class SensusUltraMemoryDump(object):
         dev = self.driver.dev
         lib = self.driver.lib
 
-        hd = ct.create_string_buffer('\000' * SIZE_MEM_HANDSHAKE)
-        ud = ct.create_string_buffer('\000' * SIZE_MEM_USER)
-        dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
+        # one more to accomodate NULL
+        hd = ct.create_string_buffer(SIZE_MEM_HANDSHAKE + 1)
+        ud = ct.create_string_buffer(SIZE_MEM_USER + 1)
+        dd = ct.create_string_buffer(SIZE_MEM_DATA + 1)
 
+        dd_buf = DCBuffer()
+        dd_buf.size = SIZE_MEM_DATA
+        dd_buf.data = ct.cast(dd, ct.c_char_p)
+
+        log.debug('loading user data')
         rc = lib.reefnet_sensusultra_device_read_user(dev, ud, SIZE_MEM_USER)
         if rc != 0:
             raise DeviceError('Device communication error')
 
+        log.debug('loading handshake data')
         rc = lib.reefnet_sensusultra_device_get_handshake(dev, hd, SIZE_MEM_HANDSHAKE)
         if rc != 0:
             raise DeviceError('Device communication error')
 
-        rc = lib.device_dump(dev, dd, SIZE_MEM_DATA)
+        log.debug('loading dive data')
+        rc = lib.device_dump(dev, dd_buf)
         if rc != 0:
             raise DeviceError('Device communication error')
 
@@ -229,8 +248,9 @@ class SensusUltraMemoryDump(object):
         dq = Queue(5)
         parse_dive = partial(self.parse_dive,
                 parser=parser, boot_time=btime, dives=dq)
+        f = FuncDive(parse_dive)
         extract_dives = partial(lib.reefnet_sensusultra_extract_dives,
-                None, dd, SIZE_MEM_DATA, FuncDive(parse_dive), ct.py_object(None))
+                None, dd, SIZE_MEM_DATA, f, None)
 
         # http://bugs.python.org/issue1395552
         def run(self):
@@ -258,7 +278,8 @@ class SensusUltraMemoryDump(object):
             raise DeviceError('Failed to extract dives properly')
 
     
-    def parse_dive(self, buffer, size, pdata, parser, boot_time, dives):
+    def parse_dive(self, buffer, size, fingerprint, fsize, pdata, parser,
+            boot_time, dives):
         """
         Callback used by libdivecomputer's library function to extract
         dives from a device and put it into dives queue.
@@ -268,8 +289,14 @@ class SensusUltraMemoryDump(object):
             Buffer with binary dive data.
          size
             Size of buffer dive data.
+         fingerprint
+            Fingerprint buffer.
+         fsize
+            Size of fingerprint buffer.
          pdata
             Parser user data (nothing at the moment).
+         parser
+            libdivecomputer parser instance.
          boot_time
             Sensus Ultra boot time.
          dives
@@ -290,9 +317,8 @@ class SensusUltraMemoryDump(object):
         parse_sample = partial(self.parse_sample,
                 dive_node=dn,
                 sdata={})
-        lib.parser_samples_foreach(parser,
-                FuncSample(parse_sample),
-                ct.py_object(None))
+        f = FuncSample(parse_sample)
+        lib.parser_samples_foreach(parser, f, None)
 
         try:
             dives.put(dn, timeout=30)
