@@ -123,7 +123,7 @@ def parse(f, query):
         yield n
 
 
-def xpath(node, query):
+def xp(node, query):
     """
     Perform XPath query in UDDF namespace on specified node.
 
@@ -141,7 +141,7 @@ def xpath(node, query):
     return node.xpath(query, namespaces=_NSMAP)
 
 
-def xpath_first(node, query):
+def xp_first(node, query):
     """
     Find first element with XPath query in UDDF namespace on specified
     node.
@@ -157,7 +157,7 @@ def xpath_first(node, query):
     .. seealso::
         lxml.etree.Element.xpath
     """
-    data = xpath(node, query)
+    data = xp(node, query)
     if data:
         return data[0]
     else:
