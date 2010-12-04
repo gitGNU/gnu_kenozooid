@@ -119,7 +119,7 @@ def parse(f, query):
     """
     log.debug('parsing and searching with with query: {0}'.format(query))
     doc = et.parse(f)
-    for n in xpath(doc, query):
+    for n in xp(doc, query):
         yield n
 
 
