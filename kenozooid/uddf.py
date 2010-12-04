@@ -119,8 +119,49 @@ def parse(f, query):
     """
     log.debug('parsing and searching with with query: {0}'.format(query))
     doc = et.parse(f)
-    for n in doc.xpath(query, namespaces=_NSMAP):
+    for n in xpath(doc, query):
         yield n
+
+
+def xpath(node, query):
+    """
+    Perform XPath query in UDDF namespace on specified node.
+
+    The result is data returned by lxml.etree.Element.xpath.
+    
+    :Parameters:
+     node
+        Node to be queried.
+     query
+        XPath query.
+
+    .. seealso::
+        lxml.etree.Element.xpath
+    """
+    return node.xpath(query, namespaces=_NSMAP)
+
+
+def xpath_first(node, query):
+    """
+    Find first element with XPath query in UDDF namespace on specified
+    node.
+
+    First element is returned or None if it was not found.
+    
+    :Parameters:
+     node
+        Node to be queried.
+     query
+        XPath query.
+
+    .. seealso::
+        lxml.etree.Element.xpath
+    """
+    data = xpath(node, query)
+    if data:
+        return data[0]
+    else:
+        return  None
 
 
 def find_data(name, node, fields, queries, parsers, nquery=None):
