@@ -172,7 +172,7 @@ class SensusUltraDriver(object):
             raise DeviceError('Device communication error')
 
         # take 8 bytes for now (version, serial and time)
-        dump = HandshakeDump._make(unpack(FMT_HANDSHAKE, hd.raw[:8]))
+        dump = _handshake(hd.raw)
         return 'Sensus Ultra %d.%d' % (dump.ver2, dump.ver1)
 
 
@@ -187,7 +187,6 @@ class SensusUltraMemoryDump(object):
         'time': 'uddf:divetime',
         'temp': 'uddf:temperature',
     }
-    DIVE_TIME = ku.XPath('uddf:divetime/text()')
 
     def dump(self):
         """
@@ -242,7 +241,7 @@ class SensusUltraMemoryDump(object):
             raise DeviceError('Cannot create data parser')
         
         hd = dump.data.read(SIZE_MEM_HANDSHAKE)
-        hdp = HandshakeDump._make(unpack(FMT_HANDSHAKE, hd[:8]))
+        hdp = _handshake(hd)
 
         ud = dump.data.read(SIZE_MEM_USER)
 
@@ -312,7 +311,7 @@ class SensusUltraMemoryDump(object):
         lib = ct.CDLL('libdivecomputer.so.0')
         lib.parser_set_data(parser, buffer, size)
 
-        header = DiveHeader._make(unpack(FMT_DIVE_HEADER, buffer[:16]))
+        header = _dive_header(buffer)
         log.debug('parsing dive: {0}'.format(header))
 
         # dive time is in seconds since boot time
@@ -334,10 +333,10 @@ class SensusUltraMemoryDump(object):
         lib.parser_samples_foreach(parser, f, None)
 
         log.debug('removing endcount samples')
-        samples = ku.XPath('//uddf:samples')(dn)[0]
+        samples = ku.xp_first(dn, '//uddf:samples')
         for w in samples[-header.endcount:]:
             samples.remove(w)
-        last_time = int(self.DIVE_TIME(samples[-1])[0])
+        last_time = int(ku.xp_first(samples[-1], 'uddf:divetime/text()'))
 
         # each dive ends at about DiveHeader.threshold depth, therefore
         # inject last sample required by UDDF
@@ -386,6 +385,29 @@ class SensusUltraMemoryDump(object):
         else:
             log.warn('unknown sample type', st)
         return 1
+
+
+def _handshake(data):
+    """
+    Convert binary data into HandshakeDump structure.
+
+    :Parameters:
+     data
+        Binary data.
+
+    """
+    return HandshakeDump._make(unpack(FMT_HANDSHAKE, data[:8]))
+
+
+def _dive_header(data):
+    """
+    Convert binary data into DiveHeader structure.
+
+    :Parameters:
+     data
+        Dive binary data.
+    """
+    return DiveHeader._make(unpack(FMT_DIVE_HEADER, data[:16]))
 
 
 # vim: sw=4:et:ai

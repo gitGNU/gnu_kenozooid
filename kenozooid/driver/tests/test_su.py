@@ -24,13 +24,19 @@ Reefnet Sensus Ultra driver tests.
 """
 
 from cStringIO import StringIO
+from collections import namedtuple
+from datetime import datetime
+from binascii import unhexlify
+import lxml.etree as et
 import bz2
 import base64
 import unittest
 
-from kenozooid.driver.su import SensusUltraMemoryDump
-from kenozooid.uddf import UDDFProfileData, UDDFDeviceDump, q
+from kenozooid.driver.su import SensusUltraMemoryDump, _handshake, _dive_header
+import kenozooid.uddf as ku
 
+SU_DATA_DOWNLOAD_TIME = datetime(2010, 2, 22, 21, 34, 22)
+SU_DATA_INTERVAL = 10
 SU_DATA = \
    r'QlpoOTFBWSZTWXY6bxUAAUJ/////////////////////////////////////////////4G' \
     'cfD180vV58bmp7wPQAA9BpRREGtUqgBKivQAGqkqqSottAAlVEQBdgG6wFDQALYOg7YaOo' \
@@ -643,41 +649,81 @@ SU_DATA = \
     '+t2MFEQYqxFEURE//CkAJCST5//xdyRThQkHY6bxUA=='
 
 
-# todo: tests - handshake parsing, header parsing, dive time calculation,
-#   endcount samples removal
+def _dump():
+    Dump = namedtuple('Dump', 'time data')
+
+    s = base64.b64decode(SU_DATA)
+    data = bz2.decompress(s)
+
+    return Dump(time=SU_DATA_DOWNLOAD_TIME, data=StringIO(data))
+
+
 class SensusUltraUDDFTestCase(unittest.TestCase):
     """
     Sensus Ultra data to UDDF format conversion tests.
     """
     def test_conversion(self):
-        """Test basic Sensus Ultra data to UDDF conversion
+        """Test Sensus Ultra profile data conversion
         """
-        pd = UDDFProfileData()
-        pd.create()
-        dd = UDDFDeviceDump()
-        dd.create()
-        root = dd.tree.getroot()
-        root.divecomputercontrol.divecomputerdump.datetime = '2010-02-22 21:14'
-
-        s = base64.b64decode(SU_DATA)
-        dump = bz2.decompress(s)
+        dump = _dump()
 
         dumper = SensusUltraMemoryDump()
-        dumper.convert(dd.tree, StringIO(dump), pd.tree)
+        dives = list(dumper.convert(dump))
 
         # 43 dives
-        self.assertEquals(43, len(pd.tree.findall(q('//dive'))))
+        self.assertEquals(43, len(dives))
 
-        # 247 samples for first dive
-        dive = pd.tree.findall(q('//dive'))[-3]
-        data = dive.findall(q('samples/waypoint'))
-        self.assertEquals(247, len(data))
+        # 18 samples for first dive
+        dive = dives[-1] # su stores data from last to first
+        wps = ku.xp(dive, './/uddf:samples/uddf:waypoint')
+        self.assertEquals(18, len(wps))
 
-        self.assertEquals('2009-09-20 13:18:08', dive.datetime)
+        dt = ku.xp_first(dive, './uddf:datetime/text()')
+        self.assertEquals('2009-09-19 13:14:40', dt, et.tostring(dive))
 
-        pd.clean()
-        pd.validate()
+        # check first sample, UDDF obligatory one
+        t = ku.xp_first(wps[0], './/uddf:divetime/text()')
+        self.assertEquals('0', t)
+        t = ku.xp_first(wps[0], './/uddf:depth/text()')
+        self.assertEquals('0.0', t)
 
+        # check if second sample does not start with 0 time
+        t = ku.xp_first(wps[1], './/uddf:divetime/text()')
+        self.assertEquals(SU_DATA_INTERVAL, int(t))
+
+        # check last UDDF required sample
+        t = ku.xp_first(wps[-1], './/uddf:divetime/text()')
+        self.assertEquals('170', t)
+        t = ku.xp_first(wps[-1], './/uddf:depth/text()')
+        self.assertEquals('0.0', t)
+
+        # check the one before last and last samples times
+        t1 = ku.xp_first(wps[-2], './/uddf:divetime/text()')
+        t2 = ku.xp_first(wps[-1], './/uddf:divetime/text()')
+        self.assertEquals(SU_DATA_INTERVAL, int(t2) - int(t1)) 
+
+
+    def test_handshake(self):
+        """Test Sensus Ultra handshake data parsing
+        """
+        data = unhexlify('0203641d4ebee30302007a837f018b000a0057040f000100')
+        v = _handshake(data)
+        self.assertEquals(3, v.ver2)
+        self.assertEquals(2, v.ver1)
+        self.assertEquals(7524, v.serial)
+        self.assertEquals(65257038, v.time)
+
+
+    def test_dive_header(self):
+        """Test Sensus Ultra dive header data parsing
+        """
+        data = unhexlify('00000000dc2866020a0057040f000100')
+        v = _dive_header(data)
+        self.assertEquals(40249564, v.time)
+        self.assertEquals(10, v.interval)
+        self.assertEquals(1111, v.threshold)
+        self.assertEquals(15, v.endcount)
+        self.assertEquals(1, v.averaging)
 
 
 # vim: sw=4:et:ai
