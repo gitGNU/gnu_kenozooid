@@ -2,16 +2,22 @@
 
 # time [min] and tank pressure readings [bars] columns expected
 f = read.csv('stats/an1rmv.csv')
+# todo: pass parameters like: profile to analyze, tank size
 tank = 15
+profile = profiles
 
 f$time = f$time * 60
+indices = match(f$time, profile$time)
+n = length(indices)
+indices = cbind(indices[1:n - 1], indices[2:n])
 
-# fixme: constant depth is assumed
-data = merge(f, profiles)
+avg_depth = apply(indices, 1, function(p) { mean(profile$depth[p[1]:p[2]]) })
+
+data = merge(f, profile)
 n = nrow(data)
 
-rmv = diff(-data$pressure) * tank / diff(data$time / 60.0) / (data$depth[2:n] / 10.0 + 1)
-print(rmv)
-data$rmv = c(0, round(rmv))
+time = data$time[2:length(data$time)]
+rmv = diff(-data$pressure) * tank / diff(data$time / 60.0) / (avg_depth / 10.0 + 1)
+rmv = data.frame(time=time, depth=avg_depth, rmv=rmv)
 
-print(data)
+print(rmv)
