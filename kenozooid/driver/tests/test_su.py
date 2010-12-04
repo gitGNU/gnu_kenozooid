@@ -28,12 +28,10 @@ from collections import namedtuple
 from datetime import datetime
 from binascii import unhexlify
 import lxml.etree as et
-import bz2
-import base64
 import unittest
 
-from kenozooid.driver.su import SensusUltraMemoryDump, _handshake, _dive_header
 import kenozooid.uddf as ku
+from kenozooid.driver.su import SensusUltraMemoryDump, _handshake, _dive_header
 
 SU_DATA_DOWNLOAD_TIME = datetime(2010, 2, 22, 21, 34, 22)
 SU_DATA_INTERVAL = 10
@@ -651,10 +649,7 @@ SU_DATA = \
 
 def _dump():
     Dump = namedtuple('Dump', 'time data')
-
-    s = base64.b64decode(SU_DATA)
-    data = bz2.decompress(s)
-
+    data = ku._dump_decode(SU_DATA)
     return Dump(time=SU_DATA_DOWNLOAD_TIME, data=StringIO(data))
 
 
