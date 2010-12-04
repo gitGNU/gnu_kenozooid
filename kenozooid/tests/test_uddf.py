@@ -22,132 +22,11 @@
 UDDF file format tests.
 """
 
-import unittest
-from lxml import etree
-import lxml.objectify as eto
-from datetime import datetime
-from StringIO import StringIO
-from functools import partial
-
-
-class UDDFTestCase(unittest.TestCase):
-    """
-    UDDF file format tests.
-    """
-    def test_creation(self):
-        """Test UDDF creation
-        """
-        uf = UDDFFile()
-        uf.create()
-        self.assertFalse(uf.tree is None)
-
-        root = uf.tree.getroot()
-        self.assertEquals('3.0.0', root.get('version')) # check UDDF version
-        self.assertEquals('kenozooid', root.generator.name.text)
-        self.assertEquals(kenozooid.__version__, root.generator.version.text)
-
-
-    def test_time_parsing(self):
-        """Test UDDF time parsing
-        """
-        uf = UDDFProfileData()
-        uf.parse(StringIO("""
-<uddf xmlns="http://www.streit.cc/uddf">
-<profiledata>
-<repetitiongroup>
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
-</dive>
-</repetitiongroup>
-</profiledata>
-</uddf>
-"""))
-        dt = uf.get_datetime(uf.tree.find(q('//dive')))
-        self.assertEquals(datetime(2009, 3, 2, 23, 2), dt)
-
-
-    def test_q(self):
-        """Test conversion to qualified tag names and ElementPath expressions"""
-        self.assertEquals('{http://www.streit.cc/uddf}name', q('name'))
-        self.assertEquals('//{http://www.streit.cc/uddf}name', q('//name'))
-        self.assertEquals('{http://www.streit.cc/uddf}samples/' \
-                '{http://www.streit.cc/uddf}waypoint', q('samples/waypoint'))
-
-
-    def test_has_deco(self):
-        """Test checking deco waypoint.
-        """
-        w = eto.XML('<waypoint><alarm>deco</alarm></waypoint>')
-        self.assertTrue(has_deco(w))
-
-        w = eto.XML('<waypoint><alarm>error</alarm></waypoint>')
-        self.assertFalse(has_deco(w))
-
-        w = eto.XML('<waypoint></waypoint>')
-        self.assertFalse(has_deco(w))
-
-        # there can be different alarms
-        w = eto.XML('<waypoint><alarm>error</alarm><alarm>deco</alarm></waypoint>')
-        self.assertTrue(has_deco(w))
-
-
-    def test_has_temp(self):
-        """Test checking waypoint with temperature.
-        """
-        w = eto.XML('<waypoint><temperature>12</temperature></waypoint>')
-        self.assertTrue(has_temp(w))
-
-        w = eto.XML('<waypoint></waypoint>')
-        self.assertFalse(has_temp(w))
-
-
-
-
-
-
-class UDDFDeviceDumpTestCase(unittest.TestCase):
-    """
-    Tests for UDDF file containing device dump data.
-    """
-    def test_encoding(self):
-        """Test data encoding
-        """
-        s = UDDFDeviceDump.encode('01234567890abcdef')
-        self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
-
-
-
-
-    def test_setting_data(self):
-        """Test data setting
-        """
-        dd = UDDFDeviceDump()
-        dd.create()
-        dd.set_model('tt', 'Test Model')
-
-        dd.set_data('01234567890abcdef')
-        
-        dump = dd.tree.find(q('//divecomputerdump'))
-        self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=',
-                dump.dcdump.text)
-
-
-    def test_getting_data(self):
-        """Test data getting
-        """
-        dd = UDDFDeviceDump()
-        dd.create()
-
-        s = UDDFDeviceDump.encode('01234567890abcdef')
-        dump = dd.tree.find(q('//divecomputerdump'))
-        dump.dcdump = s
-
-        self.assertEquals('01234567890abcdef', dd.get_data())
-
-
 from lxml import etree as et
 from cStringIO import StringIO
 from datetime import datetime
+from functools import partial
+import unittest
 
 import kenozooid.uddf as ku
 
@@ -469,6 +348,14 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(expected, models, sd)
 
 
+    def test_dump_data_encode(self):
+        """Test dive computer data encoding to be stored in UDDF dive computer dump file
+        """
+        s = ku._dump_encode('01234567890abcdef')
+        self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
+
+
+
 class PostprocessingTestCase(unittest.TestCase):
     """
     UDDF postprocessing tests.
@@ -504,7 +391,7 @@ class PostprocessingTestCase(unittest.TestCase):
         ku.reorder(doc)
 
         f = StringIO()
-        ku.save(doc, f)
+        ku.save(doc.getroot(), f)
 
         f = StringIO(f.getvalue())
 
