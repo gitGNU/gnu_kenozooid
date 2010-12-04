@@ -643,7 +643,8 @@ SU_DATA = \
     '+t2MFEQYqxFEURE//CkAJCST5//xdyRThQkHY6bxUA=='
 
 
-
+# todo: tests - handshake parsing, header parsing, dive time calculation,
+#   endcount samples removal
 class SensusUltraUDDFTestCase(unittest.TestCase):
     """
     Sensus Ultra data to UDDF format conversion tests.
