@@ -31,46 +31,49 @@ class Calculate(object):
     """
     Kenozooid calculator command line module.
     """
-    usage = '<ppO2|ppN2|ead <depth> <ean>> | <mod [pp=1.4] <ean>>'
     description = 'air and nitrox calculations (partial pressure, EAD, MOD); metric units'
-    def add_options(self, parser):
-        """
-        No options for calculator. TODO: Add imperial/metric units.
-        """
 
-    def __call__(self, options, *args):
+    @classmethod
+    def add_arguments(cls, parser):
+        """
+        Parse calculator commands arguments.
+
+        TODO: Add imperial/metric units support.
+        """
+        cmds = ('ppO2', 'ppN2', 'ead')
+        desc = ('calculate O2 partial pressure (ppO2)',
+            'calculate Nitrogen parital pressure (ppN2)', 
+            'calculate equivalent air depth (EAD)')
+        subp = parser.add_subparsers()
+        for cmd, d in zip(cmds, desc):
+            p = subp.add_parser(cmd, help=d)
+            p.set_defaults(cmd_calc=cmd)
+            p.add_argument('depth', type=float, nargs=1)
+            p.add_argument('ean', type=float, nargs=1)
+
+        p = subp.add_parser('mod',
+                help='calculate maximum operating depth (MOD)')
+        p.set_defaults(cmd_calc='mod')
+        p.add_argument('pp', type=float, nargs='?', default=1.4)
+        p.add_argument('ean', type=float, nargs=1)
+
+
+    def __call__(self, args):
         """
         Execute Kenozooid calculator command.
         """
         import kenozooid.calc as kcalc
 
-        fname = args[1]
-        if fname in ('ppO2', 'ppN2', 'ead'):
-            if len(args) != 4: # fname, depth, ean
-                raise ArgumentError()
-
-            depth = float(args[2])
-            ean = float(args[3])
-            f = getattr(kcalc, fname)
-            result = f(depth, ean)
-
-        elif fname == 'mod':
-            # fname, [pp], depth
-            if len(args) == 3:
-                ean = float(args[2])
-                pp = 1.4
-            elif len(args) == 4:
-                pp = float(args[2])
-                ean = float(args[3])
-            else:
-                raise ArgumentError()
-
-            result = kcalc.mod(ean, pp=pp)
-
+        cmd = args.cmd_calc
+        f = getattr(kcalc, cmd)
+        if cmd in ('ppO2', 'ppN2', 'ead'):
+            result = f(args.depth[0], args.ean[0])
+        elif cmd == 'mod':
+            result = f(args.ean[0], args.pp)
         else:
             raise ArgumentError()
 
-        print '%s: %.2f' % (fname, round(result, 2))
+        print '{0:.2f}'.format(result)
 
 
 # vim: sw=4:et:ai

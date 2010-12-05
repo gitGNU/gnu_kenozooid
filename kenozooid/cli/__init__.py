@@ -22,7 +22,7 @@
 Commmand line user interface.
 """
 
-import optparse
+import argparse
 import logging
 import sys
 
@@ -33,30 +33,25 @@ class CLIModule(object):
     """
     Command line module for Kenozooid.
     """
-    usage = ''
     description = ''
 
-    # option group description
-    group = None
-
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
-        Add options of command line module to command line parser.
+        Add command line module arguments to command line parser.
 
         :Parameters:
          parser
-            Option parser instance.
+            Parser instance.
         """
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute command line module.
 
         May raise ArgumentError exception to indicate wrong arguments.
 
         :Parameters:
-         options
-            Command line module options.
          args
             Command line module arguments.
         """
@@ -78,40 +73,32 @@ def main():
     import kenozooid.cli.dc
     import kenozooid.cli.uddf
 
-    names = []
-    usage = []
-    desc = []
-
-    # find command line modules and create command line help text
-    modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
-    part1 = '\n'
-    part2 = ''
-    for cls in modules:
-        p = params(cls)
-        name = p['name']
-        usage = cls.usage
-        desc = cls.description
-        part1 += '\n    %%prog [options] %s %s' % (name, usage)
-        part2 += '\n    %s - %s' % (name, desc)
-
-    usage = '%s\n\nCommmand Description:\n%s' % (part1, part2)
-
     # add common options to command line parser
-    parser = optparse.OptionParser(usage=usage)
-    parser.add_option('-v', '--verbose',
+    parser = argparse.ArgumentParser(
+            description='Kenozooid {0}.'.format(kenozooid.__version__))
+
+    parser.add_argument('-v', '--verbose',
             action='store_true', dest='verbose', default=False,
             help='explain what is being done')
-    parser.add_option('--profile',
+    parser.add_argument('--profile',
             action='store_true', dest='profile', default=False,
             help='run with profiler')
 
-    # add command line modules' options to parser
-    modules = query(CLIModule)
-    for cls in modules:
-        m = cls()
-        m.add_options(parser)
+    subp = parser.add_subparsers()
 
-    options, args = parser.parse_args()
+    # find command line modules and create subcommands
+    modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
+    for cls in modules:
+        p = params(cls)
+
+        name = p['name']
+        desc = cls.description
+
+        p = subp.add_parser(name, help=desc)
+        cls.add_arguments(p)
+        p.set_defaults(cmd=name)
+
+    args = parser.parse_args()
 
     # configure basic logger
     logging.basicConfig()
@@ -119,10 +106,8 @@ def main():
     log = logging.getLogger()
     log.setLevel(logging.INFO)
 
-    if options.verbose:
+    if args.verbose:
         logging.root.setLevel(logging.DEBUG)
-
-    # don't import kenozooid modules until logger is configured
 
     # import modules implementing supported drivers
     # todo: support dynamic import of third party drivers
@@ -131,33 +116,29 @@ def main():
     import kenozooid.driver.ostc
     import kenozooid.driver.su
 
-    # find the command line module to be executed
-    found = False
-    try:
-        modules = query(name=args[0])
-        cls = modules.next()
-        cmd = cls()
-        found = True
-    except (StopIteration, IndexError):
-        parser.print_help()
-        sys.exit(1)
-
     # execute the command line module
     try:
-        if options.profile:
+        cls = query(name=args.cmd).next()
+        cmd = cls()
+
+        if args.profile:
             import hotshot, hotshot.stats
             prof = hotshot.Profile('kenozooid.prof')
-            prof.runcall(cmd, options, *args)
+            prof.runcall(cmd, args)
             prof.close()
             stats = hotshot.stats.load('kenozooid.prof')
             stats.strip_dirs()
             stats.sort_stats('time', 'calls')
             stats.print_stats(20)
         else:
-            cmd(options, *args)
+            cmd(args)
     except DeviceError, ex:
-        print ex
-    except ArgumentError:
+        print >> sys.stderr, 'kz: {0}'.format(ex)
+        sys.exit(3)
+    except ArgumentError, ex:
+        print >> sys.stderr, 'kz: {0}'.format(ex)
+        sys.exit(2)
+    except StopIteration:
         parser.print_help()
         sys.exit(2)
 

@@ -42,37 +42,36 @@ class ListDives(object):
     """
     List dives from UDDF file.
     """
-    usage = '<input> ...'
     description = 'list dives stored in UDDF file'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
         Add options for dive list fetched from UDDF file.
         """
-        group = optparse.OptionGroup(parser, 'Dive List Options')
-        group.add_option('--csv',
+        parser.add_argument('--csv',
                 action='store_true',
                 dest='dives_csv',
                 default=False,
                 help='list dives in CSV format')
-        parser.add_option_group(group)
+        parser.add_argument('input',
+                nargs='+',
+                help='UDDF file with dive profiles')
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute command for list of dives in UDDF file.
         """
         from kenozooid.uddf import parse, dive_data, dive_profile
         from kenozooid.util import min2str, FMT_DIVETIME
 
-        if len(args) < 2:
-            raise ArgumentError()
-
-        csv = options.dives_csv
+        csv = args.dives_csv
+        files = args.input
 
         if csv:
             print 'file,number,start_time,time,depth'
-        for fin in args[1:]:
+        for fin in files:
             nodes = parse(fin, '//uddf:dive')
             dives = ((dive_data(n), dive_profile(n)) for n in nodes)
 
@@ -100,13 +99,19 @@ class ConvertFile(object):
     """
     Convert UDDF dive memory dumps into UDDF dive profiles.
     """
-    usage = '<dump1> [dump2 ...] <output>'
     description = 'convert UDDF dive memory dumps into UDDF dive profiles'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
-        No options file conversion command.
+        Add convert command line command arguments.
         """
+        parser.add_argument('input',
+                nargs='+',
+                help='UDDF file containing dive memory dump')
+        parser.add_argument('output',
+                nargs=1,
+                help='UDDF file to contain dive profiles')
 
 
     def __call__(self, options, *args):
@@ -116,11 +121,8 @@ class ConvertFile(object):
         from kenozooid.driver import MemoryDump, find_driver
         import kenozooid.uddf as ku
 
-        if len(args) < 3:
-            raise ArgumentError()
-
-        fin = args[1:-1]
-        fout = args[-1]
+        fin = args.input
+        fout = args.output[0]
 
         pd = ku.create()
 
@@ -167,54 +169,58 @@ class PlotProfiles(object):
     """
     Plot profiles of dives command.
     """
-    usage = '[dives] <input> ... <output>'
-    description = 'plot profiles of dives ([dives] - dive range, i.e. 1-3,6 ' \
-        'indicates\n        dive 1, 2, 3 and 6)'
+    description = 'plot graphs of dive profiles'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
         Add options for plotting profiles of dives command.
         """
-        group = optparse.OptionGroup(parser, 'Dive Profile Plotting Options')
-        group.add_option('--title',
-                action='store_true',
-                dest='plot_title',
-                default=False,
-                help='display plot title')
-        group.add_option('--info',
-                action='store_true',
-                dest='plot_info',
-                default=False,
-                help='display dive information (depth, time, temperature)')
-        group.add_option('--temp',
-                action='store_true',
-                dest='plot_temp',
-                default=False,
-                help='plot temperature graph')
-        group.add_option('--no-sig',
-                action='store_false',
-                dest='plot_sig',
-                default=True,
-                help='do not display Kenozooid signature')
-        group.add_option('--legend',
-                action='store_true',
-                dest='plot_legend',
-                default=False,
-                help='display graph legend')
-        group.add_option('--overlay',
+        parser.add_argument('--overlay',
                 action='store_true',
                 dest='plot_overlay',
                 default=False,
                 help='overlay plots in one graph')
-        group.add_option('--labels',
+        parser.add_argument('--title',
+                action='store_true',
+                dest='plot_title',
+                default=False,
+                help='display plot title')
+        parser.add_argument('--info',
+                action='store_true',
+                dest='plot_info',
+                default=False,
+                help='display dive information (depth, time, temperature)')
+        parser.add_argument('--temp',
+                action='store_true',
+                dest='plot_temp',
+                default=False,
+                help='plot temperature graph')
+        parser.add_argument('--no-sig',
+                action='store_false',
+                dest='plot_sig',
+                default=True,
+                help='do not display Kenozooid signature')
+        parser.add_argument('--legend',
+                action='store_true',
+                dest='plot_legend',
+                default=False,
+                help='display graph legend')
+        parser.add_argument('--labels',
                 action='store',
-                type='string',
                 dest='plot_labels',
                 help='override dives labels')
-        parser.add_option_group(group)
+        parser.add_argument('input',
+                nargs='+',
+                metavar='[dives] input',
+                help='dives from specified UDDF file (i.e.  1-3,6 is dive'
+                    ' 1, 2, 3, and 6 from a file, all by default)')
+        parser.add_argument('output',
+                nargs=1,
+                help='output file: pdf, png or svg')
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute dives' profiles plotting command.
         """
@@ -222,36 +228,32 @@ class PlotProfiles(object):
         import itertools
         from kenozooid.plot import plot, plot_overlay
 
-        if len(args) < 3:
-            raise ArgumentError()
-
-        fout = args[-1]
+        fout = args.output[0]
 
         _, ext = os.path.splitext(fout)
         ext = ext.replace('.', '')
-        if ext.lower() not in ('svg', 'pdf', 'png'):
-            print >> sys.stderr, 'Unknown format: %s' % ext
-            sys.exit(2)
+        if ext.lower() not in ('pdf', 'png', 'svg'):
+            raise ArgumentError('Unknown format: {0}'.format(ext))
 
         # fetch dives and profiles from files provided on command line
-        data = itertools.chain(*_fetch(args[1:-1]))
-        if options.plot_overlay:
+        data = itertools.chain(*_fetch(args.input))
+        if args.plot_overlay:
             plotf = plot_overlay
 
             params = {}
-            if options.plot_labels:
-                labels = [l.strip() for l in options.plot_labels.split(',')]
+            if args.plot_labels:
+                labels = [l.strip() for l in args.plot_labels.split(',')]
                 params = { 'labels': labels }
         else:
             plotf = plot
             params = {}
 
         plotf(fout, data, format=ext,
-            title=options.plot_title,
-            info=options.plot_info,
-            temp=options.plot_temp,
-            sig=options.plot_sig,
-            legend=options.plot_legend,
+            title=args.plot_title,
+            info=args.plot_info,
+            temp=args.plot_temp,
+            sig=args.plot_sig,
+            legend=args.plot_legend,
             **params)
 
 
@@ -261,30 +263,28 @@ class Analyze(object):
     """
     Analyze dives with R script.
     """
-    usage = '<script> [dives] <input> ...'
-    description = 'analyze dives with R script ([dives] - dive range, i.e. 1-3,6 ' \
-        'indicates\n        dive 1, 2, 3 and 6)'
+    description = 'analyze dives with R script'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
-        There are no options for dive analyze command.
+        Add R script runner options.
         """
+        parser.add_argument('script', nargs=1, help='R script to execute')
+        parser.add_argument('input', nargs='+', metavar='[dives] input',
+                help='dives from specified UDDF file (i.e.  1-3,6 is dive'
+                    ' 1, 2, 3, and 6 from a file, all by default)')
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute dives' analyze command.
         """
         from kenozooid.analyze import analyze
 
-        if len(args) < 3:
-            raise ArgumentError()
-
-        script = args[1]
-
         # fetch dives and profiles from files provided on command line
-        data = itertools.chain(*_fetch(args[2:]))
-        analyze(script, data)
+        data = itertools.chain(*_fetch(args.input))
+        analyze(args.script[0], data)
 
 
 def _fetch(args):
@@ -299,8 +299,7 @@ def _fetch(args):
             i += 1 # skip range spec
             f = args[i]
             if not os.path.exists(f):
-                print >> sys.stderr, 'File does not exist: %s' % f
-                sys.exit(2)
+                raise ArgumentError('File does not exist: {0}'.format(f))
 
         # return generator of dive data and its profile data tuples
         nodes = parse(f, q)

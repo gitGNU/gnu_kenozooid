@@ -35,16 +35,16 @@ class ListDrivers(object):
     """
     Dive computers drivers listing command line module.
     """
-    usage = ''
     description = 'list available dive computer drivers and their capabilities'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
-        No options for drivers listing.
+        No arguments for drivers listing.
         """
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute drivers listing command.
         """
@@ -90,47 +90,51 @@ class Simulate(object):
     """
     Simulate dive on a dive computer.
     """
-    usage = '<drv> <port> <dive plan>'
     description = 'simulate dive with a dive computer'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
-        Add dive computer dive simulation options.
+        Add dive computer dive simulation arguments.
         """
-        group = optparse.OptionGroup(parser, 'Dive Simulation Options')
-        group.add_option('--no-start',
+        parser.add_argument('--no-start',
                 action='store_false',
                 dest='sim_start',
                 default=True,
                 help='assume simulation is started, don\'t start simulation')
-        group.add_option('--no-stop',
+        parser.add_argument('--no-stop',
                 action='store_false',
                 dest='sim_stop',
                 default=True,
                 help='don\'t stop simulation, leave dive computer in simulation mode')
-        parser.add_option_group(group)
+        parser.add_argument('driver',
+                nargs=1,
+                help='device driver id')
+        parser.add_argument('port',
+                nargs=1,
+                help='device port, i.e. /dev/ttyUSB0, COM1')
+        parser.add_argument('plan',
+                nargs=1,
+                help='dive plan')
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute dive computer dive simulation.
         """
         from kenozooid.simulation import simulate
         from kenozooid.driver import Simulator, find_driver
 
-        if len(args) != 4:
-            raise ArgumentError()
-
-        drv = args[1]
-        port = args[2]
-        spec = args[3]
+        drv = args.driver[0]
+        port = args.port[0]
+        spec = args.plan[0]
 
         sim = find_driver(Simulator, drv, port)
 
         if sim is None:
             print 'Device driver %s does not support simulation' % drv
             sys.exit(3)
-        simulate(sim, spec, options.sim_start, options.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+        simulate(sim, spec, args.sim_start, args.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
 
 
@@ -139,16 +143,25 @@ class Dump(object):
     """
     Command module for dive computer memory dumping.
     """
-    usage = '<drv> <port> <output>'
     description = 'dump dive computer memory (logbook, settings, etc.)'
 
-    def add_options(self, parser):
+    @classmethod
+    def add_arguments(self, parser):
         """
-        No options for dive computer memory dumping.
+        Add arguments for dive computer memory dump command.
         """
+        parser.add_argument('driver',
+                nargs=1,
+                help='device driver id')
+        parser.add_argument('port',
+                nargs=1,
+                help='device port, i.e. /dev/ttyUSB0, COM1')
+        parser.add_argument('output',
+                nargs=1,
+                help='UDDF file to contain dive computer dump')
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute dive computer memory dump command.
         """
@@ -156,12 +169,9 @@ class Dump(object):
         import kenozooid.uddf as ku
         from datetime import datetime
 
-        if len(args) != 4:
-            raise ArgumentError()
-
-        drv = args[1]
-        port = args[2]
-        fout = args[3]
+        drv = args.driver[0]
+        port = args.port[0]
+        fout = args.output[0]
 
         dumper = find_driver(MemoryDump, drv, port)
         if dumper is None:
