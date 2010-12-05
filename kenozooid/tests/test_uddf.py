@@ -433,4 +433,32 @@ class PostprocessingTestCase(unittest.TestCase):
         self.assertEquals(['2009-03-02 23:02', '2009-04-02 23:02'], times)
 
 
+
+class NodeRangeTestCase(unittest.TestCase):
+    """
+    Node range tests.
+    """
+    def test_simple(self):
+        """Test parsing simple numerical ranges
+        """
+        self.assertEquals('1 <= position() and position() <= 3',
+                ku.node_range('1-3'))
+        self.assertEquals('position() = 2 or position() = 4',
+                ku.node_range('2, 4'))
+        self.assertEquals('position() = 1 or position() = 3'
+                ' or 4 <= position() and position() <= 7',
+            ku.node_range('1,3,4-7'))
+        self.assertEquals('1 <= position()', ku.node_range('1-'))
+        self.assertEquals('position() <= 10', ku.node_range('-10'))
+
+
+    def test_errors(self):
+        """Test invalid ranges
+        """
+        self.assertRaises(ku.RangeError, ku.node_range, '30--')
+        self.assertRaises(ku.RangeError, ku.node_range, '30-2-')
+        self.assertRaises(ku.RangeError, ku.node_range, '1,a,2')
+        self.assertRaises(ku.RangeError, ku.node_range, '1-a,3')
+
+
 # vim: sw=4:et:ai

@@ -23,35 +23,6 @@ Tests of plotting routines.
 """
 
 import unittest
-import lxml.objectify as eto
-from kenozooid.plot import get_deco
 
-class DecoTestCase(unittest.TestCase):
-    """
-    Deco related routines tests.
-    """
-    def test_deco_getting(self):
-        """Test getting deco periods.
-        """
-        wps = eto.XML("""
-<samples>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint><alarm>deco</alarm><divetime>1</divetime><depth>1</depth></waypoint>
-<waypoint></waypoint>
-</samples>
-""")
-        wps = list(wps.waypoint)
-        data = list(get_deco(wps))
-        self.assertEquals(3, len(data))
-        self.assertEquals(3, len(data[0]))
-        self.assertEquals(2, len(data[1]))
-        self.assertEquals(3, len(data[2]))
 
+# vim: sw=4:et:ai

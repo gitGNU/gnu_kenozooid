@@ -24,34 +24,4 @@ Test command line routines.
 
 import unittest
 
-from kenozooid.cli.uddf import parse_range, RangeError
-
-
-class RangeTestCase(unittest.TestCase):
-    """
-    Numerical range tests.
-    """
-    def test_simple(self):
-        """Test parsing simple numerical ranges
-        """
-        self.assertEquals((1, 2, 3), parse_range('1-3'))
-        self.assertEquals((2, 4), parse_range('2,4'))
-        self.assertEquals((1, 3, 4, 5, 6, 7), parse_range('1,3,4-7'))
-
-
-    def test_inifinity(self):
-        """Test parsing infinite numerical ranges
-        """
-        self.assertEquals(tuple(range(30, 101)), parse_range('30-'))
-        self.assertEquals(tuple(range(900, 1001)),
-                parse_range('900-', infinity=1000))
-
-
-    def test_errors(self):
-        """Test invalid ranges
-        """
-        self.assertRaises(RangeError, parse_range, '30--')
-        self.assertRaises(RangeError, parse_range, '30-2-')
-        self.assertRaises(RangeError, parse_range, '1,a,2')
-        self.assertRaises(RangeError, parse_range, '1-a,3')
-
+# vim: sw=4:et:ai

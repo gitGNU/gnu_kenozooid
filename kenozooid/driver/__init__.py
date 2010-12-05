@@ -175,6 +175,9 @@ def find_driver(iface, query, port=None):
             log.debug('found device driver for query: {0}'.format(query))
             break
 
+    if not found:
+        raise DeviceError('Device driver not found, query: {0}'.format(query))
+
     # scan for connected devices
     try:
         drv = cls.scan(port).next()

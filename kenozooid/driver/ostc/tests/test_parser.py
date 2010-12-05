@@ -26,10 +26,8 @@ import bz2
 import base64
 import unittest
 
-from kenozooid.uddf import UDDFDeviceDump
-from kenozooid.driver.ostc import pressure
-from kenozooid.driver.ostc import OSTCMemoryDump
 import kenozooid.driver.ostc.parser as ostc_parser
+import kenozooid.uddf as ku
 
 OSTC_DATA = \
    r'QlpoOTFBWSZTWaGjTzYAGeF//////////////+73///f73//9//8QHBEQEZkykf07' \
@@ -427,23 +425,26 @@ OSTC_DATA_BROKEN = \
     'IbUA==' \
 
 
-def get_data(data):
-    """
-    Get binary data from memory dump file.
-    """
-    s = base64.b64decode(data)
-    decoded = bz2.decompress(s)
-    return decoded
-
-
 class ParserTestCase(unittest.TestCase):
     """
     OSTC binary data parsing tests.
+
+    :Attributes:
+     dump_data
+        OSTC dump data from OSTC_DATA.
+
     """
+    def setUp(self):
+        """
+        Create test dump data.
+        """
+        self.dump_data = ku._dump_decode(OSTC_DATA)
+
+
     def test_status_parsing(self):
         """Test status parsing
         """
-        dump = ostc_parser.status(get_data(OSTC_DATA))
+        dump = ostc_parser.status(self.dump_data)
 
         self.assertEquals('\xaa' * 5 + '\x55', dump.preamble)
 
@@ -460,7 +461,7 @@ class ParserTestCase(unittest.TestCase):
     def test_profile_split(self):
         """Test profile splitting
         """
-        dump = ostc_parser.status(get_data(OSTC_DATA))
+        dump = ostc_parser.status(self.dump_data)
         profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
@@ -473,7 +474,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        dump = ostc_parser.status(get_data(OSTC_DATA))
+        dump = ostc_parser.status(self.dump_data)
         profile = tuple(ostc_parser.profile(dump.profile))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -513,7 +514,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        dump = ostc_parser.status(get_data(OSTC_DATA))
+        dump = ostc_parser.status(self.dump_data)
         profile = tuple(ostc_parser.profile(dump.profile))
         h, p = profile[0]
         header = ostc_parser.header(h)
@@ -591,7 +592,7 @@ class ParserTestCase(unittest.TestCase):
     def test_invalid_profile(self):
         """Test parsing invalid profile
         """
-        data = tuple(ostc_parser.profile(get_data(OSTC_DATA_BROKEN)))
+        data = tuple(ostc_parser.profile(ku._dump_decode(OSTC_DATA_BROKEN)))
         assert 32 == len(data)
 
         # dive no 31 is broken (count from 0)
