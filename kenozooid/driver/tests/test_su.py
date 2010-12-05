@@ -670,7 +670,7 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
 
         # 18 samples for first dive
         dive = dives[-1] # su stores data from last to first
-        wps = ku.xp(dive, './/uddf:samples/uddf:waypoint')
+        wps = list(ku.xp(dive, './/uddf:samples/uddf:waypoint'))
         self.assertEquals(18, len(wps))
 
         dt = ku.xp_first(dive, './uddf:datetime/text()')

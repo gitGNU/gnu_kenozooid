@@ -119,8 +119,7 @@ def parse(f, query):
     """
     log.debug('parsing and searching with with query: {0}'.format(query))
     doc = et.parse(f)
-    for n in xp(doc, query):
-        yield n
+    return xp(doc, query)
 
 
 def xp(node, query):
@@ -138,7 +137,8 @@ def xp(node, query):
     .. seealso::
         lxml.etree.Element.xpath
     """
-    return node.xpath(query, namespaces=_NSMAP)
+    for n in node.xpath(query, namespaces=_NSMAP):
+        yield n 
 
 
 def xp_first(node, query):
@@ -158,10 +158,10 @@ def xp_first(node, query):
         lxml.etree.Element.xpath
     """
     data = xp(node, query)
-    if data:
-        return data[0]
-    else:
-        return  None
+    try:
+        return data.next()
+    except StopIteration:
+        return None
 
 
 def find_data(name, node, fields, queries, parsers, nquery=None):
