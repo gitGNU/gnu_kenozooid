@@ -348,6 +348,34 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(expected, models, sd)
 
 
+    def test_create_dive_profile_sample_default(self):
+        """Test UDDF dive profile default sample creation
+        """
+        w = ku.create_dive_profile_sample(None, depth=3.1, time=19, temp=20)
+        s = et.tostring(w)
+        self.assertEquals('19', ku.xp_first(w, 'uddf:divetime/text()'), s)
+        self.assertEquals('3.1', ku.xp_first(w, 'uddf:depth/text()'), s)
+        self.assertEquals('20.0', ku.xp_first(w, 'uddf:temperature/text()'), s)
+
+
+    def test_create_dive_profile_sample_custom(self):
+        """Test UDDF dive profile custom sample creation
+        """
+        Q = {
+            'depth': 'uddf:depth',
+            'time': 'uddf:divetime',
+            'temp': 'uddf:temperature',
+            'alarm': 'uddf:alarm',
+        }
+        w = ku.create_dive_profile_sample(None, queries=Q,
+                depth=3.1, time=19, temp=20, alarm='deco')
+        s = et.tostring(w)
+        self.assertEquals('19', ku.xp_first(w, 'uddf:divetime/text()'), s)
+        self.assertEquals('3.1', ku.xp_first(w, 'uddf:depth/text()'), s)
+        self.assertEquals('20.0', ku.xp_first(w, 'uddf:temperature/text()'), s)
+        self.assertEquals('deco', ku.xp_first(w, 'uddf:alarm/text()'), s)
+        
+
     def test_dump_data_encode(self):
         """Test dive computer data encoding to be stored in UDDF dive computer dump file
         """

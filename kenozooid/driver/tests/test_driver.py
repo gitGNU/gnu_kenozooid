@@ -19,7 +19,7 @@
 #
 
 """
-Basic driver tests.
+Basic tests of driver infrastructure.
 """
 
 import unittest
@@ -53,3 +53,4 @@ class DriverFindingTestCase(unittest.TestCase):
         self.assertRaises(DeviceError, find_driver, Simulator, 'unknown')
 
 
+# vim: sw=4:et:ai

@@ -194,7 +194,7 @@ class OSTCMemoryDump(object):
                 dn = ku.create_dive_data(time=st)
 
                 create_sample = partial(ku.create_dive_profile_sample, dn,
-                        fqueries=uddf_sample)
+                        queries=uddf_sample)
 
                 deco = False
 
