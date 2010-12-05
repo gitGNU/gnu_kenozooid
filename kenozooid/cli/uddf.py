@@ -114,7 +114,7 @@ class ConvertFile(object):
                 help='UDDF file to contain dive profiles')
 
 
-    def __call__(self, options, *args):
+    def __call__(self, args):
         """
         Execute file conversion command.
         """
