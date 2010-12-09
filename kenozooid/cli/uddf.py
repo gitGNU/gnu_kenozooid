@@ -112,6 +112,19 @@ class AddDives(object):
         """
         Add options for dive adding to UDDF file.
         """
+        g = parser.add_mutually_exclusive_group(required=True)
+        g.add_argument('-d', nargs=3, metavar=('time', 'depth', 'duration'),
+                help='add dive with dive time, maximum depth and dive'
+                ' duration data')
+        g.add_argument('-p', nargs=2, metavar=('dive', 'profile'),
+                help='add dive data from an UDDF file containing dive profiles')
+
+        parser.add_argument('-s', '--site', metavar='site',
+                help='dive site id or name')
+        parser.add_argument('-b', '--buddy', metavar='buddy',
+                help='dive buddy id, name or organization membership id')
+        parser.add_argument('output', nargs=1, help='UDDF output file')
+
 
     def __call__(self, args):
         """
