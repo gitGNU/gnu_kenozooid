@@ -26,7 +26,7 @@ import argparse
 import logging
 import sys
 
-from kenozooid.component import query, params
+from kenozooid.component import query, params, inject
 
 
 class CLIModule(object):
@@ -84,19 +84,7 @@ def main():
             action='store_true', dest='profile', default=False,
             help='run with profiler')
 
-    subp = parser.add_subparsers()
-
-    # find command line modules and create subcommands
-    modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
-    for cls in modules:
-        p = params(cls)
-
-        name = p['name']
-        desc = cls.description
-
-        p = subp.add_parser(name, help=desc)
-        cls.add_arguments(p)
-        p.set_defaults(cmd=name)
+    add_commands(parser, title='Kenozooid commands')
 
     args = parser.parse_args()
 
@@ -141,6 +129,83 @@ def main():
     except StopIteration:
         parser.print_help()
         sys.exit(2)
+
+
+def add_commands(parser, prefix=None, title=None):
+    """
+    Find and add commands to the argument parser.
+
+    :Parameters:
+     parser
+        Argument parser (from argparse module).
+     prefix
+        Prefix of commands to add to argument parser.
+     title
+        Help title of commands.
+    """
+    subp = parser.add_subparsers(title=title)
+
+    # find command line modules sorted by their names
+    modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
+    for cls in modules:
+        desc = cls.description
+
+        p = params(cls)
+        name = p['name']
+        master = p.get('master', False)
+
+        # no prefix then simply use name as command, command shall have no
+        # spaces;
+        # if there is prefix then match command with its prefix
+        if prefix:
+            if not name.startswith(prefix) or name == prefix:
+                continue
+
+            cmd = name.rsplit(' ', 1)[1]
+        elif ' ' in name:
+            continue
+        else:
+            cmd = name
+
+        p = subp.add_parser(cmd, help=desc)
+        if not master:
+            p.set_defaults(cmd=name)
+        cls.add_arguments(p)
+
+
+def add_master_command(name, title, desc):
+    """
+    Add master command.
+
+    The purpose of master command is to
+    
+    - group other commands as sub-commands, i.e. 'dive' master command for
+      'list' and 'add' sub-commands means there are 'dive list' and 'dive
+      add' commands.
+    - provide help title and generalized help description of groupped
+      sub-commands
+
+    :Parameters:
+     name
+        Command name.
+     title
+        Command help title.
+     desc
+        Command description.
+    """
+
+    @inject(CLIModule, name=name, master=True)
+    class Command(object):
+
+        description = desc
+
+        @classmethod
+        def add_arguments(self, parser):
+            add_commands(parser, name, title)
+
+        def __call__(self, args):
+            raise ArgumentError()
+    return Command
 
 
 # vim: sw=4:et:ai

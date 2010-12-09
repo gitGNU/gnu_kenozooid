@@ -31,13 +31,20 @@ from lxml import etree as et
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError
+from kenozooid.cli import CLIModule, ArgumentError, add_master_command
 from kenozooid.component import query, params
 from kenozooid.uddf import node_range
 
 log = logging.getLogger('kenozooid.cli.uddf')
 
-@inject(CLIModule, name='dives')
+
+# for commands 'dive add', 'dive list', etc
+add_master_command('dive',
+        'Kenozooid dive management commands',
+        'manage dives in UDDF file')
+
+
+@inject(CLIModule, name='dive list')
 class ListDives(object):
     """
     List dives from UDDF file.
@@ -91,6 +98,26 @@ class ListDives(object):
                         dtime=dtime,
                         depth=depth,
                         file=fin)
+
+
+@inject(CLIModule, name='dive add')
+class AddDives(object):
+    """
+    Add dives to UDDF file.
+    """
+    description = 'add dives to UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive adding to UDDF file.
+        """
+
+    def __call__(self, args):
+        """
+        Execute command for adding dives into UDDF file.
+        """
+        raise ArgumentError('Not implemented yet')
 
 
 
