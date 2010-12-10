@@ -43,6 +43,11 @@ add_master_command('dive',
         'Kenozooid dive management commands',
         'manage dives in UDDF file')
 
+# for commands 'site add', 'site list', etc
+add_master_command('site',
+        'Kenozooid dive site management commands',
+        'manage dive sites in UDDF file')
+
 
 @inject(CLIModule, name='dive list')
 class ListDives(object):
@@ -124,6 +129,51 @@ class AddDives(object):
         parser.add_argument('-b', '--buddy', metavar='buddy',
                 help='dive buddy id, name or organization membership id')
         parser.add_argument('output', nargs=1, help='UDDF output file')
+
+
+    def __call__(self, args):
+        """
+        Execute command for adding dives into UDDF file.
+        """
+        raise ArgumentError('Not implemented yet')
+
+
+@inject(CLIModule, name='site add')
+class AddDives(object):
+    """
+    Add dive sites to UDDF file.
+    """
+    description = 'add dive sites to UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive sites adding to UDDF file.
+        """
+        parser.add_argument('-p', '--position',
+                nargs=2,
+                metavar=('x', 'y'),
+                help='longitude and latitude of dive site')
+        #parser.add_argument('-c', '--country',
+        #        nargs=1,
+        #        metavar='country',
+        #        help='dive site country, i.e. Ireland')
+        #parser.add_argument('-p', '--province',
+        #        nargs=1,
+        #        metavar='province',
+        #        help='dive site province, i.e. Howth')
+        parser.add_argument('id',
+                nargs='?',
+                help='id of dive site')
+        parser.add_argument('location',
+                nargs=1,
+                help='location of dive site, i.e. Scapa Flow, Red Sea')
+        parser.add_argument('name',
+                nargs=1,
+                help='name of dive site, i.e. SMS Markgraf, SS Thistlegorm')
+        parser.add_argument('output',
+                nargs=1,
+                help='UDDF output file')
 
 
     def __call__(self, args):
