@@ -48,6 +48,11 @@ add_master_command('site',
         'Kenozooid dive site management commands',
         'manage dive sites in UDDF file')
 
+# for commands 'buddy add', 'buddy list', etc
+add_master_command('buddy',
+        'Kenozooid dive buddy management commands',
+        'manage dive buddies in UDDF file')
+
 
 @inject(CLIModule, name='dive list')
 class ListDives(object):
@@ -127,7 +132,7 @@ class AddDives(object):
         parser.add_argument('-s', '--site', metavar='site',
                 help='dive site id or name')
         parser.add_argument('-b', '--buddy', metavar='buddy',
-                help='dive buddy id, name or organization membership id')
+                help='dive buddy id, name or organization member id number')
         parser.add_argument('output', nargs=1, help='UDDF output file')
 
 
@@ -139,16 +144,16 @@ class AddDives(object):
 
 
 @inject(CLIModule, name='site add')
-class AddDives(object):
+class AddDiveSites(object):
     """
-    Add dive sites to UDDF file.
+    Add dive site to UDDF file.
     """
-    description = 'add dive sites to UDDF file'
+    description = 'add dive site to UDDF file'
 
     @classmethod
     def add_arguments(self, parser):
         """
-        Add options for dive sites adding to UDDF file.
+        Add options for dive site adding to UDDF file.
         """
         parser.add_argument('-p', '--position',
                 nargs=2,
@@ -178,7 +183,42 @@ class AddDives(object):
 
     def __call__(self, args):
         """
-        Execute command for adding dives into UDDF file.
+        Execute command for adding dive site into UDDF file.
+        """
+        raise ArgumentError('Not implemented yet')
+
+
+@inject(CLIModule, name='buddy add')
+class AddBuddy(object):
+    """
+    Add dive buddy to UDDF file.
+    """
+    description = 'add dive buddy to UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive buddy adding to UDDF file.
+        """
+        parser.add_argument('-m', '--member',
+                nargs=2,
+                metavar=('org', 'number'),
+                help='organization and its member id number i.e. CFT 123')
+        parser.add_argument('id',
+                nargs='?',
+                help='id of a buddy, i.e. tcora')
+        parser.add_argument('name',
+                nargs=1,
+                help='buddy name, i.e. "Tom Cora", "Thomas Henry Corra"'
+                    ' or "Corra, Thomas Henry"')
+        parser.add_argument('output',
+                nargs=1,
+                help='UDDF output file')
+
+
+    def __call__(self, args):
+        """
+        Execute command for adding dive buddy into UDDF file.
         """
         raise ArgumentError('Not implemented yet')
 
