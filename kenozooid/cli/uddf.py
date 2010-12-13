@@ -242,6 +242,45 @@ class AddBuddy(object):
         ku.save(doc, fout)
 
 
+@inject(CLIModule, name='buddy list')
+class ListBuddies(object):
+    """
+    List dive buddies from UDDF file.
+    """
+    description = 'list dive buddies stored in UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive buddy list fetched from UDDF file.
+        """
+        parser.add_argument('input',
+                nargs='+',
+                help='UDDF file with dive buddies')
+
+
+    def __call__(self, args):
+        """
+        Execute command for list of dive buddies in UDDF file.
+        """
+        from kenozooid.uddf import parse, buddy_data
+
+        fmt = u'{no:4} {id:10} {fname:20} {mname:20} {lname:30}' \
+                ' {org:10} {number:11}'
+
+        files = args.input
+
+        for fin in files:
+            nodes = parse(fin, '//uddf:buddy')
+            for i, n in enumerate(nodes):
+                b = buddy_data(n)
+                d = b._asdict()
+                for k, v in d.items():
+                    if v is None:
+                        d[k] = ''
+                print fmt.format(no=i + 1, **d)
+
+
 
 @inject(CLIModule, name='convert')
 class ConvertFile(object):

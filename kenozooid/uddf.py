@@ -52,6 +52,7 @@ from functools import partial
 from datetime import datetime
 from dateutil.parser import parse as dparse
 from operator import itemgetter
+from uuid import uuid4 as uuid
 import base64
 import bz2
 import hashlib
@@ -92,6 +93,14 @@ XP_DEFAULT_DUMP_DATA = (XPath('uddf:link/@ref'),
             ']/uddf:model/text()'),
         XPath('uddf:datetime/text()'),
         XPath('uddf:dcdump/text()'))
+
+# XPath queries for default buddy data
+XP_DEFAULT_BUDDY_DATA = (XPath('@id'),
+        XPath('uddf:personal/uddf:firstname/text()'),
+        XPath('uddf:personal/uddf:middlename/text()'),
+        XPath('uddf:personal/uddf:lastname/text()'),
+        XPath('uddf:personal/uddf:membership/@organisation'),
+        XPath('uddf:personal/uddf:membership/@memberid'))
 
 
 class RangeError(ValueError):
@@ -313,6 +322,45 @@ def dump_data(node, fields=None, queries=None, parsers=None):
         queries = XP_DEFAULT_DUMP_DATA
         parsers = (str, str, dparse, _dump_decode)
     return find_data('DiveComputerDump', node, fields, queries, parsers)
+
+
+def buddy_data(node, fields=None, queries=None, parsers=None):
+    """
+    Get dive buddy data.
+
+    The following data is returned by default
+
+    id
+        Buddy id.
+    fname
+        Buddy first name.
+    mname
+        Buddy middle name.
+    lname
+        Buddy last name.
+    org
+        Organization, which a buddy is member of.
+    number
+        Member number id in the organization.
+
+    :Parameters:
+     node
+        XML node.
+     fields
+        Names of fields to be created in a record.
+     queries
+        XPath expression objects for each field to retrieve its value.
+     parsers
+        Parsers of field values to be created in a record.
+
+    .. seealso::
+        find_data
+    """
+    if fields is None:
+        fields = ('id', 'fname', 'mname', 'lname', 'org', 'number')
+        queries = XP_DEFAULT_BUDDY_DATA
+        parsers = (str, ) * 7
+    return find_data('Buddy', node, fields, queries, parsers)
 
 
 def node_range(s):
@@ -720,6 +768,9 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
         }
     if formatters == None:
         formatters = {}
+
+    if 'id' not in data or data['id'] is None:
+        data['id'] = str(uuid())
         
     _, buddy = create_node('uddf:diver/uddf:buddy', parent=node,
             force_last=True)
