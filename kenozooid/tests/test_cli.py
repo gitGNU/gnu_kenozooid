@@ -22,6 +22,44 @@
 Test command line routines.
 """
 
+from kenozooid.cli.uddf import _name_parse
+
 import unittest
+
+class NameParseTestCase(unittest.TestCase):
+    """
+    Name parsing tests.
+    """
+    def test_name(self):
+        """Test parsing name"""
+        f, m, l = _name_parse('Tom Cora')
+        self.assertEquals('Tom', f)
+        self.assertTrue(m is None)
+        self.assertEquals('Cora', l)
+            
+
+    def test_name_middle(self):
+        """Test parsing name with middle name"""
+        f, m, l = _name_parse('Thomas Henry Corra')
+        self.assertEquals('Thomas', f)
+        self.assertEquals('Henry', m)
+        self.assertEquals('Corra', l)
+
+
+    def test_name_last(self):
+        """Test parsing name with lastname first"""
+        f, m, l = _name_parse('Corra, Thomas Henry')
+        self.assertEquals('Thomas', f)
+        self.assertEquals('Henry', m)
+        self.assertEquals('Corra', l)
+
+
+    def test_name_first(self):
+        """Test parsing just first name"""
+        f, m, l = _name_parse('Tom')
+        self.assertEquals('Tom', f)
+        self.assertTrue(m is None)
+        self.assertTrue(l is None)
+
 
 # vim: sw=4:et:ai

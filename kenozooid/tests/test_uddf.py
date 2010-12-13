@@ -280,6 +280,33 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('B', lnames[0], sd)
 
 
+    def test_create_attr_data(self):
+        """
+        Test generic method for creating XML data as attributes
+        """
+        doc = et.XML('<uddf><diver></diver></uddf>')
+        fq = {
+            'fname': 'diver/@fn',
+            'lname': 'diver/@ln',
+        }
+        ku.create_data(doc, fq, fname='A', lname='B')
+
+        sd = et.tostring(doc)
+
+        divers = doc.xpath('//diver')
+        self.assertEquals(1, len(divers), sd)
+        self.assertTrue(divers[0].text is None, sd)
+
+        fnames = doc.xpath('//diver/@fn')
+        self.assertEquals(1, len(fnames), sd)
+        self.assertEquals('A', fnames[0], sd)
+
+        lnames = doc.xpath('//diver/@ln')
+        self.assertEquals(1, len(lnames), sd)
+        self.assertEquals('B', lnames[0], sd)
+
+
+
     def test_create_node(self):
         """
         Test generic method for creating XML nodes
@@ -299,6 +326,11 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(1, len(tq(doc)), sd)
 
         list(ku.create_node('diver/test', parent=doc))
+        sd = et.tostring(doc, pretty_print=True)
+        self.assertEquals(1, len(dq(doc)), sd)
+        self.assertEquals(1, len(tq(doc)), sd)
+
+        list(ku.create_node('diver/test', parent=doc, force_last=True))
         sd = et.tostring(doc, pretty_print=True)
         self.assertEquals(1, len(dq(doc)), sd)
         self.assertEquals(2, len(tq(doc)), sd)
@@ -381,6 +413,50 @@ class CreateDataTestCase(unittest.TestCase):
         """
         s = ku._dump_encode('01234567890abcdef')
         self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
+
+
+    def test_create_buddy(self):
+        """Test creating buddy data
+        """
+        f = ku.create()
+        buddy = ku.create_buddy_data(f, id='tcora',
+                fname='Thomas', mname='Henry', lname='Corra',
+                org='CFT', number='123')
+        s = et.tostring(f)
+
+        d = list(ku.xp(f, '//uddf:buddy'))
+        self.assertEquals(1, len(d), s)
+
+        d = list(ku.xp(f, '//uddf:buddy/uddf:personal/uddf:firstname/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('Thomas', d[0], s)
+
+        d = list(ku.xp(f, '//uddf:buddy/uddf:personal/uddf:middlename/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('Henry', d[0], s)
+
+        d = list(ku.xp(f, '//uddf:buddy/uddf:personal/uddf:lastname/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('Corra', d[0], s)
+
+        d = list(ku.xp(f, '//uddf:buddy/uddf:personal/uddf:membership'))
+        self.assertEquals(1, len(d), s)
+
+        d = list(ku.xp(f,
+            '//uddf:buddy/uddf:personal/uddf:membership/@organisation'))
+        self.assertEquals('CFT', d[0], s)
+
+        d = list(ku.xp(f,
+            '//uddf:buddy/uddf:personal/uddf:membership/@memberid'))
+        self.assertEquals('123', d[0], s)
+
+        # create 2nd buddy
+        buddy = ku.create_buddy_data(f, id='tcora2',
+                fname='Thomas', mname='Henry', lname='Corra',
+                org='CFT', number='123')
+        s = et.tostring(f, pretty_print=True)
+        d = list(ku.xp(f, '//uddf:buddy'))
+        self.assertEquals(2, len(d), s)
 
 
 

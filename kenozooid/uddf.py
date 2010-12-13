@@ -536,7 +536,8 @@ def create_data(node, queries, formatters=None, **data):
 
         n = node
         if p:
-            nodes = list(create_node(p, parent=node))
+            force_last = attr is None
+            nodes = list(create_node(p, parent=node, force_last=force_last))
             n = nodes[-1]
         if attr:
             n.set(attr, value)
@@ -544,7 +545,42 @@ def create_data(node, queries, formatters=None, **data):
             n.text = value
 
 
-def create_node(path, parent=None):
+def create_node(path, parent=None, force_last=False):
+    """
+    Create a hierarchy of nodes using XML nodes path specification.
+
+    Path is a string of node names separated by slash character, i.e. a/b/c
+    creates::
+
+        <a><b><c/></b><a>
+
+    If parent node is specified and some part of node hierarchy already
+    exists then only non-existant nodes are created, i.e. if parent is
+    'x' node in
+
+        <x><y/></x>
+
+    then path 'x/z' modifies XML document as follows
+
+        <x><y/><z/></x>
+
+     With `force_last` set to true, one can enforce creation of _last_ node
+     in the path, i.e. if parent is 'x' node in
+
+        <x><y/></x>
+
+    then path 'x/y' modifies XML document as follows
+
+        <x><y/><y/></x>
+
+    :Parameters:
+     path
+        Hierarchy of nodes.
+     parent
+         Optional parent node.
+     update_last
+        If false then last node in the hierarchy is always created.
+    """
     # preserve namespace prefix option... please?!? :/
     T = lambda tag: tag.replace('uddf:', '{' + _NSMAP['uddf'] + '}')
     tags = path.split('/')
@@ -560,7 +596,7 @@ def create_node(path, parent=None):
                 if k.tag == t:
                     exists = True
                     break
-        if is_last or not exists:
+        if is_last and force_last or not exists:
             k = et.Element(t)
         if n is not None:
             n.append(k)
@@ -602,7 +638,8 @@ def create_dc_data(node, queries=None, formatters=None,
             data['dc_id'] = dc_id
 
         # create new dive computer node
-        _, dc = create_node('uddf:equipment/uddf:divecomputer', parent=node)
+        _, dc = create_node('uddf:equipment/uddf:divecomputer',
+                parent=node, force_last=True)
         create_data(dc, _queries, formatters, **data)
     return dc
 
@@ -617,7 +654,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
             'time': _format_time,
         }
     _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
-            parent=node)
+            parent=node, force_last=True)
     create_data(dn, queries, formatters, **data)
     return dn
 
@@ -632,7 +669,8 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
     if formatters == None:
         formatters = DEFAULT_FMT_DIVE_PROFILE
 
-    _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
+    _, wn = create_node('uddf:samples/uddf:waypoint', parent=node,
+            force_last=True)
     create_data(wn, queries, formatters, **data)
     return wn
 
@@ -654,6 +692,39 @@ def create_dump_data(node, queries=None, formatters=None, **data):
             parent=node)
     create_data(dcd, queries, formatters, **data)
     return dcd
+
+
+def create_buddy_data(node, queries=None, formatters=None, **data):
+    """
+    Create buddy data.
+
+    :Parameters:
+     node
+        Base node (UDDF root node).
+     queries
+        Path-like expressions of XML structure to be created.
+     formatters
+        Buddy data formatters.
+     data
+        Buddy data.
+     
+    """
+    if queries == None:
+        queries = {
+            'id': '@id',
+            'fname': 'uddf:personal/uddf:firstname',
+            'mname': 'uddf:personal/uddf:middlename',
+            'lname': 'uddf:personal/uddf:lastname',
+            'org': 'uddf:personal/uddf:membership/@organisation',
+            'number': 'uddf:personal/uddf:membership/@memberid',
+        }
+    if formatters == None:
+        formatters = {}
+        
+    _, buddy = create_node('uddf:diver/uddf:buddy', parent=node,
+            force_last=True)
+    create_data(buddy, queries, formatters, **data)
+    return buddy
         
 
 def _format_time(t):

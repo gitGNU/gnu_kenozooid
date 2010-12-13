@@ -220,7 +220,26 @@ class AddBuddy(object):
         """
         Execute command for adding dive buddy into UDDF file.
         """
-        raise ArgumentError('Not implemented yet')
+        import kenozooid.uddf as ku
+
+        if args.member:
+            org, number = args.member
+        else:
+            org, number = None, None
+
+        id = args.id
+        fn, mn, ln = _name_parse(args.name[0])
+        fout = args.output[0]
+
+        if os.path.exists(fout):
+            doc = et.parse(fout).getroot()
+        else:
+            doc = ku.create()
+
+        ku.create_buddy_data(doc, id=id, fname=fn, mname=mn,
+                lname=ln, org=org, number=number)
+
+        ku.save(doc, fout)
 
 
 
@@ -435,6 +454,48 @@ def _fetch(args):
         nodes = parse(f, q)
         yield ((dive_data(n), dive_profile(n)) for n in nodes)
         i += 1
+
+
+def _name_parse(name):
+    """
+    Parse name data from a string. The name string is in simplified BibTeX
+    format, i.e.
+
+    - Tom
+    - Tom Cora
+    - Thomas Henry Corra
+    - Corra, Thomas Henry
+
+    Parsed name is tuple consisting of first name, middle name and last
+    name.
+    """
+    f, m, l = None, None, None
+
+    t = name.split(',')
+    if len(t) == 1:
+        nd = t[0].strip().split(' ', 2)
+        if len(nd) == 3:
+            f, m, l = nd
+        elif len(nd) == 2:
+            f, l = nd
+        elif len(nd) == 1:
+            f = nd[0]
+    elif len(t) == 2:
+        l = t[0].strip()
+        nd = t[1].strip().split(' ', 1)
+        f = nd[0]
+        if len(nd) == 2:
+            m = nd[1]
+    else:
+        raise ValueError('Cannot parse name')
+
+    if f:
+        f = f.strip()
+    if m:
+        m = m.strip()
+    if l:
+        l = l.strip()
+    return f, m, l
 
 
 # vim: sw=4:et:ai
