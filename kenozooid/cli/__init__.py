@@ -22,10 +22,6 @@
 Commmand line user interface.
 """
 
-import argparse
-import logging
-import sys
-
 from kenozooid.component import query, params, inject
 
 
@@ -62,73 +58,6 @@ class ArgumentError(BaseException):
     """
     Wrong command line module arguments.
     """
-
-
-
-def main():
-    """
-    Find Kenozooid command line modules and execute them.
-    """
-    import kenozooid.cli.calc
-    import kenozooid.cli.dc
-    import kenozooid.cli.uddf
-
-    # add common options to command line parser
-    parser = argparse.ArgumentParser(
-            description='Kenozooid {0}.'.format(kenozooid.__version__))
-
-    parser.add_argument('-v', '--verbose',
-            action='store_true', dest='verbose', default=False,
-            help='explain what is being done')
-    parser.add_argument('--profile',
-            action='store_true', dest='profile', default=False,
-            help='run with profiler')
-
-    add_commands(parser, title='Kenozooid commands')
-
-    args = parser.parse_args()
-
-    # configure basic logger
-    logging.basicConfig()
-    logging.Logger.manager.loggerDict.clear()
-    log = logging.getLogger()
-    log.setLevel(logging.INFO)
-
-    if args.verbose:
-        logging.root.setLevel(logging.DEBUG)
-
-    # import modules implementing supported drivers
-    # todo: support dynamic import of third party drivers
-    from kenozooid.driver import DeviceError
-    import kenozooid.driver.dummy
-    import kenozooid.driver.ostc
-    import kenozooid.driver.su
-
-    # execute the command line module
-    try:
-        cls = next(query(name=args.cmd))
-        cmd = cls()
-
-        if args.profile:
-            import hotshot, hotshot.stats
-            prof = hotshot.Profile('kenozooid.prof')
-            prof.runcall(cmd, args)
-            prof.close()
-            stats = hotshot.stats.load('kenozooid.prof')
-            stats.strip_dirs()
-            stats.sort_stats('time', 'calls')
-            stats.print_stats(20)
-        else:
-            cmd(args)
-    except DeviceError as ex:
-        print('kz: {0}'.format(ex), file=sys.stderr)
-        sys.exit(3)
-    except ArgumentError as ex:
-        print('kz: {0}'.format(ex), file=sys.stderr)
-        sys.exit(2)
-    except StopIteration:
-        parser.print_help()
-        sys.exit(2)
 
 
 def add_commands(parser, prefix=None, title=None):
