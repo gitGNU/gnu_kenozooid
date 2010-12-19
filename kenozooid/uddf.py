@@ -585,8 +585,7 @@ def create_data(node, queries, formatters=None, **data):
         n = node
         if p:
             force_last = attr is None
-            nodes = list(create_node(p, parent=node, force_last=force_last))
-            n = nodes[-1]
+            *_, n = create_node(p, parent=node, force_last=force_last)
         if attr:
             n.set(attr, value)
         else:
