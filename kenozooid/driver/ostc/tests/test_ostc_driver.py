@@ -23,7 +23,7 @@ OSTC driver tests.
 """
 
 from collections import namedtuple
-from cStringIO import StringIO
+from io import BytesIO
 from datetime import datetime
 import lxml.etree as et
 import unittest
@@ -123,7 +123,7 @@ class UDDFTestCase(unittest.TestCase):
         DCDump = namedtuple('DCDump', 'time data')
 
         data = ku._dump_decode(OSTC_DATA)
-        dump = DCDump(datetime.now(), StringIO(data))
+        dump = DCDump(datetime.now(), BytesIO(data))
 
         dc = OSTCMemoryDump()
         self.dives = list(dc.convert(dump))

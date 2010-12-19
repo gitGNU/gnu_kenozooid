@@ -26,7 +26,7 @@ import sys
 import optparse
 import itertools
 import os.path
-from cStringIO import StringIO
+from io import BytesIO
 from lxml import etree as et
 import logging
 
@@ -87,27 +87,27 @@ class ListDives(object):
         files = args.input
 
         if csv:
-            print 'file,number,start_time,time,depth'
+            print('file,number,start_time,time,depth')
         for fin in files:
             nodes = parse(fin, '//uddf:dive')
             dives = ((dive_data(n), dive_profile(n)) for n in nodes)
 
             if not csv:
-                print fin + ':'
+                print(fin + ':')
             for i, (d, dp) in enumerate(dives):
                 vtime, vdepth, vtemp = zip(*dp)
                 depth = max(vdepth)
                 if csv:
-                    fmt = u'{file},{no},{stime},{dtime},{depth:.1f}'
+                    fmt = '{file},{no},{stime},{dtime},{depth:.1f}'
                     dtime = max(vtime)
                 else:
-                    fmt = u'{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
+                    fmt = '{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
                     dtime = min2str(max(vtime) / 60.0)
-                print fmt.format(no=i + 1,
+                print(fmt.format(no=i + 1,
                         stime=d.time.strftime(FMT_DIVETIME),
                         dtime=dtime,
                         depth=depth,
-                        file=fin)
+                        file=fin))
 
 
 @inject(CLIModule, name='dive add')
@@ -265,7 +265,7 @@ class ListBuddies(object):
         """
         from kenozooid.uddf import parse, buddy_data
 
-        fmt = u'{no:4} {id:10} {fname:20} {mname:20} {lname:30}' \
+        fmt = '{no:4} {id:10} {fname:20} {mname:20} {lname:30}' \
                 ' {org:10} {number:11}'
 
         files = args.input
@@ -278,7 +278,7 @@ class ListBuddies(object):
                 for k, v in d.items():
                     if v is None:
                         d[k] = ''
-                print fmt.format(no=i + 1, **d)
+                print(fmt.format(no=i + 1, **d))
 
 
 
@@ -334,7 +334,7 @@ class ConvertFile(object):
 
             dc = ku.create_dc_data(xp_owner(pd)[0], dc_model=dump.dc_model)
             dc_id = dc.get('id')
-            dump = dump._replace(dc_id=dc_id, data=StringIO(dump.data))
+            dump = dump._replace(dc_id=dc_id, data=BytesIO(dump.data))
 
             # determine device driver to parse the dump and convert dump
             # data into UDDF profile data

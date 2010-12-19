@@ -25,6 +25,7 @@ OSTC driver binary parser routines tests.
 import bz2
 import base64
 import unittest
+from io import BytesIO
 
 import kenozooid.driver.ostc.parser as ostc_parser
 import kenozooid.uddf as ku
@@ -444,12 +445,12 @@ class ParserTestCase(unittest.TestCase):
     def test_status_parsing(self):
         """Test status parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(BytesIO(self.dump_data))
 
-        self.assertEquals('\xaa' * 5 + '\x55', dump.preamble)
+        self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
 
         # first dive is deleted one so no \xfa\xfa
-        self.assertEquals('\xfa\x20', dump.profile[:2])
+        self.assertEquals(b'\xfa\x20', dump.profile[:2])
 
         self.assertEquals(4142, dump.voltage)
 
@@ -461,20 +462,20 @@ class ParserTestCase(unittest.TestCase):
     def test_profile_split(self):
         """Test profile splitting
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(BytesIO(self.dump_data))
         profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
         for header, block in profile:
-            self.assertEquals('\xfa\xfa', header[:2])
-            self.assertEquals('\xfb\xfb', header[-2:])
-            self.assertEquals('\xfd\xfd', block[-2:])
+            self.assertEquals(b'\xfa\xfa', header[:2])
+            self.assertEquals(b'\xfb\xfb', header[-2:])
+            self.assertEquals(b'\xfd\xfd', block[-2:])
 
 
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(BytesIO(self.dump_data))
         profile = tuple(ostc_parser.profile(dump.profile))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -514,7 +515,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(BytesIO(self.dump_data))
         profile = tuple(ostc_parser.profile(dump.profile))
         h, p = profile[0]
         header = ostc_parser.header(h)
@@ -547,7 +548,7 @@ class ParserTestCase(unittest.TestCase):
 
         # temp = 50 (5 degrees)
         # deco = NDL/160
-        data = '\x2c\x01\x84\x32\x00\x00\xa0'
+        data = b'\x2c\x01\x84\x32\x00\x00\xa0'
         v = ostc_parser.sample_data(data, 3, 8, 4, 2)
         self.assertEquals(50, unpack('<H', v)[0])
 
@@ -555,8 +556,7 @@ class ParserTestCase(unittest.TestCase):
         v = ostc_parser.sample_data(data, 3, 5, 4, 2)
         self.assertFalse(v)
 
-        v = ostc_parser.sample_data(data, 5, 8, 4, 2)
-        d, t = map(ord, v)
+        d, t = ostc_parser.sample_data(data, 5, 8, 4, 2)
         self.assertEquals(0, d)
         self.assertEquals(0xa0, t)
 

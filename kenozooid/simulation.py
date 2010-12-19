@@ -135,7 +135,7 @@ def simulate(simulator, spec, start=True, stop=True):
         simulator.start()
     try:
         # start simulation
-        pt, d = data.next()
+        pt, d = next(data)
         simulator.depth(d)
 
         for t, d in data:

@@ -73,7 +73,7 @@ class Calculate(object):
         else:
             raise ArgumentError()
 
-        print '{0:.2f}'.format(result)
+        print('{0:.2f}'.format(result))
 
 
 # vim: sw=4:et:ai

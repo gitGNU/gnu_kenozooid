@@ -50,20 +50,20 @@ class DummySimulator(object):
         """
         Print information about starting dive simulation.
         """
-        print 'Starting dive simulation'
+        print('Starting dive simulation')
 
 
     def depth(self, d):
         """
         Print current time and depth.
         """
-        print '%s -> %02dm' % (datetime.now().time(), d)
+        print('%s -> %02dm' % (datetime.now().time(), d))
 
 
     def stop(self):
         """
         Print information about stopping dive simulation.
         """
-        print 'Stopping dive simulation'
+        print('Stopping dive simulation')
 
 

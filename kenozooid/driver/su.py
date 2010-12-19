@@ -33,7 +33,7 @@ from struct import unpack, pack
 from collections import namedtuple
 from lxml import etree as et
 from functools import partial
-from Queue import Queue, Full, Empty
+from queue import Queue, Full, Empty
 from threading import Thread
 import time
 
@@ -161,12 +161,12 @@ class SensusUltraDriver(object):
         Read Reefnet Sensus Ultra version and serial number.
         """
 
-        sd = ct.create_string_buffer('\000' * SIZE_MEM_SENSE)
+        sd = ct.create_string_buffer(SIZE_MEM_SENSE + 1)
         rc = self.lib.reefnet_sensusultra_device_sense(self.dev, sd, SIZE_MEM_SENSE)
         if rc != 0:
             raise DeviceError('Device communication error')
 
-        hd = ct.create_string_buffer('\000' * SIZE_MEM_HANDSHAKE)
+        hd = ct.create_string_buffer(SIZE_MEM_HANDSHAKE + 1)
         rc = self.lib.reefnet_sensusultra_device_get_handshake(self.dev, hd, SIZE_MEM_HANDSHAKE)
         if rc != 0:
             raise DeviceError('Device communication error')
@@ -245,7 +245,7 @@ class SensusUltraMemoryDump(object):
 
         ud = dump.data.read(SIZE_MEM_USER)
 
-        dd = ct.create_string_buffer('\000' * SIZE_MEM_DATA)
+        dd = ct.create_string_buffer(SIZE_MEM_DATA + 1)
         dd.raw = dump.data.read(SIZE_MEM_DATA)
 
         # boot time = host time - device time (sensus time)

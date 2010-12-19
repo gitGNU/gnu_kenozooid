@@ -52,7 +52,7 @@ class SpecParserTestCase(unittest.TestCase):
         """
         try:
             tuple(parse('0:14,5  5-15,8'))
-        except ValueError, ex:
+        except ValueError as ex:
             self.assertTrue('Invalid time specification' in str(ex))
 
 
@@ -61,7 +61,7 @@ class SpecParserTestCase(unittest.TestCase):
         """
         try:
             tuple(parse('0:14,5  5:15,'))
-        except ValueError, ex:
+        except ValueError as ex:
             self.assertTrue('Invalid depth specification' in str(ex))
 
 

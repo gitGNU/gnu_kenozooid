@@ -41,7 +41,7 @@ import kenozooid.uddf as ku
 import kenozooid.component as kc
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
 from kenozooid.units import C2K
-import parser as ostc_parser
+from . import parser as ostc_parser
 
 
 def pressure(depth):
@@ -96,7 +96,7 @@ class OSTCDriver(object):
             drv = OSTCDriver(port)
             log.debug('connected ostc to port %s' % port)
             yield drv
-        except SerialException, ex:
+        except SerialException as ex:
             log.debug('%s' % ex)
 
 
@@ -163,7 +163,7 @@ class OSTCMemoryDump(object):
         Convert dive profiles to UDDF format.
         """
         nodes = []
-        dive_data = ostc_parser.status(''.join(dump.data))
+        dive_data = ostc_parser.status(dump.data)
 
         # uddf dive profile sample
         uddf_sample = {
@@ -220,7 +220,7 @@ class OSTCMemoryDump(object):
 
                 yield dn
 
-            except ValueError, ex:
+            except ValueError as ex:
                 log.error('invalid dive {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
                     ' {0.hour:>02d}:{0.minute:>02d}' \
                     ' max depth={0.max_depth}'.format(header))
@@ -234,7 +234,8 @@ def deco_start(sample):
      sample
         Dive sample.
     """
-    return sample.deco_depth > 0 \
+    return sample.deco_depth is not None \
+        and sample.deco_depth > 0 \
         and sample.deco_time > 0 \
         and sample.depth - sample.deco_depth <= 1.0
 

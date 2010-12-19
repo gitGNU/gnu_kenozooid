@@ -25,7 +25,7 @@ OSTC dive computer binary data parsing routines.
 import logging
 import re
 from collections import namedtuple
-from struct import unpack
+from struct import unpack, calcsize
 from binascii import hexlify
 
 log = logging.getLogger('kenozooid.driver.ostc')
@@ -33,9 +33,10 @@ log = logging.getLogger('kenozooid.driver.ostc')
 # command 'a' output
 StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile')
 FMT_STATUS = '<6s256sHbb32768s'
+LEN_STATUS = calcsize(FMT_STATUS)
 
 # profile data is FA0FA..(43)..FBFB...FDFD
-RE_PROFILE = re.compile('(\xfa\xfa[^\xfa].{41}[^\xfb]\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
+RE_PROFILE = re.compile(b'(\xfa\xfa.{43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
 
 # dive profile header
 DiveHeader = namedtuple('DiveHeader', """\
@@ -55,7 +56,7 @@ def status(data):
     """
     Split status and profile data, see `StatusDump` named tuple.
     """
-    dump = StatusDump._make(unpack(FMT_STATUS, data))
+    dump = StatusDump._make(unpack(FMT_STATUS, data.read(LEN_STATUS)))
     log.debug('unpacked status dump, voltage %d, version %d.%d'
         % (dump.voltage, dump.ver1, dump.ver2))
     return dump
@@ -111,7 +112,7 @@ def dive_data(header, data):
         i += 2
 
         # size is count of bytes after profile byte
-        pfb = ord(data[i])
+        pfb = data[i]
         i += 1
         size, event = flag_byte(pfb)
         log.debug('sample %d info: depth = %.2f, pfb = %s, %s',
@@ -125,20 +126,20 @@ def dive_data(header, data):
         current_gas = None
         # parse event byte information
         if event:
-            v = ord(data[i])
+            v = data[i]
             i += 1
             alarm = v & 0x0f
             gas_set = v & 0x10
             gas_change = v & 0x20
 
             if gas_set:
-                gas_set_o2 = ord(data[i])
-                gas_set_he = ord(data[i + 1])
+                gas_set_o2 = data[i]
+                gas_set_he = data[i + 1]
                 i += 2
                 gas_set = 2
 
             if gas_change:
-                current_gas = ord(data[i])
+                current_gas = data[i]
                 i += 1
                 gas_change = 1
 
@@ -154,7 +155,7 @@ def dive_data(header, data):
         deco = sample_data(data, i, j, div_deco_s, div_deco_c)
         if deco is not None:
             assert len(deco) == div_deco_c
-            deco_depth, deco_time = map(ord, deco)
+            deco_depth, deco_time = deco
             i += div_deco_c
             div_bytes += div_deco_c
             log.debug('deco time %d, depth %d' % (deco_time, deco_depth))
@@ -183,7 +184,7 @@ def dive_data(header, data):
                 ' div_bytes = %d, deco_debug = %s' \
                     % (j, depth, pfb, size, event, alarm, temp, gas_set,
                             gas_change, div_bytes,
-                            hexlify(deco_debug if deco_depth else '[]')))
+                            hexlify(deco_debug if deco_depth else b'[]')))
             raise ValueError('Invalid dive')
 
         # is a sample within dive total time? if not, then skip sample
@@ -194,7 +195,7 @@ def dive_data(header, data):
             log.debug('skipped sample %d (out of dive time), seek %d' % (j, i))
         j += 1
 
-    assert data[i:i + 2] == '\xfd\xfd'
+    assert data[i:i + 2] == b'\xfd\xfd'
 
 
 def sample_data(data, i, sample, div_sample, div_count):
@@ -216,7 +217,6 @@ def sample_data(data, i, sample, div_sample, div_count):
     v = None
     if div_sample and sample % div_sample == 0:
         v = data[i:i + div_count]
-        i += div_count
     return v
 
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-python -c 'import sys; \
+python3 -c 'import sys; \
     sys.argv[0] = "kz"; \
     from kenozooid.cli import main; \
     main()' "$@"

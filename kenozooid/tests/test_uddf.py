@@ -23,7 +23,7 @@ UDDF file format tests.
 """
 
 from lxml import etree as et
-from cStringIO import StringIO
+from io import BytesIO
 from datetime import datetime
 from functools import partial
 import unittest
@@ -31,7 +31,7 @@ import unittest
 import kenozooid.uddf as ku
 
 
-UDDF_PROFILE = """\
+UDDF_PROFILE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
 <uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
   <generator>
@@ -107,7 +107,7 @@ UDDF_PROFILE = """\
 </uddf>
 """
 
-UDDF_DUMP = """\
+UDDF_DUMP = b"""\
 <?xml version='1.0' encoding='utf-8'?>
 <uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
   <generator>
@@ -151,7 +151,7 @@ class FindDataTestCase(unittest.TestCase):
     """
     def test_parsing(self):
         """Test basic XML parsing routine"""
-        f = StringIO(UDDF_PROFILE)
+        f = BytesIO(UDDF_PROFILE)
         depths = list(ku.parse(f, '//uddf:waypoint//uddf:depth/text()'))
         self.assertEqual(7, len(depths))
 
@@ -161,16 +161,16 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_dive_data(self):
         """Test parsing UDDF default dive data"""
-        f = StringIO(UDDF_PROFILE)
-        node = ku.parse(f, '//uddf:dive[1]').next()
+        f = BytesIO(UDDF_PROFILE)
+        node = next(ku.parse(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
         self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.time)
 
 
     def test_profile_data(self):
         """Test parsing UDDF default dive profile data"""
-        f = StringIO(UDDF_PROFILE)
-        node = ku.parse(f, '//uddf:dive[2]').next()
+        f = BytesIO(UDDF_PROFILE)
+        node = next(ku.parse(f, '//uddf:dive[2]'))
         profile = list(ku.dive_profile(node))
         self.assertEquals(4, len(profile))
 
@@ -182,14 +182,14 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_dump_data(self):
         """Test parsing UDDF dive computer dump data"""
-        f = StringIO(UDDF_DUMP)
-        node = ku.parse(f, '//uddf:divecomputerdump').next()
+        f = BytesIO(UDDF_DUMP)
+        node = next(ku.parse(f, '//uddf:divecomputerdump'))
         dump = ku.dump_data(node)
 
         expected = ('ostc',
                 'OSTC Mk.1',
                 datetime(2010, 11, 7, 21, 13, 24),
-                '01234567890abcdef')
+                b'01234567890abcdef')
         self.assertEquals(expected, dump)
 
 
@@ -198,7 +198,7 @@ class FindDataTestCase(unittest.TestCase):
         """
         data = 'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA='
         s = ku._dump_decode(data)
-        self.assertEquals('01234567890abcdef', s)
+        self.assertEquals(b'01234567890abcdef', s)
 
 
 
@@ -225,13 +225,13 @@ class CreateDataTestCase(unittest.TestCase):
         Test UDDF data saving
         """
         doc = ku.create()
-        f = StringIO()
+        f = BytesIO()
         ku.save(doc, f)
         s = f.getvalue()
-        self.assertFalse('uddf:' in s)
+        self.assertFalse(b'uddf:' in s)
         f.close() # check if file closing is possible
 
-        preamble = """\
+        preamble = b"""\
 <?xml version='1.0' encoding='utf-8'?>
 <uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">\
 """
@@ -412,7 +412,7 @@ class CreateDataTestCase(unittest.TestCase):
         """Test dive computer data encoding to be stored in UDDF dive computer dump file
         """
         s = ku._dump_encode('01234567890abcdef')
-        self.assertEquals('QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
+        self.assertEquals(b'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
 
 
     def test_create_buddy(self):
@@ -486,7 +486,7 @@ class PostprocessingTestCase(unittest.TestCase):
     def test_reorder(self):
         """Test UDDF reordering
         """
-        doc = et.parse(StringIO("""
+        doc = et.parse(BytesIO(b"""
 <uddf xmlns="http://www.streit.cc/uddf">
 <profiledata>
 <repetitiongroup>
@@ -513,10 +513,10 @@ class PostprocessingTestCase(unittest.TestCase):
 """))
         ku.reorder(doc)
 
-        f = StringIO()
+        f = BytesIO()
         ku.save(doc.getroot(), f)
 
-        f = StringIO(f.getvalue())
+        f = BytesIO(f.getvalue())
 
         nodes = list(ku.parse(f, '//uddf:repetitiongroup'))
         self.assertEquals(1, len(nodes))

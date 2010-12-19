@@ -180,17 +180,17 @@ def find_driver(iface, query, port=None):
 
     # scan for connected devices
     try:
-        drv = cls.scan(port).next()
-    except StopIteration, ex:
+        drv = next(cls.scan(port))
+    except StopIteration as ex:
         raise DeviceError('Device with id %s seems to be not connected' % id)
 
     # find class implementing specified interface (and functionality)
     try:
-        cls = kc.query(iface, id=id).next()
+        cls = next(kc.query(iface, id=id))
         obj = cls()
         obj.driver = drv
         return obj
-    except StopIteration, ex:
+    except StopIteration as ex:
         return None
 
 

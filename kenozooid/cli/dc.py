@@ -49,7 +49,7 @@ class ListDrivers(object):
         Execute drivers listing command.
         """
         drivers = query(DeviceDriver)
-        print 'Available drivers:\n'
+        print('Available drivers:\n')
         for cls in drivers:
             p = params(cls)
             id = p['id']
@@ -66,7 +66,7 @@ class ListDrivers(object):
             #    caps.append('divelog')
             # ... etc ...
 
-            print '%s (%s): %s' % (id, name, ', '.join(caps))
+            print('%s (%s): %s' % (id, name, ', '.join(caps)))
 
 
 ### def cmd_scan(parser, options, args):
@@ -132,7 +132,7 @@ class Simulate(object):
         sim = find_driver(Simulator, drv, port)
 
         if sim is None:
-            print 'Device driver %s does not support simulation' % drv
+            print('Device driver %s does not support simulation' % drv)
             sys.exit(3)
         simulate(sim, spec, args.sim_start, args.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
 
@@ -175,7 +175,7 @@ class Dump(object):
 
         dumper = find_driver(MemoryDump, drv, port)
         if dumper is None:
-            print 'Device driver %s does not support memory dump' % drv
+            print('Device driver %s does not support memory dump' % drv)
             sys.exit(3)
 
         xp_owner = ku.XPath('//uddf:diver/uddf:owner')

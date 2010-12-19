@@ -37,5 +37,5 @@ def min2str(t):
     >>> min2str(67.20)
     '67:12'
     """
-    return u'%02d:%02d' % (int(t), math.modf(t)[0] * 60)
+    return '%02d:%02d' % (int(t), math.modf(t)[0] * 60)
 

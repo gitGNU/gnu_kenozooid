@@ -168,7 +168,7 @@ def xp_first(node, query):
     """
     data = xp(node, query)
     try:
-        return data.next()
+        return next(data)
     except StopIteration:
         return None
 
@@ -402,7 +402,7 @@ def node_range(s):
                     data.append('position() <= %d' % int(p2))
             else:
                 raise RangeError('Invalid range %s' % s)
-    except ValueError, ex:
+    except ValueError as ex:
         raise RangeError('Invalid range %s' % s)
     return ' or '.join(data)
 
@@ -454,7 +454,7 @@ def _dump_decode(data):
     Decode dive computer data, which is stored in UDDF dive computer dump
     file.
     """
-    s = base64.b64decode(data)
+    s = base64.b64decode(data.encode())
     return bz2.decompress(s)
 
 
@@ -682,7 +682,7 @@ def create_dc_data(node, queries=None, formatters=None,
 
     if dc is None:
         if not dc_id:
-            dc_id = 'id' + hashlib.md5(str(dc_model)).hexdigest()
+            dc_id = 'id' + hashlib.md5(dc_model.encode()).hexdigest()
             data['dc_id'] = dc_id
 
         # create new dive computer node
@@ -791,7 +791,7 @@ def _dump_encode(data):
 
     The encoded string is returned.
     """
-    s = bz2.compress(data)
+    s = bz2.compress(data.encode())
     return base64.b64encode(s)
 
 

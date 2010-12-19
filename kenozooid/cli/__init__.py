@@ -106,7 +106,7 @@ def main():
 
     # execute the command line module
     try:
-        cls = query(name=args.cmd).next()
+        cls = next(query(name=args.cmd))
         cmd = cls()
 
         if args.profile:
@@ -120,11 +120,11 @@ def main():
             stats.print_stats(20)
         else:
             cmd(args)
-    except DeviceError, ex:
-        print >> sys.stderr, 'kz: {0}'.format(ex)
+    except DeviceError as ex:
+        print('kz: {0}'.format(ex), file=sys.stderr)
         sys.exit(3)
-    except ArgumentError, ex:
-        print >> sys.stderr, 'kz: {0}'.format(ex)
+    except ArgumentError as ex:
+        print('kz: {0}'.format(ex), file=sys.stderr)
         sys.exit(2)
     except StopIteration:
         parser.print_help()

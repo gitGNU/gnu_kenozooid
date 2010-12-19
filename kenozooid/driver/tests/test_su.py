@@ -23,7 +23,7 @@
 Reefnet Sensus Ultra driver tests.
 """
 
-from cStringIO import StringIO
+from io import BytesIO
 from collections import namedtuple
 from datetime import datetime
 from binascii import unhexlify
@@ -650,7 +650,7 @@ SU_DATA = \
 def _dump():
     Dump = namedtuple('Dump', 'time data')
     data = ku._dump_decode(SU_DATA)
-    return Dump(time=SU_DATA_DOWNLOAD_TIME, data=StringIO(data))
+    return Dump(time=SU_DATA_DOWNLOAD_TIME, data=BytesIO(data))
 
 
 class SensusUltraUDDFTestCase(unittest.TestCase):
@@ -701,7 +701,7 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
     def test_handshake(self):
         """Test Sensus Ultra handshake data parsing
         """
-        data = unhexlify('0203641d4ebee30302007a837f018b000a0057040f000100')
+        data = unhexlify(b'0203641d4ebee30302007a837f018b000a0057040f000100')
         v = _handshake(data)
         self.assertEquals(3, v.ver2)
         self.assertEquals(2, v.ver1)
@@ -712,7 +712,7 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
     def test_dive_header(self):
         """Test Sensus Ultra dive header data parsing
         """
-        data = unhexlify('00000000dc2866020a0057040f000100')
+        data = unhexlify(b'00000000dc2866020a0057040f000100')
         v = _dive_header(data)
         self.assertEquals(40249564, v.time)
         self.assertEquals(10, v.interval)
