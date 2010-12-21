@@ -167,10 +167,7 @@ def xp_first(node, query):
         lxml.etree.Element.xpath
     """
     data = xp(node, query)
-    try:
-        return next(data)
-    except StopIteration:
-        return None
+    return next(data, None)
 
 
 def find_data(name, node, fields, queries, parsers, nquery=None):
@@ -637,7 +634,7 @@ def create_node(path, parent=None, multiple=False):
 
         k = None
         if n is not None:
-            k = next(iter(n.xpath(t, namespaces=_NSMAP)), None)
+            k = xp_first(n, t)
         if is_last and multiple or k is None:
             k = et.Element(T(t))
         if n is not None:
