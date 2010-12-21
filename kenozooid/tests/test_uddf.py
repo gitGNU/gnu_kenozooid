@@ -330,7 +330,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(1, len(dq(doc)), sd)
         self.assertEquals(1, len(tq(doc)), sd)
 
-        list(ku.create_node('diver/test', parent=doc, force_last=True))
+        list(ku.create_node('diver/test', parent=doc, multiple=True))
         sd = et.tostring(doc, pretty_print=True)
         self.assertEquals(1, len(dq(doc)), sd)
         self.assertEquals(2, len(tq(doc)), sd)

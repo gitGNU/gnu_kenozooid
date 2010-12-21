@@ -584,15 +584,15 @@ def create_data(node, queries, formatters=None, **data):
 
         n = node
         if p:
-            force_last = attr is None
-            *_, n = create_node(p, parent=node, force_last=force_last)
+            multiple = attr is None
+            *_, n = create_node(p, parent=node, multiple=multiple)
         if attr:
             n.set(attr, value)
         else:
             n.text = value
 
 
-def create_node(path, parent=None, force_last=False):
+def create_node(path, parent=None, multiple=False):
     """
     Create a hierarchy of nodes using XML nodes path specification.
 
@@ -611,7 +611,7 @@ def create_node(path, parent=None, force_last=False):
 
         <x><y/><z/></x>
 
-     With `force_last` set to true, one can enforce creation of _last_ node
+     With `multiple` set to true, one can enforce creation of _last_ node
      in the path, i.e. if parent is 'x' node in
 
         <x><y/></x>
@@ -634,17 +634,12 @@ def create_node(path, parent=None, force_last=False):
     n = parent
     for t in tags:
         is_last = tags[-1] == t
-        exists = False
 
-        t = T(t)
-
+        k = None
         if n is not None:
-            for k in n:
-                if k.tag == t:
-                    exists = True
-                    break
-        if is_last and force_last or not exists:
-            k = et.Element(t)
+            k = next(iter(n.xpath(t, namespaces=_NSMAP)), None)
+        if is_last and multiple or k is None:
+            k = et.Element(T(t))
         if n is not None:
             n.append(k)
         n = k
@@ -686,7 +681,7 @@ def create_dc_data(node, queries=None, formatters=None,
 
         # create new dive computer node
         _, dc = create_node('uddf:equipment/uddf:divecomputer',
-                parent=node, force_last=True)
+                parent=node, multiple=True)
         create_data(dc, _queries, formatters, **data)
     return dc
 
@@ -701,7 +696,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
             'time': _format_time,
         }
     _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
-            parent=node, force_last=True)
+            parent=node, multiple=True)
     create_data(dn, queries, formatters, **data)
     return dn
 
@@ -717,7 +712,7 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
         formatters = DEFAULT_FMT_DIVE_PROFILE
 
     _, wn = create_node('uddf:samples/uddf:waypoint', parent=node,
-            force_last=True)
+            multiple=True)
     create_data(wn, queries, formatters, **data)
     return wn
 
@@ -772,7 +767,7 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
         data['id'] = str(uuid())
         
     _, buddy = create_node('uddf:diver/uddf:buddy', parent=node,
-            force_last=True)
+            multiple=True)
     create_data(buddy, queries, formatters, **data)
     return buddy
         
