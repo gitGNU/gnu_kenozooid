@@ -548,9 +548,10 @@ def save(doc, f, validate=True):
             pretty_print=True)
 
 
-def create_data(node, queries, formatters=None, **data):
+def set_data(node, queries, formatters=None, **data):
     """
-    Create XML data relative to specified XML node.
+    Set data of nodes or attributes using XPath queries relative to
+    specified XML node.
 
     The data values are converted to string with formatters functions.
 
@@ -625,8 +626,8 @@ def create_node(path, parent=None, multiple=False):
         Hierarchy of nodes.
      parent
          Optional parent node.
-     update_last
-        If false then last node in the hierarchy is always created.
+     multiple
+        If true then last node in the hierarchy is always created.
     """
     # preserve namespace prefix option... please?!? :/
     T = lambda tag: tag.replace('uddf:', '{' + _NSMAP['uddf'] + '}')
@@ -682,7 +683,7 @@ def create_dc_data(node, queries=None, formatters=None,
         # create new dive computer node
         _, dc = create_node('uddf:equipment/uddf:divecomputer',
                 parent=node, multiple=True)
-        create_data(dc, _queries, formatters, **data)
+        set_data(dc, _queries, formatters, **data)
     return dc
 
 
@@ -697,7 +698,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
         }
     _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
             parent=node, multiple=True)
-    create_data(dn, queries, formatters, **data)
+    set_data(dn, queries, formatters, **data)
     return dn
 
 
@@ -713,7 +714,7 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
 
     _, wn = create_node('uddf:samples/uddf:waypoint', parent=node,
             multiple=True)
-    create_data(wn, queries, formatters, **data)
+    set_data(wn, queries, formatters, **data)
     return wn
 
 
@@ -732,7 +733,7 @@ def create_dump_data(node, queries=None, formatters=None, **data):
         
     _, dcd = create_node('uddf:divecomputercontrol/uddf:divecomputerdump',
             parent=node)
-    create_data(dcd, queries, formatters, **data)
+    set_data(dcd, queries, formatters, **data)
     return dcd
 
 
@@ -768,7 +769,7 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
         
     _, buddy = create_node('uddf:diver/uddf:buddy', parent=node,
             multiple=True)
-    create_data(buddy, queries, formatters, **data)
+    set_data(buddy, queries, formatters, **data)
     return buddy
         
 

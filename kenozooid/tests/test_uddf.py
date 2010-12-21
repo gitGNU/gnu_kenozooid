@@ -238,7 +238,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertTrue(s.startswith(preamble), s)
 
 
-    def test_create_data(self):
+    def test_set_data(self):
         """
         Test generic method for creating XML data
         """
@@ -247,7 +247,7 @@ class CreateDataTestCase(unittest.TestCase):
             'fname': 'diver/firstname',
             'lname': 'diver/lastname',
         }
-        ku.create_data(doc, fq, fname='A', lname='B')
+        ku.set_data(doc, fq, fname='A', lname='B')
 
         sd = et.tostring(doc)
 
@@ -264,7 +264,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('B', lnames[0], sd)
 
         # create first name but not last name
-        ku.create_data(doc, fq, fname='X')
+        ku.set_data(doc, fq, fname='X')
         sd = et.tostring(doc)
 
         divers = doc.xpath('//diver')
@@ -289,7 +289,7 @@ class CreateDataTestCase(unittest.TestCase):
             'fname': 'diver/@fn',
             'lname': 'diver/@ln',
         }
-        ku.create_data(doc, fq, fname='A', lname='B')
+        ku.set_data(doc, fq, fname='A', lname='B')
 
         sd = et.tostring(doc)
 
