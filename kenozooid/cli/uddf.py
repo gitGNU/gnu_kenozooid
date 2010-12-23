@@ -34,6 +34,7 @@ from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command
 from kenozooid.component import query, params
 from kenozooid.uddf import node_range
+from kenozooid.util import nformat
 
 log = logging.getLogger('kenozooid.cli.uddf')
 
@@ -265,8 +266,8 @@ class ListBuddies(object):
         """
         from kenozooid.uddf import parse, buddy_data
 
-        fmt = '{no:4} {id:10} {fname:20} {mname:20} {lname:30}' \
-                ' {org:10} {number:11}'
+        fmt = '{0:4} {1.id:10} {1.fname:10} {1.lname:20}' \
+                ' {1.org:5} {1.number:11}'
 
         files = args.input
 
@@ -274,11 +275,7 @@ class ListBuddies(object):
             nodes = parse(fin, '//uddf:buddy')
             for i, n in enumerate(nodes):
                 b = buddy_data(n)
-                d = b._asdict()
-                for k, v in d.items():
-                    if v is None:
-                        d[k] = ''
-                print(fmt.format(no=i + 1, **d))
+                print(nformat(fmt, i + 1, b))
 
 
 

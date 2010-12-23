@@ -19,45 +19,21 @@
 #
 
 """
-Kenozooid utility funtions.
+Tests for Kenozooid utility functions.
 """
 
-import math
-import string
+import unittest
 
-# format for dive time presentation
-FMT_DIVETIME = '%Y-%m-%d %H:%M'
+from kenozooid.util import nformat
 
-def min2str(t):
+class FormatTestCase(unittest.TestCase):
     """
-    Convert decimal minutes (i.e. 38.84) into MM:SS string (i.e. 38:50).
-
-    >>> min2str(38.84)
-    '38:50'
-
-    >>> min2str(67.20)
-    '67:12'
+    Formatting tests.
     """
-    return '%02d:%02d' % (int(t), math.modf(t)[0] * 60)
-
-
-class _Formatter(string.Formatter):
-    """
-    Formatter, which formats 'None' as empty string.
-    """
-    def format_field(self, value, fs):
-        """
-        Format null value as empty string. If value is not null, then
-        render it using default method of the formatter.
-        """
-        if value is None:
-            return ''
-        else:
-            return super(_Formatter, self).format_field(value, fs)
-
-
-_fmt = _Formatter()
-nformat = _fmt.format
+    def test_format(self):
+        """Test None value formatting"""
+        self.assertEquals('test ', nformat('{0} {1}', 'test', None))
+        self.assertEquals('', nformat('{0}', None))
 
 
 # vim: sw=4:et:ai
