@@ -105,7 +105,7 @@ class ListDives(object):
                     fmt = '{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
                     dtime = min2str(max(vtime) / 60.0)
                 print(fmt.format(no=i + 1,
-                        stime=d.time.strftime(FMT_DIVETIME),
+                        stime=format(d.time, FMT_DIVETIME),
                         dtime=dtime,
                         depth=depth,
                         file=fin))
@@ -327,7 +327,7 @@ class ConvertFile(object):
             dump = ku.dump_data(nodes[0])
 
             log.debug('dive computer dump data found: ' \
-                    '{dc_id}, {dc_model}, {time}'.format(**dump._asdict()))
+                    '{0.dc_id}, {0.dc_model}, {0.time}'.format(dump))
 
             dc = ku.create_dc_data(xp_owner(pd)[0], dc_model=dump.dc_model)
             dc_id = dc.get('id')
