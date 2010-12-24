@@ -34,6 +34,7 @@ from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command
 from kenozooid.component import query, params
 from kenozooid.uddf import node_range
+from kenozooid.util import nformat
 
 log = logging.getLogger('kenozooid.cli.uddf')
 
@@ -104,7 +105,7 @@ class ListDives(object):
                     fmt = '{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
                     dtime = min2str(max(vtime) / 60.0)
                 print(fmt.format(no=i + 1,
-                        stime=d.time.strftime(FMT_DIVETIME),
+                        stime=format(d.time, FMT_DIVETIME),
                         dtime=dtime,
                         depth=depth,
                         file=fin))
@@ -265,8 +266,8 @@ class ListBuddies(object):
         """
         from kenozooid.uddf import parse, buddy_data
 
-        fmt = '{no:4} {id:10} {fname:20} {mname:20} {lname:30}' \
-                ' {org:10} {number:11}'
+        fmt = '{0:4} {1.id:10} {1.fname:10} {1.lname:20}' \
+                ' {1.org:5} {1.number:11}'
 
         files = args.input
 
@@ -274,11 +275,7 @@ class ListBuddies(object):
             nodes = parse(fin, '//uddf:buddy')
             for i, n in enumerate(nodes):
                 b = buddy_data(n)
-                d = b._asdict()
-                for k, v in d.items():
-                    if v is None:
-                        d[k] = ''
-                print(fmt.format(no=i + 1, **d))
+                print(nformat(fmt, i + 1, b))
 
 
 
@@ -330,7 +327,7 @@ class ConvertFile(object):
             dump = ku.dump_data(nodes[0])
 
             log.debug('dive computer dump data found: ' \
-                    '{dc_id}, {dc_model}, {time}'.format(**dump._asdict()))
+                    '{0.dc_id}, {0.dc_model}, {0.time}'.format(dump))
 
             dc = ku.create_dc_data(xp_owner(pd)[0], dc_model=dump.dc_model)
             dc_id = dc.get('id')

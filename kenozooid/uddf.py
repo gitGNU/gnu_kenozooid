@@ -774,7 +774,7 @@ def _format_time(t):
     """
     Format timestamp into ISO 8601 string compatible with UDDF.
     """
-    return t.strftime(FMT_DATETIME)
+    return format(t, FMT_DATETIME)
 
 
 def _dump_encode(data):
