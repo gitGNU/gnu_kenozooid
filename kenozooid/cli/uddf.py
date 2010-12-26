@@ -25,7 +25,9 @@ UDDF related Kenozooid command line commands.
 import sys
 import optparse
 import itertools
+import os
 import os.path
+from functools import partial
 from io import BytesIO
 from lxml import etree as et
 import logging
@@ -255,6 +257,10 @@ class ListBuddies(object):
         """
         Add options for dive buddy list fetched from UDDF file.
         """
+        parser.add_argument('buddy',
+                nargs='?',
+                help='buddy search string; matches id, member number or'
+                ' partially firstname or lastname')
         parser.add_argument('input',
                 nargs='+',
                 help='UDDF file with dive buddies')
@@ -264,19 +270,63 @@ class ListBuddies(object):
         """
         Execute command for list of dive buddies in UDDF file.
         """
-        from kenozooid.uddf import parse, buddy_data
+        import kenozooid.uddf as ku
 
         fmt = '{0:4} {1.id:10} {1.fname:10} {1.lname:20}' \
                 ' {1.org:5} {1.number:11}'
 
+        if args.buddy:
+            query = ku.XP_FIND_BUDDY
+        else:
+            query = '//uddf:buddy'
         files = args.input
 
         for fin in files:
-            nodes = parse(fin, '//uddf:buddy')
+            nodes = ku.parse(fin, query, buddy=args.buddy)
             for i, n in enumerate(nodes):
-                b = buddy_data(n)
+                b = ku.buddy_data(n)
                 print(nformat(fmt, i + 1, b))
 
+
+@inject(CLIModule, name='buddy del')
+class ListBuddies(object):
+    """
+    Remove dive buddies from UDDF file.
+    """
+    description = 'remove dive buddies stored in UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for removal of dive buddy from UDDF file.
+        """
+        parser.add_argument('buddy',
+                nargs='?',
+                help='buddy search string; matches id, member number or'
+                ' partially firstname or lastname')
+        parser.add_argument('input',
+                nargs=1,
+                help='UDDF file with dive buddies')
+
+
+    def __call__(self, args):
+        """
+        Execute command for removal of dive buddies in UDDF file.
+        """
+        import kenozooid.uddf as ku
+
+        query = partial(ku.XP_FIND_BUDDY, buddy=args.buddy)
+        fin = args.input[0]
+        fbk = '{}.bak'.format(fin)
+
+        doc = et.parse(fin)
+        ku.remove_nodes(doc, query, buddy=args.buddy)
+        os.rename(fin, fbk)
+        try:
+            ku.save(doc.getroot(), fin)
+        except Exception as ex:
+            os.rename(fbk, fin)
+            raise ex
 
 
 @inject(CLIModule, name='convert')

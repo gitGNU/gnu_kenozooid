@@ -102,6 +102,14 @@ XP_DEFAULT_BUDDY_DATA = (XPath('@id'),
         XPath('uddf:personal/uddf:membership/@organisation'),
         XPath('uddf:personal/uddf:membership/@memberid'))
 
+# XPath query to find a buddy
+XP_FIND_BUDDY = XPath('/uddf:uddf/uddf:diver/uddf:buddy[' \
+    '@id = $buddy' \
+    ' or uddf:personal/uddf:membership/@memberid = $buddy' \
+    ' or contains(uddf:personal/uddf:firstname/text(), $buddy)' \
+    ' or contains(uddf:personal/uddf:lastname/text(), $buddy)' \
+    ']')
+
 
 class RangeError(ValueError):
     """
@@ -113,7 +121,7 @@ class RangeError(ValueError):
     pass
 
 
-def parse(f, query):
+def parse(f, query, **params):
     """
     Find nodes in UDDF file using XPath query.
 
@@ -124,11 +132,19 @@ def parse(f, query):
      f
         UDDF file to parse.
      query
-        XPath expression.
+        XPath expression or XPath object.
+     params
+        XPath query parameters.
+
+    .. seealso::
+        XPath
     """
-    log.debug('parsing and searching with with query: {0}'.format(query))
+    log.debug('parsing and searching with query: {0}'.format(query))
     doc = et.parse(f)
-    return xp(doc, query)
+    if isinstance(query, str):
+        return xp(doc, query)
+    else:
+        return (n for n in query(doc, **params))
 
 
 def xp(node, query):
@@ -786,6 +802,27 @@ def _dump_encode(data):
     s = bz2.compress(data.encode())
     return base64.b64encode(s)
 
+
+#
+# Removing UDDF data.
+#
+
+def remove_nodes(node, query, **params):
+    """
+    Remove nodes from XML document using XPath query.
+
+    :Parameters:
+     node
+        Starting XML node for XPath query.
+     query
+        XPath query to find nodes to remove.
+     params
+        XPath query parameters.
+    """
+    log.debug('node removal with query: {}, params: {}'.format(query, params))
+    for n in query(node, **params):
+        p = n.getparent()
+        p.remove(n)
 
 #
 # Processing UDDF data.

@@ -145,6 +145,37 @@ UDDF_DUMP = b"""\
 </uddf>
 """
 
+UDDF_BUDDY = b"""\
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<diver>
+    <owner>
+        <personal>
+            <firstname>Anonymous</firstname>
+            <lastname>Guest</lastname>
+        </personal>
+    </owner>
+        <buddy id="b1"><personal>
+            <firstname>F1 AA</firstname><lastname>L1 X1</lastname>
+            <membership memberid="m1" organisation="CFT"/>
+        </personal></buddy>
+        <buddy id="b2"><personal>
+            <firstname>F2 BB</firstname><lastname>L2 Y2</lastname>
+            <membership memberid="m2" organisation="CFT"/>
+        </personal></buddy>
+        <buddy id="b3"><personal>
+            <firstname>F3 CC</firstname><lastname>L3 m4</lastname>
+            <membership memberid="m3" organisation="CFT"/>
+        </personal></buddy>
+        <buddy id="b4"><personal>
+            <firstname>F4 DD</firstname><lastname>L4 m2</lastname>
+            <membership memberid="m4" organisation="CFT"/>
+        </personal></buddy>
+    </diver>
+</uddf>
+"""
+
+
 class FindDataTestCase(unittest.TestCase):
     """
     Data search within UDDF tests.
@@ -199,6 +230,30 @@ class FindDataTestCase(unittest.TestCase):
         data = 'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA='
         s = ku._dump_decode(data)
         self.assertEquals(b'01234567890abcdef', s)
+
+
+    def test_buddy_query(self):
+        """
+        Test buddy XPath query
+        """
+        xp = '/uddf:uddf/uddf:diver/uddf:buddy[' \
+            '@id = "{0}"' \
+            ' or uddf:personal/uddf:membership/@memberid = "{0}"' \
+            ' or contains(uddf:personal/uddf:firstname/text(), "{0}")' \
+            ' or contains(uddf:personal/uddf:lastname/text(), "{0}")' \
+            ']'
+
+        def q(expected, buddy):
+            f = BytesIO(UDDF_BUDDY)
+            nodes = ku.XP_FIND_BUDDY(et.parse(f), buddy=buddy)
+            node = nodes[0]
+            self.assertEquals(expected, node.get('id'), nodes)
+
+        
+        q('b1', 'b1') # by id
+        q('b1', 'm1') # by organisation member number
+        q('b4', 'F4') # by firstname
+        q('b3', 'L3') # by lastname
 
 
 
@@ -476,6 +531,26 @@ class CreateDataTestCase(unittest.TestCase):
 
         id = ku.xp_first(f, '//uddf:buddy/@id')
         self.assertTrue(id is not None, s)
+
+
+class NodeRemovalTestCase(unittest.TestCase):
+    """
+    Node removal tests.
+    """
+    def test_node_removal(self):
+        """Test node removal
+        """
+        f = BytesIO(UDDF_BUDDY)
+        doc = et.parse(f)
+        buddy = ku.XP_FIND_BUDDY(doc, buddy='m1')[0]
+        p = buddy.getparent()
+
+        assert buddy in p
+        assert len(p) == 5 # the owner and 4 buddies
+
+        ku.remove_nodes(doc, ku.XP_FIND_BUDDY, buddy='m1')
+        self.assertEquals(4, len(p))
+        self.assertFalse(buddy in p, et.tostring(doc, pretty_print=True))
 
 
 
