@@ -315,7 +315,7 @@ class ListBuddies(object):
         """
         import kenozooid.uddf as ku
 
-        query = partial(ku.XP_FIND_BUDDY, buddy=args.buddy)
+        query = ku.XP_FIND_BUDDY
         fin = args.input[0]
         fbk = '{}.bak'.format(fin)
 
