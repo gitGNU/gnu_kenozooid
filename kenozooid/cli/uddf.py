@@ -211,6 +211,48 @@ class AddDiveSite(object):
 
 
 
+@inject(CLIModule, name='site del')
+class DelDiveSite(object):
+    """
+    Remove dive site from UDDF file.
+    """
+    description = 'remove dive site stored in UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for removal of dive site from UDDF file.
+        """
+        parser.add_argument('site',
+                nargs=1,
+                help='dive site search string; matches id or partially dive' \
+                    ' site name')
+        parser.add_argument('input',
+                nargs=1,
+                help='UDDF file with dive sites')
+
+
+    def __call__(self, args):
+        """
+        Execute command for removal of dive sites from UDDF file.
+        """
+        import kenozooid.uddf as ku
+
+        query = ku.XP_FIND_SITE
+        fin = args.input[0]
+        fbk = '{}.bak'.format(fin)
+
+        doc = et.parse(fin)
+        ku.remove_nodes(doc, query, site=args.site[0])
+        os.rename(fin, fbk)
+        try:
+            ku.save(doc.getroot(), fin)
+        except Exception as ex:
+            os.rename(fbk, fin)
+            raise ex
+
+
+
 @inject(CLIModule, name='buddy add')
 class AddBuddy(object):
     """
@@ -321,7 +363,7 @@ class DelBuddy(object):
         Add options for removal of dive buddy from UDDF file.
         """
         parser.add_argument('buddy',
-                nargs='?',
+                nargs=1,
                 help='buddy search string; matches id, member number or'
                 ' partially firstname or lastname')
         parser.add_argument('input',
@@ -331,7 +373,7 @@ class DelBuddy(object):
 
     def __call__(self, args):
         """
-        Execute command for removal of dive buddies in UDDF file.
+        Execute command for removal of dive buddies from UDDF file.
         """
         import kenozooid.uddf as ku
 
@@ -340,7 +382,7 @@ class DelBuddy(object):
         fbk = '{}.bak'.format(fin)
 
         doc = et.parse(fin)
-        ku.remove_nodes(doc, query, buddy=args.buddy)
+        ku.remove_nodes(doc, query, buddy=args.buddy[0])
         os.rename(fin, fbk)
         try:
             ku.save(doc.getroot(), fin)
