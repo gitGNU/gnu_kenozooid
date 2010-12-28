@@ -289,7 +289,7 @@ class ListBuddies(object):
 
 
 @inject(CLIModule, name='buddy del')
-class ListBuddies(object):
+class DelBuddy(object):
     """
     Remove dive buddies from UDDF file.
     """
