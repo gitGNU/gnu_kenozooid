@@ -102,6 +102,13 @@ XP_DEFAULT_BUDDY_DATA = (XPath('@id'),
         XPath('uddf:personal/uddf:membership/@organisation'),
         XPath('uddf:personal/uddf:membership/@memberid'))
 
+# XPath queries for default dive site data
+XP_DEFAULT_SITE_DATA = (XPath('@id'),
+        XPath('uddf:name/text()'),
+        XPath('uddf:geography/uddf:location/text()'),
+        XPath('uddf:geography/uddf:longitude/text()'),
+        XPath('uddf:geography/uddf:latitude/text()'))
+
 # XPath query to find a buddy
 XP_FIND_BUDDY = XPath('/uddf:uddf/uddf:diver/uddf:buddy[' \
     '@id = $buddy' \
@@ -379,6 +386,43 @@ def buddy_data(node, fields=None, queries=None, parsers=None):
         queries = XP_DEFAULT_BUDDY_DATA
         parsers = (str, ) * 7
     return find_data('Buddy', node, fields, queries, parsers)
+
+
+def site_data(node, fields=None, queries=None, parsers=None):
+    """
+    Get dive site data.
+
+    The following data is returned by default
+
+    id
+        Dive site id.
+    name
+        Dive site name.
+    location
+        Dive site location.
+    x
+        Dive site longitude.
+    y
+        Dive site latitude.
+
+    :Parameters:
+     node
+        XML node.
+     fields
+        Names of fields to be created in a record.
+     queries
+        XPath expression objects for each field to retrieve its value.
+     parsers
+        Parsers of field values to be created in a record.
+
+    .. seealso::
+        find_data
+    """
+    if fields is None:
+        fields = ('id', 'name', 'location', 'x', 'y')
+        queries = XP_DEFAULT_SITE_DATA
+        parsers = (str, str, str, float, float)
+    return find_data('DiveSite', node, fields, queries, parsers)
 
 
 def node_range(s):

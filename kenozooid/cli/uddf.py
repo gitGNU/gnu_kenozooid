@@ -211,6 +211,49 @@ class AddDiveSite(object):
 
 
 
+@inject(CLIModule, name='site list')
+class ListDiveSites(object):
+    """
+    List dive sites from UDDF file.
+    """
+    description = 'list dive sites stored in UDDF file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive site list fetched from UDDF file.
+        """
+        parser.add_argument('site',
+                nargs='?',
+                help='dive site search string; matches id or partially dive' \
+                    ' site name')
+        parser.add_argument('input',
+                nargs='+',
+                help='UDDF file with dive sites')
+
+
+    def __call__(self, args):
+        """
+        Execute command for list of dive sites in UDDF file.
+        """
+        import kenozooid.uddf as ku
+
+        fmt = '{0:4} {1.id:10} {1.name:12} {1.location:20}'
+
+        if args.site:
+            query = ku.XP_FIND_SITE
+        else:
+            query = '//uddf:site'
+        files = args.input
+
+        for fin in files:
+            nodes = ku.parse(fin, query, site=args.site)
+            for i, n in enumerate(nodes):
+                n = ku.site_data(n)
+                print(nformat(fmt, i + 1, n))
+
+
+
 @inject(CLIModule, name='site del')
 class DelDiveSite(object):
     """

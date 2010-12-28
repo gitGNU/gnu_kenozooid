@@ -202,7 +202,8 @@ class FindDataTestCase(unittest.TestCase):
         
     def test_parsing(self):
         """
-        Test basic XML parsing routine"""
+        Test basic XML parsing routine.
+        """
         f = BytesIO(UDDF_PROFILE)
         depths = list(ku.parse(f, '//uddf:waypoint//uddf:depth/text()'))
         self.assertEqual(7, len(depths))
@@ -213,7 +214,8 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_dive_data(self):
         """
-        Test parsing UDDF default dive data"""
+        Test parsing UDDF default dive data.
+        """
         f = BytesIO(UDDF_PROFILE)
         node = next(ku.parse(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
@@ -222,7 +224,8 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_profile_data(self):
         """
-        Test parsing UDDF default dive profile data"""
+        Test parsing UDDF default dive profile data.
+        """
         f = BytesIO(UDDF_PROFILE)
         node = next(ku.parse(f, '//uddf:dive[2]'))
         profile = list(ku.dive_profile(node))
@@ -236,7 +239,8 @@ class FindDataTestCase(unittest.TestCase):
 
     def test_dump_data(self):
         """
-        Test parsing UDDF dive computer dump data"""
+        Test parsing UDDF dive computer dump data.
+        """
         f = BytesIO(UDDF_DUMP)
         node = next(ku.parse(f, '//uddf:divecomputerdump'))
         dump = ku.dump_data(node)
@@ -255,6 +259,17 @@ class FindDataTestCase(unittest.TestCase):
         data = 'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA='
         s = ku._dump_decode(data)
         self.assertEquals(b'01234567890abcdef', s)
+
+
+    def test_site_data(self):
+        """
+        Test dive site data parsing.
+        """
+        f = BytesIO(UDDF_SITE)
+        node = next(ku.parse(f, '//uddf:site[1]'))
+        site = ku.site_data(node)
+        expected = ('markgraf', 'SMS Markgraf', 'Scapa Flow', None, None)
+        self.assertEquals(expected, site)
 
 
     def test_buddy_query(self):
