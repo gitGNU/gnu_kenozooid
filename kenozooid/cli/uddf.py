@@ -114,11 +114,11 @@ class ListDives(object):
 
 
 @inject(CLIModule, name='dive add')
-class AddDives(object):
+class AddDive(object):
     """
-    Add dives to UDDF file.
+    Add a dive to UDDF file.
     """
-    description = 'add dives to UDDF file'
+    description = 'add dive to UDDF file'
 
     @classmethod
     def add_arguments(self, parser):
@@ -147,7 +147,7 @@ class AddDives(object):
 
 
 @inject(CLIModule, name='site add')
-class AddDiveSites(object):
+class AddDiveSite(object):
     """
     Add dive site to UDDF file.
     """
