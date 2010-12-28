@@ -582,7 +582,6 @@ def set_data(node, queries, formatters=None, **data):
         formatters = {}
 
     for key, p in queries.items():
-
         value = data.get(key)
         if value is None:
             continue
@@ -665,10 +664,9 @@ def create_dc_data(node, queries=None, formatters=None,
     """
     Create dive computer information data in UDDF file.
     """
-    _queries = {
-        'dc_id': '@id',
-        'dc_model': 'uddf:model',
-    }
+    _f = ('dc_id', 'dc_model')
+    _q = ('@id', 'uddf:model')
+    _queries = OrderedDict(zip(_f, _q))
     if queries is not None:
         _queries.update(queries)
 
@@ -702,9 +700,7 @@ def create_dc_data(node, queries=None, formatters=None,
 
 def create_dive_data(node=None, queries=None, formatters=None, **data):
     if queries == None:
-        queries = {
-            'time': 'uddf:datetime',
-        }
+        queries = OrderedDict(time='uddf:datetime')
     if formatters == None:
         formatters = {
             'time': _format_time,
@@ -717,11 +713,9 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
 
 def create_dive_profile_sample(node, queries=None, formatters=None, **data):
     if queries == None:
-        queries = {
-            'depth': 'uddf:depth',
-            'time': 'uddf:divetime',
-            'temp': 'uddf:temperature',
-        }
+        f = ('depth', 'time', 'temp')
+        q = ('uddf:depth', 'uddf:divetime', 'uddf:temperature')
+        queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = DEFAULT_FMT_DIVE_PROFILE
 
@@ -733,11 +727,10 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
 
 def create_dump_data(node, queries=None, formatters=None, **data):
     if queries == None:
-        queries = {
-            'dc_id': 'uddf:link/@ref',
-            'time': 'uddf:datetime',
-            'data': 'uddf:dcdump',
-        }
+        f = ('dc_id', 'time', 'data')
+        q = ('uddf:link/@ref', 'uddf:datetime', 'uddf:dcdump')
+        queries = OrderedDict(zip(f, q))
+
     if formatters == None:
         formatters = {
             'time': _format_time,
@@ -766,14 +759,15 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
      
     """
     if queries == None:
-        queries = {
-            'id': '@id',
-            'fname': 'uddf:personal/uddf:firstname',
-            'mname': 'uddf:personal/uddf:middlename',
-            'lname': 'uddf:personal/uddf:lastname',
-            'org': 'uddf:personal/uddf:membership/@organisation',
-            'number': 'uddf:personal/uddf:membership/@memberid',
-        }
+        f = ('id', 'fname', 'mname', 'lname', 'org', 'number')
+        q = ('@id',
+            'uddf:personal/uddf:firstname',
+            'uddf:personal/uddf:middlename',
+            'uddf:personal/uddf:lastname',
+            'uddf:personal/uddf:membership/@organisation',
+            'uddf:personal/uddf:membership/@memberid')
+        queries = OrderedDict(zip(f, q))
+
     if formatters == None:
         formatters = {}
 
@@ -802,13 +796,14 @@ def create_site_data(node, queries=None, formatters=None, **data):
      
     """
     if queries == None:
-        queries = {
-            'id': '@id',
-            'name': 'uddf:name',
-            'location': 'uddf:geography/uddf:location',
-            'x': 'uddf:geography/uddf:longitude',
-            'y': 'uddf:geography/uddf:latitude',
-        }
+        f = ('id', 'name', 'location', 'x', 'y')
+        q = ('@id',
+            'uddf:name',
+            'uddf:geography/uddf:location',
+            'uddf:geography/uddf:longitude',
+            'uddf:geography/uddf:latitude')
+        queries = OrderedDict(zip(f, q))
+
     if formatters == None:
         formatters = {}
 
