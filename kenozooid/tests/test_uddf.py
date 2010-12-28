@@ -241,13 +241,6 @@ class FindDataTestCase(unittest.TestCase):
         """
         Test buddy XPath query
         """
-        xp = '/uddf:uddf/uddf:diver/uddf:buddy[' \
-            '@id = "{0}"' \
-            ' or uddf:personal/uddf:membership/@memberid = "{0}"' \
-            ' or contains(uddf:personal/uddf:firstname/text(), "{0}")' \
-            ' or contains(uddf:personal/uddf:lastname/text(), "{0}")' \
-            ']'
-
         def q(expected, buddy):
             f = BytesIO(UDDF_BUDDY)
             nodes = ku.XP_FIND_BUDDY(et.parse(f), buddy=buddy)
