@@ -146,6 +146,7 @@ class AddDive(object):
         raise ArgumentError('Not implemented yet')
 
 
+
 @inject(CLIModule, name='site add')
 class AddDiveSite(object):
     """
@@ -161,6 +162,7 @@ class AddDiveSite(object):
         parser.add_argument('-p', '--position',
                 nargs=2,
                 metavar=('x', 'y'),
+                type=float,
                 help='longitude and latitude of dive site')
         #parser.add_argument('-c', '--country',
         #        nargs=1,
@@ -188,7 +190,25 @@ class AddDiveSite(object):
         """
         Execute command for adding dive site into UDDF file.
         """
-        raise ArgumentError('Not implemented yet')
+        import kenozooid.uddf as ku
+
+        id = args.id
+        if args.position:
+            x, y = args.position
+        else:
+            x, y = None, None
+        location = args.location[0]
+        name = args.name[0]
+        fout = args.output[0]
+
+        if os.path.exists(fout):
+            doc = et.parse(fout).getroot()
+        else:
+            doc = ku.create()
+
+        ku.create_site_data(doc, id=id, location=location, name=name, x=x, y=y)
+        ku.save(doc, fout)
+
 
 
 @inject(CLIModule, name='buddy add')

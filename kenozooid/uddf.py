@@ -46,7 +46,7 @@ module need to be optimized to _not_ return lists.
 TODO: More research is needed to cache results of some of the queries. 
 """
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 from lxml import etree as et
 from functools import partial
 from datetime import datetime
@@ -784,6 +784,41 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
             multiple=True)
     set_data(buddy, queries, formatters, **data)
     return buddy
+
+
+def create_site_data(node, queries=None, formatters=None, **data):
+    """
+    Create dive site data.
+
+    :Parameters:
+     node
+        Base node (UDDF root node).
+     queries
+        Path-like expressions of XML structure to be created.
+     formatters
+        Dive site data formatters.
+     data
+        Dive site data.
+     
+    """
+    if queries == None:
+        queries = {
+            'id': '@id',
+            'name': 'uddf:name',
+            'location': 'uddf:geography/uddf:location',
+            'x': 'uddf:geography/uddf:longitude',
+            'y': 'uddf:geography/uddf:latitude',
+        }
+    if formatters == None:
+        formatters = {}
+
+    if 'id' not in data or data['id'] is None:
+        data['id'] = str(uuid())
+        
+    _, site = create_node('uddf:divesite/uddf:site', parent=node,
+            multiple=True)
+    set_data(site, queries, formatters, **data)
+    return site
         
 
 def _format_time(t):
