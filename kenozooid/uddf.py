@@ -110,6 +110,11 @@ XP_FIND_BUDDY = XPath('/uddf:uddf/uddf:diver/uddf:buddy[' \
     ' or contains(uddf:personal/uddf:lastname/text(), $buddy)' \
     ']')
 
+# XPath query to find a dive site
+XP_FIND_SITE = XPath('/uddf:uddf/uddf:divesite/uddf:site[' \
+    '@id = $site or contains(uddf:name/text(), $site)' \
+    ']')
+
 
 class RangeError(ValueError):
     """
