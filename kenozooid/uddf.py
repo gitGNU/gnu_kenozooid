@@ -46,7 +46,7 @@ module need to be optimized to _not_ return lists.
 TODO: More research is needed to cache results of some of the queries. 
 """
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 from lxml import etree as et
 from functools import partial
 from datetime import datetime
@@ -102,6 +102,26 @@ XP_DEFAULT_BUDDY_DATA = (XPath('@id'),
         XPath('uddf:personal/uddf:membership/@organisation'),
         XPath('uddf:personal/uddf:membership/@memberid'))
 
+# XPath queries for default dive site data
+XP_DEFAULT_SITE_DATA = (XPath('@id'),
+        XPath('uddf:name/text()'),
+        XPath('uddf:geography/uddf:location/text()'),
+        XPath('uddf:geography/uddf:longitude/text()'),
+        XPath('uddf:geography/uddf:latitude/text()'))
+
+# XPath query to find a buddy
+XP_FIND_BUDDY = XPath('/uddf:uddf/uddf:diver/uddf:buddy[' \
+    '@id = $buddy' \
+    ' or uddf:personal/uddf:membership/@memberid = $buddy' \
+    ' or contains(uddf:personal/uddf:firstname/text(), $buddy)' \
+    ' or contains(uddf:personal/uddf:lastname/text(), $buddy)' \
+    ']')
+
+# XPath query to find a dive site
+XP_FIND_SITE = XPath('/uddf:uddf/uddf:divesite/uddf:site[' \
+    '@id = $site or contains(uddf:name/text(), $site)' \
+    ']')
+
 
 class RangeError(ValueError):
     """
@@ -113,7 +133,7 @@ class RangeError(ValueError):
     pass
 
 
-def parse(f, query):
+def parse(f, query, **params):
     """
     Find nodes in UDDF file using XPath query.
 
@@ -124,11 +144,19 @@ def parse(f, query):
      f
         UDDF file to parse.
      query
-        XPath expression.
+        XPath expression or XPath object.
+     params
+        XPath query parameters.
+
+    .. seealso::
+        XPath
     """
-    log.debug('parsing and searching with with query: {0}'.format(query))
+    log.debug('parsing and searching with query: {0}'.format(query))
     doc = et.parse(f)
-    return xp(doc, query)
+    if isinstance(query, str):
+        return xp(doc, query)
+    else:
+        return (n for n in query(doc, **params))
 
 
 def xp(node, query):
@@ -360,6 +388,43 @@ def buddy_data(node, fields=None, queries=None, parsers=None):
     return find_data('Buddy', node, fields, queries, parsers)
 
 
+def site_data(node, fields=None, queries=None, parsers=None):
+    """
+    Get dive site data.
+
+    The following data is returned by default
+
+    id
+        Dive site id.
+    name
+        Dive site name.
+    location
+        Dive site location.
+    x
+        Dive site longitude.
+    y
+        Dive site latitude.
+
+    :Parameters:
+     node
+        XML node.
+     fields
+        Names of fields to be created in a record.
+     queries
+        XPath expression objects for each field to retrieve its value.
+     parsers
+        Parsers of field values to be created in a record.
+
+    .. seealso::
+        find_data
+    """
+    if fields is None:
+        fields = ('id', 'name', 'location', 'x', 'y')
+        queries = XP_DEFAULT_SITE_DATA
+        parsers = (str, str, str, float, float)
+    return find_data('DiveSite', node, fields, queries, parsers)
+
+
 def node_range(s):
     """
     Parse textual representation of number range into XPath expression.
@@ -566,7 +631,6 @@ def set_data(node, queries, formatters=None, **data):
         formatters = {}
 
     for key, p in queries.items():
-
         value = data.get(key)
         if value is None:
             continue
@@ -649,10 +713,9 @@ def create_dc_data(node, queries=None, formatters=None,
     """
     Create dive computer information data in UDDF file.
     """
-    _queries = {
-        'dc_id': '@id',
-        'dc_model': 'uddf:model',
-    }
+    _f = ('dc_id', 'dc_model')
+    _q = ('@id', 'uddf:model')
+    _queries = OrderedDict(zip(_f, _q))
     if queries is not None:
         _queries.update(queries)
 
@@ -686,9 +749,7 @@ def create_dc_data(node, queries=None, formatters=None,
 
 def create_dive_data(node=None, queries=None, formatters=None, **data):
     if queries == None:
-        queries = {
-            'time': 'uddf:datetime',
-        }
+        queries = OrderedDict(time='uddf:datetime')
     if formatters == None:
         formatters = {
             'time': _format_time,
@@ -701,11 +762,9 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
 
 def create_dive_profile_sample(node, queries=None, formatters=None, **data):
     if queries == None:
-        queries = {
-            'depth': 'uddf:depth',
-            'time': 'uddf:divetime',
-            'temp': 'uddf:temperature',
-        }
+        f = ('depth', 'time', 'temp')
+        q = ('uddf:depth', 'uddf:divetime', 'uddf:temperature')
+        queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = DEFAULT_FMT_DIVE_PROFILE
 
@@ -717,11 +776,10 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
 
 def create_dump_data(node, queries=None, formatters=None, **data):
     if queries == None:
-        queries = {
-            'dc_id': 'uddf:link/@ref',
-            'time': 'uddf:datetime',
-            'data': 'uddf:dcdump',
-        }
+        f = ('dc_id', 'time', 'data')
+        q = ('uddf:link/@ref', 'uddf:datetime', 'uddf:dcdump')
+        queries = OrderedDict(zip(f, q))
+
     if formatters == None:
         formatters = {
             'time': _format_time,
@@ -750,14 +808,15 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
      
     """
     if queries == None:
-        queries = {
-            'id': '@id',
-            'fname': 'uddf:personal/uddf:firstname',
-            'mname': 'uddf:personal/uddf:middlename',
-            'lname': 'uddf:personal/uddf:lastname',
-            'org': 'uddf:personal/uddf:membership/@organisation',
-            'number': 'uddf:personal/uddf:membership/@memberid',
-        }
+        f = ('id', 'fname', 'mname', 'lname', 'org', 'number')
+        q = ('@id',
+            'uddf:personal/uddf:firstname',
+            'uddf:personal/uddf:middlename',
+            'uddf:personal/uddf:lastname',
+            'uddf:personal/uddf:membership/@organisation',
+            'uddf:personal/uddf:membership/@memberid')
+        queries = OrderedDict(zip(f, q))
+
     if formatters == None:
         formatters = {}
 
@@ -768,6 +827,42 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
             multiple=True)
     set_data(buddy, queries, formatters, **data)
     return buddy
+
+
+def create_site_data(node, queries=None, formatters=None, **data):
+    """
+    Create dive site data.
+
+    :Parameters:
+     node
+        Base node (UDDF root node).
+     queries
+        Path-like expressions of XML structure to be created.
+     formatters
+        Dive site data formatters.
+     data
+        Dive site data.
+     
+    """
+    if queries == None:
+        f = ('id', 'name', 'location', 'x', 'y')
+        q = ('@id',
+            'uddf:name',
+            'uddf:geography/uddf:location',
+            'uddf:geography/uddf:longitude',
+            'uddf:geography/uddf:latitude')
+        queries = OrderedDict(zip(f, q))
+
+    if formatters == None:
+        formatters = {}
+
+    if 'id' not in data or data['id'] is None:
+        data['id'] = str(uuid())
+        
+    _, site = create_node('uddf:divesite/uddf:site', parent=node,
+            multiple=True)
+    set_data(site, queries, formatters, **data)
+    return site
         
 
 def _format_time(t):
@@ -786,6 +881,27 @@ def _dump_encode(data):
     s = bz2.compress(data.encode())
     return base64.b64encode(s)
 
+
+#
+# Removing UDDF data.
+#
+
+def remove_nodes(node, query, **params):
+    """
+    Remove nodes from XML document using XPath query.
+
+    :Parameters:
+     node
+        Starting XML node for XPath query.
+     query
+        XPath query to find nodes to remove.
+     params
+        XPath query parameters.
+    """
+    log.debug('node removal with query: {}, params: {}'.format(query, params))
+    for n in query(node, **params):
+        p = n.getparent()
+        p.remove(n)
 
 #
 # Processing UDDF data.

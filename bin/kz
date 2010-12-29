@@ -13,17 +13,10 @@ import kenozooid.cli.uddf
 # add common options to command line parser
 parser = argparse.ArgumentParser(
         description='Kenozooid {0}.'.format(kenozooid.__version__))
-
 parser.add_argument('-v', '--verbose',
         action='store_true', dest='verbose', default=False,
         help='explain what is being done')
-parser.add_argument('--profile',
-        action='store_true', dest='profile', default=False,
-        help='run with profiler')
-
-
 add_commands(parser, title='Kenozooid commands')
-
 args = parser.parse_args()
 
 # configure basic logger
@@ -46,18 +39,7 @@ import kenozooid.driver.su
 try:
     cls = next(query(name=args.cmd))
     cmd = cls()
-
-    if args.profile:
-        import hotshot, hotshot.stats
-        prof = hotshot.Profile('kenozooid.prof')
-        prof.runcall(cmd, args)
-        prof.close()
-        stats = hotshot.stats.load('kenozooid.prof')
-        stats.strip_dirs()
-        stats.sort_stats('time', 'calls')
-        stats.print_stats(20)
-    else:
-        cmd(args)
+    cmd(args)
 except DeviceError as ex:
     print('kz: {0}'.format(ex), file=sys.stderr)
     sys.exit(3)

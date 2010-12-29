@@ -145,12 +145,65 @@ UDDF_DUMP = b"""\
 </uddf>
 """
 
+UDDF_BUDDY = b"""\
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<diver>
+    <owner>
+        <personal>
+            <firstname>Anonymous</firstname>
+            <lastname>Guest</lastname>
+        </personal>
+    </owner>
+    <buddy id="b1"><personal>
+        <firstname>F1 AA</firstname><lastname>L1 X1</lastname>
+        <membership memberid="m1" organisation="CFT"/>
+    </personal></buddy>
+    <buddy id="b2"><personal>
+        <firstname>F2 BB</firstname><lastname>L2 Y2</lastname>
+        <membership memberid="m2" organisation="CFT"/>
+    </personal></buddy>
+    <buddy id="b3"><personal>
+        <firstname>F3 CC</firstname><lastname>L3 m4</lastname>
+        <membership memberid="m3" organisation="CFT"/>
+    </personal></buddy>
+    <buddy id="b4"><personal>
+        <firstname>F4 DD</firstname><lastname>L4 m2</lastname>
+        <membership memberid="m4" organisation="CFT"/>
+    </personal></buddy>
+</diver>
+</uddf>
+"""
+
+UDDF_SITE = b"""\
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<divesite>
+    <site id='markgraf'><name>SMS Markgraf</name><geography><location>Scapa Flow</location></geography></site>
+    <site id='konig'><name>SMS Konig</name><geography><location>Scapa Flow</location></geography></site>
+</divesite>
+</uddf>
+"""
+
+
 class FindDataTestCase(unittest.TestCase):
     """
     Data search within UDDF tests.
     """
+    def _qt(self, xml, query, expected, **data):
+        """
+        Execute XPath query and check for expected node with specified id.
+        """
+        f = BytesIO(xml)
+        nodes = query(et.parse(f), **data)
+        node = nodes[0]
+        self.assertEquals(expected, node.get('id'), nodes)
+
+        
     def test_parsing(self):
-        """Test basic XML parsing routine"""
+        """
+        Test basic XML parsing routine.
+        """
         f = BytesIO(UDDF_PROFILE)
         depths = list(ku.parse(f, '//uddf:waypoint//uddf:depth/text()'))
         self.assertEqual(7, len(depths))
@@ -160,7 +213,9 @@ class FindDataTestCase(unittest.TestCase):
 
 
     def test_dive_data(self):
-        """Test parsing UDDF default dive data"""
+        """
+        Test parsing UDDF default dive data.
+        """
         f = BytesIO(UDDF_PROFILE)
         node = next(ku.parse(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
@@ -168,7 +223,9 @@ class FindDataTestCase(unittest.TestCase):
 
 
     def test_profile_data(self):
-        """Test parsing UDDF default dive profile data"""
+        """
+        Test parsing UDDF default dive profile data.
+        """
         f = BytesIO(UDDF_PROFILE)
         node = next(ku.parse(f, '//uddf:dive[2]'))
         profile = list(ku.dive_profile(node))
@@ -181,7 +238,9 @@ class FindDataTestCase(unittest.TestCase):
 
 
     def test_dump_data(self):
-        """Test parsing UDDF dive computer dump data"""
+        """
+        Test parsing UDDF dive computer dump data.
+        """
         f = BytesIO(UDDF_DUMP)
         node = next(ku.parse(f, '//uddf:divecomputerdump'))
         dump = ku.dump_data(node)
@@ -194,11 +253,41 @@ class FindDataTestCase(unittest.TestCase):
 
 
     def test_dump_data_decode(self):
-        """Test dive computer data decoding stored in UDDF dive computer dump file
+        """
+        Test dive computer data decoding stored in UDDF dive computer dump file.
         """
         data = 'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA='
         s = ku._dump_decode(data)
         self.assertEquals(b'01234567890abcdef', s)
+
+
+    def test_site_data(self):
+        """
+        Test dive site data parsing.
+        """
+        f = BytesIO(UDDF_SITE)
+        node = next(ku.parse(f, '//uddf:site[1]'))
+        site = ku.site_data(node)
+        expected = ('markgraf', 'SMS Markgraf', 'Scapa Flow', None, None)
+        self.assertEquals(expected, site)
+
+
+    def test_buddy_query(self):
+        """
+        Test buddy XPath query.
+        """
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b1', buddy='b1') # by id
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b1', buddy='m1') # by organisation member number
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b4', buddy='F4') # by firstname
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b3', buddy='L3') # by lastname
+
+
+    def test_site_query(self):
+        """
+        Test dive site XPath query.
+        """
+        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'konig', site='konig') # by id
+        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'markgraf', site='Markg') # by name
 
 
 
@@ -381,7 +470,8 @@ class CreateDataTestCase(unittest.TestCase):
 
 
     def test_create_dive_profile_sample_default(self):
-        """Test UDDF dive profile default sample creation
+        """
+        Test UDDF dive profile default sample creation
         """
         w = ku.create_dive_profile_sample(None, depth=3.1, time=19, temp=20)
         s = et.tostring(w)
@@ -391,7 +481,8 @@ class CreateDataTestCase(unittest.TestCase):
 
 
     def test_create_dive_profile_sample_custom(self):
-        """Test UDDF dive profile custom sample creation
+        """
+        Test UDDF dive profile custom sample creation
         """
         Q = {
             'depth': 'uddf:depth',
@@ -409,14 +500,76 @@ class CreateDataTestCase(unittest.TestCase):
         
 
     def test_dump_data_encode(self):
-        """Test dive computer data encoding to be stored in UDDF dive computer dump file
+        """
+        Test dive computer data encoding to be stored in UDDF dive computer dump file
         """
         s = ku._dump_encode('01234567890abcdef')
         self.assertEquals(b'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
 
 
+    def test_create_site(self):
+        """
+        Test creating dive site data
+        """
+        f = ku.create()
+        buddy = ku.create_site_data(f, id='markgraf', name='SMS Markgraf',
+                location='Scapa Flow')
+        s = et.tostring(f, pretty_print=True)
+
+        d = list(ku.xp(f, '//uddf:site'))
+        self.assertEquals(1, len(d), s)
+
+        id = ku.xp_first(f, '//uddf:site/@id')
+        self.assertEquals('markgraf', id, s)
+
+        d = list(ku.xp(f, '//uddf:site/uddf:geography'))
+        self.assertEquals(1, len(d), s)
+
+        d = list(ku.xp(f, '//uddf:site/uddf:geography/uddf:location/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('Scapa Flow', d[0], s)
+
+        # create 2nd dive site
+        buddy = ku.create_site_data(f, id='konig', name='SMS Konig',
+                location='Scapa Flow')
+        s = et.tostring(f, pretty_print=True)
+        d = list(ku.xp(f, '//uddf:site'))
+        self.assertEquals(2, len(d), s)
+
+        ids = list(ku.xp(f, '//uddf:site/@id'))
+        self.assertEquals(['markgraf', 'konig'], ids, s)
+
+
+    def test_create_site_with_pos(self):
+        """
+        Test creating dive site data with position.
+        """
+        f = ku.create()
+        buddy = ku.create_site_data(f, name='SMS Konig', location='Scapa Flow',
+                x=6.1, y=6.2)
+        s = et.tostring(f, pretty_print=True)
+
+        x = ku.xp_first(f, '//uddf:site//uddf:longitude/text()')
+        self.assertEquals(6.1, float(x))
+        y = ku.xp_first(f, '//uddf:site//uddf:latitude/text()')
+        self.assertEquals(6.2, float(y))
+
+
+    def test_create_site_no_id(self):
+        """
+        Test creating dive site data with autogenerated id.
+        """
+        f = ku.create()
+        buddy = ku.create_site_data(f, name='Konig', location='Scapa Flow')
+        s = et.tostring(f, pretty_print=True)
+
+        id = ku.xp_first(f, '//uddf:site/@id')
+        self.assertTrue(id is not None, s)
+
+
     def test_create_buddy(self):
-        """Test creating buddy data
+        """
+        Test creating buddy data
         """
         f = ku.create()
         buddy = ku.create_buddy_data(f, id='tcora',
@@ -466,7 +619,8 @@ class CreateDataTestCase(unittest.TestCase):
 
 
     def test_create_buddy_no_id(self):
-        """Test creating buddy data with autogenerated id
+        """
+        Test creating buddy data with autogenerated id
         """
         f = ku.create()
         buddy = ku.create_buddy_data(f,
@@ -478,13 +632,35 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertTrue(id is not None, s)
 
 
+class NodeRemovalTestCase(unittest.TestCase):
+    """
+    Node removal tests.
+    """
+    def test_node_removal(self):
+        """
+        Test node removal
+        """
+        f = BytesIO(UDDF_BUDDY)
+        doc = et.parse(f)
+        buddy = ku.XP_FIND_BUDDY(doc, buddy='m1')[0]
+        p = buddy.getparent()
+
+        assert buddy in p
+        assert len(p) == 5 # the owner and 4 buddies
+
+        ku.remove_nodes(doc, ku.XP_FIND_BUDDY, buddy='m1')
+        self.assertEquals(4, len(p))
+        self.assertFalse(buddy in p, et.tostring(doc, pretty_print=True))
+
+
 
 class PostprocessingTestCase(unittest.TestCase):
     """
     UDDF postprocessing tests.
     """
     def test_reorder(self):
-        """Test UDDF reordering
+        """
+        Test UDDF reordering
         """
         doc = et.parse(BytesIO(b"""
 <uddf xmlns="http://www.streit.cc/uddf">
@@ -534,7 +710,8 @@ class NodeRangeTestCase(unittest.TestCase):
     Node range tests.
     """
     def test_simple(self):
-        """Test parsing simple numerical ranges
+        """
+        Test parsing simple numerical ranges
         """
         self.assertEquals('1 <= position() and position() <= 3',
                 ku.node_range('1-3'))
@@ -548,7 +725,8 @@ class NodeRangeTestCase(unittest.TestCase):
 
 
     def test_errors(self):
-        """Test invalid ranges
+        """
+        Test invalid ranges
         """
         self.assertRaises(ku.RangeError, ku.node_range, '30--')
         self.assertRaises(ku.RangeError, ku.node_range, '30-2-')
