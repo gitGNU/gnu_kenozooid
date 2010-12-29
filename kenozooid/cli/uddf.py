@@ -126,16 +126,20 @@ class AddDive(object):
         Add options for dive adding to UDDF file.
         """
         g = parser.add_mutually_exclusive_group(required=True)
-        g.add_argument('-d', nargs=3, metavar=('time', 'depth', 'duration'),
+        g.add_argument('-d', '--with-depth',
+                nargs=3,
+                metavar=('time', 'depth', 'duration'),
                 help='add dive with dive time, maximum depth and dive'
-                ' duration data')
-        g.add_argument('-p', nargs=2, metavar=('dive', 'profile'),
+                    ' duration data')
+        g.add_argument('-p', '--with-profile',
+                nargs=2,
+                metavar=('dive', 'profile'),
                 help='add dive data from an UDDF file containing dive profiles')
 
         parser.add_argument('-s', '--site', metavar='site',
-                help='dive site id or name')
+                help='dive site search string')
         parser.add_argument('-b', '--buddy', metavar='buddy',
-                help='dive buddy id, name or organization member id number')
+                help='dive buddy search string')
         parser.add_argument('output', nargs=1, help='UDDF output file')
 
 
@@ -143,7 +147,27 @@ class AddDive(object):
         """
         Execute command for adding dives into UDDF file.
         """
-        raise ArgumentError('Not implemented yet')
+        import kenozooid.uddf as ku
+        from dateutil.parser import parse as dparse
+        fout = args.output[0]
+
+        if os.path.exists(fout):
+            doc = et.parse(fout).getroot()
+        else:
+            doc = ku.create()
+
+        if args.with_depth:
+            try:
+                time = dparse(args.with_depth[0])
+                depth = float(args.with_depth[1])
+                duration = int(args.with_depth[2])
+            except ValueError:
+                raise ArgumentError('Invalid time, depth or duration parameter')
+            
+            ku.create_dive_data(doc, time=time, depth=depth,
+                    duration=duration)
+
+        ku.save(doc, fout)
 
 
 

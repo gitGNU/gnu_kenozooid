@@ -748,11 +748,29 @@ def create_dc_data(node, queries=None, formatters=None,
 
 
 def create_dive_data(node=None, queries=None, formatters=None, **data):
+    """
+    Create dive data.
+
+    :Parameters:
+     node
+        Base node (UDDF root node).
+     queries
+        Path-like expressions of XML structure to be created.
+     formatters
+        Dive data formatters.
+     data
+        Dive data.
+    """
     if queries == None:
-        queries = OrderedDict(time='uddf:datetime')
+        f = ('time', 'depth', 'duration')
+        q = ('uddf:datetime', 'uddf:greatestdepth', 'uddf:diveduration')
+        queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = {
             'time': _format_time,
+            'depth': partial(str.format, '{0:.1f}'),
+            'duration': partial(str.format, '{0:.0f}')
+            #'temp': partial(str.format, '{0:.1f}'),
         }
     _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
             parent=node, multiple=True)
