@@ -149,8 +149,9 @@ class AddDive(object):
         """
         import kenozooid.uddf as ku
         from dateutil.parser import parse as dparse
-        fout = args.output[0]
+        from copy import deepcopy
 
+        fout = args.output[0]
         if os.path.exists(fout):
             doc = et.parse(fout).getroot()
         else:
@@ -166,6 +167,21 @@ class AddDive(object):
             
             ku.create_dive_data(doc, time=time, depth=depth,
                     duration=duration)
+        else:
+            no, fin = args.with_profile
+            no = int(no)
+            q = ku.XPath('//uddf:dive[position() = $no]')
+            dives = ku.parse(fin, q, no=no)
+            dive = next(dives, None)
+            if dive is None:
+                raise ArgumentError('Cannot find dive in UDDF profile data')
+            if next(dives, None) is not None:
+                raise ArgumentError('Too many dives found')
+
+            _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
+                    parent=doc)
+            rg.append(deepcopy(dive))
+            ku.reorder(doc)
 
         ku.save(doc, fout)
 
