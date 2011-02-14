@@ -104,9 +104,8 @@ class OSTCDriver(object):
         """
         Read OSTC dive computer firmware version and firmware fingerprint.
         """
-        self._write('e')
-        data = self._read(2)
-        v1, v2 = tuple(map(ord, data))
+        self._write(b'e')
+        v1, v2 = self._read(2)
         data = self._read(16)
         fingerprint = hexlify(data)
         return 'OSTC Mk.1 %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
@@ -124,7 +123,7 @@ class OSTCSimulator(object):
         will not show dive mode screen until "dived" into configured depth
         (option CF0).
         """
-        self.driver._write('c')
+        self.driver._write(b'c')
 
 
     def stop(self):
@@ -154,7 +153,7 @@ class OSTCMemoryDump(object):
         """
         Download OSTC status and all dive profiles.
         """
-        self.driver._write('a')
+        self.driver._write(b'a')
         return self.driver._read(33034)
 
 

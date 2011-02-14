@@ -539,7 +539,7 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test dive computer data encoding to be stored in UDDF dive computer dump file
         """
-        s = ku._dump_encode('01234567890abcdef')
+        s = ku._dump_encode(b'01234567890abcdef')
         self.assertEquals(b'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
 
 

@@ -896,7 +896,7 @@ def _dump_encode(data):
 
     The encoded string is returned.
     """
-    s = bz2.compress(data.encode())
+    s = bz2.compress(data)
     return base64.b64encode(s)
 
 
