@@ -148,7 +148,8 @@ class SensusUltraDriver(object):
         dev = ct.c_void_p()
         rc = 0
         if port is not None:
-            rc = lib.reefnet_sensusultra_device_open(ct.byref(dev), port)
+            rc = lib.reefnet_sensusultra_device_open(ct.byref(dev),
+                    port.encode())
         if rc == 0:
             drv = SensusUltraDriver(dev, lib)
             log.debug('found Reefnet Sensus Ultra driver using' \
@@ -265,7 +266,7 @@ class SensusUltraMemoryDump(object):
             
             while not (fn.done() and dq.empty()):
                 try:
-                    dn = dq.get(timeout=0.3)
+                    dn = dq.get(timeout=1)
                     yield dn
                 except Empty:
                     if not fn.done():
