@@ -425,6 +425,42 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(2, len(tq(doc)), sd)
 
 
+    def test_create_dive_data(self):
+        """
+        Test dive data creation.
+        """
+        f = ku.create()
+        dive = ku.create_dive_data(f, time=datetime(2010, 12, 29, 20, 14),
+                depth=32.15, duration=2001.0)
+        s = et.tostring(f)
+
+        d = list(ku.xp(f, '//uddf:dive'))
+        self.assertEquals(1, len(d), s)
+
+        d = list(ku.xp(f, '//uddf:dive/uddf:datetime/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('2010-12-29 20:14:00', d[0], s)
+
+        d = list(ku.xp(f, '//uddf:dive/uddf:greatestdepth/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('32.1', d[0], s)
+
+        d = list(ku.xp(f, '//uddf:dive/uddf:diveduration/text()'))
+        self.assertEquals(1, len(d), s)
+        self.assertEquals('2001', d[0], s)
+
+        # create 2nd dive
+        dive = ku.create_dive_data(f, time=datetime(2010, 12, 30, 20, 14),
+                depth=32.15, duration=2001.0)
+        s = et.tostring(f, pretty_print=True)
+        d = list(ku.xp(f, '//uddf:dive'))
+        self.assertEquals(2, len(d), s)
+
+        dt = tuple(ku.xp(f, '//uddf:dive/uddf:datetime/text()'))
+        expected = '2010-12-29 20:14:00', '2010-12-30 20:14:00'
+        self.assertEquals(expected, dt, s)
+
+
     def test_create_dc_data(self):
         """
         Test creating dive computer information data in UDDF file
@@ -503,7 +539,7 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test dive computer data encoding to be stored in UDDF dive computer dump file
         """
-        s = ku._dump_encode('01234567890abcdef')
+        s = ku._dump_encode(b'01234567890abcdef')
         self.assertEquals(b'QlpoOTFBWSZTWZdWXlwAAAAJAH/gPwAgACKMmAAUwAE0xwH5Gis6xNXmi7kinChIS6svLgA=', s)
 
 

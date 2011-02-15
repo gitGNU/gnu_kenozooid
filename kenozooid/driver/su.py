@@ -34,7 +34,7 @@ from collections import namedtuple
 from lxml import etree as et
 from functools import partial
 from queue import Queue, Full, Empty
-from threading import Thread
+from concurrent.futures import ThreadPoolExecutor
 import time
 
 import logging
@@ -258,30 +258,21 @@ class SensusUltraMemoryDump(object):
         extract_dives = partial(lib.reefnet_sensusultra_extract_dives,
                 None, dd, SIZE_MEM_DATA, f, None)
 
-        # http://bugs.python.org/issue1395552
-        def run(self):
-            self.result = extract_dives()
-        Thread.run = run
-        t = Thread()
-        #t = Thread(target=extract_dives)
+        with ThreadPoolExecutor(max_workers=1) as e:
+            fn = e.submit(extract_dives)
+            
+            while not (fn.done() and dq.empty()):
+                try:
+                    dn = dq.get(timeout=0.3)
+                    yield dn
+                except Empty:
+                    if not fn.done():
+                        log.warn('su driver possible queue miss')
 
-        t.start()
-        while t.is_alive():
-            try:
-                dn = dq.get(False)
-            except Empty:
-                time.sleep(0.1)
+            if fn.result() == 0:
+                raise StopIteration()
             else:
-                yield dn
-
-        # there still can be some dive nodes left in the queue
-        while not dq.empty():
-            yield dq.get()
-
-        if t.result == 0:
-            raise StopIteration()
-        else:
-            raise DeviceError('Failed to extract dives properly')
+                raise DeviceError('Failed to extract dives properly')
 
     
     def parse_dive(self, buffer, size, fingerprint, fsize, pdata, parser,
