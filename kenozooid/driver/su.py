@@ -152,8 +152,10 @@ class SensusUltraDriver(object):
         if rc == 0:
             drv = SensusUltraDriver(dev, lib)
             log.debug('found Reefnet Sensus Ultra driver using' \
-                    ' libdivecomputer library on port %s' % port)
+                    ' libdivecomputer library on port {}'.format(port))
             yield drv
+        else:
+            log.debug('libdc error: {}'.format(rc))
 
 
     def version(self):
