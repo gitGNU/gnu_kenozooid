@@ -182,7 +182,8 @@ def find_driver(iface, query, port=None):
     try:
         drv = next(cls.scan(port))
     except StopIteration as ex:
-        raise DeviceError('Device with id %s seems to be not connected' % id)
+        raise DeviceError('Driver "{}" cannot communicate with a device at'
+                ' port "{}"'.format(id, port))
 
     # find class implementing specified interface (and functionality)
     try:
