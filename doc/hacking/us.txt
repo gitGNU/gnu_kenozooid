@@ -1,0 +1,31 @@
+.. _logbook:
+
+Logbook
+=======
+
+.. _adddive:
+
+Adding Dive
+-----------
+The diver adds a dive to dive logbook. A dive consists of a minimum of
+
+- date
+- maximum depth in meters
+- duration in minutes
+
+Optionally, a diver might provide any of
+
+- time of dive
+- buddy
+- dive site
+
+.. _adddivep:
+
+Adding Dive With Profile
+------------------------
+The diver adds a dive with profile data to dive logbook. The minimal set of
+data is obtained from the profile data.
+
+The optional data can be added as in adddive_.
+
+.. vim: sw=4:et:ai
