@@ -133,13 +133,13 @@ class AddDive(object):
                     ' duration data')
         g.add_argument('-p', '--with-profile',
                 nargs=2,
-                metavar=('dive', 'profile'),
-                help='add dive data from an UDDF file containing dive profiles')
+                metavar=('dive', 'input'),
+                help='add dive data with profile data from an UDDF file')
 
         parser.add_argument('-s', '--site', metavar='site',
-                help='dive site search string')
+                help='dive site')
         parser.add_argument('-b', '--buddy', metavar='buddy',
-                help='dive buddy search string')
+                help='dive buddy')
         parser.add_argument('output', nargs=1, help='UDDF output file')
 
 
