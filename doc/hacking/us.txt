@@ -3,8 +3,11 @@
 Dive Computer
 =============
 
+.. _backup:
+
 Backup
 ------
+The diver backups dive computer data - configuration and dive profiles.
 
 Simulation
 ----------
