@@ -1,3 +1,17 @@
+.. _dc:
+
+Dive Computer
+=============
+
+.. _backup:
+
+Backup
+------
+The diver backups dive computer data - configuration and dive profiles.
+
+Simulation
+----------
+
 .. _logbook:
 
 Logbook
@@ -53,5 +67,13 @@ in particular
 
 - year is 4 digit number
 - year is followed by month, month by day
+
+.. _planning:
+
+Planning
+========
+
+Simple Calculation
+------------------
 
 .. vim: sw=4:et:ai
