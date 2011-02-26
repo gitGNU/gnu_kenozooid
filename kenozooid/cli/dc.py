@@ -138,17 +138,17 @@ class Simulate(object):
 
 
 
-@inject(CLIModule, name='dump')
-class Dump(object):
+@inject(CLIModule, name='backup')
+class Backup(object):
     """
-    Command module for dive computer memory dumping.
+    Command line module for dive computer data backup.
     """
-    description = 'dump dive computer memory (logbook, settings, etc.)'
+    description = 'backup dive computer data (logbook, settings, etc.)'
 
     @classmethod
     def add_arguments(self, parser):
         """
-        Add arguments for dive computer memory dump command.
+        Add arguments for dive computer data backup command.
         """
         parser.add_argument('driver',
                 nargs=1,
@@ -158,37 +158,26 @@ class Dump(object):
                 help='device port, i.e. /dev/ttyUSB0, COM1')
         parser.add_argument('output',
                 nargs=1,
-                help='UDDF file to contain dive computer dump')
+                help='UDDF file to contain dive computer backup')
 
 
     def __call__(self, args):
         """
-        Execute dive computer memory dump command.
+        Execute dive computer data backup command.
         """
         from kenozooid.driver import MemoryDump, find_driver
-        import kenozooid.uddf as ku
-        from datetime import datetime
+        import kenozooid.logbook as kl
 
-        drv = args.driver[0]
+        drv_name = args.driver[0]
         port = args.port[0]
         fout = args.output[0]
 
-        dumper = find_driver(MemoryDump, drv, port)
-        if dumper is None:
-            print('Device driver %s does not support memory dump' % drv)
+        drv = find_driver(MemoryDump, drv_name, port)
+        if drv is None:
+            print('Device driver %s does not support memory dump' % drv_name)
             sys.exit(3)
 
-        xp_owner = ku.XPath('//uddf:diver/uddf:owner')
-
-        model = dumper.driver.version()
-        data = dumper.dump()
-
-        dd = ku.create()
-        dc = ku.create_dc_data(xp_owner(dd)[0], dc_model=model)
-        dc_id = dc.get('id')
-        ku.create_dump_data(dd, dc_id=dc_id, time=datetime.now(), data=data)
-
-        ku.save(dd, fout)
+        kl.backup(drv, fout)
 
 
 # vim: sw=4:et:ai

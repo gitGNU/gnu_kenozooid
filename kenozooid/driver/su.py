@@ -50,6 +50,11 @@ SIZE_MEM_DATA = 2080768
 SIZE_MEM_HANDSHAKE = 24
 SIZE_MEM_SENSE = 6
 
+START_HANDSHAKE = 0
+END_HANDSHAKE = START_USER = SIZE_MEM_HANDSHAKE
+END_USER = START_DATA = START_USER + SIZE_MEM_USER
+END_DATA = START_DATA + SIZE_MEM_DATA
+
 # Reefnet Sensus Ultra handshake packet (only version and serial supported
 # at the moment)
 HandshakeDump = namedtuple('HandshakeDump', 'ver1 ver2 serial time')
@@ -243,13 +248,16 @@ class SensusUltraMemoryDump(object):
         if rc != 0:
             raise DeviceError('Cannot create data parser')
         
-        hd = dump.data.read(SIZE_MEM_HANDSHAKE)
+        hd = dump.data[:END_HANDSHAKE]
+        assert len(hd) == SIZE_MEM_HANDSHAKE
         hdp = _handshake(hd)
 
-        ud = dump.data.read(SIZE_MEM_USER)
+        ud = dump.data[START_USER : END_USER]
+        assert len(ud) == SIZE_MEM_USER
 
         dd = ct.create_string_buffer(SIZE_MEM_DATA + 1)
-        dd.raw = dump.data.read(SIZE_MEM_DATA)
+        assert len(dump.data[START_DATA:]) == SIZE_MEM_DATA
+        dd.raw = dump.data[START_DATA:]
 
         # boot time = host time - device time (sensus time)
         btime = time.mktime(dump.time.timetuple()) - hdp.time

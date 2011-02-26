@@ -56,7 +56,7 @@ def status(data):
     """
     Split status and profile data, see `StatusDump` named tuple.
     """
-    dump = StatusDump._make(unpack(FMT_STATUS, data.read(LEN_STATUS)))
+    dump = StatusDump._make(unpack(FMT_STATUS, data[:LEN_STATUS]))
     log.debug('unpacked status dump, voltage %d, version %d.%d'
         % (dump.voltage, dump.ver1, dump.ver2))
     return dump

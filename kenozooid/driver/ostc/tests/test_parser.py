@@ -25,7 +25,6 @@ OSTC driver binary parser routines tests.
 import bz2
 import base64
 import unittest
-from io import BytesIO
 
 import kenozooid.driver.ostc.parser as ostc_parser
 import kenozooid.uddf as ku
@@ -445,7 +444,7 @@ class ParserTestCase(unittest.TestCase):
     def test_status_parsing(self):
         """Test status parsing
         """
-        dump = ostc_parser.status(BytesIO(self.dump_data))
+        dump = ostc_parser.status(self.dump_data)
 
         self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
 
@@ -462,7 +461,7 @@ class ParserTestCase(unittest.TestCase):
     def test_profile_split(self):
         """Test profile splitting
         """
-        dump = ostc_parser.status(BytesIO(self.dump_data))
+        dump = ostc_parser.status(self.dump_data)
         profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
@@ -475,7 +474,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        dump = ostc_parser.status(BytesIO(self.dump_data))
+        dump = ostc_parser.status(self.dump_data)
         profile = tuple(ostc_parser.profile(dump.profile))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -515,7 +514,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        dump = ostc_parser.status(BytesIO(self.dump_data))
+        dump = ostc_parser.status(self.dump_data)
         profile = tuple(ostc_parser.profile(dump.profile))
         h, p = profile[0]
         header = ostc_parser.header(h)
