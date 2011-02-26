@@ -11,11 +11,15 @@ dive computer
 diver
     A diving person, who is interested in dive planning, logging and
     analysis.
+statistical software
+    Software to perform statistical analysis.
 
 Subsystems
 ----------
 Kenozoid consists of the following subsystems
 
+analytics
+    Analytics modules and statistical software integration.
 drivers
     Device drivers allowing other subsystems to communicate with dive
     computers.
