@@ -9,7 +9,7 @@ import kenozooid
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.todo',
     'extapi']
 project = 'Kenozooid'
-source_suffix = '.txt'
+source_suffix = '.rst'
 master_doc = 'index'
 
 version = kenozooid.__version__
