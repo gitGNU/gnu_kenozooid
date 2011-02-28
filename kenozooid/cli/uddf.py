@@ -23,12 +23,10 @@ UDDF related Kenozooid command line commands.
 """
 
 import sys
-import optparse
 import itertools
 import os
 import os.path
 from functools import partial
-from io import BytesIO
 from lxml import etree as et
 import logging
 
@@ -474,75 +472,6 @@ class DelBuddy(object):
             raise ex
 
 
-@inject(CLIModule, name='convert')
-class ConvertFile(object):
-    """
-    Convert UDDF dive memory dumps into UDDF dive profiles.
-    """
-    description = 'convert UDDF dive memory dumps into UDDF dive profiles'
-
-    @classmethod
-    def add_arguments(self, parser):
-        """
-        Add convert command line command arguments.
-        """
-        parser.add_argument('input',
-                nargs='+',
-                help='UDDF file containing dive memory dump')
-        parser.add_argument('output',
-                nargs=1,
-                help='UDDF file to contain dive profiles')
-
-
-    def __call__(self, args):
-        """
-        Execute file conversion command.
-        """
-        from kenozooid.driver import MemoryDump, find_driver
-        import kenozooid.uddf as ku
-
-        fin = args.input
-        fout = args.output[0]
-
-        pd = ku.create()
-
-        xp_dc = ku.XPath('//uddf:divecomputerdump')
-        xp_owner = ku.XPath('//uddf:diver/uddf:owner')
-
-        for fn in fin:
-            dd = et.parse(fn)
-            nodes = xp_dc(dd)
-
-            if not nodes:
-                log.warn('no dive computer dump data found in ' + fn)
-                continue
-
-            assert len(nodes) == 1
-
-            dump = ku.dump_data(nodes[0])
-
-            log.debug('dive computer dump data found: ' \
-                    '{0.dc_id}, {0.dc_model}, {0.time}'.format(dump))
-
-            dc = ku.create_dc_data(xp_owner(pd)[0], dc_model=dump.dc_model)
-            dc_id = dc.get('id')
-            dump = dump._replace(dc_id=dc_id, data=BytesIO(dump.data))
-
-            # determine device driver to parse the dump and convert dump
-            # data into UDDF profile data
-            dumper = find_driver(MemoryDump, dump.dc_model, None)
-            dnodes = dumper.convert(dump)
-            _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup', parent=pd)
-            for n in dnodes:
-                equ, l = ku.create_node('uddf:equipmentused/uddf:link')
-                l.set('ref', dc_id)
-                n.insert(1, equ) # append after datetime element
-                rg.append(n)
-
-        ku.reorder(pd)
-        ku.save(pd, fout)
-
-
 
 @inject(CLIModule, name='plot')
 class PlotProfiles(object):
@@ -605,7 +534,6 @@ class PlotProfiles(object):
         Execute dives' profiles plotting command.
         """
         import os.path
-        import itertools
         from kenozooid.plot import plot, plot_overlay
 
         fout = args.output[0]

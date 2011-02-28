@@ -475,7 +475,7 @@ class CreateDataTestCase(unittest.TestCase):
         id_q = '//uddf:owner//uddf:divecomputer/@id'
         ids = xpath(id_q)
         self.assertEquals(1, len(ids), sd)
-        self.assertEquals('id206a9b642b3e16c89a61696ab28f3d5c', ids[0], sd)
+        self.assertEquals('206a9b642b3e16c89a61696ab28f3d5c', ids[0], sd)
 
         model_q = '//uddf:owner//uddf:divecomputer/uddf:model/text()'
         models = xpath(model_q)
@@ -496,8 +496,8 @@ class CreateDataTestCase(unittest.TestCase):
 
         ids = xpath(id_q)
         self.assertEquals(2, len(ids), sd)
-        expected = ['id206a9b642b3e16c89a61696ab28f3d5c',
-                'id605e79544a68819ce664c088aba92658']
+        expected = ['206a9b642b3e16c89a61696ab28f3d5c',
+                '605e79544a68819ce664c088aba92658']
         self.assertEquals(expected, ids, sd)
 
         models = xpath(model_q)

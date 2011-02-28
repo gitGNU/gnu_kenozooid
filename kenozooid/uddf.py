@@ -737,7 +737,7 @@ def create_dc_data(node, queries=None, formatters=None,
 
     if dc is None:
         if not dc_id:
-            dc_id = 'id' + hashlib.md5(dc_model.encode()).hexdigest()
+            dc_id = hashlib.md5(dc_model.encode()).hexdigest()
             data['dc_id'] = dc_id
 
         # create new dive computer node

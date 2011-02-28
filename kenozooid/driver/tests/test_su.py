@@ -23,7 +23,6 @@
 Reefnet Sensus Ultra driver tests.
 """
 
-from io import BytesIO
 from collections import namedtuple
 from datetime import datetime
 from binascii import unhexlify
@@ -650,7 +649,7 @@ SU_DATA = \
 def _dump():
     Dump = namedtuple('Dump', 'time data')
     data = ku._dump_decode(SU_DATA)
-    return Dump(time=SU_DATA_DOWNLOAD_TIME, data=BytesIO(data))
+    return Dump(time=SU_DATA_DOWNLOAD_TIME, data=data)
 
 
 class SensusUltraUDDFTestCase(unittest.TestCase):
