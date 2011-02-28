@@ -38,14 +38,33 @@ Use Cases
 Add Dive
 --------
 
+**Input:** basic dive data (date, maximum depth, duration)
+or dive profile and profile file, logbook file;
+optional dive data (time of dive, buddy, dive site)
+
++----------+--------------+----------------------------------------------------------+
+| Diver    | UI           | Logbook                                                  |
++==========+==============+==========================================================+
+| Add dive | Verify input | If dive profile provided then extract basic dive data.   |
+|          | parameters   |                                                          |
+|          |              | Insert basic and optional dive data into logbook file.   |
+|          |              |                                                          |
+|          |              | If dive profile provided                                 |
+|          |              |                                                          |
+|          |              | - insert dive profile data                               |
+|          |              | - copy any additional data associated with profile       |
+|          |              |   data (i.e. equipment used)                             |
++----------+--------------+----------------------------------------------------------+
+
 Dive Computer Backup
 --------------------
 
 **Pre:** dive computer is correctly connected
+
 **Input:** dive computer, backup file
 
 +--------------+--------------+---------------------------+-------------------------+---------------+
-| Diver        | UI           | Logbook                   | Drivers                 | Dive Computer |
+| Diver        | UI           | Logbook                   | Driver                  | Dive Computer |
 +==============+==============+===========================+=========================+===============+
 | Start backup | Verify input |                           | Identify dive computer  |               |
 |              | parameters   |                           | and provide appropriate |               |
