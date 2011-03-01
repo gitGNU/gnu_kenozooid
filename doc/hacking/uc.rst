@@ -37,28 +37,47 @@ Use Cases
 
 Add Dive
 --------
+**Input:** dive data (date, maximum depth, duration) or dive profile in
+profile file, logbook file; optional dive data (time of dive, minimum
+temperature, buddy, dive site)
 
-**Input:** basic dive data (date, maximum depth, duration)
-or dive profile and profile file, logbook file;
-optional dive data (time of dive, buddy, dive site)
+The use case is about storing dive information in dive logbook - while dive
+profile information is copied (or calculated) from some dive profile file (dive
+computer backup file), then the types of data being copied is strictly limited
+below. Data copying functionality could be provided by other use case (if ever).
 
-+----------+--------------+----------------------------------------------------------+
-| Diver    | UI           | Logbook                                                  |
-+==========+==============+==========================================================+
-| Add dive | Verify input | If dive profile provided then extract basic dive data.   |
-|          | parameters   |                                                          |
-|          |              | Insert basic and optional dive data into logbook file.   |
-|          |              |                                                          |
-|          |              | If dive profile provided                                 |
-|          |              |                                                          |
-|          |              | - insert dive profile data                               |
-|          |              | - copy any additional data associated with profile       |
-|          |              |   data (i.e. equipment used)                             |
-+----------+--------------+----------------------------------------------------------+
+Data, which can be extracted (calculated) from dive profile
+
+- date and time of dive
+- maximum depth
+- duration
+- minimum temperature
+- information about dive computer used to obtain dive profile
+
+Data, which *cannot* be extracted from dive profile
+
+- buddy
+- dive site
+
++----------+--------------+----------------------------------------------------+
+| Diver    | UI           | Logbook                                            |
++==========+==============+====================================================+
+| Add dive | Verify input | If dive profile provided, then extract appropriate |
+|          | parameters   | dive data from dive profile.                       |
+|          |              |                                                    |
+|          |              | Insert dive data into logbook file.                |
+|          |              |                                                    |
+|          |              | If dive profile provided, then insert into logbook |
+|          |              | file                                               |
+|          |              |                                                    |
+|          |              | - dive profile data                                |
+|          |              | - used dive computer information if available      |
+|          |              |                                                    |
+|          |              | Save logbook file.                                 |
++----------+--------------+----------------------------------------------------+
 
 Dive Computer Backup
 --------------------
-
 **Pre:** dive computer is correctly connected
 
 **Input:** dive computer, backup file
