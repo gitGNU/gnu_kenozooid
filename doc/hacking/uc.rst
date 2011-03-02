@@ -41,10 +41,11 @@ Add Dive
 profile file, logbook file; optional dive data (time of dive, minimum
 temperature, buddy, dive site)
 
-The use case is about storing dive information in dive logbook - while dive
-profile information is copied (or calculated) from some dive profile file (dive
-computer backup file), then the types of data being copied is strictly limited
-below. Data copying functionality could be provided by other use case (if ever).
+The use case is about storing dive information in dive logbook - while dive data
+like duration or maximum depth is extracted (or calculated) from some dive
+profile (i.e. contained in dive computer backup file), then the types of data
+being copied is strictly limited below. Data copying functionality could be
+provided by other use case (if ever).
 
 Data, which can be extracted (calculated) from dive profile
 
@@ -62,8 +63,10 @@ Data, which *cannot* be extracted from dive profile
 +----------+--------------+----------------------------------------------------+
 | Diver    | UI           | Logbook                                            |
 +==========+==============+====================================================+
-| Add dive | Verify input | If dive profile provided, then extract appropriate |
-|          | parameters   | dive data from dive profile.                       |
+| Add dive | Verify input | Open logbook file.                                 |
+|          | parameters   |                                                    |
+|          |              | If dive profile provided, then extract appropriate |
+|          |              | dive data from dive profile.                       |
 |          |              |                                                    |
 |          |              | Insert dive data into logbook file.                |
 |          |              |                                                    |
