@@ -85,14 +85,13 @@ Dive Computer Backup
 --------------------
 **Pre:** dive computer is correctly connected
 
-**Input:** dive computer, backup file
+**Input:** dive computer, backup file name
 
 +---------------+--------------+----------------------------+-------------------------+----------------+
 | Diver         | UI           | Logbook                    | Driver                  | Dive Computer  |
 +===============+==============+============================+=========================+================+
-| Start backup. | Verify input |                            | Identify dive computer  |                |
-|               | parameters.  |                            | and provide appropriate |                |
-|               |              |                            | driver.                 |                |
+| Start backup. | Verify input | Identify dive computer and |                         |                |
+|               | parameters.  | find appropriate driver.   |                         |                |
 +---------------+--------------+----------------------------+-------------------------+----------------+
 |               |              | Create backup file.        | Request raw data.       | Send raw data. |
 +---------------+--------------+----------------------------+-------------------------+----------------+
@@ -107,5 +106,37 @@ Dive Computer Backup
 |               |              |                            |                         |                |
 |               |              | Save backup file.          |                         |                |
 +---------------+--------------+----------------------------+-------------------------+----------------+
+
+Dive Computer Backup Reprocess
+------------------------------
+**Pre:** backup file exists
+
+**Input:** new backup file name
+
++--------------+--------------+-------------------------------+-------------------------+
+| Diver        | UI           | Logbook                       | Driver                  |
++==============+==============+===============================+=========================+
+| Start backup | Verify input | Lookup dive computer original |                         |
+| reprocess.   | parameters.  | data.                         |                         |
+|              |              |                               |                         |
+|              |              | Identify dive computer and    |                         |
+|              |              | find dive computer driver.    |                         |
+|              |              |                               |                         |
+|              |              | Create backup file.           |                         |
+|              |              |                               |                         |
+|              |              | Store raw data in new backup  |                         |
+|              |              | file.                         |                         |
++--------------+--------------+-------------------------------+-------------------------+
+|              |              |                               | Convert raw data to     |
+|              |              |                               | universal data model.   |
++--------------+--------------+-------------------------------+-------------------------+
+|              |              | Store universal data          |                         |
+|              |              | in new backup file including  |                         |
+|              |              | dive computer information.    |                         |
+|              |              |                               |                         |
+|              |              | Reorder dives.                |                         |
+|              |              |                               |                         |
+|              |              | Save new backup file.         |                         |
++--------------+--------------+-------------------------------+-------------------------+
 
 .. vim: sw=4:et:ai
