@@ -145,15 +145,14 @@ class AddDive(object):
         """
         Execute command for adding dives into UDDF file.
         """
-        import kenozooid.uddf as ku
+        import kenozooid.logbook as kl
         from dateutil.parser import parse as dparse
         from copy import deepcopy
 
+        time, depth, duration = None, None, None
+        dive_no, fin = None, None
+
         fout = args.output[0]
-        if os.path.exists(fout):
-            doc = et.parse(fout).getroot()
-        else:
-            doc = ku.create()
 
         if args.with_depth:
             try:
@@ -162,26 +161,11 @@ class AddDive(object):
                 duration = int(args.with_depth[2])
             except ValueError:
                 raise ArgumentError('Invalid time, depth or duration parameter')
-            
-            ku.create_dive_data(doc, time=time, depth=depth,
-                    duration=duration)
         else:
-            no, fin = args.with_profile
-            no = int(no)
-            q = ku.XPath('//uddf:dive[position() = $no]')
-            dives = ku.parse(fin, q, no=no)
-            dive = next(dives, None)
-            if dive is None:
-                raise ArgumentError('Cannot find dive in UDDF profile data')
-            if next(dives, None) is not None:
-                raise ArgumentError('Too many dives found')
+            dive_no, fin = args.with_profile
+            dive_no = int(no)
 
-            _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
-                    parent=doc)
-            rg.append(deepcopy(dive))
-            ku.reorder(doc)
-
-        ku.save(doc, fout)
+        kl.add_dive(fout, time, depth, duration, dive_no, fin)
 
 
 
