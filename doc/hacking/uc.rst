@@ -60,24 +60,26 @@ Data, which *cannot* be extracted from dive profile
 - buddy
 - dive site
 
-+----------+--------------+----------------------------------------------------+
-| Diver    | UI           | Logbook                                            |
-+==========+==============+====================================================+
-| Add dive | Verify input | Open logbook file.                                 |
-|          | parameters   |                                                    |
-|          |              | If dive profile provided, then extract appropriate |
-|          |              | dive data from dive profile.                       |
-|          |              |                                                    |
-|          |              | Insert dive data into logbook file.                |
-|          |              |                                                    |
-|          |              | If dive profile provided, then insert into logbook |
-|          |              | file                                               |
-|          |              |                                                    |
-|          |              | - dive profile data                                |
-|          |              | - used dive computer information if available      |
-|          |              |                                                    |
-|          |              | Save logbook file.                                 |
-+----------+--------------+----------------------------------------------------+
++-----------+--------------+----------------------------------------------------+
+| Diver     | UI           | Logbook                                            |
++===========+==============+====================================================+
+| Add dive. | Verify input | Open logbook file (create if necessary).           |
+|           | parameters.  |                                                    |
+|           |              | If dive profile provided, then extract appropriate |
+|           |              | dive data from dive profile.                       |
+|           |              |                                                    |
+|           |              | Insert dive data into logbook file.                |
+|           |              |                                                    |
+|           |              | If dive profile provided, then insert into logbook |
+|           |              | file.                                              |
+|           |              |                                                    |
+|           |              | - dive profile data                                |
+|           |              | - used dive computer information if available      |
+|           |              |                                                    |
+|           |              | Reorder dives.                                     |
+|           |              |                                                    |
+|           |              | Save logbook file.                                 |
++-----------+--------------+----------------------------------------------------+
 
 Dive Computer Backup
 --------------------
@@ -85,23 +87,25 @@ Dive Computer Backup
 
 **Input:** dive computer, backup file
 
-+--------------+--------------+---------------------------+-------------------------+---------------+
-| Diver        | UI           | Logbook                   | Driver                  | Dive Computer |
-+==============+==============+===========================+=========================+===============+
-| Start backup | Verify input |                           | Identify dive computer  |               |
-|              | parameters   |                           | and provide appropriate |               |
-|              |              |                           | driver                  |               |
-+--------------+--------------+---------------------------+-------------------------+---------------+
-|              |              | Create backup file        | Request raw data        | Send raw data |
-+--------------+--------------+---------------------------+-------------------------+---------------+
-|              |              | Store raw data in         | Convert raw data to     |               |
-|              |              | backup file               | universal data model    |               |
-+--------------+--------------+---------------------------+-------------------------+---------------+
-|              |              | Store universal data      |                         |               |
-|              |              | in backup file including  |                         |               |
-|              |              | dive computer information |                         |               |
-+--------------+--------------+---------------------------+-------------------------+---------------+
-|              |              | Save backup file          |                         |               |
-+--------------+--------------+---------------------------+-------------------------+---------------+
++---------------+--------------+----------------------------+-------------------------+----------------+
+| Diver         | UI           | Logbook                    | Driver                  | Dive Computer  |
++===============+==============+============================+=========================+================+
+| Start backup. | Verify input |                            | Identify dive computer  |                |
+|               | parameters.  |                            | and provide appropriate |                |
+|               |              |                            | driver.                 |                |
++---------------+--------------+----------------------------+-------------------------+----------------+
+|               |              | Create backup file.        | Request raw data.       | Send raw data. |
++---------------+--------------+----------------------------+-------------------------+----------------+
+|               |              | Store raw data in backup   | Convert raw data to     |                |
+|               |              | file.                      | universal data model.   |                |
++---------------+--------------+----------------------------+-------------------------+----------------+
+|               |              | Store universal data       |                         |                |
+|               |              | in backup file including   |                         |                |
+|               |              | dive computer information. |                         |                |
+|               |              |                            |                         |                |
+|               |              | Reorder dives.             |                         |                |
+|               |              |                            |                         |                |
+|               |              | Save backup file.          |                         |                |
++---------------+--------------+----------------------------+-------------------------+----------------+
 
 .. vim: sw=4:et:ai
