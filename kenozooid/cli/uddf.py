@@ -579,6 +579,39 @@ class Analyze(object):
         analyze(args.script[0], data)
 
 
+
+@inject(CLIModule, name='dive extract')
+class DumpExtract(object):
+    """
+    Extract dive profiles from dive computer dump (binary) data.
+    """
+    description = 'extract dives from dive computer backup'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive extract command.
+        """
+        parser.add_argument('input',
+                help='UDDF file with dive computer dump data')
+        parser.add_argument('output',
+                help='output UDDF file')
+
+
+    def __call__(self, args):
+        """
+        Execute dive extract command.
+        """
+        import kenozooid.logbook as kl
+
+        fin = args.input
+        fout = args.output
+        log.debug('extracting dive profiles from {} (saving to {})' \
+                .format(fin, fout))
+        kl.extract_dives(fin, fout)
+
+
+
 def _fetch(args):
     from kenozooid.uddf import parse, dive_data, dive_profile
     i = 0

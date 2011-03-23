@@ -22,9 +22,14 @@
 Dive logbook functionality.
 """
 
-import kenozooid.uddf as ku
+import lxml.etree as et
 from datetime import datetime
 from collections import namedtuple
+import logging
+
+import kenozooid.uddf as ku
+
+log = logging.getLogger('kenozooid.logbook')
 
 def backup(drv, fout):
     """
@@ -61,6 +66,60 @@ def backup(drv, fout):
 
     ku.reorder(data)
     ku.save(data, fout)
+
+
+def extract_dives(fin, fout):
+    """
+    Extract dives from dive computer dump data.
+
+    :Parameters:
+     fin
+        File with dive computer dump data.
+     fout
+        Output file.
+    """
+    from kenozooid.driver import MemoryDump, find_driver
+    import kenozooid.uddf as ku
+    
+    dout = ku.create()
+    
+    xp_dc = ku.XPath('//uddf:divecomputerdump')
+    xp_owner = ku.XPath('//uddf:diver/uddf:owner')
+    
+    din = et.parse(fin)
+    nodes = xp_dc(din)
+
+    if not nodes:
+        raise ValueError('No dive computer dump data found in ' + fin)
+
+    assert len(nodes) == 1
+
+    dump = ku.dump_data(nodes[0])
+
+    log.debug('dive computer dump data found: ' \
+            '{0.dc_id}, {0.dc_model}, {0.time}'.format(dump))
+
+    dc = ku.create_dc_data(xp_owner(dout)[0], dc_model=dump.dc_model)
+    dc_id = dc.get('id')
+    dump = dump._replace(dc_id=dc_id, data=dump.data)
+
+    ku.create_dump_data(dout, dc_id=dc_id, time=dump.time, data=dump.data)
+
+    # determine device driver to parse the dump and convert dump
+    # data into UDDF profile data
+    dumper = find_driver(MemoryDump, dump.dc_model, None)
+    dnodes = dumper.convert(dump)
+    _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
+            parent=dout)
+    for n in dnodes:
+        equ, l = ku.create_node('uddf:equipmentused/uddf:link')
+        l.set('ref', dc_id)
+        n.insert(1, equ) # append after datetime element
+        rg.append(n)
+    
+    ku.reorder(dout)
+    ku.save(dout, fout)
+
 
 
 def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None):

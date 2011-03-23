@@ -22,8 +22,8 @@ saved, then processed to Kenozooid structures and saved. See also rbackup_.
 Backup Reprocess
 ^^^^^^^^^^^^^^^^
 The Kenozooid dive computer drivers can be buggy or not recognize all dive
-computer's functionality, therefore there is a need to reprocess dive
-computer original data by the diver.
+computer's functionality, therefore there is a need to extract dive
+profiles and dive computer configuration once again.
 
 Simulation
 ^^^^^^^^^^
