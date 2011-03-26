@@ -75,7 +75,10 @@ _NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
 XPath = partial(et.XPath, namespaces=_NSMAP)
 
 # XPath queries for default dive data
-XP_DEFAULT_DIVE_DATA = (XPath('uddf:datetime/text()'), )
+XP_DEFAULT_DIVE_DATA = (XPath('uddf:datetime/text()'),
+    XPath('uddf:greatestdepth/text()'),
+    XPath('uddf:diveduration/text()'),
+    XPath('uddf:temperature/text()'))
 
 # XPath queries for default dive profile sample data
 XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
@@ -269,9 +272,9 @@ def dive_data(node, fields=None, queries=None, parsers=None):
     """
 
     if fields is None:
-        fields = ('time', )
+        fields = ('time', 'duration', 'depth', 'temp')
         queries = XP_DEFAULT_DIVE_DATA
-        parsers = (dparse, )
+        parsers = (dparse, float, float, float)
 
     return find_data('Dive', node, fields, queries, parsers)
 

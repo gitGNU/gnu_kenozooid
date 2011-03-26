@@ -88,27 +88,28 @@ class ListDives(object):
         files = args.input
 
         if csv:
-            print('file,number,start_time,time,depth')
+            print('file,number,start_time,depth,duration')
         for fin in files:
-            nodes = parse(fin, '//uddf:dive')
-            dives = ((dive_data(n), dive_profile(n)) for n in nodes)
+            dives = (dive_data(n) for n in parse(fin, '//uddf:dive'))
 
             if not csv:
                 print(fin + ':')
-            for i, (d, dp) in enumerate(dives):
-                vtime, vdepth, vtemp = zip(*dp)
-                depth = max(vdepth)
-                if csv:
-                    fmt = '{file},{no},{stime},{dtime},{depth:.1f}'
-                    dtime = max(vtime)
-                else:
-                    fmt = '{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
-                    dtime = min2str(max(vtime) / 60.0)
-                print(fmt.format(no=i + 1,
-                        stime=format(d.time, FMT_DIVETIME),
-                        dtime=dtime,
-                        depth=depth,
-                        file=fin))
+            for i, dive in enumerate(dives):
+                try:
+                    duration = dive.duration
+                    if csv:
+                        fmt = '{file},{no},{time},{depth:.1f},{duration}'
+                    else:
+                        fmt = '{no:4}: {time}   \u21a7{depth:.1f}m    t={dtime}'
+                        duration = min2str(duration / 60.0)
+
+                    print(fmt.format(no=i + 1,
+                            time=format(dive.time, FMT_DIVETIME),
+                            depth=dive.depth,
+                            duration=duration,
+                            file=fin))
+                except TypeError as ex:
+                    log.warn('invalid dive data, skipping dive')
 
 
 @inject(CLIModule, name='dive add')
