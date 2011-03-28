@@ -88,27 +88,28 @@ class ListDives(object):
         files = args.input
 
         if csv:
-            print('file,number,start_time,time,depth')
+            print('file,number,start_time,depth,duration')
         for fin in files:
-            nodes = parse(fin, '//uddf:dive')
-            dives = ((dive_data(n), dive_profile(n)) for n in nodes)
+            dives = (dive_data(n) for n in parse(fin, '//uddf:dive'))
 
             if not csv:
                 print(fin + ':')
-            for i, (d, dp) in enumerate(dives):
-                vtime, vdepth, vtemp = zip(*dp)
-                depth = max(vdepth)
-                if csv:
-                    fmt = '{file},{no},{stime},{dtime},{depth:.1f}'
-                    dtime = max(vtime)
-                else:
-                    fmt = '{no:4}: {stime}   t={dtime}   \u21a7{depth:.1f}m' 
-                    dtime = min2str(max(vtime) / 60.0)
-                print(fmt.format(no=i + 1,
-                        stime=format(d.time, FMT_DIVETIME),
-                        dtime=dtime,
-                        depth=depth,
-                        file=fin))
+            for i, dive in enumerate(dives):
+                try:
+                    duration = dive.duration
+                    if csv:
+                        fmt = '{file},{no},{time},{depth:.1f},{duration}'
+                    else:
+                        fmt = '{no:4}: {time}   \u21a7{depth:.1f}m    t={dtime}'
+                        duration = min2str(duration / 60.0)
+
+                    print(fmt.format(no=i + 1,
+                            time=format(dive.time, FMT_DIVETIME),
+                            depth=dive.depth,
+                            duration=duration,
+                            file=fin))
+                except TypeError as ex:
+                    log.warn('invalid dive data, skipping dive')
 
 
 @inject(CLIModule, name='dive add')
@@ -145,15 +146,14 @@ class AddDive(object):
         """
         Execute command for adding dives into UDDF file.
         """
-        import kenozooid.uddf as ku
+        import kenozooid.logbook as kl
         from dateutil.parser import parse as dparse
         from copy import deepcopy
 
+        time, depth, duration = None, None, None
+        dive_no, fin = None, None
+
         fout = args.output[0]
-        if os.path.exists(fout):
-            doc = et.parse(fout).getroot()
-        else:
-            doc = ku.create()
 
         if args.with_depth:
             try:
@@ -162,26 +162,11 @@ class AddDive(object):
                 duration = int(args.with_depth[2])
             except ValueError:
                 raise ArgumentError('Invalid time, depth or duration parameter')
-            
-            ku.create_dive_data(doc, time=time, depth=depth,
-                    duration=duration)
         else:
-            no, fin = args.with_profile
-            no = int(no)
-            q = ku.XPath('//uddf:dive[position() = $no]')
-            dives = ku.parse(fin, q, no=no)
-            dive = next(dives, None)
-            if dive is None:
-                raise ArgumentError('Cannot find dive in UDDF profile data')
-            if next(dives, None) is not None:
-                raise ArgumentError('Too many dives found')
+            dive_no, fin = args.with_profile
+            dive_no = int(no)
 
-            _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
-                    parent=doc)
-            rg.append(deepcopy(dive))
-            ku.reorder(doc)
-
-        ku.save(doc, fout)
+        kl.add_dive(fout, time, depth, duration, dive_no, fin)
 
 
 
@@ -593,6 +578,39 @@ class Analyze(object):
         # fetch dives and profiles from files provided on command line
         data = itertools.chain(*_fetch(args.input))
         analyze(args.script[0], data)
+
+
+
+@inject(CLIModule, name='dive extract')
+class DumpExtract(object):
+    """
+    Extract dive profiles from dive computer dump (binary) data.
+    """
+    description = 'extract dives from dive computer backup'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive extract command.
+        """
+        parser.add_argument('input',
+                help='UDDF file with dive computer dump data')
+        parser.add_argument('output',
+                help='output UDDF file')
+
+
+    def __call__(self, args):
+        """
+        Execute dive extract command.
+        """
+        import kenozooid.logbook as kl
+
+        fin = args.input
+        fout = args.output
+        log.debug('extracting dive profiles from {} (saving to {})' \
+                .format(fin, fout))
+        kl.extract_dives(fin, fout)
+
 
 
 def _fetch(args):

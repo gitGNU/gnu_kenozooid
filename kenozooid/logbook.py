@@ -22,9 +22,14 @@
 Dive logbook functionality.
 """
 
-import kenozooid.uddf as ku
+import lxml.etree as et
 from datetime import datetime
 from collections import namedtuple
+import logging
+
+import kenozooid.uddf as ku
+
+log = logging.getLogger('kenozooid.logbook')
 
 def backup(drv, fout):
     """
@@ -61,6 +66,121 @@ def backup(drv, fout):
 
     ku.reorder(data)
     ku.save(data, fout)
+
+
+def extract_dives(fin, fout):
+    """
+    Extract dives from dive computer dump data.
+
+    :Parameters:
+     fin
+        File with dive computer dump data.
+     fout
+        Output file.
+    """
+    from kenozooid.driver import MemoryDump, find_driver
+    import kenozooid.uddf as ku
+    
+    dout = ku.create()
+    
+    xp_dc = ku.XPath('//uddf:divecomputerdump')
+    xp_owner = ku.XPath('//uddf:diver/uddf:owner')
+    
+    din = et.parse(fin)
+    nodes = xp_dc(din)
+
+    if not nodes:
+        raise ValueError('No dive computer dump data found in ' + fin)
+
+    assert len(nodes) == 1
+
+    dump = ku.dump_data(nodes[0])
+
+    log.debug('dive computer dump data found: ' \
+            '{0.dc_id}, {0.dc_model}, {0.time}'.format(dump))
+
+    dc = ku.create_dc_data(xp_owner(dout)[0], dc_model=dump.dc_model)
+    dc_id = dc.get('id')
+    dump = dump._replace(dc_id=dc_id, data=dump.data)
+
+    ku.create_dump_data(dout, dc_id=dc_id, time=dump.time, data=dump.data)
+
+    # determine device driver to parse the dump and convert dump
+    # data into UDDF profile data
+    dumper = find_driver(MemoryDump, dump.dc_model, None)
+    dnodes = dumper.convert(dump)
+    _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
+            parent=dout)
+    for n in dnodes:
+        equ, l = ku.create_node('uddf:equipmentused/uddf:link')
+        l.set('ref', dc_id)
+        n.insert(1, equ) # append after datetime element
+        rg.append(n)
+    
+    ku.reorder(dout)
+    ku.save(dout, fout)
+
+
+
+def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None):
+    """
+    Add new dive to logbook file.
+
+    The logbook file is created if it does not exist.
+
+    :Parameters:
+     fout
+        Logbook file.
+     time
+        Dive time.
+     depth
+        Dive maximum depth.
+     duration
+        Dive duration (in minutes).
+     dive_no
+        Dive number in dive profile file.
+     fin
+        Dive profile file.
+    """
+    dive = None # obtained from profile file
+
+    if os.path.exists(fout):
+        doc = et.parse(fout).getroot()
+    else:
+        doc = ku.create()
+
+    if dive_no is not None and fin is not None:
+        q = ku.XPath('//uddf:dive[position() = $no]')
+        dives = ku.parse(fin, q, no=no)
+        dive = next(dives, None)
+        if dive is None:
+            raise ValueError('Cannot find dive in UDDF profile data')
+        if next(dives, None) is not None:
+            raise ValueError('Too many dives found')
+
+    elif time is not None and depth is not None and duration is not None:
+        duration = int(duration * 3600)
+    else:
+        raise ValueError('Dive data or dive profile needs to be provided')
+
+    if dive is not None:
+        if time is None:
+            time = ku.xp(dive, 'datetime/text()')
+        if depth is None:
+            depth = ku.xp(dive, 'greatestdepth/text()')
+        if duration is None:
+            duration = ku.xp(dive, 'diveduration/text()')
+            
+            
+    ku.create_dive_data(doc, time=time, depth=depth,
+            duration=duration)
+
+    if dive is not None:
+        _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
+                parent=doc)
+        rg.append(deepcopy(dive))
+    ku.reorder(doc)
+    ku.save(doc, fout)
 
 
 # vim: sw=4:et:ai
