@@ -186,11 +186,15 @@ class OSTCMemoryDump(object):
             # memory, so substract the dive time;
             # sampling amount is substracted as well as below (0, 0)
             # waypoint is added
-            st -= timedelta(minutes=header.dive_time_m,
+            duration = timedelta(minutes=header.dive_time_m,
                     seconds=header.dive_time_s + header.sampling)
+            st -= duration
 
             try:
-                dn = ku.create_dive_data(time=st)
+                dn = ku.create_dive_data(time=st,
+                        depth=header.max_depth / 100,
+                        duration=duration.seconds,
+                        temp=header.min_temp)
 
                 create_sample = partial(ku.create_dive_profile_sample, dn,
                         queries=uddf_sample)
