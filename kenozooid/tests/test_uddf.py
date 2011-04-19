@@ -62,6 +62,9 @@ UDDF_PROFILE = b"""\
     <repetitiongroup>
       <dive>
         <datetime>2009-09-19 13:10:23</datetime>
+        <diveduration>20</diveduration>
+        <greatestdepth>30.2</greatestdepth>
+        <lowesttemperature>251.4</lowesttemperature>
         <samples>
           <waypoint>
             <depth>1.48</depth>
@@ -81,6 +84,9 @@ UDDF_PROFILE = b"""\
       </dive>
       <dive>
         <datetime>2010-10-30 13:24:43</datetime>
+        <diveduration>30</diveduration>
+        <greatestdepth>32.2</greatestdepth>
+        <lowesttemperature>250.4</lowesttemperature>
         <samples>
           <waypoint>
             <depth>2.61</depth>
@@ -220,6 +226,9 @@ class FindDataTestCase(unittest.TestCase):
         node = next(ku.parse(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
         self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.time)
+        self.assertEquals(20, dive.duration)
+        self.assertEquals(30.2, dive.depth)
+        self.assertEquals(251.4, dive.temp)
 
 
     def test_profile_data(self):
