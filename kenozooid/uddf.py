@@ -78,7 +78,7 @@ XPath = partial(et.XPath, namespaces=_NSMAP)
 XP_DEFAULT_DIVE_DATA = (XPath('uddf:datetime/text()'),
     XPath('uddf:greatestdepth/text()'),
     XPath('uddf:diveduration/text()'),
-    XPath('uddf:temperature/text()'))
+    XPath('uddf:lowesttemperature/text()'))
 
 # XPath queries for default dive profile sample data
 XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
@@ -272,7 +272,7 @@ def dive_data(node, fields=None, queries=None, parsers=None):
     """
 
     if fields is None:
-        fields = ('time', 'duration', 'depth', 'temp')
+        fields = ('time', 'depth', 'duration', 'temp')
         queries = XP_DEFAULT_DIVE_DATA
         parsers = (dparse, float, float, float)
 
@@ -765,15 +765,16 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
         Dive data.
     """
     if queries == None:
-        f = ('time', 'depth', 'duration')
-        q = ('uddf:datetime', 'uddf:greatestdepth', 'uddf:diveduration')
+        f = ('time', 'depth', 'duration', 'temp')
+        q = ('uddf:datetime', 'uddf:greatestdepth', 'uddf:diveduration',
+                'uddf:lowesttemperature')
         queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = {
             'time': _format_time,
             'depth': partial(str.format, '{0:.1f}'),
-            'duration': partial(str.format, '{0:.0f}')
-            #'temp': partial(str.format, '{0:.1f}'),
+            'duration': partial(str.format, '{0:.0f}'),
+            'temp': partial(str.format, '{0:.1f}'),
         }
     _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
             parent=node, multiple=True)

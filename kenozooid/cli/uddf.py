@@ -100,7 +100,8 @@ class ListDives(object):
                     if csv:
                         fmt = '{file},{no},{time},{depth:.1f},{duration}'
                     else:
-                        fmt = '{no:4}: {time}   \u21a7{depth:.1f}m    t={dtime}'
+                        fmt = '{no:4}: {time}   \u21a7{depth:.1f}m' \
+                                '    t={duration}'
                         duration = min2str(duration / 60.0)
 
                     print(fmt.format(no=i + 1,
@@ -109,6 +110,7 @@ class ListDives(object):
                             duration=duration,
                             file=fin))
                 except TypeError as ex:
+                    log.debug(ex)
                     log.warn('invalid dive data, skipping dive')
 
 
