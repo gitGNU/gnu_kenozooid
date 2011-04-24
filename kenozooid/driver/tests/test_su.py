@@ -675,6 +675,19 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         dt = ku.xp_first(dive, './uddf:datetime/text()')
         self.assertEquals('2009-09-19 13:14:40', dt, et.tostring(dive))
 
+        d = ku.xp_first(dive, 'uddf:greatestdepth/text()')
+        md = max(float(f) for f in ku.xp(dive, './/uddf:depth/text()'))
+        self.assertEquals('12.0', d)
+        self.assertEquals(12.0, md)
+
+        d = ku.xp_first(dive, 'uddf:diveduration/text()')
+        self.assertEquals('170', d)
+
+        t = ku.xp_first(dive, 'uddf:lowesttemperature/text()')
+        mt = min(float(f) for f in ku.xp(dive, './/uddf:temperature/text()'))
+        self.assertEquals('288.6', t)
+        self.assertEquals(288.6, mt)
+
         # check first sample, UDDF obligatory one
         t = ku.xp_first(wps[0], './/uddf:divetime/text()')
         self.assertEquals('0', t)
@@ -687,7 +700,8 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
 
         # check last UDDF required sample
         t = ku.xp_first(wps[-1], './/uddf:divetime/text()')
-        self.assertEquals('170', t)
+        self.assertEquals('170', t) # duration above should equal to this
+                                    # value, too
         t = ku.xp_first(wps[-1], './/uddf:depth/text()')
         self.assertEquals('0.0', t)
 
