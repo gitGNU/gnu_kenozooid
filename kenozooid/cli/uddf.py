@@ -83,12 +83,13 @@ class ListDives(object):
         """
         from kenozooid.uddf import parse, dive_data, dive_profile
         from kenozooid.util import min2str, FMT_DIVETIME
+        from kenozooid.units import K2C
 
         csv = args.dives_csv
         files = args.input
 
         if csv:
-            print('file,number,start_time,depth,duration')
+            print('file,number,start_time,depth,duration,temp')
         for fin in files:
             dives = (dive_data(n) for n in parse(fin, '//uddf:dive'))
 
@@ -98,16 +99,17 @@ class ListDives(object):
                 try:
                     duration = dive.duration
                     if csv:
-                        fmt = '{file},{no},{time},{depth:.1f},{duration}'
+                        fmt = '{file},{no},{time},{depth:.1f},{duration},{temp}'
                     else:
                         fmt = '{no:4}: {time}   \u21a7{depth:.1f}m' \
-                                '    t={duration}'
+                                '    t={duration}    T={temp:.1f}\u00b0C'
                         duration = min2str(duration / 60.0)
 
                     print(fmt.format(no=i + 1,
                             time=format(dive.time, FMT_DIVETIME),
                             depth=dive.depth,
                             duration=duration,
+                            temp=K2C(dive.temp),
                             file=fin))
                 except TypeError as ex:
                     log.debug(ex)
