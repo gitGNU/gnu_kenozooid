@@ -40,6 +40,7 @@ import logging
 
 import kenozooid
 from kenozooid.util import min2str, FMT_DIVETIME
+from kenozooid.units import K2C
 
 log = logging.getLogger('kenozooid.plot')
 
@@ -59,6 +60,13 @@ def get_deco(samples):
             deco.append((float(s2.time) / 60, float(s2.depth)))
 
 
+def _float_vec(data):
+    """
+    Create R float vector using RPy interface.
+    """
+    # unfortunately, rpy does not convert None to NA anymore
+    c = ro.FloatVector([ro.NA_Real if v is None else float(v) for v in data])
+    return c
 
 
 def _inject_profile(dp):
@@ -71,11 +79,12 @@ def _inject_profile(dp):
      dp
         Dive profile.   
     """
+
     vtime, vdepth, vtemp = zip(*dp)
     df = ro.DataFrame({
-        'time': ro.FloatVector(vtime),
-        'depth': ro.FloatVector(vdepth),
-        'temp': ro.FloatVector(vtemp),
+        'time': _float_vec(vtime),
+        'depth': _float_vec(vdepth),
+        'temp': _float_vec(vtemp),
     })
     ro.globalenv['dp'] = df
     return df
@@ -129,7 +138,6 @@ cairo_pdf('%s', width=10, height=5, onefile=T)
         log.debug('plotting dive profile') 
 
         _inject_profile(dp)
-        max_time = R('max(dp$time) / 60.0')[0]
 
         R(r"""
 ylim = rev(range(dp$depth))
@@ -147,14 +155,12 @@ grid()
 
         if info:
             R("""
-info = sprintf('t = %%s\n\u21a7 = %%.1fm\nT = %%.1f\u00b0C',
-    '%s',
-    max(dp$depth),
-    min(dp$temp, na.rm=T) - 273.15)
-
+info = 't = {}\n\u21a7 = {:.1f}m\nT = {:.1f}\u00b0C'
 grid.text(info, x=0.85, y=0.25, just=c('left', 'bottom'),
     gp=gpar(cex=0.8, fontfamily='monospace'))
-            """ % min2str(max_time))
+            """.format(min2str(dive.duration / 60.0),
+                dive.depth,
+                K2C(dive.temp)))
 
         if sig:
             _plot_sig()
