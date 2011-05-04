@@ -705,6 +705,10 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         t = ku.xp_first(wps[-1], './/uddf:depth/text()')
         self.assertEquals('0.0', t)
 
+        # check time of the one sample before last
+        t = ku.xp_first(wps[-2], './/uddf:divetime/text()')
+        self.assertEquals('160', t)
+
         # check the one before last and last samples times
         t1 = ku.xp_first(wps[-2], './/uddf:divetime/text()')
         t2 = ku.xp_first(wps[-1], './/uddf:divetime/text()')
