@@ -22,13 +22,13 @@
 Dive analytics via R statistical package.
 """
 
-import itertools
 import rpy2.robjects as ro
 import logging
 
 import kenozooid.uddf as ku
+import kenozooid.rglue as kr
 
-log = logging.getLogger('kenozooid.plot')
+log = logging.getLogger('kenozooid.analyze')
 R = ro.r
 
 def analyze(script, dives):
@@ -56,9 +56,9 @@ def analyze(script, dives):
             vtime, vdepth, vtemp = zip(*dp)
             profiles = profiles.rbind(ro.DataFrame({
                 'dive': ro.StrVector([dt]),
-                'time': ro.FloatVector(vtime),
-                'depth': ro.FloatVector(vdepth),
-                'temp': ro.FloatVector(vtemp),
+                'time': kr.float_vec(vtime),
+                'depth': kr.float_vec(vdepth),
+                'temp': kr.float_vec(vtemp),
             }))
             
 
@@ -69,7 +69,6 @@ dives$time = as.POSIXct(dives$time)
 profiles$dive = as.POSIXct(profiles$dive)
         """)
 
-        for l in f:
-            R(l)
+        R(f.read())
 
 # vim: sw=4:et:ai

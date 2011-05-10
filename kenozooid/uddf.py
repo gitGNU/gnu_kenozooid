@@ -52,7 +52,7 @@ from functools import partial
 from datetime import datetime
 from dateutil.parser import parse as dparse
 from operator import itemgetter
-from uuid import uuid4 as uuid
+#from uuid import uuid4 as uuid
 import base64
 import bz2
 import hashlib

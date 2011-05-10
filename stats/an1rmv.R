@@ -1,4 +1,5 @@
 # read tank pressure data from an1rmv.csv and calculate RMV during dive
+# run as: ./bin/kz analyze stats/an1rmv.R 19 dumps/ostc-dump-18.uddf
 
 # time [min] and tank pressure readings [bars] columns expected
 f = read.csv('stats/an1rmv.csv')

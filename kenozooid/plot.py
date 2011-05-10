@@ -41,6 +41,7 @@ import logging
 import kenozooid
 from kenozooid.util import min2str, FMT_DIVETIME
 from kenozooid.units import K2C
+import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.plot')
 
@@ -60,15 +61,6 @@ def get_deco(samples):
             deco.append((float(s2.time) / 60, float(s2.depth)))
 
 
-def _float_vec(data):
-    """
-    Create R float vector using RPy interface.
-    """
-    # unfortunately, rpy does not convert None to NA anymore
-    c = ro.FloatVector([ro.NA_Real if v is None else float(v) for v in data])
-    return c
-
-
 def _inject_profile(dp):
     """
     Inject dive profile as data frame into R namespace.
@@ -82,9 +74,9 @@ def _inject_profile(dp):
 
     vtime, vdepth, vtemp = zip(*dp)
     df = ro.DataFrame({
-        'time': _float_vec(vtime),
-        'depth': _float_vec(vdepth),
-        'temp': _float_vec(vtemp),
+        'time': kr.float_vec(vtime),
+        'depth': kr.float_vec(vdepth),
+        'temp': kr.float_vec(vtemp),
     })
     ro.globalenv['dp'] = df
     return df
