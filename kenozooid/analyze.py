@@ -31,6 +31,11 @@ import kenozooid.rglue as kr
 log = logging.getLogger('kenozooid.analyze')
 R = ro.r
 
+# maximum size of R script, 1MB should be more than enough;
+# we need to pass whole script to R to support multi-line
+# statements
+MAX_SCRIPT_SIZE = 1024 ** 2
+
 def analyze(script, dives):
     """
     Analyze dives with specified R script.
@@ -69,6 +74,10 @@ dives$time = as.POSIXct(dives$time)
 profiles$dive = as.POSIXct(profiles$dive)
         """)
 
-        R(f.read())
+        data = f.read(MAX_SCRIPT_SIZE)
+        if f.read(1):
+            raise ValueError('The script {} is too big'.format(script))
+        R(data)
+
 
 # vim: sw=4:et:ai
