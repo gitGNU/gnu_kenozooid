@@ -36,7 +36,7 @@ R = ro.r
 # statements
 MAX_SCRIPT_SIZE = 1024 ** 2
 
-def analyze(script, dives):
+def analyze(script, dives, args):
     """
     Analyze dives with specified R script.
 
@@ -48,6 +48,8 @@ def analyze(script, dives):
         R script to run in the context of dive data.
      dives
         Dive data.
+     args
+        R script arguments.
     """
     with open(script) as f:
         dive_times = []
@@ -67,6 +69,10 @@ def analyze(script, dives):
             }))
             
 
+        if args:
+            ro.globalenv['args'] = ro.StrVector(args)
+        else:
+            R('args = list()')
         ro.globalenv['dives'] = ro.DataFrame({'time': ro.StrVector(dive_times)})
         ro.globalenv['profiles'] = profiles
         R("""

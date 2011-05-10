@@ -568,7 +568,13 @@ class Analyze(object):
         Add R script runner options.
         """
         parser.add_argument('script', nargs=1, help='R script to execute')
-        parser.add_argument('input', nargs='+', metavar='[dives] input',
+        parser.add_argument('-a',
+                action='append',
+                dest='args',
+                help='R script arguments')
+        parser.add_argument('input',
+                nargs='+',
+                metavar='[dives] input',
                 help='dives from specified UDDF file (i.e.  1-3,6 is dive'
                     ' 1, 2, 3, and 6 from a file, all by default)')
 
@@ -581,7 +587,7 @@ class Analyze(object):
 
         # fetch dives and profiles from files provided on command line
         data = itertools.chain(*_fetch(args.input))
-        analyze(args.script[0], data)
+        analyze(args.script[0], data, args.args)
 
 
 
