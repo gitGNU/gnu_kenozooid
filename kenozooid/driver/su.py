@@ -72,7 +72,7 @@ FMT_DIVE_HEADER = '<4xL4H'
 # see buffer.c, buffer.h
 class DCBuffer(ct.Structure):
     _fields_ = [
-        ('data', ct.c_char_p),
+        ('data', ct.POINTER(ct.c_char)),
         ('capacity', ct.c_size_t),
         ('offset', ct.c_size_t),
         ('size', ct.c_size_t),
@@ -103,7 +103,7 @@ class Vendor(ct.Structure):
     _fields_ = [
         ('type', ct.c_uint),
         ('size', ct.c_uint),
-        ('data', ct.c_void_p), 
+        # fixme: (segv): ('data', ct.c_void_p),
     ]
 
 
@@ -113,12 +113,11 @@ class SampleValue(ct.Union):
         ('depth', ct.c_double),
         ('pressure', Pressure),
         ('temperature', ct.c_double),
-# at the moment one of fields below causes segmentation fault
-#        ('event', Event),
-#        ('rbt', ct.c_uint),
-#        ('heartbeat', ct.c_uint),
-#        ('bearing', ct.c_uint),
-#        ('vendor', Vendor),
+        ('event', Event),
+        ('rbt', ct.c_uint),
+        ('heartbeat', ct.c_uint),
+        ('bearing', ct.c_uint),
+        ('vendor', Vendor),
     ]
 
 
@@ -169,12 +168,12 @@ class SensusUltraDriver(object):
         Read Reefnet Sensus Ultra version and serial number.
         """
 
-        sd = ct.create_string_buffer(SIZE_MEM_SENSE + 1)
+        sd = ct.create_string_buffer(SIZE_MEM_SENSE)
         rc = self.lib.reefnet_sensusultra_device_sense(self.dev, sd, SIZE_MEM_SENSE)
         if rc != 0:
             raise DeviceError('Device communication error')
 
-        hd = ct.create_string_buffer(SIZE_MEM_HANDSHAKE + 1)
+        hd = ct.create_string_buffer(SIZE_MEM_HANDSHAKE)
         rc = self.lib.reefnet_sensusultra_device_get_handshake(self.dev, hd, SIZE_MEM_HANDSHAKE)
         if rc != 0:
             raise DeviceError('Device communication error')
@@ -207,31 +206,29 @@ class SensusUltraMemoryDump(object):
         dev = self.driver.dev
         lib = self.driver.lib
 
-        # one more to accomodate NULL
-        hd = ct.create_string_buffer(SIZE_MEM_HANDSHAKE + 1)
-        ud = ct.create_string_buffer(SIZE_MEM_USER + 1)
-        dd = ct.create_string_buffer(SIZE_MEM_DATA + 1)
-
-        dd_buf = DCBuffer()
-        dd_buf.size = SIZE_MEM_DATA
-        dd_buf.data = ct.cast(dd, ct.c_char_p)
+        hd = ct.create_string_buffer(SIZE_MEM_HANDSHAKE)
+        ud = ct.create_string_buffer(SIZE_MEM_USER)
+        dd = ct.cast(lib.dc_buffer_new(SIZE_MEM_DATA), ct.POINTER(DCBuffer))
 
         log.debug('loading user data')
         rc = lib.reefnet_sensusultra_device_read_user(dev, ud, SIZE_MEM_USER)
         if rc != 0:
+            log.debug('read error rc = {}'.format(rc))
             raise DeviceError('Device communication error')
 
         log.debug('loading handshake data')
         rc = lib.reefnet_sensusultra_device_get_handshake(dev, hd, SIZE_MEM_HANDSHAKE)
         if rc != 0:
+            log.debug('read error rc = {}'.format(rc))
             raise DeviceError('Device communication error')
 
         log.debug('loading dive data')
-        rc = lib.device_dump(dev, dd_buf)
+        rc = lib.device_dump(dev, dd)
         if rc != 0:
+            log.debug('read error rc = {}'.format(rc))
             raise DeviceError('Device communication error')
 
-        return hd.raw[:-1] + ud.raw[:-1] + dd.raw[:-1]
+        return hd.raw + ud.raw + dd.contents.data[:dd.contents.size]
 
 
     def convert(self, dump):
@@ -249,15 +246,15 @@ class SensusUltraMemoryDump(object):
             raise DeviceError('Cannot create data parser')
         
         hd = dump.data[:END_HANDSHAKE]
-        assert len(hd) == SIZE_MEM_HANDSHAKE
+        assert len(hd) == SIZE_MEM_HANDSHAKE, len(hd)
         hdp = _handshake(hd)
 
         ud = dump.data[START_USER : END_USER]
-        assert len(ud) == SIZE_MEM_USER
+        assert len(ud) == SIZE_MEM_USER, len(ud)
 
-        dd = ct.create_string_buffer(SIZE_MEM_DATA + 1)
-        assert len(dump.data[START_DATA:]) == SIZE_MEM_DATA
+        dd = ct.create_string_buffer(SIZE_MEM_DATA)
         dd.raw = dump.data[START_DATA:]
+        assert len(dd.raw) == SIZE_MEM_DATA, len(dd.raw)
 
         # boot time = host time - device time (sensus time)
         btime = time.mktime(dump.time.timetuple()) - hdp.time
