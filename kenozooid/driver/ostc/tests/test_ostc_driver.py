@@ -149,7 +149,7 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals('1939', d)
 
         t = ku.xp_first(dive, 'uddf:lowesttemperature/text()')
-        self.assertEquals('275.0', t)
+        self.assertEquals('300.6', t) # 27.45C
 
 
     def test_deco(self):
