@@ -21,3 +21,5 @@
 """
 OSTC dive computer driver tests.
 """
+
+# vim: sw=4:et:ai
