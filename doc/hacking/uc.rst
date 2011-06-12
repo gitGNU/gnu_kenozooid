@@ -87,25 +87,25 @@ Dive Computer Backup
 
 **Input:** dive computer, backup file name
 
-+---------------+--------------+----------------------------+-------------------------+----------------+
-| Diver         | UI           | Logbook                    | Driver                  | Dive Computer  |
-+===============+==============+============================+=========================+================+
-| Start backup. | Verify input | Identify dive computer and |                         |                |
-|               | parameters.  | find appropriate driver.   |                         |                |
-+---------------+--------------+----------------------------+-------------------------+----------------+
-|               |              | Create backup file.        | Request raw data.       | Send raw data. |
-+---------------+--------------+----------------------------+-------------------------+----------------+
-|               |              | Store raw data in backup   | Convert raw data to     |                |
-|               |              | file.                      | universal data model.   |                |
-+---------------+--------------+----------------------------+-------------------------+----------------+
-|               |              | Store universal data       |                         |                |
-|               |              | in backup file including   |                         |                |
-|               |              | dive computer information. |                         |                |
-|               |              |                            |                         |                |
-|               |              | Reorder dives.             |                         |                |
-|               |              |                            |                         |                |
-|               |              | Save backup file.          |                         |                |
-+---------------+--------------+----------------------------+-------------------------+----------------+
++---------------+--------------+-------------------------------+---------------------+----------------+
+| Diver         | UI           | Logbook                       | Driver              | Dive Computer  |
++===============+==============+===============================+=====================+================+
+| Start backup. | Verify input | Identify dive computer and    | Request raw data.   | Send raw data. |
+|               | parameters.  | find appropriate driver.      |                     |                |
++---------------+--------------+-------------------------------+---------------------+----------------+
+|               |              |                               | Convert raw data to |                |
+|               |              |                               | dive data.          |                |
++---------------+--------------+-------------------------------+---------------------+----------------+
+|               |              | Create backup file.           |                     |                |
+|               |              |                               |                     |                |
+|               |              | Store raw data, dive data and |                     |                |
+|               |              | dive computer information     |                     |                |
+|               |              | into new backup file.         |                     |                |
+|               |              |                               |                     |                |
+|               |              | Reorder dives.                |                     |                |
+|               |              |                               |                     |                |
+|               |              | Save new backup file.         |                     |                |
++---------------+--------------+-------------------------------+---------------------+----------------+
 
 Dive Computer Backup Reprocess
 ------------------------------
@@ -113,31 +113,29 @@ Dive Computer Backup Reprocess
 
 **Input:** new backup file name
 
-+--------------+--------------+-------------------------------+-------------------------+
-| Diver        | UI           | Logbook                       | Driver                  |
-+==============+==============+===============================+=========================+
-| Start backup | Verify input | Lookup dive computer original |                         |
-| reprocess.   | parameters.  | data.                         |                         |
-|              |              |                               |                         |
-|              |              | Identify dive computer and    |                         |
-|              |              | find dive computer driver.    |                         |
-|              |              |                               |                         |
-|              |              | Create backup file.           |                         |
-|              |              |                               |                         |
-|              |              | Store raw data in new backup  |                         |
-|              |              | file.                         |                         |
-+--------------+--------------+-------------------------------+-------------------------+
-|              |              |                               | Convert raw data to     |
-|              |              |                               | universal data model.   |
-+--------------+--------------+-------------------------------+-------------------------+
-|              |              | Store universal data          |                         |
-|              |              | in new backup file including  |                         |
-|              |              | dive computer information.    |                         |
-|              |              |                               |                         |
-|              |              | Reorder dives.                |                         |
-|              |              |                               |                         |
-|              |              | Save new backup file.         |                         |
-+--------------+--------------+-------------------------------+-------------------------+
++--------------+--------------+-------------------------------+---------------------+
+| Diver        | UI           | Logbook                       | Driver              |
++==============+==============+===============================+=====================+
+| Start backup | Verify input | Lookup dive computer original |                     |
+| reprocess.   | parameters.  | data.                         |                     |
+|              |              |                               |                     |
+|              |              | Identify dive computer and    |                     |
+|              |              | find dive computer driver.    |                     |
++--------------+--------------+-------------------------------+---------------------+
+|              |              |                               | Convert raw data to |
+|              |              |                               | dive data.          |
++--------------+--------------+-------------------------------+---------------------+
+|              |              | Create backup file.           |                     |
+|              |              |                               |                     |
+|              |              | Store raw data, dive data and |                     |
+|              |              | dive computer information     |                     |
+|              |              | into new backup file.         |                     |
+|              |              |                               |                     |
+|              |              | Reorder dives.                |                     |
+|              |              |                               |                     |
+|              |              | Save new backup file.         |                     |
++--------------+--------------+-------------------------------+---------------------+
+
 
 Convert Raw Dive Computer Data
 ------------------------------
