@@ -98,9 +98,9 @@ def dive_data(header, data):
     div_ppo2_s, div_ppo2_c = divisor(header.div_ppo2)
     div_deco_debug_s, div_deco_debug_c = divisor(header.div_deco_debug)
 
-    log.debug('header divisor values %x %x %x %x %x' % (header.div_temp,
-        header.div_deco, header.div_tank, header.div_ppo2,
-        header.div_deco_debug))
+    log.debug('header divisor values {:x} {:x} {:x} {:x} {:x}'
+        .format(header.div_temp, header.div_deco, header.div_tank,
+            header.div_ppo2, header.div_deco_debug))
 
     dive_total_time = header.dive_time_m * 60 + header.dive_time_s
 
@@ -114,8 +114,8 @@ def dive_data(header, data):
         pfb = data[i]
         i += 1
         size, event = flag_byte(pfb)
-        log.debug('sample %d info: depth = %.2f, pfb = %s, size = %s, data: %s',
-                j, depth, hex(pfb), size, hexlify(data[i:i+size]))
+        log.debug('sample {} info: depth = {:.2f}, pfb = {:x}, size = {}, ' \
+            'data: {}'.format(j, depth, pfb, size, hexlify(data[i:i + size])))
 
         alarm = None
         gas_set = 0
@@ -165,7 +165,7 @@ def dive_data(header, data):
             deco_depth, deco_time = deco
             i += div_deco_c
             div_bytes += div_deco_c
-            log.debug('deco time %d, depth %d' % (deco_time, deco_depth))
+            log.debug('deco time {}, depth {}'.format(deco_time, deco_depth))
         else:
             deco_depth, deco_time = None, None
 
@@ -178,7 +178,7 @@ def dive_data(header, data):
         if ppo2 is not None:
             i += div_ppo2_c
             div_bytes += div_ppo2_c
-            log.debug('ppo2 {}'.format(ppo2))
+            log.debug('ppo2 {}'.format(hexlify(ppo2)))
 
         deco_debug = sample_data(data, i, j, div_deco_debug_s, div_deco_debug_c)
         if deco_debug is not None:
@@ -186,11 +186,11 @@ def dive_data(header, data):
             div_bytes += div_deco_debug_c
             
         if size != event + gas_set + gas_change + setpoint_change + div_bytes:
-            log.debug('invalid dive data, sample = %d, depth = %.2f,' \
-                ' pfb = 0x%x, size = %d, event = %d,  alarm = %s, temp = %s,' \
-                ' gas_set = %d, gas_change = %d, setpoint_change = % d,' \
-                ' setpoint = %d, div_bytes = %d, deco_debug = %s' \
-                    % (j, depth, pfb, size, event, alarm, temp, gas_set,
+            log.debug('invalid dive data, sample = {}, depth = {:.2f},' \
+                ' pfb = {:x}, size = {}, event = {}, alarm = {}, temp = {},' \
+                ' gas_set = {}, gas_change = {}, setpoint_change = {},' \
+                ' setpoint = {}, div_bytes = {}, deco_debug = {}'
+                .format(j, depth, pfb, size, event, alarm, temp, gas_set,
                             gas_change, setpoint_change, setpoint, div_bytes,
                             hexlify(deco_debug if deco_depth else b'[]')))
             raise ValueError('Invalid dive')
@@ -200,7 +200,8 @@ def dive_data(header, data):
             yield DiveSample(depth, alarm, gas_set_o2, gas_set_he, current_gas,
                     setpoint, temp, deco_depth, deco_time, tank, ppo2)
         else:
-            log.debug('skipped sample %d (out of dive time), seek %d' % (j, i))
+            log.debug('skipped sample {} (out of dive time), seek {}'
+                .format(j, i))
         j += 1
 
     assert data[i:i + 2] == b'\xfd\xfd'

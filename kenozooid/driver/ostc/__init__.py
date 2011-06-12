@@ -68,16 +68,16 @@ class OSTCDriver(object):
 
 
     def _write(self, cmd):
-        log.debug('sending command %s' % cmd)
+        log.debug('sending command {}'.format(cmd))
         self._device.write(cmd)
-        log.debug('returned after command %s' % cmd)
+        log.debug('returned after command {}'.format(cmd))
 
 
     def _read(self, size):
         assert size > 0
-        log.debug('reading %d byte(s)' % size)
+        log.debug('reading {} byte(s)'.format(size))
         data = self._device.read(size)
-        log.debug('got %d byte(s) of data' % len(data))
+        log.debug('got {} byte(s) of data'.format(len(data)))
         if len(data) != size:
             raise DeviceError('Device communication error')
         return data
@@ -93,10 +93,10 @@ class OSTCDriver(object):
         """
         try:
             drv = OSTCDriver(port)
-            log.debug('connected ostc to port %s' % port)
+            log.debug('connected ostc to port {}'.format(port))
             yield drv
         except SerialException as ex:
-            log.debug('%s' % ex)
+            log.debug('{}'.format(ex))
 
 
     def version(self):
@@ -106,8 +106,8 @@ class OSTCDriver(object):
         self._write(b'e')
         v1, v2 = self._read(2)
         data = self._read(16)
-        fingerprint = hexlify(data)
-        return 'OSTC Mk.1 %s.%s (fingerprint %s)' % (v1, v2, fingerprint.upper())
+        fingerprint = hexlify(data).upper()
+        return 'OSTC Mk.1 {}.{} (fingerprint {})'.format(v1, v2, fingerprint)
 
 
 
@@ -172,8 +172,8 @@ class OSTCMemoryDump(object):
         }
 
         for h, p in ostc_parser.profile(dive_data.profile):
-            log.debug('header: %s' % hexlify(h))
-            log.debug('profile: %s' % hexlify(p))
+            log.debug('header: {}'.format(hexlify(h)))
+            log.debug('profile: {}'.format(hexlify(p)))
 
             header = ostc_parser.header(h)
             dive_data = ostc_parser.dive_data(header, p)
