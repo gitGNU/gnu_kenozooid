@@ -48,7 +48,7 @@ FMT_DIVE_HEADER = '<H6BHHB' 'HHH6HB' 'BBHB4B' 'BBHH'
 
 # dive profile data block sample
 DiveSample = namedtuple('DiveSample', 'depth alarm gas_set_o2 gas_set_he'
-    ' current_gas temp deco_depth deco_time tank ppo2')
+    ' current_gas setpoint temp deco_depth deco_time tank ppo2')
 
 
 def status(data):
@@ -123,6 +123,8 @@ def dive_data(header, data):
         gas_set_he = None
         gas_change = 0
         current_gas = None
+        setpoint_change = 0
+        setpoint = None
         # parse event byte information
         if event:
             v = data[i]
@@ -130,6 +132,7 @@ def dive_data(header, data):
             alarm = v & 0x0f
             gas_set = v & 0x10
             gas_change = v & 0x20
+            setpoint_change = v & 0x40
 
             if gas_set:
                 gas_set_o2 = data[i]
@@ -141,6 +144,11 @@ def dive_data(header, data):
                 current_gas = data[i]
                 i += 1
                 gas_change = 1
+
+            if setpoint_change:
+                setpoint = data[i]
+                i += 1
+                setpoint_change = 1
 
         div_bytes = 0
 
@@ -177,19 +185,20 @@ def dive_data(header, data):
             i += div_deco_debug_c
             div_bytes += div_deco_debug_c
             
-        if size != event + gas_set + gas_change + div_bytes:
-            log.debug('invalid dive data, sample = %d, depth = %.2f, pfb = 0x%x, size = %d, event = %d,' \
-                ' alarm = %s, temp = %s, gas_set = %d, gas_change = %d,' \
-                ' div_bytes = %d, deco_debug = %s' \
+        if size != event + gas_set + gas_change + setpoint_change + div_bytes:
+            log.debug('invalid dive data, sample = %d, depth = %.2f,' \
+                ' pfb = 0x%x, size = %d, event = %d,  alarm = %s, temp = %s,' \
+                ' gas_set = %d, gas_change = %d, setpoint_change = % d,' \
+                ' setpoint = %d, div_bytes = %d, deco_debug = %s' \
                     % (j, depth, pfb, size, event, alarm, temp, gas_set,
-                            gas_change, div_bytes,
+                            gas_change, setpoint_change, setpoint, div_bytes,
                             hexlify(deco_debug if deco_depth else b'[]')))
             raise ValueError('Invalid dive')
 
         # is a sample within dive total time? if not, then skip sample
         if header.sampling * (j - 1) <= dive_total_time:
             yield DiveSample(depth, alarm, gas_set_o2, gas_set_he, current_gas,
-                    temp, deco_depth, deco_time, tank, ppo2)
+                    setpoint, temp, deco_depth, deco_time, tank, ppo2)
         else:
             log.debug('skipped sample %d (out of dive time), seek %d' % (j, i))
         j += 1
