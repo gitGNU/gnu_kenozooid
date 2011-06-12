@@ -223,7 +223,7 @@ class OSTCMemoryDump(object):
                 yield dn
 
             except ValueError as ex:
-                log.error('invalid dive {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
+                log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
                     ' {0.hour:>02d}:{0.minute:>02d}' \
                     ' max depth={0.max_depth}'.format(header))
 

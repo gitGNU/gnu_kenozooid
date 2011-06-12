@@ -114,8 +114,8 @@ def dive_data(header, data):
         pfb = data[i]
         i += 1
         size, event = flag_byte(pfb)
-        log.debug('sample %d info: depth = %.2f, pfb = %s, %s',
-                j, depth, hex(pfb), hexlify(data[i:i+size]))
+        log.debug('sample %d info: depth = %.2f, pfb = %s, size = %s, data: %s',
+                j, depth, hex(pfb), size, hexlify(data[i:i+size]))
 
         alarm = None
         gas_set = 0
@@ -170,7 +170,7 @@ def dive_data(header, data):
         if ppo2 is not None:
             i += div_ppo2_c
             div_bytes += div_ppo2_c
-            log.debug('ppo2 %d' % ppo2)
+            log.debug('ppo2 {}'.format(ppo2))
 
         deco_debug = sample_data(data, i, j, div_deco_debug_s, div_deco_debug_c)
         if deco_debug is not None:
