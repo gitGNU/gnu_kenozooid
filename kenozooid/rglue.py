@@ -1,7 +1,6 @@
-# Kenozooid - software stack to support different capabilities of dive
-# computers.
+# Kenozooid - dive planning and analysis toolbox.
 #
-# Copyright (C) 2009 by Artur Wroblewski <wrobell@pld-linux.org>
+# Copyright (C) 2009-2011 by Artur Wroblewski <wrobell@pld-linux.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
