@@ -139,4 +139,33 @@ Dive Computer Backup Reprocess
 |              |              | Save new backup file.         |                         |
 +--------------+--------------+-------------------------------+-------------------------+
 
+Convert Raw Dive Computer Data
+------------------------------
+**Pre:** file with raw dive computer data exists
+
+**Input:** driver name, raw dive computer data, new backup file name
+
++-------------------+--------------+-------------------------------+---------------------+
+| Diver             | UI           | Logbook                       | Driver              |
++===================+==============+===============================+=====================+
+| Start conversion. | Verify input | Read raw data.                |                     |
+|                   | parameters.  | data.                         |                     |
+|                   |              |                               |                     |
+|                   |              | Identify dive computer and    |                     |
+|                   |              | find dive computer driver.    |                     |
++-------------------+--------------+-------------------------------+---------------------+
+|                   |              |                               | Convert raw data to |
+|                   |              |                               | dive data.          |
++-------------------+--------------+-------------------------------+---------------------+
+|                   |              | Create backup file.           |                     |
+|                   |              |                               |                     |
+|                   |              | Store raw data, dive data and |                     |
+|                   |              | dive computer information     |                     |
+|                   |              | into new backup file.         |                     |
+|                   |              |                               |                     |
+|                   |              | Reorder dives.                |                     |
+|                   |              |                               |                     |
+|                   |              | Save new backup file.         |                     |
++-------------------+--------------+-------------------------------+---------------------+
+
 .. vim: sw=4:et:ai

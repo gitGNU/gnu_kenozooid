@@ -67,6 +67,44 @@ def backup(drv, fout):
     ku.save(data, fout)
 
 
+def convert(drv, model, raw_data, fout):
+    """
+    Convert binary dive computer data into UDDF.
+
+    :Parameters:
+     drv
+        Dive computer driver.
+     model
+        Dive computer model.
+     raw_data
+        Binary dive computer data.
+     fout
+        Output file.
+    """
+    data = ku.create()
+
+    # store raw data
+    xp_owner = ku.XPath('//uddf:diver/uddf:owner')
+    dc = ku.create_dc_data(xp_owner(data)[0], dc_model=model)
+    dc_id = dc.get('id')
+
+    Dump = namedtuple('Dump', 'dc_id time data')
+    dump = Dump(dc_id, datetime.now(), raw_data)
+    ku.create_dump_data(data, **dump._asdict())
+
+    # convert raw data into UDDF
+    dive_nodes = drv.convert(dump)
+    _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup', parent=data)
+    for n in dive_nodes:
+        equ, l = ku.create_node('uddf:equipmentused/uddf:link')
+        l.set('ref', dc_id)
+        n.insert(1, equ) # append after datetime element
+        rg.append(n)
+
+    ku.reorder(data)
+    ku.save(data, fout)
+
+
 def extract_dives(fin, fout):
     """
     Extract dives from dive computer dump data.

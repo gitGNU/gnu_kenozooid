@@ -15,7 +15,8 @@ Backup
 The diver backups dive computer data - configuration and dive profiles.
 
 Dive computer data in its original (highly probably binary) structure is
-saved, then processed to Kenozooid structures and saved. See also rbackup_.
+saved, then processed to Kenozooid data structures and saved. See also
+rbackup_.
 
 .. _rbackup:
 
@@ -24,6 +25,15 @@ Backup Reprocess
 The Kenozooid dive computer drivers can be buggy or not recognize all dive
 computer's functionality, therefore there is a need to extract dive
 profiles and dive computer configuration once again.
+
+Raw Data Conversion
+^^^^^^^^^^^^^^^^^^^
+The raw dive computer data can be obtained by other software, therefore
+there is a need to convert the raw data into Kenozooid data structures and
+save.
+
+The resulting file should be similar or the same as in case of backuping
+data directly from a dive computer.
 
 Simulation
 ^^^^^^^^^^

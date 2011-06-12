@@ -179,4 +179,53 @@ class Backup(object):
         kl.backup(drv, fout)
 
 
+
+@inject(CLIModule, name='convert')
+class Convert(object):
+    """
+    Command line module for binary dive computer data conversion.
+    """
+    description = 'convert binary dive computer data.'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add arguments for dive computer data conversion command.
+        """
+        parser.add_argument('driver',
+                nargs=1,
+                help='device driver id')
+        parser.add_argument('model',
+                nargs=1,
+                help='dive computer model description')
+        parser.add_argument('input',
+                nargs=1,
+                help='dive computer binary data')
+        parser.add_argument('output',
+                nargs=1,
+                help='UDDF file to contain dive computer backup')
+
+
+    def __call__(self, args):
+        """
+        Execute dive computer data conversion command.
+        """
+        from kenozooid.driver import MemoryDump, find_driver
+        import kenozooid.logbook as kl
+
+        drv_name = args.driver[0]
+        model = args.model[0]
+        fin = args.input[0]
+        fout = args.output[0]
+
+        drv = find_driver(MemoryDump, drv_name)
+        if drv is None:
+            print('Device driver %s does not support memory dump' % drv_name)
+            sys.exit(3)
+
+        with open(fin, 'rb') as f:
+            data = f.read()
+        kl.convert(drv, model, data, fout)
+
+
 # vim: sw=4:et:ai
