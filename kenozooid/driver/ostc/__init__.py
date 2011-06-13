@@ -226,6 +226,14 @@ class OSTCMemoryDump(object):
                     ' max depth={0.max_depth}'.format(header))
 
 
+    def version(self, data):
+        """
+        Get OSTC model and version information from raw data.
+        """
+        status = ostc_parser.status(data)
+        return 'OSTC Mk.1 {}.{}'.format(status.ver1, status.ver2)
+
+
 def deco_start(sample):
     """
     Check if a dive sample start deco period.

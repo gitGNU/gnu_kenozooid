@@ -656,7 +656,8 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
     Sensus Ultra data to UDDF format conversion tests.
     """
     def test_conversion(self):
-        """Test Sensus Ultra profile data conversion
+        """
+        Test Sensus Ultra profile data conversion
         """
         dump = _dump()
 
@@ -714,8 +715,15 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         self.assertEquals(SU_DATA_INTERVAL, int(t2) - int(t1)) 
 
 
+
+class ParserTestCase(unittest.TestCase):
+    """
+    Sensus Ultra data parsing test case.
+    """
+
     def test_handshake(self):
-        """Test Sensus Ultra handshake data parsing
+        """
+        Test Sensus Ultra handshake data parsing
         """
         data = unhexlify(b'0203641d4ebee30302007a837f018b000a0057040f000100')
         v = _handshake(data)
@@ -726,7 +734,8 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
 
 
     def test_dive_header(self):
-        """Test Sensus Ultra dive header data parsing
+        """
+        Test Sensus Ultra dive header data parsing
         """
         data = unhexlify(b'00000000dc2866020a0057040f000100')
         v = _dive_header(data)
@@ -735,6 +744,21 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         self.assertEquals(1111, v.threshold)
         self.assertEquals(15, v.endcount)
         self.assertEquals(1, v.averaging)
+
+
+class MemoryDumpTestCase(unittest.TestCase):
+    """
+    Sensus Ultra memory dump driver tests.
+    """
+    def test_version(self):
+        """
+        Test Sensus Ultra version parsing from raw data
+        """
+        data = ku._dump_decode(SU_DATA)
+        drv = SensusUltraMemoryDump()
+        ver = drv.version(data)
+        self.assertEquals('Sensus Ultra 3.2', ver)
+
 
 
 # vim: sw=4:et:ai

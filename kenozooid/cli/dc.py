@@ -164,19 +164,13 @@ class Backup(object):
         """
         Execute dive computer data backup command.
         """
-        from kenozooid.driver import MemoryDump, find_driver
         import kenozooid.logbook as kl
 
         drv_name = args.driver[0]
         port = args.port[0]
         fout = args.output[0]
 
-        drv = find_driver(MemoryDump, drv_name, port)
-        if drv is None:
-            print('Device driver %s does not support memory dump' % drv_name)
-            sys.exit(3)
-
-        kl.backup(drv, fout)
+        kl.backup(drv_name, port, fout)
 
 
 
@@ -195,9 +189,6 @@ class Convert(object):
         parser.add_argument('driver',
                 nargs=1,
                 help='device driver id')
-        parser.add_argument('model',
-                nargs=1,
-                help='dive computer model description')
         parser.add_argument('input',
                 nargs=1,
                 help='dive computer binary data')
@@ -210,22 +201,13 @@ class Convert(object):
         """
         Execute dive computer data conversion command.
         """
-        from kenozooid.driver import MemoryDump, find_driver
         import kenozooid.logbook as kl
 
         drv_name = args.driver[0]
-        model = args.model[0]
         fin = args.input[0]
         fout = args.output[0]
 
-        drv = find_driver(MemoryDump, drv_name)
-        if drv is None:
-            print('Device driver %s does not support memory dump' % drv_name)
-            sys.exit(3)
-
-        with open(fin, 'rb') as f:
-            data = f.read()
-        kl.convert(drv, model, data, fout)
+        kl.convert(drv_name, fin, fout)
 
 
 # vim: sw=4:et:ai

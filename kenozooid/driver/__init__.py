@@ -131,13 +131,13 @@ class MemoryDump(object):
         """
 
 
-    def version(self, dump):
+    def version(self, data):
         """
         Extract model and version information from dive computer raw data.
 
         :Parameters:
-         dump
-            Dive computer data (time, data).
+         data
+            Raw dive computer data.
         """
 
 

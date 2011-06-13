@@ -267,6 +267,18 @@ class SensusUltraMemoryDump(object):
 
         return _iterate(dq, extract_dives)
 
+
+    def version(self, data):
+        """
+        Get Sensus Ultra version from raw data.
+
+        :Parameters:
+         data
+            Raw dive computer data.
+        """
+        status = _handshake(data)
+        return 'Sensus Ultra %d.%d' % (status.ver2, status.ver1)
+
     
     def parse_dive(self, buffer, size, fingerprint, fsize, pdata, parser,
             boot_time, dives):

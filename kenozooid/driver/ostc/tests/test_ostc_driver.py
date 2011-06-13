@@ -170,4 +170,30 @@ class UDDFTestCase(unittest.TestCase):
         self.assertTrue(all(t2), '{0}\n{1}'.format(t2, et.tostring(dive)))
 
 
+
+class MemoryDumpTestCase(unittest.TestCase):
+    """
+    OSTC memory dump tests.
+
+    :Attributes:
+     dump_data
+        OSTC raw data from OSTC_DATA.
+
+    """
+    def setUp(self):
+        """
+        Create test dump data.
+        """
+        self.dump_data = ku._dump_decode(OSTC_DATA)
+
+
+    def test_version(self):
+        """Test OSTC version parsing from raw data
+        """
+        dc = OSTCMemoryDump()
+        ver = dc.version(self.dump_data)
+        self.assertEquals('OSTC Mk.1 1.26', ver)
+
+
+
 # vim: sw=4:et:ai
