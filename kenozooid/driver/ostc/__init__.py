@@ -27,7 +27,6 @@ protocol can be found at address
 
 """
 
-import array
 import logging
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
@@ -101,13 +100,12 @@ class OSTCDriver(object):
 
     def version(self):
         """
-        Read OSTC dive computer firmware version and firmware fingerprint.
+        Read OSTC dive computer firmware version.
         """
         self._write(b'e')
         v1, v2 = self._read(2)
-        data = self._read(16)
-        fingerprint = hexlify(data).upper()
-        return 'OSTC Mk.1 {}.{} (fingerprint {})'.format(v1, v2, fingerprint)
+        self._read(16) # fingerprint, ignore as it can be 0x00 if not built yet
+        return 'OSTC Mk.1 {}.{}'.format(v1, v2)
 
 
 
