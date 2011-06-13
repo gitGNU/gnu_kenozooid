@@ -24,7 +24,6 @@ used in diving.
 The module specifies set of interfaces to be implemented by device drivers.
 """
 
-import sys
 import logging
 
 import kenozooid.component as kc
@@ -117,26 +116,28 @@ class MemoryDump(object):
 
     def dump(self):
         """
-        Return iterator of binary data being memory dump.
+        Get raw data from dive computer.
 
-        Dumped memory will be saved to a file by Kenozooid.
+        Raw data will be saved to a file by Kenozooid.
         """
 
-    def convert(self, dtree, data, tree):
+    def convert(self, dump):
         """
-        Convert dive computer dump data into UDFF format.
-
-        ElementTree parameter is prepared structure of UDDF format. It
-        shall be filled with data from memory dump. The structure is saved
-        by Kenozooid.
+        Convert dive computer raw data into UDFF format.
 
         :Parameters:
-         dtree
-            XML data coming from UDDF file containing device data.
-         data
-            Dive computer memory dump.
-         tree
-            ElementTree representing UDFF file.
+         dump
+            Dive computer data (time, data). 
+        """
+
+
+    def version(self, dump):
+        """
+        Extract model and version information from dive computer raw data.
+
+        :Parameters:
+         dump
+            Dive computer data (time, data).
         """
 
 
