@@ -501,9 +501,9 @@ def _record(rt, node, queries, parsers):
     parsers.
 
     :Parameters:
-    rt
+     rt
         Record type (named tuple) of record data.
-    node
+     node
         XML node.
      queries
         XPath expression objects for each field to retrieve its value.
