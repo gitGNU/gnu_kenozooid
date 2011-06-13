@@ -9,7 +9,7 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <datetime>2011-06-01 17:28:07</datetime>
+    <datetime>2011-06-13 23:17:44</datetime>
   </generator>
   <diver>
     <owner>
@@ -18,7 +18,7 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="12b2a96c73bd61e2e528c31427c68d20">
+        <divecomputer id="21682229cda55e57794e6889dfad27df">
           <model>OSTC Mk.1 1.80</model>
         </divecomputer>
       </equipment>
@@ -26,9 +26,9 @@
   </diver>
   <divecomputercontrol>
     <divecomputerdump>
-      <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
-      <datetime>2011-06-01 17:28:12</datetime>
-      <dcdump>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</dcdump>
+      <link ref="21682229cda55e57794e6889dfad27df"/>
+      <datetime>2011-06-13 23:17:49</datetime>
+      <dcdump>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</dcdump>
     </divecomputerdump>
   </divecomputercontrol>
   <profiledata>
@@ -36,7 +36,7 @@
       <dive>
         <datetime>2011-03-19 14:56:18</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>6.0</greatestdepth>
         <diveduration>2022</diveduration>
@@ -879,7 +879,7 @@
       <dive>
         <datetime>2011-03-27 12:04:15</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>30.8</greatestdepth>
         <diveduration>2025</diveduration>
@@ -1722,7 +1722,7 @@
       <dive>
         <datetime>2011-03-27 15:07:17</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>38.4</greatestdepth>
         <diveduration>2083</diveduration>
@@ -2590,7 +2590,7 @@
       <dive>
         <datetime>2011-04-23 15:14:41</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>22.1</greatestdepth>
         <diveduration>3679</diveduration>
@@ -4107,7 +4107,7 @@
       <dive>
         <datetime>2011-04-24 12:30:19</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>38.7</greatestdepth>
         <diveduration>3101</diveduration>
@@ -5391,7 +5391,7 @@
       <dive>
         <datetime>2011-04-24 14:51:23</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>19.5</greatestdepth>
         <diveduration>2917</diveduration>
@@ -6598,7 +6598,7 @@
       <dive>
         <datetime>2011-05-15 11:40:12</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>10.3</greatestdepth>
         <diveduration>2208</diveduration>
@@ -7515,7 +7515,7 @@
       <dive>
         <datetime>2011-05-17 20:12:54</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>12.6</greatestdepth>
         <diveduration>2466</diveduration>
@@ -8538,7 +8538,7 @@
       <dive>
         <datetime>2011-05-28 10:53:44</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>20.8</greatestdepth>
         <diveduration>616</diveduration>
@@ -8806,7 +8806,7 @@
       <dive>
         <datetime>2011-05-29 11:22:19</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>37.7</greatestdepth>
         <diveduration>3161</diveduration>
@@ -10115,7 +10115,7 @@
       <dive>
         <datetime>2011-05-29 14:18:36</datetime>
         <equipmentused>
-          <link ref="12b2a96c73bd61e2e528c31427c68d20"/>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
         </equipmentused>
         <greatestdepth>26.9</greatestdepth>
         <diveduration>2904</diveduration>
@@ -11312,6 +11312,911 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>2910</divetime>
+          </waypoint>
+        </samples>
+      </dive>
+      <dive>
+        <datetime>2011-06-08 19:38:44</datetime>
+        <equipmentused>
+          <link ref="21682229cda55e57794e6889dfad27df"/>
+        </equipmentused>
+        <greatestdepth>13.0</greatestdepth>
+        <diveduration>2176</diveduration>
+        <lowesttemperature>285.8</lowesttemperature>
+        <samples>
+          <waypoint>
+            <depth>0.0</depth>
+            <divetime>0</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>2.9</depth>
+            <divetime>10</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>2.9</depth>
+            <divetime>20</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>2.9</depth>
+            <divetime>30</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.0</depth>
+            <divetime>40</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.4</depth>
+            <divetime>50</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.5</depth>
+            <divetime>60</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.6</depth>
+            <divetime>70</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.0</depth>
+            <divetime>80</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>90</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.1</depth>
+            <divetime>100</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.7</depth>
+            <divetime>110</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.8</depth>
+            <temperature>285.8</temperature>
+            <divetime>120</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.0</depth>
+            <divetime>130</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>140</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.2</depth>
+            <divetime>150</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.1</depth>
+            <divetime>160</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.2</depth>
+            <divetime>170</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>180</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>190</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>200</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>210</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>220</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>230</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <temperature>285.9</temperature>
+            <divetime>240</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>250</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.5</depth>
+            <divetime>260</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.5</depth>
+            <divetime>270</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.6</depth>
+            <divetime>280</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.5</depth>
+            <divetime>290</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.5</depth>
+            <divetime>300</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>310</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>320</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>330</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.5</depth>
+            <divetime>340</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.7</depth>
+            <divetime>350</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.6</depth>
+            <temperature>285.9</temperature>
+            <divetime>360</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>370</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>380</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.4</depth>
+            <divetime>390</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.2</depth>
+            <divetime>400</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>410</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.2</depth>
+            <divetime>420</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.8</depth>
+            <divetime>430</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.7</depth>
+            <divetime>440</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.9</depth>
+            <divetime>450</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.7</depth>
+            <divetime>460</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.8</depth>
+            <divetime>470</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>13.0</depth>
+            <temperature>285.9</temperature>
+            <divetime>480</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.8</depth>
+            <divetime>490</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.8</depth>
+            <divetime>500</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.6</depth>
+            <divetime>510</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.7</depth>
+            <divetime>520</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.6</depth>
+            <divetime>530</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.5</depth>
+            <divetime>540</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>550</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>560</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>570</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.3</depth>
+            <divetime>580</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>12.1</depth>
+            <divetime>590</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.9</depth>
+            <temperature>285.9</temperature>
+            <divetime>600</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.8</depth>
+            <divetime>610</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.7</depth>
+            <divetime>620</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.4</depth>
+            <divetime>630</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>11.2</depth>
+            <divetime>640</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.9</depth>
+            <divetime>650</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.8</depth>
+            <divetime>660</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.4</depth>
+            <divetime>670</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.6</depth>
+            <divetime>680</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.8</depth>
+            <divetime>690</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.5</depth>
+            <divetime>700</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.5</depth>
+            <divetime>710</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.3</depth>
+            <temperature>285.9</temperature>
+            <divetime>720</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>10.0</depth>
+            <divetime>730</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>9.9</depth>
+            <divetime>740</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>9.9</depth>
+            <divetime>750</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>9.8</depth>
+            <divetime>760</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>9.7</depth>
+            <divetime>770</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>9.4</depth>
+            <divetime>780</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>9.2</depth>
+            <divetime>790</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.9</depth>
+            <divetime>800</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.8</depth>
+            <divetime>810</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.8</depth>
+            <divetime>820</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.7</depth>
+            <divetime>830</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.4</depth>
+            <temperature>285.9</temperature>
+            <divetime>840</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.6</depth>
+            <divetime>850</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.5</depth>
+            <divetime>860</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.3</depth>
+            <divetime>870</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.2</depth>
+            <divetime>880</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.2</depth>
+            <divetime>890</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.0</depth>
+            <divetime>900</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.7</depth>
+            <divetime>910</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.5</depth>
+            <divetime>920</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.5</depth>
+            <divetime>930</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <divetime>940</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>950</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.0</depth>
+            <temperature>285.9</temperature>
+            <divetime>960</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>970</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>980</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>990</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.5</depth>
+            <divetime>1000</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.3</depth>
+            <divetime>1010</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.2</depth>
+            <divetime>1020</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.0</depth>
+            <divetime>1030</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.9</depth>
+            <divetime>1040</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.7</depth>
+            <divetime>1050</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <divetime>1060</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <divetime>1070</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <temperature>286.0</temperature>
+            <divetime>1080</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.7</depth>
+            <divetime>1090</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <divetime>1100</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.0</depth>
+            <divetime>1110</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.1</depth>
+            <divetime>1120</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.2</depth>
+            <divetime>1130</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.1</depth>
+            <divetime>1140</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.1</depth>
+            <divetime>1150</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.3</depth>
+            <divetime>1160</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.3</depth>
+            <divetime>1170</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.1</depth>
+            <divetime>1180</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.1</depth>
+            <divetime>1190</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.7</depth>
+            <temperature>286.0</temperature>
+            <divetime>1200</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <divetime>1210</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <divetime>1220</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.0</depth>
+            <divetime>1230</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.2</depth>
+            <divetime>1240</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.3</depth>
+            <divetime>1250</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.6</depth>
+            <divetime>1260</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.8</depth>
+            <divetime>1270</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1280</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.0</depth>
+            <divetime>1290</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.2</depth>
+            <divetime>1300</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.3</depth>
+            <divetime>1310</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <temperature>286.0</temperature>
+            <divetime>1320</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.3</depth>
+            <divetime>1330</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.3</depth>
+            <divetime>1340</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.3</depth>
+            <divetime>1350</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>1360</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>1370</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.0</depth>
+            <divetime>1380</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1390</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1400</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.0</depth>
+            <divetime>1410</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1420</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.6</depth>
+            <divetime>1430</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.4</depth>
+            <temperature>286.0</temperature>
+            <divetime>1440</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1450</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1460</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.8</depth>
+            <divetime>1470</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.6</depth>
+            <divetime>1480</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1490</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1500</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.8</depth>
+            <divetime>1510</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.6</depth>
+            <divetime>1520</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.3</depth>
+            <divetime>1530</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.5</depth>
+            <divetime>1540</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.5</depth>
+            <divetime>1550</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <temperature>285.9</temperature>
+            <divetime>1560</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.8</depth>
+            <divetime>1570</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1580</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.0</depth>
+            <divetime>1590</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.3</depth>
+            <divetime>1600</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <divetime>1610</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <divetime>1620</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.6</depth>
+            <divetime>1630</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <divetime>1640</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <divetime>1650</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.5</depth>
+            <divetime>1660</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.5</depth>
+            <divetime>1670</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.5</depth>
+            <temperature>285.9</temperature>
+            <divetime>1680</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.5</depth>
+            <divetime>1690</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.4</depth>
+            <divetime>1700</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>1710</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>1720</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>1730</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.1</depth>
+            <divetime>1740</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1750</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1760</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1770</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>7.0</depth>
+            <divetime>1780</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.8</depth>
+            <divetime>1790</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <temperature>285.9</temperature>
+            <divetime>1800</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1810</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.8</depth>
+            <divetime>1820</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.9</depth>
+            <divetime>1830</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.7</depth>
+            <divetime>1840</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.6</depth>
+            <divetime>1850</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.2</depth>
+            <divetime>1860</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.9</depth>
+            <divetime>1870</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.8</depth>
+            <divetime>1880</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.4</depth>
+            <divetime>1890</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>5.0</depth>
+            <divetime>1900</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.8</depth>
+            <divetime>1910</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.4</depth>
+            <temperature>286.0</temperature>
+            <divetime>1920</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.2</depth>
+            <divetime>1930</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.0</depth>
+            <divetime>1940</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.9</depth>
+            <divetime>1950</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.0</depth>
+            <divetime>1960</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.9</depth>
+            <divetime>1970</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.0</depth>
+            <divetime>1980</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.0</depth>
+            <divetime>1990</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.9</depth>
+            <divetime>2000</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.9</depth>
+            <divetime>2010</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.8</depth>
+            <divetime>2020</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.7</depth>
+            <divetime>2030</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.6</depth>
+            <temperature>286.0</temperature>
+            <divetime>2040</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.6</depth>
+            <divetime>2050</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.8</depth>
+            <divetime>2060</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.7</depth>
+            <divetime>2070</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.9</depth>
+            <divetime>2080</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.1</depth>
+            <divetime>2090</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.0</depth>
+            <divetime>2100</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.8</depth>
+            <divetime>2110</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.9</depth>
+            <divetime>2120</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>4.0</depth>
+            <divetime>2130</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>3.5</depth>
+            <divetime>2140</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>2.3</depth>
+            <divetime>2150</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>1.7</depth>
+            <temperature>286.0</temperature>
+            <divetime>2160</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>0.1</depth>
+            <divetime>2170</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>0.0</depth>
+            <divetime>2180</divetime>
           </waypoint>
         </samples>
       </dive>
