@@ -655,14 +655,14 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
     """
     Sensus Ultra data to UDDF format conversion tests.
     """
-    def test_conversion(self):
+    def test_profile_conversion(self):
         """
         Test Sensus Ultra profile data conversion
         """
         dump = _dump()
 
         dumper = SensusUltraMemoryDump()
-        dives = list(dumper.convert(dump))
+        dives = list(dumper.dives(dump))
 
         # 43 dives
         self.assertEquals(43, len(dives))

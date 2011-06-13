@@ -230,10 +230,9 @@ class SensusUltraMemoryDump(object):
         return hd.raw + ud.raw + dd.contents.data[:dd.contents.size]
 
 
-    def convert(self, dump):
+    def dives(self, dump):
         """
-        Convert Reefnet Sensus Ultra dive profiles data into UDDF format
-        dive nodes.
+        Convert Reefnet Sensus Ultra dive data into UDDF format.
         """
         #dev = self.driver.dev
         #lib = self.driver.lib

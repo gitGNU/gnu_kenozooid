@@ -121,9 +121,9 @@ class MemoryDump(object):
         Raw data will be saved to a file by Kenozooid.
         """
 
-    def convert(self, dump):
+    def dives(self, dump):
         """
-        Convert dive computer raw data into UDFF format.
+        Extract dive data from raw data into UDDF format.
 
         :Parameters:
          dump

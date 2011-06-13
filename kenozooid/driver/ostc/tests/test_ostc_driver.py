@@ -124,7 +124,7 @@ class UDDFTestCase(unittest.TestCase):
         dump = DCDump(datetime.now(), data)
 
         dc = OSTCMemoryDump()
-        self.dives = list(dc.convert(dump))
+        self.dives = list(dc.dives(dump))
 
 
     def test_conversion(self):

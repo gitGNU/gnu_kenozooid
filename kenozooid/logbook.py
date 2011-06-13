@@ -208,7 +208,7 @@ def _save_dives(drv, time, data, fout):
     dump = ku.dump_data(ddn)
 
     # convert raw data into dive data and store in output file
-    dnodes = drv.convert(dump)
+    dnodes = drv.dives(dump)
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
             parent=dout)
     for n in dnodes:

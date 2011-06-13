@@ -154,9 +154,9 @@ class OSTCMemoryDump(object):
         return self.driver._read(33034)
 
 
-    def convert(self, dump):
+    def dives(self, dump):
         """
-        Convert dive profiles to UDDF format.
+        Convert dive data into UDDF format.
         """
         nodes = []
         dive_data = ostc_parser.status(dump.data)
