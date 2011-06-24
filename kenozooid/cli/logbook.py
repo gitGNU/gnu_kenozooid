@@ -97,16 +97,18 @@ class ListDives(object):
             for i, dive in enumerate(dives):
                 try:
                     duration = dive.duration
+                    depth = dive.depth
                     if csv:
                         fmt = '{file},{no},{time},{depth:.1f},{duration},{temp}'
                     else:
-                        fmt = '{no:4}: {time}   \u21a7{depth:.1f}m' \
-                                '    t={duration}    T={temp:.1f}\u00b0C'
+                        fmt = '{no:4}: {time}   \u21a7{depth:<9}' \
+                                ' t={duration:<6}   T={temp:.1f}\u00b0C'
                         duration = min2str(duration / 60.0)
+                        depth = '{:.1f}m'.format(depth)
 
                     print(fmt.format(no=i + 1,
                             time=format(dive.time, FMT_DIVETIME),
-                            depth=dive.depth,
+                            depth=depth,
                             duration=duration,
                             temp=K2C(dive.temp),
                             file=fin))
