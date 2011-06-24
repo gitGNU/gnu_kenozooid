@@ -47,8 +47,8 @@ Logbook
 
 Add Dive
 ^^^^^^^^
-The diver adds a dive to dive logbook. A dive consists of dive data, which
-is
+The diver adds a dive to dive logbook. A dive consists of dive data.
+The data is
 
 - date
 - maximum depth
@@ -96,6 +96,40 @@ in particular
 
 - year is 4 digit number
 - year is followed by month, month by day
+
+Add Dive Site
+^^^^^^^^^^^^^
+The diver adds a dive site data to logbook file. The data can be
+
+- id of dive site
+- location, i.e. Red Sea
+- name, i.e. SS Thistlegorm
+- position (longitude and latitude) of dive site
+
+List Dive Sites
+^^^^^^^^^^^^^^^
+The diver lists dive sites stored in logbook file.
+
+Remove Dive Site
+^^^^^^^^^^^^^^^^
+The diver removes dive site data from logbook file.
+
+Add Buddy
+^^^^^^^^^
+The diver adds a buddy data to logbook file. The data can be
+
+- buddy id (short string like initials, nickname, etc.)
+- name
+- organization, i.e. PADI, CMAS
+- member id of organization buddy belongs to
+
+List Buddies
+^^^^^^^^^^^^
+The diver lists buddy data stored in logbook file.
+
+Remove Buddy
+^^^^^^^^^^^^
+The diver removes buddy data from logbook file.
 
 .. _planning:
 
