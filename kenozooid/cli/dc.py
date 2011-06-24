@@ -22,12 +22,14 @@ Dive computer related Kenozooid command line commands.
 """
 
 import optparse
+import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError
 from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump
 
+log = logging.getLogger('kenozooid.cli.dc')
 
 @inject(CLIModule, name='drivers')
 class ListDrivers(object):
@@ -164,13 +166,45 @@ class Backup(object):
         """
         Execute dive computer data backup command.
         """
-        import kenozooid.logbook as kl
+        import kenozooid.dc as kd
 
         drv_name = args.driver[0]
         port = args.port[0]
         fout = args.output[0]
 
-        kl.backup(drv_name, port, fout)
+        kd.backup(drv_name, port, fout)
+
+
+
+@inject(CLIModule, name='dive extract')
+class DumpExtract(object):
+    """
+    Extract dive profiles from dive computer dump (binary) data.
+    """
+    description = 'extract dives from dive computer backup'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive extract command.
+        """
+        parser.add_argument('input',
+                help='UDDF file with dive computer dump data')
+        parser.add_argument('output',
+                help='output UDDF file')
+
+
+    def __call__(self, args):
+        """
+        Execute dive extract command.
+        """
+        import kenozooid.dc as kd
+
+        fin = args.input
+        fout = args.output
+        log.debug('extracting dive profiles from {} (saving to {})' \
+                .format(fin, fout))
+        kd.extract_dives(fin, fout)
 
 
 
@@ -201,13 +235,13 @@ class Convert(object):
         """
         Execute dive computer data conversion command.
         """
-        import kenozooid.logbook as kl
+        import kenozooid.dc as kd
 
         drv_name = args.driver[0]
         fin = args.input[0]
         fout = args.output[0]
 
-        kl.convert(drv_name, fin, fout)
+        kd.convert(drv_name, fin, fout)
 
 
 # vim: sw=4:et:ai

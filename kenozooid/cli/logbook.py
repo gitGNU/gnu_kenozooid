@@ -18,7 +18,7 @@
 #
 
 """
-UDDF related Kenozooid command line commands.
+Kenozooid's logbook command line user interface.
 """
 
 import sys
@@ -587,38 +587,6 @@ class Analyze(object):
         # fetch dives and profiles from files provided on command line
         data = itertools.chain(*_fetch(args.input))
         analyze(args.script[0], data, args.args)
-
-
-
-@inject(CLIModule, name='dive extract')
-class DumpExtract(object):
-    """
-    Extract dive profiles from dive computer dump (binary) data.
-    """
-    description = 'extract dives from dive computer backup'
-
-    @classmethod
-    def add_arguments(self, parser):
-        """
-        Add options for dive extract command.
-        """
-        parser.add_argument('input',
-                help='UDDF file with dive computer dump data')
-        parser.add_argument('output',
-                help='output UDDF file')
-
-
-    def __call__(self, args):
-        """
-        Execute dive extract command.
-        """
-        import kenozooid.logbook as kl
-
-        fin = args.input
-        fout = args.output
-        log.debug('extracting dive profiles from {} (saving to {})' \
-                .format(fin, fout))
-        kl.extract_dives(fin, fout)
 
 
 

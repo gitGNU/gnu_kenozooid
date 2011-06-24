@@ -26,7 +26,7 @@ from kenozooid.cli import ArgumentError, add_commands
 from kenozooid.component import query, params, inject
 import kenozooid.cli.calc
 import kenozooid.cli.dc
-import kenozooid.cli.uddf
+import kenozooid.cli.logbook
 
 # add common options to command line parser
 parser = argparse.ArgumentParser(
