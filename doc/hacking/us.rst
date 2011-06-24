@@ -45,8 +45,8 @@ Logbook
 
 .. _adddive:
 
-Adding Dive
-^^^^^^^^^^^
+Add Dive
+^^^^^^^^
 The diver adds a dive to dive logbook. A dive consists of dive data, which
 is
 
@@ -63,12 +63,13 @@ Optionally, diver can specify
 
 .. _adddivep:
 
-Adding Dive With Profile
-^^^^^^^^^^^^^^^^^^^^^^^^
+Add Dive With Profile
+^^^^^^^^^^^^^^^^^^^^^
 The diver adds a dive with profile data to dive logbook.
 
-Some of the dive data is extracted from profile data and some is provided
-by diver. See adddive_ for list of dive data.
+Some of the dive data is extracted from profile data (i.e. dive duration)
+and some is provided by diver (i.e. buddy). See adddive_ for list of dive
+data.
 
 Listing Dives
 ^^^^^^^^^^^^^
