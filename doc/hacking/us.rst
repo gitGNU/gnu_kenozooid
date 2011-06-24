@@ -71,8 +71,8 @@ Some of the dive data is extracted from profile data (i.e. dive duration)
 and some is provided by diver (i.e. buddy). See adddive_ for list of dive
 data.
 
-Listing Dives
-^^^^^^^^^^^^^
+List Dives
+^^^^^^^^^^
 The diver lists dives from dive logbook.
 
 By default, all dives are displayed.
