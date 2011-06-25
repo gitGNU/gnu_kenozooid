@@ -21,7 +21,7 @@
 Test command line routines.
 """
 
-from kenozooid.cli.uddf import _name_parse
+from kenozooid.cli.logbook import _name_parse
 
 import unittest
 
