@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
   <generator>
     <name>kenozooid</name>
     <version>0.1.0</version>

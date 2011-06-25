@@ -32,7 +32,7 @@ import kenozooid.uddf as ku
 
 UDDF_PROFILE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
   <generator>
     <name>kenozooid</name>
     <version>0.1.0</version>
@@ -114,7 +114,7 @@ UDDF_PROFILE = b"""\
 
 UDDF_DUMP = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
   <generator>
     <name>kenozooid</name>
     <version>0.1.0</version>
@@ -152,7 +152,7 @@ UDDF_DUMP = b"""\
 
 UDDF_BUDDY = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
 <diver>
     <owner>
         <personal>
@@ -182,7 +182,7 @@ UDDF_BUDDY = b"""\
 
 UDDF_SITE = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
 <divesite>
     <site id='markgraf'><name>SMS Markgraf</name><geography><location>Scapa Flow</location></geography></site>
     <site id='konig'><name>SMS Konig</name><geography><location>Scapa Flow</location></geography></site>
@@ -330,7 +330,7 @@ class CreateDataTestCase(unittest.TestCase):
 
         preamble = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">\
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">\
 """
         self.assertTrue(s.startswith(preamble), s)
 
@@ -707,7 +707,7 @@ class PostprocessingTestCase(unittest.TestCase):
         Test UDDF reordering
         """
         doc = et.parse(BytesIO(b"""
-<uddf xmlns="http://www.streit.cc/uddf">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/">
 <profiledata>
 <repetitiongroup>
 <dive>

@@ -64,7 +64,7 @@ log = logging.getLogger('kenozooid.uddf')
 #
 # Default UDDF namespace mapping.
 #
-_NSMAP = {'uddf': 'http://www.streit.cc/uddf'}
+_NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.0/'}
 
 #
 # Parsing and searching.
@@ -536,7 +536,7 @@ DEFAULT_FMT_DIVE_PROFILE = {
 
 # basic data for an UDDF file
 UDDF_BASIC = """\
-<uddf xmlns="http://www.streit.cc/uddf" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
 <generator>
     <name>kenozooid</name>
     <version>{kzver}</version>
