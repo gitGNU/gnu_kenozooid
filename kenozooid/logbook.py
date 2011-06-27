@@ -22,6 +22,7 @@ Dive logbook functionality.
 """
 
 import lxml.etree as et
+import os.path
 import logging
 
 import kenozooid.uddf as ku
@@ -65,8 +66,8 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
         if next(dives, None) is not None:
             raise ValueError('Too many dives found')
 
-    elif time is not None and depth is not None and duration is not None:
-        duration = int(duration * 3600)
+    elif (time, depth, duration) is not (None, None, None):
+        duration = int(duration * 60)
     else:
         raise ValueError('Dive data or dive profile needs to be provided')
 
@@ -78,7 +79,6 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
         if duration is None:
             duration = ku.xp(dive, 'diveduration/text()')
             
-            
     ku.create_dive_data(doc, time=time, depth=depth,
             duration=duration)
 
@@ -86,6 +86,7 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
         _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
                 parent=doc)
         rg.append(deepcopy(dive))
+
     ku.reorder(doc)
     ku.save(doc, fout)
 

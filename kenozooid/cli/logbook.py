@@ -98,11 +98,15 @@ class ListDives(object):
                 try:
                     duration = dive.duration
                     depth = dive.depth
+                    temp = ''
+                    if dive.temp is not None:
+                        temp = '{:.1f}\u00b0C'.format(K2C(temp))
+
                     if csv:
                         fmt = '{file},{no},{time},{depth:.1f},{duration},{temp}'
                     else:
                         fmt = '{no:4}: {time}   \u21a7{depth:<9}' \
-                                ' t={duration:<6}   T={temp:.1f}\u00b0C'
+                                ' t={duration:<6}   T={temp}'
                         duration = min2str(duration / 60.0)
                         depth = '{:.1f}m'.format(depth)
 
@@ -110,7 +114,7 @@ class ListDives(object):
                             time=format(dive.time, FMT_DIVETIME),
                             depth=depth,
                             duration=duration,
-                            temp=K2C(dive.temp),
+                            temp=temp,
                             file=fin))
                 except TypeError as ex:
                     log.debug(ex)
@@ -164,7 +168,7 @@ class AddDive(object):
             try:
                 time = dparse(args.with_depth[0])
                 depth = float(args.with_depth[1])
-                duration = int(args.with_depth[2])
+                duration = float(args.with_depth[2])
             except ValueError:
                 raise ArgumentError('Invalid time, depth or duration parameter')
         else:
