@@ -139,7 +139,7 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals(195, len(data))
 
         t = ku.xp_first(dive, 'uddf:datetime/text()')
-        self.assertEquals('2009-01-31 23:08:41', t)
+        self.assertEquals('2009-01-31T23:08:41', t)
 
         d = ku.xp_first(dive, 'uddf:greatestdepth/text()')
         self.assertEquals('75.0', d)

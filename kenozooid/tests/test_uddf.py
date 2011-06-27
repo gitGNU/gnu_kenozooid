@@ -447,7 +447,7 @@ class CreateDataTestCase(unittest.TestCase):
 
         d = list(ku.xp(f, '//uddf:dive/uddf:datetime/text()'))
         self.assertEquals(1, len(d), s)
-        self.assertEquals('2010-12-29 20:14:00', d[0], s)
+        self.assertEquals('2010-12-29T20:14:00', d[0], s)
 
         d = list(ku.xp(f, '//uddf:dive/uddf:greatestdepth/text()'))
         self.assertEquals(1, len(d), s)
@@ -465,7 +465,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(2, len(d), s)
 
         dt = tuple(ku.xp(f, '//uddf:dive/uddf:datetime/text()'))
-        expected = '2010-12-29 20:14:00', '2010-12-30 20:14:00'
+        expected = '2010-12-29T20:14:00', '2010-12-30T20:14:00'
         self.assertEquals(expected, dt, s)
 
 

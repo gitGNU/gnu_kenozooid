@@ -673,7 +673,7 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         self.assertEquals(18, len(wps))
 
         dt = ku.xp_first(dive, './uddf:datetime/text()')
-        self.assertEquals('2009-09-19 13:14:40', dt, et.tostring(dive))
+        self.assertEquals('2009-09-19T13:14:40', dt, et.tostring(dive))
 
         d = ku.xp_first(dive, 'uddf:greatestdepth/text()')
         md = max(float(f) for f in ku.xp(dive, './/uddf:depth/text()'))

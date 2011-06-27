@@ -527,7 +527,7 @@ def _dump_decode(data):
 #
 
 # default format for timestamps within UDDF file
-FMT_DATETIME = '%Y-%m-%d %H:%M:%S%z'
+FMT_DATETIME = '%Y-%m-%dT%H:%M:%S%z'
 
 DEFAULT_FMT_DIVE_PROFILE = {
     'depth': lambda d: str.format('{0:.1f}', max(d, 0)),
@@ -539,17 +539,17 @@ UDDF_BASIC = """\
 <uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
 <generator>
     <name>kenozooid</name>
-    <version>{kzver}</version>
-    <manufacturer>
+    <manufacturer id='kenozooid'>
       <name>Kenozooid Team</name>
       <contact>
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
+    <version>{kzver}</version>
     <datetime></datetime>
 </generator>
 <diver>
-    <owner>
+    <owner id='owner'>
         <personal>
             <firstname>Anonymous</firstname>
             <lastname>Guest</lastname>
