@@ -150,9 +150,9 @@ def _save_dives(drv, time, data, fout):
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
             parent=dout)
     for n in dnodes:
-        equ, l = ku.create_node('uddf:equipmentused/uddf:link')
+        *_, l = ku.create_node('uddf:informationafterdive' \
+                '/uddf:equipmentused/uddf:link', parent=n)
         l.set('ref', dc_id)
-        n.insert(1, equ) # append after datetime element
         rg.append(n)
     
     ku.reorder(dout)

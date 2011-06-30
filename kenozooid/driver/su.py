@@ -26,6 +26,7 @@ It uses libdivecomputer library from
 """
 
 import ctypes as ct
+from collections import OrderedDict
 from datetime import datetime
 from dateutil.parser import parse as dparse
 from struct import unpack, pack
@@ -188,11 +189,6 @@ class SensusUltraMemoryDump(object):
     """
     Reefnet Sensus Ultra dive logger memory dump.
     """
-    UDDF_SAMPLE = {
-        'depth': 'uddf:depth',
-        'time': 'uddf:divetime',
-        'temp': 'uddf:temperature',
-    }
 
     def dump(self):
         """
@@ -303,6 +299,10 @@ class SensusUltraMemoryDump(object):
          dives
             Queue of dives to be consumed by caller.
         """
+        _f = 'depth', 'time', 'temp'
+        _q = 'uddf:depth', 'uddf:divetime', 'uddf:temperature'
+        UDDF_SAMPLE = OrderedDict(zip(_f, _q))
+
         lib = ct.CDLL('libdivecomputer.so.0')
         lib.parser_set_data(parser, buffer, size)
 
@@ -328,7 +328,7 @@ class SensusUltraMemoryDump(object):
         min_temp = 10000   # in Kelvin
         samples = []
         for sdata in _iterate(sq, extract_samples):
-            n = ku.create_dive_profile_sample(None, self.UDDF_SAMPLE, **sdata)
+            n = ku.create_dive_profile_sample(None, UDDF_SAMPLE, **sdata)
             samples.append(n)
 
         log.debug('removing {} endcount samples'.format(header.endcount))
@@ -348,7 +348,7 @@ class SensusUltraMemoryDump(object):
 
         # each dive starts below DiveHeader.threshold, therefore
         # inject first sample required by UDDF
-        ku.create_dive_profile_sample(dn, self.UDDF_SAMPLE,
+        ku.create_dive_profile_sample(dn, UDDF_SAMPLE,
                 depth=0.0, time=0)
 
         snode = ku.xp_first(dn, './uddf:samples')
@@ -358,7 +358,7 @@ class SensusUltraMemoryDump(object):
 
         # each dive ends at about DiveHeader.threshold depth, therefore
         # inject last sample required by UDDF
-        ku.create_dive_profile_sample(dn, self.UDDF_SAMPLE,
+        ku.create_dive_profile_sample(dn, UDDF_SAMPLE,
                 depth=0.0, time=duration)
 
         try:

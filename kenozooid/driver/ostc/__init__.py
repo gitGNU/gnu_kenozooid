@@ -27,11 +27,12 @@ protocol can be found at address
 
 """
 
-import logging
+from collections import OrderedDict
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
 from binascii import hexlify
 from functools import partial
+import logging
 
 log = logging.getLogger('kenozooid.driver.ostc')
 
@@ -162,12 +163,9 @@ class OSTCMemoryDump(object):
         dive_data = ostc_parser.status(dump.data)
 
         # uddf dive profile sample
-        uddf_sample = {
-            'depth': 'uddf:depth',
-            'time': 'uddf:divetime',
-            'temp': 'uddf:temperature',
-            'alarm': 'uddf:alarm',
-        }
+        _f = 'depth', 'time', 'temp', 'alarm'
+        _q = 'uddf:depth', 'uddf:divetime', 'uddf:temperature', 'uddf:alarm'
+        UDDF_SAMPLE = OrderedDict(zip(_f, _q))
 
         for h, p in ostc_parser.profile(dive_data.profile):
             log.debug('header: {}'.format(hexlify(h)))
@@ -194,7 +192,7 @@ class OSTCMemoryDump(object):
                         temp=C2K(header.min_temp / 10.0))
 
                 create_sample = partial(ku.create_dive_profile_sample, dn,
-                        queries=uddf_sample)
+                        queries=UDDF_SAMPLE)
 
                 deco = False
 

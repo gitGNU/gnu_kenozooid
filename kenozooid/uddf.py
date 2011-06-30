@@ -66,6 +66,9 @@ log = logging.getLogger('kenozooid.uddf')
 #
 _NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.0/'}
 
+# Node id formatter
+FORMAT_ID = 'id-{}'
+
 #
 # Parsing and searching.
 #
@@ -74,10 +77,10 @@ _NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.0/'}
 XPath = partial(et.XPath, namespaces=_NSMAP)
 
 # XPath queries for default dive data
-XP_DEFAULT_DIVE_DATA = (XPath('uddf:datetime/text()'),
-    XPath('uddf:greatestdepth/text()'),
-    XPath('uddf:diveduration/text()'),
-    XPath('uddf:lowesttemperature/text()'))
+XP_DEFAULT_DIVE_DATA = (XPath('uddf:informationbeforedive/uddf:datetime/text()'),
+    XPath('uddf:informationafterdive/uddf:greatestdepth/text()'),
+    XPath('uddf:informationafterdive/uddf:diveduration/text()'),
+    XPath('uddf:informationafterdive/uddf:lowesttemperature/text()'))
 
 # XPath queries for default dive profile sample data
 XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
@@ -603,8 +606,12 @@ def save(doc, f, validate=True):
 
     if validate:
         log.debug('validating uddf file')
-        #schema = et.XMLSchema(et.parse(open('uddf/uddf.xsd')))
-        #schema.assertValid(doc.getroot())
+        schema = et.XMLSchema(et.parse(open('uddf/uddf_3.0.1.xsd')))
+        try:
+            schema.assertValid(doc)
+        except et.DocumentInvalid as ex:
+            log.info(et.tostring(doc, pretty_print=True))
+            raise ex
 
     et.ElementTree(doc).write(f,
             encoding='utf-8',
@@ -739,7 +746,7 @@ def create_dc_data(node, queries=None, formatters=None,
 
     if dc is None:
         if not dc_id:
-            dc_id = hashlib.md5(dc_model.encode()).hexdigest()
+            dc_id = FORMAT_ID.format(hashlib.md5(dc_model.encode()).hexdigest())
             data['dc_id'] = dc_id
 
         # create new dive computer node
@@ -765,8 +772,10 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
     """
     if queries == None:
         f = ('time', 'depth', 'duration', 'temp')
-        q = ('uddf:datetime', 'uddf:greatestdepth', 'uddf:diveduration',
-                'uddf:lowesttemperature')
+        q = ('uddf:informationbeforedive/uddf:datetime',
+                'uddf:informationafterdive/uddf:greatestdepth',
+                'uddf:informationafterdive/uddf:diveduration',
+                'uddf:informationafterdive/uddf:lowesttemperature')
         queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = {
@@ -775,8 +784,10 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
             'duration': partial(str.format, '{0:.0f}'),
             'temp': partial(str.format, '{0:.1f}'),
         }
-    _, _, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
+    _, rg, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
             parent=node, multiple=True)
+    _set_id(rg)
+    _set_id(dn)
     set_data(dn, queries, formatters, **data)
     return dn
 
@@ -842,7 +853,7 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
         formatters = {}
 
     if 'id' not in data or data['id'] is None:
-        data['id'] = str(uuid())
+        data['id'] = uuid().hex
         
     _, buddy = create_node('uddf:diver/uddf:buddy', parent=node,
             multiple=True)
@@ -878,7 +889,7 @@ def create_site_data(node, queries=None, formatters=None, **data):
         formatters = {}
 
     if 'id' not in data or data['id'] is None:
-        data['id'] = str(uuid())
+        data['id'] = uuid().hex
         
     _, site = create_node('uddf:divesite/uddf:site', parent=node,
             multiple=True)
@@ -953,7 +964,7 @@ def reorder(doc):
     pd = profiles[0]
 
     nodes = find('//uddf:dive')
-    times = find('//uddf:dive/uddf:datetime/text()')
+    times = find('//uddf:dive/uddf:informationbeforedive/uddf:datetime/text()')
 
     dives = {}
     for n, t in zip(nodes, times):
@@ -965,11 +976,24 @@ def reorder(doc):
     for rg in rgroups: # cleanup old repetition groups
         pd.remove(rg)
     rg, = create_node('uddf:repetitiongroup', parent=pd)
+    _set_id(rg)
 
     # sort dive nodes by dive time
     log.debug('sorting dives')
     for dt, n in sorted(dives.items(), key=itemgetter(0)):
         rg.append(n)
+
+
+def _set_id(node):
+    """
+    Generate id for a node if there is no id yet.
+
+    :Parameters:
+     node
+        Node for which id should be generated.
+    """
+    if node.get('id') is None:
+        node.set('id', FORMAT_ID.format(uuid().hex))
 
 
 # vim: sw=4:et:ai

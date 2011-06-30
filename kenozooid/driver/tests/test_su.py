@@ -672,18 +672,18 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         wps = list(ku.xp(dive, './/uddf:samples/uddf:waypoint'))
         self.assertEquals(18, len(wps))
 
-        dt = ku.xp_first(dive, './uddf:datetime/text()')
+        dt = ku.xp_first(dive, 'uddf:informationbeforedive/uddf:datetime/text()')
         self.assertEquals('2009-09-19T13:14:40', dt, et.tostring(dive))
 
-        d = ku.xp_first(dive, 'uddf:greatestdepth/text()')
+        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:greatestdepth/text()')
         md = max(float(f) for f in ku.xp(dive, './/uddf:depth/text()'))
         self.assertEquals('12.0', d)
         self.assertEquals(12.0, md)
 
-        d = ku.xp_first(dive, 'uddf:diveduration/text()')
+        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:diveduration/text()')
         self.assertEquals('170', d)
 
-        t = ku.xp_first(dive, 'uddf:lowesttemperature/text()')
+        t = ku.xp_first(dive, 'uddf:informationafterdive/uddf:lowesttemperature/text()')
         mt = min(float(f) for f in ku.xp(dive, './/uddf:temperature/text()'))
         self.assertEquals('288.6', t)
         self.assertEquals(288.6, mt)

@@ -60,10 +60,14 @@ UDDF_PROFILE = b"""\
   <profiledata>
     <repetitiongroup>
       <dive>
-        <datetime>2009-09-19 13:10:23</datetime>
-        <diveduration>20</diveduration>
-        <greatestdepth>30.2</greatestdepth>
-        <lowesttemperature>251.4</lowesttemperature>
+        <informationbeforedive>
+            <datetime>2009-09-19 13:10:23</datetime>
+        </informationbeforedive>
+        <informationafterdive>
+            <diveduration>20</diveduration>
+            <greatestdepth>30.2</greatestdepth>
+            <lowesttemperature>251.4</lowesttemperature>
+        </informationafterdive>
         <samples>
           <waypoint>
             <depth>1.48</depth>
@@ -82,10 +86,14 @@ UDDF_PROFILE = b"""\
         </samples>
       </dive>
       <dive>
-        <datetime>2010-10-30 13:24:43</datetime>
-        <diveduration>30</diveduration>
-        <greatestdepth>32.2</greatestdepth>
-        <lowesttemperature>250.4</lowesttemperature>
+        <informationbeforedive>
+            <datetime>2010-10-30 13:24:43</datetime>
+        </informationbeforedive>
+        <informationafterdive>
+            <diveduration>30</diveduration>
+            <greatestdepth>32.2</greatestdepth>
+            <lowesttemperature>250.4</lowesttemperature>
+        </informationafterdive>
         <samples>
           <waypoint>
             <depth>2.61</depth>
@@ -442,18 +450,21 @@ class CreateDataTestCase(unittest.TestCase):
                 depth=32.15, duration=2001.0)
         s = et.tostring(f)
 
+        self.assertTrue(ku.xp_first(f, '//uddf:repetitiongroup/@id') is not None)
+        self.assertTrue(ku.xp_first(f, '//uddf:dive/@id') is not None)
+
         d = list(ku.xp(f, '//uddf:dive'))
         self.assertEquals(1, len(d), s)
 
-        d = list(ku.xp(f, '//uddf:dive/uddf:datetime/text()'))
+        d = list(ku.xp(f, '//uddf:dive/uddf:informationbeforedive/uddf:datetime/text()'))
         self.assertEquals(1, len(d), s)
         self.assertEquals('2010-12-29T20:14:00', d[0], s)
 
-        d = list(ku.xp(f, '//uddf:dive/uddf:greatestdepth/text()'))
+        d = list(ku.xp(f, '//uddf:dive/uddf:informationafterdive/uddf:greatestdepth/text()'))
         self.assertEquals(1, len(d), s)
         self.assertEquals('32.1', d[0], s)
 
-        d = list(ku.xp(f, '//uddf:dive/uddf:diveduration/text()'))
+        d = list(ku.xp(f, '//uddf:dive/uddf:informationafterdive/uddf:diveduration/text()'))
         self.assertEquals(1, len(d), s)
         self.assertEquals('2001', d[0], s)
 
@@ -464,7 +475,7 @@ class CreateDataTestCase(unittest.TestCase):
         d = list(ku.xp(f, '//uddf:dive'))
         self.assertEquals(2, len(d), s)
 
-        dt = tuple(ku.xp(f, '//uddf:dive/uddf:datetime/text()'))
+        dt = tuple(ku.xp(f, '//uddf:dive/uddf:informationbeforedive/uddf:datetime/text()'))
         expected = '2010-12-29T20:14:00', '2010-12-30T20:14:00'
         self.assertEquals(expected, dt, s)
 
@@ -483,7 +494,7 @@ class CreateDataTestCase(unittest.TestCase):
         id_q = '//uddf:owner//uddf:divecomputer/@id'
         ids = xpath(id_q)
         self.assertEquals(1, len(ids), sd)
-        self.assertEquals('206a9b642b3e16c89a61696ab28f3d5c', ids[0], sd)
+        self.assertEquals('id-206a9b642b3e16c89a61696ab28f3d5c', ids[0], sd)
 
         model_q = '//uddf:owner//uddf:divecomputer/uddf:model/text()'
         models = xpath(model_q)
@@ -504,8 +515,8 @@ class CreateDataTestCase(unittest.TestCase):
 
         ids = xpath(id_q)
         self.assertEquals(2, len(ids), sd)
-        expected = ['206a9b642b3e16c89a61696ab28f3d5c',
-                '605e79544a68819ce664c088aba92658']
+        expected = ['id-206a9b642b3e16c89a61696ab28f3d5c',
+                'id-605e79544a68819ce664c088aba92658']
         self.assertEquals(expected, ids, sd)
 
         models = xpath(model_q)
@@ -708,24 +719,70 @@ class PostprocessingTestCase(unittest.TestCase):
         """
         doc = et.parse(BytesIO(b"""
 <uddf xmlns="http://www.streit.cc/uddf/3.0/">
+<generator>
+    <name>kenozooid</name>
+</generator>
+<diver>
+    <owner id='owner'>
+        <personal>
+            <firstname>Anonymous</firstname>
+            <lastname>Guest</lastname>
+        </personal>
+    </owner>
+</diver>
 <profiledata>
-<repetitiongroup>
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
+<repetitiongroup id='r1'>
+<dive id='d1'>
+    <informationbeforedive>
+        <datetime>2009-03-02T23:02:00</datetime>
+    </informationbeforedive>
+    <informationafterdive>
+        <diveduration>20</diveduration>
+        <greatestdepth>30.2</greatestdepth>
+        <lowesttemperature>251.4</lowesttemperature>
+    </informationafterdive>
 </dive>
-<dive>
-    <datetime>2009-04-02 23:02</datetime>
+<dive id='d2'>
+    <informationbeforedive>
+        <datetime>2009-04-02T23:02:00</datetime>
+    </informationbeforedive>
+    <informationafterdive>
+        <diveduration>20</diveduration>
+        <greatestdepth>30.2</greatestdepth>
+        <lowesttemperature>251.4</lowesttemperature>
+    </informationafterdive>
 </dive>
-<dive>
-    <datetime>2009-04-02 23:02</datetime>
+<dive id='d3'>
+    <informationbeforedive>
+        <datetime>2009-04-02T23:02:00</datetime>
+    </informationbeforedive>
+    <informationafterdive>
+        <diveduration>20</diveduration>
+        <greatestdepth>30.2</greatestdepth>
+        <lowesttemperature>251.4</lowesttemperature>
+    </informationafterdive>
 </dive>
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
+<dive id='d4'>
+    <informationbeforedive>
+        <datetime>2009-03-02T23:02:00</datetime>
+    </informationbeforedive>
+    <informationafterdive>
+        <diveduration>20</diveduration>
+        <greatestdepth>30.2</greatestdepth>
+        <lowesttemperature>251.4</lowesttemperature>
+    </informationafterdive>
 </dive>
 </repetitiongroup>
-<repetitiongroup> <!-- one more repetition group which shall be removed -->
-<dive>
-    <datetime>2009-03-02 23:02</datetime>
+<repetitiongroup id='r2'> <!-- one more repetition group; it shall be removed -->
+<dive id='d5'>
+    <informationbeforedive>
+        <datetime>2009-03-02T23:02:00</datetime>
+    </informationbeforedive>
+    <informationafterdive>
+        <diveduration>20</diveduration>
+        <greatestdepth>30.2</greatestdepth>
+        <lowesttemperature>251.4</lowesttemperature>
+    </informationafterdive>
 </dive>
 </repetitiongroup>
 </profiledata>
@@ -733,19 +790,15 @@ class PostprocessingTestCase(unittest.TestCase):
 """))
         ku.reorder(doc)
 
-        f = BytesIO()
-        ku.save(doc.getroot(), f)
-
-        f = BytesIO(f.getvalue())
-
-        nodes = list(ku.parse(f, '//uddf:repetitiongroup'))
+        nodes = list(ku.xp(doc, '//uddf:repetitiongroup'))
         self.assertEquals(1, len(nodes))
-        nodes = list(ku.parse(f, '//uddf:dive'))
+        self.assertTrue(nodes[0].get('id') is not None)
+        nodes = list(ku.xp(doc, '//uddf:dive'))
         self.assertEquals(2, len(nodes))
 
         # check the order of dives
-        times = list(ku.parse(f, '//uddf:dive/uddf:datetime/text()'))
-        self.assertEquals(['2009-03-02 23:02', '2009-04-02 23:02'], times)
+        times = list(ku.xp(doc, '//uddf:dive/uddf:informationbeforedive/uddf:datetime/text()'))
+        self.assertEquals(['2009-03-02T23:02:00', '2009-04-02T23:02:00'], times)
 
 
 

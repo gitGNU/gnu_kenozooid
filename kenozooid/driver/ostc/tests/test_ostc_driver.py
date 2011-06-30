@@ -138,16 +138,16 @@ class UDDFTestCase(unittest.TestCase):
         data = list(ku.xp(dive, 'uddf:samples/uddf:waypoint'))
         self.assertEquals(195, len(data))
 
-        t = ku.xp_first(dive, 'uddf:datetime/text()')
+        t = ku.xp_first(dive, 'uddf:informationbeforedive/uddf:datetime/text()')
         self.assertEquals('2009-01-31T23:08:41', t)
 
-        d = ku.xp_first(dive, 'uddf:greatestdepth/text()')
+        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:greatestdepth/text()')
         self.assertEquals('75.0', d)
 
-        d = ku.xp_first(dive, 'uddf:diveduration/text()')
+        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:diveduration/text()')
         self.assertEquals('1939', d)
 
-        t = ku.xp_first(dive, 'uddf:lowesttemperature/text()')
+        t = ku.xp_first(dive, 'uddf:informationafterdive/uddf:lowesttemperature/text()')
         self.assertEquals('300.6', t) # 27.45C
 
 
