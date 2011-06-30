@@ -100,7 +100,7 @@ class ListDives(object):
                     depth = dive.depth
                     temp = ''
                     if dive.temp is not None:
-                        temp = '{:.1f}\u00b0C'.format(K2C(temp))
+                        temp = '{:.1f}\u00b0C'.format(K2C(dive.temp))
 
                     if csv:
                         fmt = '{file},{no},{time},{depth:.1f},{duration},{temp}'
