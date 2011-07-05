@@ -457,6 +457,17 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(26, dump.ver2)
 
 
+    def test_eeprom_parsing(self):
+        """Test EEPROM data parsing
+        """
+        dump = ostc_parser.status(self.dump_data)
+        eeprom = dump.eeprom
+
+        self.assertEquals(155, eeprom.serial)
+        self.assertEquals(23, eeprom.dives)
+        self.assertEquals(252, len(eeprom.data))
+
+
     def test_profile_split(self):
         """Test profile splitting
         """

@@ -34,6 +34,10 @@ StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile
 FMT_STATUS = '<6s256sHbb32768s'
 LEN_STATUS = calcsize(FMT_STATUS)
 
+# EEPROM data, command 'g' output (nfy)
+EEPROMData = namedtuple('EEPROMData', 'serial dives data')
+FMT_EEPROM = '<HH252s'
+
 # profile data is FA0FA..(43)..FBFB...FDFD
 RE_PROFILE = re.compile(b'(\xfa\xfa.{43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
 
@@ -55,9 +59,11 @@ def status(data):
     """
     Split status and profile data, see `StatusDump` named tuple.
     """
-    dump = StatusDump._make(unpack(FMT_STATUS, data[:LEN_STATUS]))
-    log.debug('unpacked status dump, voltage {}, version {}.{}'.format(
-        dump.voltage, dump.ver1, dump.ver2))
+    dump = StatusDump(*unpack(FMT_STATUS, data[:LEN_STATUS]))
+    eeprom = EEPROMData(*unpack(FMT_EEPROM, dump.eeprom))
+    dump = dump._replace(eeprom=eeprom)
+    log.debug('unpacked status dump, voltage {}, version {}.{}, serial {}' \
+        .format(dump.voltage, dump.ver1, dump.ver2, dump.eeprom.serial))
     return dump
 
 
