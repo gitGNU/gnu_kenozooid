@@ -248,3 +248,4 @@ def flag_byte(value):
     return value & 0x7f, value >> 7
 
 
+# vim: sw=4:et:ai
