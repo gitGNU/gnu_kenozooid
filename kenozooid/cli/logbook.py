@@ -66,11 +66,6 @@ class ListDives(object):
         """
         Add options for dive list fetched from UDDF file.
         """
-        parser.add_argument('--csv',
-                action='store_true',
-                dest='dives_csv',
-                default=False,
-                help='list dives in CSV format')
         parser.add_argument('input',
                 nargs='+',
                 help='UDDF file with dive profiles')
@@ -80,45 +75,17 @@ class ListDives(object):
         """
         Execute command for list of dives in UDDF file.
         """
-        from kenozooid.uddf import parse, dive_data, dive_profile
-        from kenozooid.util import min2str, FMT_DIVETIME
-        from kenozooid.units import K2C
+        import kenozooid.logbook as kl
 
         csv = args.dives_csv
         files = args.input
 
-        if csv:
-            print('file,number,start_time,depth,duration,temp')
         for fin in files:
-            dives = (dive_data(n) for n in parse(fin, '//uddf:dive'))
+            print('{}:'.format(fin))
+            for i, dl in enumerate(kl.list_dives(fin), 1):
+                l =  ' '.join('{:>9}'.format(s) for s in dl)
+                print('{:5}: {}'.format(i, l))
 
-            if not csv:
-                print(fin + ':')
-            for i, dive in enumerate(dives):
-                try:
-                    duration = dive.duration
-                    depth = dive.depth
-                    temp = ''
-                    if dive.temp is not None:
-                        temp = '{:.1f}\u00b0C'.format(K2C(dive.temp))
-
-                    if csv:
-                        fmt = '{file},{no},{time},{depth:.1f},{duration},{temp}'
-                    else:
-                        fmt = '{no:4}: {time}   \u21a7{depth:<9}' \
-                                ' t={duration:<6}   T={temp}'
-                        duration = min2str(duration / 60.0)
-                        depth = '{:.1f}m'.format(depth)
-
-                    print(fmt.format(no=i + 1,
-                            time=format(dive.time, FMT_DIVETIME),
-                            depth=depth,
-                            duration=duration,
-                            temp=temp,
-                            file=fin))
-                except TypeError as ex:
-                    log.debug(ex)
-                    log.warn('invalid dive data, skipping dive')
 
 
 @inject(CLIModule, name='dive add')

@@ -19,6 +19,8 @@
 
 """
 Dive logbook functionality.
+
+Dive, dive site and buddy data display and management is implemented.
 """
 
 import lxml.etree as et
@@ -26,8 +28,42 @@ import os.path
 import logging
 
 import kenozooid.uddf as ku
+from kenozooid.util import min2str, FMT_DIVETIME
+from kenozooid.units import K2C
 
 log = logging.getLogger('kenozooid.logbook')
+
+def list_dives(fin):
+    """
+    Get generator of preformatted dive data.
+
+    The dives are fetched from logbook file and for 
+    each dive a tuple of formatted dive information
+    is returned
+
+    - date and time of dive, i.e. 2011-03-19 14:56
+    - maximum depth, i.e. 6.0m
+    - duration of dive, i.e. 33:42
+    - temperature, i.e. 8.2°C
+
+    :Parameters:
+     fin
+        Logbook file in UDDF format.
+    """
+    dives = (ku.dive_data(n) for n in ku.parse(fin, '//uddf:dive'))
+
+    for dive in dives:
+        try:
+            duration = min2str(dive.duration / 60.0)
+            depth = '{:.1f}m'.format(dive.depth)
+            temp = ''
+            if dive.temp is not None:
+                temp = '{:.1f}\u00b0C'.format(K2C(dive.temp))
+            yield (format(dive.time, FMT_DIVETIME), depth,
+                    duration, temp)
+        except TypeError as ex:
+            log.debug(ex)
+            log.warn('invalid dive data, skipping dive')
 
 
 def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None):
