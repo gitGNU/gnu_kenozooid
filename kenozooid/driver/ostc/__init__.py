@@ -50,8 +50,8 @@ def pressure(depth):
     return int(depth + 10)
 
 
-@kc.inject(DeviceDriver, id='ostc', name='OSTC Mk.1 Driver',
-        models=('OSTC Mk.1',))
+@kc.inject(DeviceDriver, id='ostc', name='OSTC Driver',
+        models=('OSTC',))
 class OSTCDriver(object):
     """
     OSTC dive computer driver.
@@ -106,7 +106,7 @@ class OSTCDriver(object):
         self._write(b'e')
         v1, v2 = self._read(2)
         self._read(16) # fingerprint, ignore as it can be 0x00 if not built yet
-        return 'OSTC Mk.1 {}.{}'.format(v1, v2)
+        return 'OSTC {}.{}'.format(v1, v2)
 
 
 
@@ -229,7 +229,7 @@ class OSTCMemoryDump(object):
         Get OSTC model and version information from raw data.
         """
         status = ostc_parser.status(data)
-        return 'OSTC Mk.1 {}.{}'.format(status.ver1, status.ver2)
+        return 'OSTC {}.{}'.format(status.ver1, status.ver2)
 
 
 def deco_start(sample):

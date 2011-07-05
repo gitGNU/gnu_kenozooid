@@ -192,7 +192,7 @@ class MemoryDumpTestCase(unittest.TestCase):
         """
         dc = OSTCMemoryDump()
         ver = dc.version(self.dump_data)
-        self.assertEquals('OSTC Mk.1 1.26', ver)
+        self.assertEquals('OSTC 1.26', ver)
 
 
 

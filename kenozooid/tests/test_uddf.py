@@ -142,7 +142,7 @@ UDDF_DUMP = b"""\
       </personal>
       <equipment>
         <divecomputer id="ostc">
-          <model>OSTC Mk.1</model>
+          <model>OSTC</model>
         </divecomputer>
       </equipment>
     </owner>
@@ -262,7 +262,7 @@ class FindDataTestCase(unittest.TestCase):
         dump = ku.dump_data(node)
 
         expected = ('ostc',
-                'OSTC Mk.1',
+                'OSTC',
                 datetime(2010, 11, 7, 21, 13, 24),
                 b'01234567890abcdef')
         self.assertEquals(expected, dump)

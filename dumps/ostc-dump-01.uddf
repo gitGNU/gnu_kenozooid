@@ -19,7 +19,7 @@
       </personal>
       <equipment>
         <divecomputer id='ostc'>
-          <model>OSTC Mk.1</model>
+          <model>OSTC</model>
         </divecomputer>
       </equipment>
     </owner>
