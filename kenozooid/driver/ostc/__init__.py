@@ -51,7 +51,7 @@ def pressure(depth):
 
 
 @kc.inject(DeviceDriver, id='ostc', name='OSTC Driver',
-        models=('OSTC',))
+        models=('OSTC', 'OSTC Mk.2'))
 class OSTCDriver(object):
     """
     OSTC dive computer driver.
@@ -163,8 +163,8 @@ class OSTCMemoryDump(object):
         dive_data = ostc_parser.status(dump.data)
 
         # uddf dive profile sample
-        _f = 'depth', 'time', 'temp', 'alarm'
-        _q = 'uddf:depth', 'uddf:divetime', 'uddf:temperature', 'uddf:alarm'
+        _f = 'alarm', 'depth', 'time', 'temp'
+        _q = 'uddf:alarm', 'uddf:depth', 'uddf:divetime', 'uddf:temperature'
         UDDF_SAMPLE = OrderedDict(zip(_f, _q))
 
         for h, p in ostc_parser.profile(dive_data.profile):
@@ -229,7 +229,10 @@ class OSTCMemoryDump(object):
         Get OSTC model and version information from raw data.
         """
         status = ostc_parser.status(data)
-        return 'OSTC {}.{}'.format(status.ver1, status.ver2)
+        model = 'OSTC'
+        if status.eeprom.serial > 300:
+            model = 'OSTC Mk.2'
+        return '{} {}.{}'.format(model, status.ver1, status.ver2)
 
 
 def deco_start(sample):
