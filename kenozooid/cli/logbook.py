@@ -77,7 +77,6 @@ class ListDives(object):
         """
         import kenozooid.logbook as kl
 
-        csv = args.dives_csv
         files = args.input
 
         for fin in files:
