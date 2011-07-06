@@ -831,4 +831,44 @@ class NodeRangeTestCase(unittest.TestCase):
         self.assertRaises(ku.RangeError, ku.node_range, '1-a,3')
 
 
+
+class NodeCopyTestCase(unittest.TestCase):
+    """
+    Node copying tests.
+    """
+    def test_simple_copy(self):
+        """
+        Test simple UDDF node copy
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a2/>
+        <a2/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None)
+        self.assertEquals(2, len(n))
+
+
 # vim: sw=4:et:ai

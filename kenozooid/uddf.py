@@ -52,6 +52,7 @@ from datetime import datetime
 from dateutil.parser import parse as dparse
 from operator import itemgetter
 from uuid import uuid4 as uuid
+from copy import deepcopy
 import base64
 import bz2
 import hashlib
@@ -982,6 +983,31 @@ def reorder(doc):
     log.debug('sorting dives')
     for dt, n in sorted(dives.items(), key=itemgetter(0)):
         rg.append(n)
+
+
+def copy(node, target):
+    """
+    Copy node from UDDF document to target node in destination UDDF
+    document. Target node becomes parent of node to be copied.
+
+    The copying works under following assumptions
+
+    - whole node is being copied including its descendants
+    - if copied nodes reference non-descendant nodes and they do exist in
+      destination document, then referenced nodes are copied, as well
+    - if copied nodes reference non-descendant nodes and they do _not_
+      exist in destination document, then referencing and referenced nodes
+      are _not_ copied
+    - if, due to referencing nodes removal, a node becomes empty, then it
+      is removed as well (the same applies to its parent)
+
+    :Parameters:
+     node
+        Node to copy.
+     target
+        The future parent of the node to be copied.
+    """
+    target.append(deepcopy(node))
 
 
 def _set_id(node):
