@@ -51,7 +51,7 @@ def pressure(depth):
 
 
 @kc.inject(DeviceDriver, id='ostc', name='OSTC Driver',
-        models=('OSTC', 'OSTC Mk.2'))
+        models=('OSTC', 'OSTC Mk.2', 'OSTC N2'))
 class OSTCDriver(object):
     """
     OSTC dive computer driver.
@@ -232,6 +232,8 @@ class OSTCMemoryDump(object):
         model = 'OSTC'
         if status.eeprom.serial > 300:
             model = 'OSTC Mk.2'
+        elif status.eeprom.serial > 2047:
+            model = 'OSTC N2'
         return '{} {}.{}'.format(model, status.ver1, status.ver2)
 
 
