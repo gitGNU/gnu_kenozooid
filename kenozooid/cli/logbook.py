@@ -123,7 +123,6 @@ class AddDive(object):
         """
         import kenozooid.logbook as kl
         from dateutil.parser import parse as dparse
-        from copy import deepcopy
 
         time, depth, duration = None, None, None
         dive_no, fin = None, None
