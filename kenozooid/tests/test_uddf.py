@@ -871,4 +871,117 @@ class NodeCopyTestCase(unittest.TestCase):
         self.assertEquals(2, len(n))
 
 
+    def test_copy_ref_descendant_nodes(self):
+        """
+        Test copying UDDF node with descendants referencing themselves
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a2 id = 'id-a1'/>
+        <a2 id = 'id-a2' ref = 'id-a1'/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None)
+        self.assertEquals(2, len(n))
+
+
+    def test_copy_ref_nodes(self):
+        """
+        Test copying UDDF node referencing other nodes
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a2 id = 'id-a1'/>
+        <a2 id = 'id-a2' ref = 'id-b2'/>
+    </a1>
+    <b1>
+        <b2 id = 'id-b2'/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+    <b1>
+        <b2 id = 'id-b2'/>
+    </b1>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+        sd = et.tostring(t, pretty_print=True)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None, sd)
+
+        self.assertEquals(2, len(n), sd)
+        self.assertEquals('id-a1', n[0].get('id'))
+        self.assertEquals('id-a2', n[1].get('id'))
+
+
+    def test_copy_ref_nodes_non_existing(self):
+        """
+        Test copying UDDF node referencing to missing nodes
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a2 id = 'id-a1'/>
+        <a2 id = 'id-a2' ref = 'id-b1'/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None)
+        self.assertEquals(1, len(n))
+        self.assertEquals('id-a1', n[0].get('id'))
+
+
 # vim: sw=4:et:ai

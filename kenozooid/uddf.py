@@ -1007,7 +1007,26 @@ def copy(node, target):
      target
         The future parent of the node to be copied.
     """
-    target.append(deepcopy(node))
+    cn = deepcopy(node)
+
+    # get all ids
+    s1 = set(xp(target, '//uddf:*/@id'))
+    s2 = set(xp(cn, './/uddf:*/@id'))
+    ids = s1.union(s2)
+
+    # get referencing nodes
+    nodes = dict((n.get('ref'), n) for n in xp(cn, './/uddf:*[@ref]'))
+    refs = set(nodes.keys())
+
+    # remove referencing nodes to missing data
+    left = refs - ids
+    log.debug('references to remove: {} = {} - {}'.format(left, refs, ids))
+    for k in left:
+        n = nodes[k]
+        p = n.getparent()
+        p.remove(n)
+
+    target.append(cn)
 
 
 def _set_id(node):
