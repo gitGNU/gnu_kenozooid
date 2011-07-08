@@ -993,13 +993,10 @@ def copy(node, target):
     The copying works under following assumptions
 
     - whole node is being copied including its descendants
-    - if copied nodes reference non-descendant nodes and they do exist in
-      destination document, then referenced nodes are copied, as well
     - if copied nodes reference non-descendant nodes and they do _not_
-      exist in destination document, then referencing and referenced nodes
-      are _not_ copied
-    - if, due to referencing nodes removal, a node becomes empty, then it
-      is removed as well (the same applies to its parent)
+      exist in destination document, then referencing nodes are _removed_
+    - if, due to node removal, its parent node becomes empty, then parent
+      is removed, too
 
     :Parameters:
      node
@@ -1011,20 +1008,29 @@ def copy(node, target):
 
     # get all ids
     s1 = set(xp(target, '//uddf:*/@id'))
-    s2 = set(xp(cn, './/uddf:*/@id'))
+    s2 = set(xp(cn, 'descendant-or-self::uddf:*/@id'))
     ids = s1.union(s2)
 
     # get referencing nodes
-    nodes = dict((n.get('ref'), n) for n in xp(cn, './/uddf:*[@ref]'))
-    refs = set(nodes.keys())
+    nodes = list(xp(cn, 'descendant-or-self::uddf:*[@ref]'))
+    refs = set(k.get('ref') for k in nodes)
 
-    # remove referencing nodes to missing data
     left = refs - ids
     log.debug('references to remove: {} = {} - {}'.format(left, refs, ids))
-    for k in left:
-        n = nodes[k]
+
+    if cn.get('ref') in left:
+        raise ValueError('Node to copy references non-existing node')
+
+    # remove referencing nodes to missing data
+    to_remove = (n for n in nodes if n.get('ref') in left)
+    assert cn.getparent() is None
+    for n in to_remove:
         p = n.getparent()
-        p.remove(n)
+        while p is not None and len(p) == 1:
+            n = p
+            p = n.getparent()
+        if p is not None:
+            p.remove(n)
 
     target.append(cn)
 

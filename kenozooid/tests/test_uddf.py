@@ -950,7 +950,7 @@ class NodeCopyTestCase(unittest.TestCase):
 
     def test_copy_ref_nodes_non_existing(self):
         """
-        Test copying UDDF node referencing to missing nodes
+        Test copying UDDF node referencing missing node
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
@@ -982,6 +982,173 @@ class NodeCopyTestCase(unittest.TestCase):
         self.assertTrue(n is not None)
         self.assertEquals(1, len(n))
         self.assertEquals('id-a1', n[0].get('id'))
+
+
+    def test_copy_mref_nodes_non_existing(self):
+        """
+        Test copying UDDF multiple nodes referencing missing node
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a2 id = 'id-a21'/>
+        <a2 id = 'id-a22' ref = 'id-b1'/>
+        <a2 id = 'id-a23' ref = 'id-b1'/>
+        <a2 id = 'id-a24'/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+        sd = et.tostring(t, pretty_print=True)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None, sd)
+        self.assertEquals(2, len(n), sd)
+        self.assertEquals('id-a21', n[0].get('id'), sd)
+        self.assertEquals('id-a24', n[1].get('id'), sd)
+
+
+    def test_removal_on_empty_parent(self):
+        """
+        Test removal of empty UDDF parent node on copying
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a3 id = 'id-a3'>
+            <a5 id = 'id-a5'>
+                <a2 id = 'id-a21' ref = 'id-b1'/>
+                <a2 id = 'id-a22' ref = 'id-b1'/>
+            </a5>
+        </a3>
+        <a4 id = 'id-a4'/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+        sd = et.tostring(t, pretty_print=True)
+
+        # a2 nodes are removed
+        # a3 is removed as empty parent node
+        # a4 is left
+        self.assertTrue(ku.xp_first(t, '//uddf:a2') is None, sd)
+        self.assertTrue(ku.xp_first(t, '//uddf:a3') is None, sd)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None, sd)
+        self.assertEquals(1, len(n), sd)
+        self.assertEquals('id-a4', n[0].get('id'), sd)
+
+
+    def test_removal_on_empty_ref_parent(self):
+        """
+        Test removal of empty UDDF referencing parent node on copying
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1>
+        <a3 id = 'id-a3'>
+            <a5 id = 'id-a5' ref = 'id-b2'>
+                <a2 id = 'id-a21' ref = 'id-b1'/>
+                <a2 id = 'id-a22' ref = 'id-b1'/>
+            </a5>
+        </a3>
+        <a4 id = 'id-a4'/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+        sd = et.tostring(t, pretty_print=True)
+
+        # a2 nodes are removed
+        # a3 is removed as empty parent node
+        # a4 is left
+        self.assertTrue(ku.xp_first(t, '//uddf:a2') is None, sd)
+        self.assertTrue(ku.xp_first(t, '//uddf:a3') is None, sd)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None, sd)
+        self.assertEquals(1, len(n), sd)
+        self.assertEquals('id-a4', n[0].get('id'), sd)
+
+
+    def test_error_on_empty_copy(self):
+        """
+        Test error on empty copy.
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <a1 ref = 'id-b1'>
+        <a2 ref = 'id-b2'/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.parse(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        self.assertRaises(ValueError, ku.copy, a, c)
+        self.assertTrue(ku.xp_first(t, '//uddf:c') is not None)
 
 
 # vim: sw=4:et:ai
