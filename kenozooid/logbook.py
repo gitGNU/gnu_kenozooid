@@ -72,6 +72,9 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
 
     The logbook file is created if it does not exist.
 
+    If dive number is specified and dive cannot be found then ValueError
+    exception is thrown.
+
     :Parameters:
      fout
         Logbook file.
@@ -95,33 +98,23 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
 
     if dive_no is not None and fin is not None:
         q = ku.XPath('//uddf:dive[position() = $no]')
-        dives = ku.parse(fin, q, no=no)
+        dives = ku.parse(fin, q, no=dive_no)
         dive = next(dives, None)
         if dive is None:
             raise ValueError('Cannot find dive in UDDF profile data')
-        if next(dives, None) is not None:
-            raise ValueError('Too many dives found')
+
+        assert next(dives, None) is None, 'only one dive expected'
+
+        _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
+                parent=doc)
+        ku.copy(dive, rg)
 
     elif (time, depth, duration) is not (None, None, None):
         duration = int(duration * 60)
+        ku.create_dive_data(doc, time=time, depth=depth,
+                duration=duration)
     else:
         raise ValueError('Dive data or dive profile needs to be provided')
-
-    if dive is not None:
-        if time is None:
-            time = ku.xp(dive, 'datetime/text()')
-        if depth is None:
-            depth = ku.xp(dive, 'greatestdepth/text()')
-        if duration is None:
-            duration = ku.xp(dive, 'diveduration/text()')
-            
-    ku.create_dive_data(doc, time=time, depth=depth,
-            duration=duration)
-
-    if dive is not None:
-        _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
-                parent=doc)
-        rg.append(deepcopy(dive))
 
     ku.reorder(doc)
     ku.save(doc, fout)

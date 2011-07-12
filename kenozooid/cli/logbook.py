@@ -138,7 +138,7 @@ class AddDive(object):
                 raise ArgumentError('Invalid time, depth or duration parameter')
         else:
             dive_no, fin = args.with_profile
-            dive_no = int(no)
+            dive_no = int(dive_no)
 
         kl.add_dive(fout, time, depth, duration, dive_no, fin)
 
