@@ -107,27 +107,27 @@ class AddDive(object):
                     ' duration data')
         g.add_argument('-p', '--with-profile',
                 nargs=2,
-                metavar=('dive', 'input'),
+                metavar=('dive', 'pfile'),
                 help='add dive data with profile data from an UDDF file')
 
         parser.add_argument('-s', '--site', metavar='site',
                 help='dive site')
         parser.add_argument('-b', '--buddy', metavar='buddy',
                 help='dive buddy')
-        parser.add_argument('output', nargs=1, help='UDDF output file')
+        parser.add_argument('logbook', nargs=1, help='UDDF output file')
 
 
     def __call__(self, args):
         """
-        Execute command for adding dives into UDDF file.
+        Execute command for adding dives into logbook file.
         """
         import kenozooid.logbook as kl
         from dateutil.parser import parse as dparse
 
         time, depth, duration = None, None, None
-        dive_no, fin = None, None
+        dive_no, pfile = None, None
 
-        fout = args.output[0]
+        lfile = args.logbook[0]
 
         if args.with_depth:
             try:
@@ -137,10 +137,13 @@ class AddDive(object):
             except ValueError:
                 raise ArgumentError('Invalid time, depth or duration parameter')
         else:
-            dive_no, fin = args.with_profile
+            dive_no, pfile = args.with_profile
             dive_no = int(dive_no)
 
-        kl.add_dive(fout, time, depth, duration, dive_no, fin)
+        site = args.site
+        buddy = args.buddy
+
+        kl.add_dive(lfile, time, depth, duration, dive_no, pfile, site, buddy)
 
 
 

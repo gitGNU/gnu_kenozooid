@@ -66,7 +66,8 @@ def list_dives(fin):
             log.warn('invalid dive data, skipping dive')
 
 
-def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None):
+def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
+        pfile=None, qsite=None, qbuddy=None):
     """
     Add new dive to logbook file.
 
@@ -76,7 +77,7 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
     exception is thrown.
 
     :Parameters:
-     fout
+     lfile
         Logbook file.
      time
         Dive time.
@@ -86,22 +87,48 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
         Dive duration (in minutes).
      dive_no
         Dive number in dive profile file.
-     fin
+     pfile
         Dive profile file.
+     qsite
+        Dive site search term.
+     qbuddy
+        Buddy search term.
     """
     dive = None # obtained from profile file
 
-    if os.path.exists(fout):
-        doc = et.parse(fout).getroot()
+    if os.path.exists(lfile):
+        doc = et.parse(lfile).getroot()
     else:
         doc = ku.create()
 
-    if dive_no is not None and fin is not None:
+    site_id = None
+    if qsite:
+        nodes = ku.parse(lfile, ku.XP_FIND_SITE, site=qsite)
+        n = next(nodes, None)
+        if n is None:
+            raise ValueError('Cannot find dive site in logbook file')
+        if next(nodes, None) is not None:
+            raise ValueError('Found more than one dive site')
+
+        site_id = n.get('id')
+
+    buddy_id = None
+    if qbuddy:
+        nodes = ku.parse(lfile, ku.XP_FIND_BUDDY, site=qbuddy)
+        n = next(nodes, None)
+        if n is None:
+            raise ValueError('Cannot find buddy in logbook file')
+        if next(nodes, None) is not None:
+            raise ValueError('Found more than one buddy')
+
+        buddy_id = n.get('id')
+
+    if dive_no is not None and pfile is not None:
         q = ku.XPath('//uddf:dive[position() = $no]')
-        dives = ku.parse(fin, q, no=dive_no)
+        dives = ku.parse(pfile, q, no=dive_no)
         dive = next(dives, None)
         if dive is None:
-            raise ValueError('Cannot find dive in UDDF profile data')
+            raise ValueError('Cannot find dive in dive profile data')
 
         assert next(dives, None) is None, 'only one dive expected'
 
@@ -112,12 +139,12 @@ def add_dive(fout, time=None, depth=None, duration=None, dive_no=None, fin=None)
     elif (time, depth, duration) is not (None, None, None):
         duration = int(duration * 60)
         ku.create_dive_data(doc, time=time, depth=depth,
-                duration=duration)
+                duration=duration, site=site_id)
     else:
         raise ValueError('Dive data or dive profile needs to be provided')
 
     ku.reorder(doc)
-    ku.save(doc, fout)
+    ku.save(doc, lfile)
 
 
 # vim: sw=4:et:ai
