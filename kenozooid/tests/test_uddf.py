@@ -484,15 +484,18 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test dive data creation with dive site
         """
-        f = ku.create()
-        ku.create_site_data(f, id='markgraf', name='SMS Markgraf',
+        doc = ku.create()
+        ku.create_site_data(doc, id='markgraf', name='SMS Markgraf',
                 location='Scapa Flow')
-        dive = ku.create_dive_data(f, time=datetime(2010, 12, 29, 20, 14),
+        dive = ku.create_dive_data(doc, time=datetime(2010, 12, 29, 20, 14),
                 depth=32.15, duration=2001.0, site='markgraf')
-        s = et.tostring(f, pretty_print=True)
+        s = et.tostring(doc, pretty_print=True)
 
         site_id = ku.xp_first(dive, './uddf:informationbeforedive/uddf:link/@ref')
         self.assertEquals('markgraf', site_id, s)
+
+        f = BytesIO()
+        ku.save(doc, f)
 
 
     def test_create_dc_data(self):
