@@ -772,8 +772,9 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
         Dive data.
     """
     if queries == None:
-        f = ('time', 'depth', 'duration', 'temp')
+        f = ('time', 'site', 'depth', 'duration', 'temp')
         q = ('uddf:informationbeforedive/uddf:datetime',
+                'uddf:informationbeforedive/uddf:link/@ref',
                 'uddf:informationafterdive/uddf:greatestdepth',
                 'uddf:informationafterdive/uddf:diveduration',
                 'uddf:informationafterdive/uddf:lowesttemperature')

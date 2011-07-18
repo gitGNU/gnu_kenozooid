@@ -443,7 +443,7 @@ class CreateDataTestCase(unittest.TestCase):
 
     def test_create_dive_data(self):
         """
-        Test dive data creation.
+        Test dive data creation
         """
         f = ku.create()
         dive = ku.create_dive_data(f, time=datetime(2010, 12, 29, 20, 14),
@@ -478,6 +478,21 @@ class CreateDataTestCase(unittest.TestCase):
         dt = tuple(ku.xp(f, '//uddf:dive/uddf:informationbeforedive/uddf:datetime/text()'))
         expected = '2010-12-29T20:14:00', '2010-12-30T20:14:00'
         self.assertEquals(expected, dt, s)
+
+
+    def test_create_dive_data_with_dive_site(self):
+        """
+        Test dive data creation with dive site
+        """
+        f = ku.create()
+        ku.create_site_data(f, id='markgraf', name='SMS Markgraf',
+                location='Scapa Flow')
+        dive = ku.create_dive_data(f, time=datetime(2010, 12, 29, 20, 14),
+                depth=32.15, duration=2001.0, site='markgraf')
+        s = et.tostring(f, pretty_print=True)
+
+        site_id = ku.xp_first(dive, './uddf:informationbeforedive/uddf:link/@ref')
+        self.assertEquals('markgraf', site_id, s)
 
 
     def test_create_dc_data(self):
@@ -567,7 +582,7 @@ class CreateDataTestCase(unittest.TestCase):
         Test creating dive site data
         """
         f = ku.create()
-        buddy = ku.create_site_data(f, id='markgraf', name='SMS Markgraf',
+        site = ku.create_site_data(f, id='markgraf', name='SMS Markgraf',
                 location='Scapa Flow')
         s = et.tostring(f, pretty_print=True)
 
@@ -585,7 +600,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('Scapa Flow', d[0], s)
 
         # create 2nd dive site
-        buddy = ku.create_site_data(f, id='konig', name='SMS Konig',
+        site = ku.create_site_data(f, id='konig', name='SMS Konig',
                 location='Scapa Flow')
         s = et.tostring(f, pretty_print=True)
         d = list(ku.xp(f, '//uddf:site'))
