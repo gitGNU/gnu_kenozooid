@@ -134,7 +134,12 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
 
         _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
                 parent=doc)
-        ku.copy(dive, rg)
+        dive = ku.copy(dive, rg)
+
+        # set reference to dive site
+        n = ku.xp_first(dive, 'uddf:informationbeforedive')
+        l, *_ = ku.create_node('uddf:link', parent=n, append=False)
+        l.set('ref', site_id)
 
     elif (time, depth, duration) is not (None, None, None):
         duration = int(duration * 60)

@@ -664,7 +664,7 @@ def set_data(node, queries, formatters=None, **data):
             n.text = value
 
 
-def create_node(path, parent=None, multiple=False):
+def create_node(path, parent=None, multiple=False, append=True):
     """
     Create a hierarchy of nodes using XML nodes path specification.
 
@@ -713,7 +713,10 @@ def create_node(path, parent=None, multiple=False):
         if is_last and multiple or k is None:
             k = et.Element(T(t))
         if n is not None:
-            n.append(k)
+            if append:
+                n.append(k)
+            else:
+                n.insert(0, k)
         n = k
         yield n
 
@@ -999,6 +1002,8 @@ def copy(node, target):
     - if, due to node removal, its parent node becomes empty, then parent
       is removed, too
 
+    Copy of the node is returned.
+
     :Parameters:
      node
         Node to copy.
@@ -1034,6 +1039,7 @@ def copy(node, target):
             p.remove(n)
 
     target.append(cn)
+    return cn
 
 
 def _set_id(node):

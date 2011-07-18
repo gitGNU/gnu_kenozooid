@@ -441,6 +441,28 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(2, len(tq(doc)), sd)
 
 
+    def test_create_node_prepend(self):
+        """
+        Test generic method for creating XML nodes with prepending
+        """
+        doc = et.XML('<uddf><diver></diver></uddf>')
+
+        dq = et.XPath('//diver')
+        tq = et.XPath('//test1 | //test2')
+
+        d, t = ku.create_node('diver/test2', parent=doc)
+        d, t = ku.create_node('diver/test1', parent=doc, append=False)
+        sd = et.tostring(doc, pretty_print=True)
+
+        self.assertEquals(1, len(dq(doc)), sd)
+
+        nodes = tq(doc)
+        self.assertEquals(2, len(nodes), sd)
+        # test order
+        self.assertEquals('test1', nodes[0].tag)
+        self.assertEquals('test2', nodes[1].tag)
+
+
     def test_create_dive_data(self):
         """
         Test dive data creation
@@ -882,7 +904,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        r = ku.copy(a, c)
+        self.assertEquals('{http://www.streit.cc/uddf/3.0/}a1', r.tag)
 
         n = ku.xp_first(t, '//uddf:a1')
         self.assertTrue(n is not None)
