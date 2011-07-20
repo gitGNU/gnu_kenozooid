@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 from setuptools import setup, find_packages
 
@@ -34,7 +34,7 @@ class EpydocBuildDoc(Command):
             sys.argv[1:] = old_argv
 
         except ImportError:
-            print 'epydoc not installed, skipping API documentation'
+            print('epydoc not installed, skipping API documentation')
 
 
 
@@ -49,7 +49,7 @@ class build_doc(Command):
             from sphinx.setup_command import BuildDoc as SphinxBuildDoc
             self.sphinx = SphinxBuildDoc(dist)
         except ImportError:
-            print 'sphinx not installed, skipping user documentation'
+            print('sphinx not installed, skipping user documentation')
 
         Command.__init__(self, dist)
 
@@ -83,15 +83,14 @@ class build_doc(Command):
 setup(
     name='kenozooid',
     version=version,
-    description='Software stack to support different capabilities of dive computers',
+    description='Kenozooid is dive planning and analysis toolbox',
     author='Artur Wroblewski',
     author_email='wrobell@pld-linux.org',
     url='http://wrobell.it-zone.org/kenozooid',
     packages=find_packages('.'),
     long_description=\
 """\
-Kenozooid is software stack to support different capabilities of dive
-computers.
+Kenozooid is dive planning and analysis toolbox.
 """,
     classifiers=[
         'License :: OSI Approved :: GNU General Public License (GPL)',
