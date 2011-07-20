@@ -1,7 +1,9 @@
 Introduction
 ============
-Kenozooid is software stack to support different capabilities of dive
-computers.
+Kenozooid is software used to plan and analyse diving activities. Features
+like statistical analysis, dive profile plotting, dive computer support
+along with simple but powerful logbook maintenance and dive calculators are
+already implemented with further functions such as dive planning to come.
 
 The project allows to process data stored by dive computers and utilize
 their features like dumping dive computer memory, fetching dive log
