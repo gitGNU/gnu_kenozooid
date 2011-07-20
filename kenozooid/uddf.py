@@ -186,7 +186,7 @@ def xp(node, query):
 
 def xp_first(node, query):
     """
-    Find first element with XPath query in UDDF namespace on specified
+    Get first element found with XPath query in UDDF namespace on specified
     node.
 
     First element is returned or None if it was not found.
@@ -202,6 +202,26 @@ def xp_first(node, query):
     """
     data = xp(node, query)
     return next(data, None)
+
+
+def xp_last(node, query):
+    """
+    Get last element found with XPath query in UDDF namespace on specified
+    node.
+
+    LAst element is returned or None if it was not found.
+    
+    :Parameters:
+     node
+        Node to be queried.
+     query
+        XPath query.
+
+    .. seealso::
+        lxml.etree.Element.xpath
+    """
+    nodes = node.xpath(query, namespaces=_NSMAP)
+    return nodes[-1] if nodes else None
 
 
 def find_data(name, node, fields, queries, parsers, nquery=None):
@@ -640,6 +660,8 @@ def set_data(node, queries, formatters=None, **data):
     if formatters is None:
         formatters = {}
 
+    nodes = {} # created or found nodes
+
     for key, p in queries.items():
         value = data.get(key)
         if value is None:
@@ -651,20 +673,27 @@ def set_data(node, queries, formatters=None, **data):
         attr = None
         tags = p.rsplit('/', 1)
         if tags[-1].startswith('@'):
-            attr = tags[-1][1:]
+            attr = tags[-1][1:]  # skip '@'
             p = tags[0] if len(tags) > 1 else None
 
-        n = node
+        n = None
         if p:
-            multiple = attr is None
-            *_, n = create_node(p, parent=node, multiple=multiple)
+            n = nodes.get(p)
+        if p and n is None:
+            *_, n = create_node(p, parent=node)
+            nodes[p] = n
+        if n is None:
+            n = node
+
+        assert n is not None
+
         if attr:
             n.set(attr, value)
         else:
             n.text = value
 
 
-def create_node(path, parent=None, multiple=False, append=True):
+def create_node(path, parent=None, append=True):
     """
     Create a hierarchy of nodes using XML nodes path specification.
 
@@ -683,22 +712,11 @@ def create_node(path, parent=None, multiple=False, append=True):
 
         <x><y/><z/></x>
 
-     With `multiple` set to true, one can enforce creation of _last_ node
-     in the path, i.e. if parent is 'x' node in
-
-        <x><y/></x>
-
-    then path 'x/y' modifies XML document as follows
-
-        <x><y/><y/></x>
-
     :Parameters:
      path
         Hierarchy of nodes.
      parent
          Optional parent node.
-     multiple
-        If true then last node in the hierarchy is always created.
     """
     # preserve namespace prefix option... please?!? :/
     T = lambda tag: tag.replace('uddf:', '{' + _NSMAP['uddf'] + '}')
@@ -710,7 +728,7 @@ def create_node(path, parent=None, multiple=False, append=True):
         k = None
         if n is not None:
             k = xp_first(n, t)
-        if is_last and multiple or k is None:
+        if is_last or k is None:
             k = et.Element(T(t))
         if n is not None:
             if append:
@@ -754,8 +772,7 @@ def create_dc_data(node, queries=None, formatters=None,
             data['dc_id'] = dc_id
 
         # create new dive computer node
-        _, dc = create_node('uddf:equipment/uddf:divecomputer',
-                parent=node, multiple=True)
+        _, dc = create_node('uddf:equipment/uddf:divecomputer', parent=node)
         set_data(dc, _queries, formatters, **data)
     return dc
 
@@ -790,7 +807,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
             'temp': partial(str.format, '{0:.1f}'),
         }
     _, rg, dn = create_node('uddf:profiledata/uddf:repetitiongroup/uddf:dive',
-            parent=node, multiple=True)
+            parent=node)
     _set_id(rg)
     _set_id(dn)
     set_data(dn, queries, formatters, **data)
@@ -805,8 +822,7 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
     if formatters == None:
         formatters = DEFAULT_FMT_DIVE_PROFILE
 
-    _, wn = create_node('uddf:samples/uddf:waypoint', parent=node,
-            multiple=True)
+    _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
     set_data(wn, queries, formatters, **data)
     return wn
 
@@ -860,8 +876,7 @@ def create_buddy_data(node, queries=None, formatters=None, **data):
     if 'id' not in data or data['id'] is None:
         data['id'] = uuid().hex
         
-    _, buddy = create_node('uddf:diver/uddf:buddy', parent=node,
-            multiple=True)
+    _, buddy = create_node('uddf:diver/uddf:buddy', parent=node)
     set_data(buddy, queries, formatters, **data)
     return buddy
 
@@ -896,8 +911,7 @@ def create_site_data(node, queries=None, formatters=None, **data):
     if 'id' not in data or data['id'] is None:
         data['id'] = uuid().hex
         
-    _, site = create_node('uddf:divesite/uddf:site', parent=node,
-            multiple=True)
+    _, site = create_node('uddf:divesite/uddf:site', parent=node)
     set_data(site, queries, formatters, **data)
     return site
         

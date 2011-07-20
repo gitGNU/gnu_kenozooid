@@ -212,6 +212,26 @@ class FindDataTestCase(unittest.TestCase):
         node = nodes[0]
         self.assertEquals(expected, node.get('id'), nodes)
 
+
+    def test_xp_first(self):
+        """
+        Test finding first element using XPath
+        """
+        doc = et.parse(BytesIO(UDDF_SITE))
+        nodes = ku.XPath('//uddf:site')(doc)
+        n = ku.xp_first(doc, '//uddf:site')
+        self.assertTrue(n is nodes[0])
+
+
+    def test_xp_last(self):
+        """
+        Test finding last element using XPath
+        """
+        doc = et.parse(BytesIO(UDDF_SITE))
+        nodes = ku.XPath('//uddf:site')(doc)
+        n = ku.xp_last(doc, '//uddf:site')
+        self.assertTrue(n is nodes[1])
+
         
     def test_parsing(self):
         """
@@ -394,21 +414,35 @@ class CreateDataTestCase(unittest.TestCase):
             'fname': 'diver/@fn',
             'lname': 'diver/@ln',
         }
-        ku.set_data(doc, fq, fname='A', lname='B')
-
+        ku.set_data(doc, fq, fname='A1', lname='B1')
         sd = et.tostring(doc)
 
         divers = doc.xpath('//diver')
-        self.assertEquals(1, len(divers), sd)
+        self.assertEquals(2, len(divers), sd)
         self.assertTrue(divers[0].text is None, sd)
+        self.assertTrue(divers[1].text is None, sd)
 
         fnames = doc.xpath('//diver/@fn')
         self.assertEquals(1, len(fnames), sd)
-        self.assertEquals('A', fnames[0], sd)
+        self.assertEquals('A1', fnames[0], sd)
 
         lnames = doc.xpath('//diver/@ln')
         self.assertEquals(1, len(lnames), sd)
-        self.assertEquals('B', lnames[0], sd)
+        self.assertEquals('B1', lnames[0], sd)
+
+        ku.set_data(doc, fq, fname='A2', lname='B2')
+        sd = et.tostring(doc)
+
+        divers = doc.xpath('//diver')
+        self.assertEquals(3, len(divers), sd)
+
+        fnames = doc.xpath('//diver/@fn')
+        self.assertEquals(2, len(fnames), sd)
+        self.assertEquals(['A1', 'A2'], fnames, sd)
+
+        lnames = doc.xpath('//diver/@ln')
+        self.assertEquals(2, len(lnames), sd)
+        self.assertEquals(['B1', 'B2'], lnames, sd)
 
 
 
@@ -425,17 +459,12 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('diver', d.tag)
         self.assertEquals('test', t.tag)
 
-        list(ku.create_node('diver/test', parent=doc))
+        *_, = ku.create_node('diver/test', parent=doc)
         sd = et.tostring(doc, pretty_print=True)
         self.assertEquals(1, len(dq(doc)), sd)
         self.assertEquals(1, len(tq(doc)), sd)
 
-        list(ku.create_node('diver/test', parent=doc))
-        sd = et.tostring(doc, pretty_print=True)
-        self.assertEquals(1, len(dq(doc)), sd)
-        self.assertEquals(1, len(tq(doc)), sd)
-
-        list(ku.create_node('diver/test', parent=doc, multiple=True))
+        *_, = ku.create_node('diver/test', parent=doc)
         sd = et.tostring(doc, pretty_print=True)
         self.assertEquals(1, len(dq(doc)), sd)
         self.assertEquals(2, len(tq(doc)), sd)
