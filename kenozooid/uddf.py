@@ -676,14 +676,12 @@ def set_data(node, queries, formatters=None, **data):
             attr = tags[-1][1:]  # skip '@'
             p = tags[0] if len(tags) > 1 else None
 
-        n = None
+        n = node
         if p:
             n = nodes.get(p)
-        if p and n is None:
-            *_, n = create_node(p, parent=node)
-            nodes[p] = n
-        if n is None:
-            n = node
+            if n is None:
+                *_, n = create_node(p, parent=node)
+                nodes[p] = n
 
         assert n is not None
 
