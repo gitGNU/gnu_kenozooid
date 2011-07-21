@@ -1,8 +1,9 @@
 
 .. _part-user:
 
+###########
 User Manual
-===========
+###########
 
 .. toctree::
    :maxdepth: 2
