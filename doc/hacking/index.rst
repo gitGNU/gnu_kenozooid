@@ -1,9 +1,11 @@
 
 .. _part-hacking:
 
-##############################################
-Kenozooid Architecture, Design and Programming
-##############################################
+#############
+Hacking Guide
+#############
+
+Kenozooid architecture, design and programming technical documentation.
 
 ******
 Design

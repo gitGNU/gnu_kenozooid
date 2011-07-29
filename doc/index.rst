@@ -1,19 +1,21 @@
+#######################
 Kenozooid Documentation
-=======================
+#######################
 
-User Manual describes how to use Kenozooid to transfer data from dive computers,
-plot dive profiles or utilize other features of the application. 
+:ref:`part-user` contains Kenozooid tutorial, tour of the supported
+functions and their detailed description including data workflows and
+statistical analysis examples.
 
-Software developers interested in using Kenozooid as a library shall study
-Programmer Manual and `API Documentation`_.
+Software developers interested in Kenozooid library shall study
+:ref:`part-lib` and `API Documentation`_.
 
 .. _API Documentation: ../../api/index.html
 
-Hacking Guide is written for those interested in Kenozooid internals and
-development.
+:ref:`part-hacking` is written for those interested in Kenozooid
+architecture, design and implementation.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    user/index
    lib/index
@@ -22,4 +24,4 @@ development.
 * :ref:`genindex`
 * :ref:`search`
 
-
+.. vim: sw=4:et:ai
