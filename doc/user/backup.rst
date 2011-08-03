@@ -1,5 +1,5 @@
-Memory Backup
-=============
+Data Backup
+-----------
 The simplest approach to access dive computer data is to save its whole
 memory (settings, dive log book, etc.) to a binary file. This can be useful
 in few situations as memory dump can be
@@ -16,3 +16,7 @@ example, the command
 
 saves OSTC dive computer memory state into ``backup-20090214.dump`` file.
 
+Data Regeneration
+-----------------
+
+.. vim: sw=4:et:ai

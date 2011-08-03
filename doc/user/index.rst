@@ -9,15 +9,9 @@ User Manual
    :maxdepth: 2
 
    intro
-   quicktour
+   qt
    ui
-    concept
-    cmd overview
-    common options
    dc
-    backup
-        regenerate
-    simulation
    analysis
    logbook
    calc    
