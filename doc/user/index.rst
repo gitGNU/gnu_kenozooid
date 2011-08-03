@@ -19,11 +19,7 @@ User Manual
         regenerate
     simulation
    analysis
-   lb
-    list
-    search
-    add
-    delete
+   logbook
    calc    
    links
 

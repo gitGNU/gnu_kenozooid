@@ -1,18 +1,19 @@
 Dive Logbook
 ============
-Kenozooid supports basic dive logbook functionality
+Kenozooid supports basic dive logbook functionality, which allows to list,
+search, add and remove dives, buddies and dive sites.
 
-- dive data management
-- buddy data management
-- dive site data management
+Listing and Searching
+---------------------
 
-Logging Dives
+Adding Buddies and Dive Sites
+-----------------------------
+
+Adding Dives
+------------
+.. basic data vs. profile data
+
+Removing Data
 -------------
-
-Buddies
--------
-
-Dive Sites
-----------
 
 .. vim: sw=4:et:ai
