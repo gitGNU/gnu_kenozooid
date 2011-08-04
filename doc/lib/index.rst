@@ -11,6 +11,7 @@ Application Development
    intro
    cmp
    uddf
+   calc
    unit
 
 * :ref:`genindex`
