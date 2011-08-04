@@ -799,12 +799,15 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
         Dive data.
     """
     if queries == None:
-        f = ('site', 'time', 'depth', 'duration', 'temp')
+        bd = data.get('buddies')
+        bno = len(bd) if bd else 0
+        f = ('site', 'buddies', 'time', 'depth', 'duration', 'temp')
         q = ('uddf:informationbeforedive/uddf:link/@ref',
-                'uddf:informationbeforedive/uddf:datetime',
-                'uddf:informationafterdive/uddf:greatestdepth',
-                'uddf:informationafterdive/uddf:diveduration',
-                'uddf:informationafterdive/uddf:lowesttemperature')
+            ['uddf:informationbeforedive/uddf:link/@ref'] * bno,
+            'uddf:informationbeforedive/uddf:datetime',
+            'uddf:informationafterdive/uddf:greatestdepth',
+            'uddf:informationafterdive/uddf:diveduration',
+            'uddf:informationafterdive/uddf:lowesttemperature')
         queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = {

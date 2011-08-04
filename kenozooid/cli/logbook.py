@@ -112,8 +112,10 @@ class AddDive(object):
 
         parser.add_argument('-s', '--site', metavar='site',
                 help='dive site')
-        parser.add_argument('-b', '--buddy', metavar='buddy',
-                help='dive buddy')
+        parser.add_argument('-b', '--buddy',
+                nargs='+',
+                metavar='buddy',
+                help='dive buddies')
         parser.add_argument('logbook', nargs=1, help='UDDF output file')
 
 

@@ -67,7 +67,7 @@ def list_dives(fin):
 
 
 def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
-        pfile=None, qsite=None, qbuddy=None):
+        pfile=None, qsite=None, qbuddies=()):
     """
     Add new dive to logbook file.
 
@@ -91,8 +91,8 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
         Dive profile file.
      qsite
         Dive site search term.
-     qbuddy
-        Buddy search term.
+     qbuddies
+        Buddy search terms.
     """
     dive = None # obtained from profile file
 
@@ -100,6 +100,9 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
         doc = et.parse(lfile).getroot()
     else:
         doc = ku.create()
+
+    if qbuddies is None:
+        qbuddies = []
 
     site_id = None
     if qsite:
@@ -112,18 +115,21 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
 
         site_id = n.get('id')
 
-    buddy_id = None
-    if qbuddy:
-        nodes = ku.parse(lfile, ku.XP_FIND_BUDDY, site=qbuddy)
+    buddy_ids = []
+    log.debug('looking for buddies {}'.format(qbuddies))
+    for qb in qbuddies:
+        log.debug('looking for buddy {}'.format(qb))
+        nodes = ku.parse(lfile, ku.XP_FIND_BUDDY, buddy=qb)
         n = next(nodes, None)
         if n is None:
-            raise ValueError('Cannot find buddy in logbook file')
+            raise ValueError('Cannot find buddy {} in logbook file'.format(qb))
         if next(nodes, None) is not None:
-            raise ValueError('Found more than one buddy')
+            raise ValueError('Found more than one buddy for {}'.format(qb))
 
-        buddy_id = n.get('id')
+        buddy_ids.append(n.get('id'))
 
     if dive_no is not None and pfile is not None:
+        log.debug('creating dive with profile')
         q = ku.XPath('//uddf:dive[position() = $no]')
         dives = ku.parse(pfile, q, no=dive_no)
         dive = next(dives, None)
@@ -136,15 +142,22 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
                 parent=doc)
         dive = ku.copy(dive, rg)
 
-        # set reference to dive site
         n = ku.xp_first(dive, 'uddf:informationbeforedive')
+
+        # reference buddies first
+        for b_id in buddy_ids:
+            l, *_ = ku.create_node('uddf:link', parent=n, append=False)
+            l.set('ref', b_id)
+
+        # set reference to dive site (as first link)
         l, *_ = ku.create_node('uddf:link', parent=n, append=False)
         l.set('ref', site_id)
 
     elif (time, depth, duration) is not (None, None, None):
+        log.debug('creating dive data')
         duration = int(duration * 60)
         ku.create_dive_data(doc, time=time, depth=depth,
-                duration=duration, site=site_id)
+                duration=duration, site=site_id, buddies=buddy_ids)
     else:
         raise ValueError('Dive data or dive profile needs to be provided')
 

@@ -643,7 +643,26 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('markgraf', site_id, s)
 
         f = BytesIO()
-        ku.save(doc, f)
+        ku.save(doc, f) # validate created UDDF
+
+
+    def test_create_dive_data_with_buddy(self):
+        """
+        Test dive data creation with buddy data
+        """
+        doc = ku.create()
+        ku.create_buddy_data(doc, id='b1', fname='BF1', lname='BL1')
+        ku.create_buddy_data(doc, id='b2', fname='BF2', lname='BL2')
+        dive = ku.create_dive_data(doc, time=datetime(2010, 12, 29, 20, 14),
+                depth=32.15, duration=2001.0, buddies=('b1', 'b2'))
+        s = et.tostring(doc, pretty_print=True)
+
+        b1, b2 = ku.xp(dive, './uddf:informationbeforedive/uddf:link/@ref')
+        self.assertEquals('b1', b1, s)
+        self.assertEquals('b2', b2, s)
+
+        f = BytesIO()
+        ku.save(doc, f) # validate created UDDF
 
 
     def test_create_dc_data(self):
