@@ -660,35 +660,44 @@ def set_data(node, queries, formatters=None, **data):
     if formatters is None:
         formatters = {}
 
-    nodes = {} # created or found nodes
+    nodes = {} # created nodes
+    attrs = set() # created attributes
 
-    for key, p in queries.items():
+    for key, path in queries.items():
         value = data.get(key)
         if value is None:
             continue
 
-        f = formatters.get(key, str)
-        value = f(value)
+        if isinstance(path, str):
+            path = [path]
+            value = [value]
 
-        attr = None
-        tags = p.rsplit('/', 1)
-        if tags[-1].startswith('@'):
-            attr = tags[-1][1:]  # skip '@'
-            p = tags[0] if len(tags) > 1 else None
+        for p, v in zip(path, value):
+            f = formatters.get(key, str)
+            v = f(v)
 
-        n = node
-        if p:
-            n = nodes.get(p)
-            if n is None:
-                *_, n = create_node(p, parent=node)
-                nodes[p] = n
+            attr = None
+            tags = p.rsplit('/', 1)
+            if tags[-1].startswith('@'):
+                attr = tags[-1][1:]  # skip '@'
+                p = tags[0] if len(tags) > 1 else None
 
-        assert n is not None
+            n = node
+            if p:
+                n = nodes.get(p)
+                # reuse node created in this call to make t/@a t/@b work,
+                # but create new node to not overwrite attribute value
+                if n is None or (p, attr) in attrs:
+                    *_, n = create_node(p, parent=node)
+                    nodes[p] = n
+                    attrs.add((p, attr))
 
-        if attr:
-            n.set(attr, value)
-        else:
-            n.text = value
+            assert n is not None
+
+            if attr:
+                n.set(attr, v)
+            else:
+                n.text = v
 
 
 def create_node(path, parent=None, append=True):

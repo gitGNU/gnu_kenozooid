@@ -405,6 +405,64 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('B', lnames[0], sd)
 
 
+    def test_create_data_list(self):
+        """
+        Test generic method for creating list of XML data
+        """
+        doc = et.XML('<uddf><diver></diver></uddf>')
+        fq = {
+            'name': ['diver/firstname', 'diver/lastname'],
+            'address': ['diver/street', 'diver/city'],
+        }
+        ku.set_data(doc, fq, name=['A', 'B'], address=['X', 'Y'])
+
+        sd = et.tostring(doc)
+
+        divers = doc.xpath('//diver')
+        self.assertEquals(1, len(divers), sd)
+        self.assertTrue(divers[0].text is None, sd)
+
+        fnames = doc.xpath('//firstname/text()')
+        self.assertEquals(1, len(fnames), sd)
+        self.assertEquals('A', fnames[0], sd)
+
+        lnames = doc.xpath('//lastname/text()')
+        self.assertEquals(1, len(lnames), sd)
+        self.assertEquals('B', lnames[0], sd)
+
+        streets = doc.xpath('//street/text()')
+        self.assertEquals(1, len(streets), sd)
+        self.assertEquals('X', streets[0], sd)
+
+        cities = doc.xpath('//city/text()')
+        self.assertEquals(1, len(cities), sd)
+        self.assertEquals('Y', cities[0], sd)
+
+        # create first name but no last name nor address
+        ku.set_data(doc, fq, name=['A1'])
+        sd = et.tostring(doc)
+
+        divers = doc.xpath('//diver')
+        self.assertEquals(1, len(divers), sd)
+        self.assertTrue(divers[0].text is None, sd)
+
+        fnames = doc.xpath('//firstname/text()')
+        self.assertEquals(2, len(fnames), sd)
+        self.assertEquals(['A', 'A1'], fnames, sd)
+
+        lnames = doc.xpath('//lastname/text()')
+        self.assertEquals(1, len(lnames), sd)
+        self.assertEquals('B', lnames[0], sd)
+
+        streets = doc.xpath('//street/text()')
+        self.assertEquals(1, len(streets), sd)
+        self.assertEquals('X', streets[0], sd)
+
+        cities = doc.xpath('//city/text()')
+        self.assertEquals(1, len(cities), sd)
+        self.assertEquals('Y', cities[0], sd)
+
+
     def test_create_attr_data(self):
         """
         Test generic method for creating XML data as attributes
@@ -444,6 +502,45 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(2, len(lnames), sd)
         self.assertEquals(['B1', 'B2'], lnames, sd)
 
+
+    def test_create_attr_list_data(self):
+        """
+        Test generic method for creating list of XML data with attributes
+        """
+        doc = et.XML('<uddf></uddf>')
+        fq = {
+            'buddies': ['link/@ref', 'link/@ref'],
+        }
+        ku.set_data(doc, fq, buddies=['A1', 'A2'])
+        sd = et.tostring(doc)
+
+        links = doc.xpath('//link')
+        self.assertEquals(2, len(links), sd)
+        self.assertEquals('A1', links[0].get('ref'), sd)
+        self.assertEquals('A2', links[1].get('ref'), sd)
+
+
+    def test_create_attr_list_data_reuse(self):
+        """
+        Test generic method for creating list of XML data in attributes
+        with node reuse
+        """
+        doc = et.XML('<uddf></uddf>')
+        fq = {
+            's': ['t/@a', 't/@b'],
+            't': ['t/@a', 't/@b', 't/@a', 't/@b'],
+        }
+        ku.set_data(doc, fq, s=[1, 2], t=['A1', 'A2', 'A3', 'A4'])
+        sd = et.tostring(doc)
+
+        t = doc.xpath('//t')
+        self.assertEquals(3, len(t), sd)
+        self.assertEquals('1', t[0].get('a'), sd)
+        self.assertEquals('2', t[0].get('b'), sd)
+        self.assertEquals('A1', t[1].get('a'), sd)
+        self.assertEquals('A2', t[1].get('b'), sd)
+        self.assertEquals('A3', t[2].get('a'), sd)
+        self.assertEquals('A4', t[2].get('b'), sd)
 
 
     def test_create_node(self):
