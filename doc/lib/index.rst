@@ -1,9 +1,9 @@
 
 .. _part-lib:
 
-#######################
-Application Development
-#######################
+#################
+Kenozooid Library
+#################
 
 .. toctree::
    :maxdepth: 2
