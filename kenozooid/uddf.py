@@ -175,7 +175,7 @@ def xp(node, query):
     
     :Parameters:
      node
-        Node to be queried.
+        Document node or query starting node.
      query
         XPath query.
 
@@ -196,7 +196,7 @@ def xp_first(node, query):
     
     :Parameters:
      node
-        Node to be queried.
+        Document node or query starting node.
      query
         XPath query.
 
@@ -217,7 +217,7 @@ def xp_last(node, query):
     
     :Parameters:
      node
-        Node to be queried.
+        Document node or query starting node.
      query
         XPath query.
 
