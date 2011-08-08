@@ -4,8 +4,11 @@ UDDF
 General Data Access and Manipulation
 ------------------------------------
 
+.. autofunction:: kenozooid.uddf.xp
+.. autofunction:: kenozooid.uddf.xp_first
+.. autofunction:: kenozooid.uddf.xp_last
+
 - find
-- xp{,first,last}
 - create_node
 - create_data
 - copy

@@ -167,9 +167,11 @@ def parse(f, query, **params):
 
 def xp(node, query):
     """
-    Perform XPath query in UDDF namespace on specified node.
+    Find items with XPath query.
 
-    The result is data returned by lxml.etree.Element.xpath.
+    The query is performed using UDDF namespace.
+
+    Iterator of items (strings, nodes) found by query is returned.
     
     :Parameters:
      node
@@ -186,10 +188,11 @@ def xp(node, query):
 
 def xp_first(node, query):
     """
-    Get first element found with XPath query in UDDF namespace on specified
-    node.
+    Get first element found with XPath query.
 
-    First element is returned or None if it was not found.
+    The query is performed using UDDF namespace.
+
+    First element is returned or None if it is not found.
     
     :Parameters:
      node
@@ -206,10 +209,11 @@ def xp_first(node, query):
 
 def xp_last(node, query):
     """
-    Get last element found with XPath query in UDDF namespace on specified
-    node.
+    Get last element found with XPath query.
 
-    LAst element is returned or None if it was not found.
+    The query is performed using UDDF namespace.
+
+    Last element is returned or None if it is not found.
     
     :Parameters:
      node
