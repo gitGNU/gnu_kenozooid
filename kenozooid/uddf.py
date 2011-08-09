@@ -18,31 +18,29 @@
 #
 
 """
-UDDF file format support. The code below is divided into data lookup, data
-creation and data post-processing sections.
+The `kenozooid.uddf` module provides support for parsing, searching and
+manipulation of data stored in UDDF files.
 
-UDDF files are basis for Kenozooid data model.
+The functions implemented in this module can be divided into the following
+categories
 
-The UDDF data is parsed and queried with XPath. The result of a query is
-generator[1] of records (named tuples in Python terms), which should
-guarantee memory efficiency[2].
+- XML nodes functions
+- generic data searching and manipulation functions
+- functions for searching and manipulation of diving specific data
 
-Module `lxml` is used for XML parsing and XPath querying and full
-capabilities of underlying `libxml2' library should be used. The
-ElementTree XML data model is used.
+Almost each function accepts XPath expression (query) to find or modify
+data. Each tag name in an query should be prefixed with 'uddf:' string to
+indicate UDDF namespace, i.e. 'uddf:diver', 'uddf:waypoint' - appropriate
+namespace mapping for this prefix is defined for each XPath call or during
+XML node creation.
 
-Namespace Support
-=================
-Each tag name in every XPath expression should be prefixed with `uddf`
-string. Appropriate namespace mapping for this prefix is defined for each
-XPath query.
+The result of parsing or search of data is usually iterator of XML nodes or
+data records (named tuples in Python terms) depending on type of function
+(see categories above).
 
-Remarks
-=======
-[1] Ideally, it is generator. Some of the routines implemented in this
-module need to be optimized to _not_ return lists.
-
-TODO: More research is needed to cache results of some of the queries. 
+Module `lxml` is used for XML parsing and querying with XPath. Full
+capabilities of underlying `libxml2' library is used by design. The
+ElementTree XML data model is used for XML nodes.
 """
 
 from collections import namedtuple, OrderedDict
@@ -141,10 +139,10 @@ class RangeError(ValueError):
 
 def parse(f, query, **params):
     """
-    Find nodes in UDDF file using XPath query.
+    Find XML nodes in UDDF file using XPath query.
 
-    UDDF file can be a file name, file object, URL or basically everything
-    what is supported by `lxml`.
+    UDDF file can be a file name, file object, URL and basically everything
+    what is supported by `lxml` library.
 
     :Parameters:
      f
@@ -157,7 +155,8 @@ def parse(f, query, **params):
     .. seealso::
         XPath
     """
-    log.debug('parsing and searching with query: {0}'.format(query))
+    log.debug('parsing and searching with query: {}; parameters {}' \
+            .format(query, params))
     doc = et.parse(f)
     if isinstance(query, str):
         return xp(doc, query)

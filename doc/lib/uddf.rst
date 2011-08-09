@@ -1,25 +1,35 @@
 UDDF
 ====
 
-General Data Access and Manipulation
-------------------------------------
+**Source code:** :source:`kenozooid/uddf.py`
 
+.. automodule:: kenozooid.uddf
+
+XML Nodes Pasrsing, Searching and Manipulation
+----------------------------------------------
+
+.. autofunction:: kenozooid.uddf.parse
 .. autofunction:: kenozooid.uddf.xp
 .. autofunction:: kenozooid.uddf.xp_first
 .. autofunction:: kenozooid.uddf.xp_last
 
-- find
-- create_node
-- create_data
-- copy
-- save and validate
+.. autofunction:: create_node
+.. set_data -> create_data
+.. autofunction:: set_data
+.. autofunction:: copy
+.. autofunction:: save
 
-Data Specific Functions
------------------------
+Generic Data Access and Manipulation
+------------------------------------
+
+- find_data
+
+Dive Data Specific Functions
+----------------------------
+- reorder
 - dive
 - buddy
 - dive sites
 - dc
 
 .. vim: sw=4:et:ai
-
