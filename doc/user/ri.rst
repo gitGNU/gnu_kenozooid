@@ -34,9 +34,9 @@ platform (Windows, Mac OS X).
 | libdivecomputer |          | library     |                          | required by Sensus Ultra   |
 |                 |          |             |                          | driver                     |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| R               |  2.13.0  | Python      | Arch, Debian Wheezy,     | plotting and statistical   |
-|                 |          | module      | Fedora 15, Mac OS X,     | analysis                   |
-|                 |          |             | PLD Linux, Ubuntu Natty, |                            |
+| R               |  2.13.0  | R scripts   | Arch, Debian Wheezy,     | plotting and statistical   |
+|                 |          | execution   | Fedora 15, Mac OS X,     | analysis                   |
+|                 |          | environment | PLD Linux, Ubuntu Natty, |                            |
 |                 |          |             | Windows                  |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | rpy             |  2.2.2   | Python      | PLD Linux                | used to communicate with R |
