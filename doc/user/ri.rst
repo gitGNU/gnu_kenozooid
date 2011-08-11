@@ -49,12 +49,22 @@ Installation
 ------------
 
 Kenozooid Installation
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
+At the moment Kenozooid is not released yet. In the future it will be possible to install
+Kenozooid from `PyPI <http://pypi.python.org/pypi>`_, but at the moment it can be used
+only by fetching source code from
+`source control server <http://git.savannah.gnu.org/cgit/kenozooid.git>`_, see
+:ref:`use-kz-git` subsection.
+
+.. _use-kz-git:
+
+Using Kenozooid From Git
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Python Modules
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 R Packages
-~~~~~~~~~~
+^^^^^^^^^^
 
 .. vim: sw=4:et:ai
