@@ -15,6 +15,7 @@ User Manual
    analysis
    logbook
    calc    
+   ri
    links
 
 * :ref:`genindex`
