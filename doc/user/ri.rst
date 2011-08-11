@@ -42,7 +42,7 @@ platform (Windows, Mac OS X).
 | rpy             |  2.2.2   | Python      | PLD Linux                | used to communicate with R |
 |                 |          | module      |                          |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| hmisc           |          | R package   |                          | used for plotting          |
+| Hmisc           |          | R package   |                          | used for plotting          |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 
 Installation
