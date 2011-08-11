@@ -7,8 +7,8 @@ Requirements
 The table below describes Kenozooid core (mandatory) and optional dependencies.
 
 The availability column provides information about a package being provided with an
-operating system (i.e. Linux distro) or a binary ready to install on given platform
-(Windows, Mac OS X).
+operating system (i.e. Linux distro, FreeBSD) or a binary available to install on given
+platform (Windows, Mac OS X).
 
 +-----------------+----------+-------------+--------------------------+----------------------------+
 |    Name         | Version  | Type        |  Availability            |  Description               |
