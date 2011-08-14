@@ -50,21 +50,80 @@ Installation
 
 Kenozooid Installation
 ^^^^^^^^^^^^^^^^^^^^^^
-At the moment Kenozooid is not released yet. In the future it will be possible to install
-Kenozooid from `PyPI <http://pypi.python.org/pypi>`_, but at the moment it can be used
-only by fetching source code from
+At the moment Kenozooid is not released yet. In the future it will be possible
+to install Kenozooid from `PyPI <http://pypi.python.org/pypi>`_, but at the
+moment it can be used only by fetching source code from
 `source control server <http://git.savannah.gnu.org/cgit/kenozooid.git>`_, see
 :ref:`use-kz-git` subsection.
 
 .. _use-kz-git:
 
-Using Kenozooid From Git
-^^^^^^^^^^^^^^^^^^^^^^^^
+At the Bleeging Edge of Kenozooid Development
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Kenozooid can be used directly after fetching source code from its
+`Git <http://git-scm.com/>`_ repository. This allows to follow Kenozooid
+development and use its unstable but latest features.
 
-Python Modules
-^^^^^^^^^^^^^^
+Kenozooid source code is hosted on `Savannah <http://savannah.gnu.org/>`_ at
 
-R Packages
-^^^^^^^^^^
+    http://git.savannah.gnu.org/cgit/kenozooid.git
+
+To check out from the repository simply type::
+
+    git clone http://git.savannah.gnu.org/r/kenozooid.git
+
+After fetching the source code enter Kenozooid directory, set up paths and
+simply invoke Kenozooid command line interface, for example::
+
+    cd kenozooid
+    export PYTHONPATH=.:$PYTHONPATH
+    export PATH=./bin:$PATH
+    kz --help
+
+Checking Dependencies
+^^^^^^^^^^^^^^^^^^^^^
+The Kenozooid dependencies can be checked with 'setup.py' script, which is part
+of Kenozooid source code. The dependency checking verifies version of Python
+used and installation of Python modules and R packages.
+
+To check the dependencies execute the following command from Kenozooid's source
+code directory::
+
+    python3 setup.py deps
+
+Example, fully successful output of dependency check, can be as follows::
+
+    $ python3 setup.py deps
+    running deps
+    Checking Kenozooid dependencies
+    Checking Python version >= 3.2... ok
+    Checking core Python module lxml... ok
+    Checking core Python module dateutil... ok
+    Checking optional Python module rpy2... ok
+    Checking optional Python module serial... ok
+    Checking R package Hmisc... ok
+
+Example, successful output of dependency check, but with missing optional
+dependencies, might look in the following way::
+
+    $ python3 setup.py deps
+    running deps
+    Checking Kenozooid dependencies
+    Checking Python version >= 3.2... ok
+    Checking core Python module lxml... ok
+    Checking core Python module dateutil... ok
+    Checking optional Python module rpy2... ok
+    Checking optional Python module serial... not found
+    Checking R package Hmisc... not found
+
+    Missing core dependencies:
+
+      Install serial Python module with command
+
+          easy_install-3.2 --user pyserial
+
+      Install Hmisc R package by starting R and invoking command
+
+          install.packages('Hmisc')
 
 .. vim: sw=4:et:ai
