@@ -1,11 +1,90 @@
 #!/usr/bin/env python3
 
 from setuptools import setup, find_packages
+from collections import OrderedDict
+import sys
 
 version = __import__('kenozooid').__version__
 
 from distutils.cmd import Command
 import os.path
+
+class CheckDeps(Command):
+    description = 'Check core and optional Kenozooid dependencies'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        python_ok = sys.version_info >= (3, 2)
+        rpy_ok = False
+        mods = 'lxml', 'dateutil', 'rpy2', 'serial'
+        names = 'lxml', 'python-dateutil', 'rpy2', 'pyserial'
+        ic = 2
+        py_miss = set()
+        r_miss = set()
+
+        print('Checking Kenozooid dependencies')
+
+        print('Checking Python version >= 3.2... {}' \
+                .format('ok' if python_ok else 'no'))
+
+        # check Python modules
+        for i, m in enumerate(mods):
+            try:
+                t = 'core' if i < ic else 'optional'
+                print('Checking {} Python module {}... '.format(t, m), end='')
+                __import__(m)
+                print('ok')
+            except ImportError:
+                print('not found')
+                py_miss.add(m)
+
+        # check R packages
+        rpy_ok = 'rpy2' not in py_miss 
+        if rpy_ok:
+            import rpy2
+            from rpy2.robjects.packages import importr
+            try:
+                print('Checking R package Hmisc... ', end='')
+                importr('Hmisc')
+                print('ok')
+            except rpy2.rinterface.RRuntimeError:
+                print('not found')
+                r_miss.add('Hmisc')
+        else:
+            print('No rpy2 installed, not checking R packages installation')
+
+        # print installation suggestions
+        if py_miss or not python_ok:
+            print('\nMissing core dependencies:\n')
+        if not python_ok:
+            print('  Use Python 3.2 at least!!!\n')
+
+        for i, (m, n) in enumerate(zip(mods, names)):
+            if m not in py_miss:
+                continue
+
+            if i == ic:
+                print('Missing optional dependencies:\n')
+            print('''\
+  Install {} Python module with command
+
+      easy_install-3.2 --user {}
+'''.format(m, n))
+
+        for p in r_miss:
+            print('''\
+  Install {p} R package by starting R and invoking command
+
+      install.packages('{p}')
+'''.format(p=p))
+
+
 
 class EpydocBuildDoc(Command):
     description = 'Builds the documentation with epydoc'
@@ -101,11 +180,11 @@ Kenozooid is dive planning and analysis toolbox.
     keywords='diving dive computer logger plot dump uddf',
     license='GPL',
     install_requires=[
-        'lxml >= 2.2.2',
-        'matplotlib >= 0.99.0',
-        'nose >= 0.10.4',
-        'pyserial >= 2.4',
-        'setuptools',
+        'lxml >= 2.3',
+        'python-dateutil >= 2.0',
+        #'pyserial >= 2.5',
+        #'rpy2 >= 2.2.2',
+        #'distribute',
     ],
     entry_points={
         'console_scripts': [
@@ -113,6 +192,10 @@ Kenozooid is dive planning and analysis toolbox.
         ],
     },
     test_suite='nose.collector',
-    cmdclass={'build_epydoc': EpydocBuildDoc, 'build_doc': build_doc},
+    cmdclass={
+        'build_epydoc': EpydocBuildDoc,
+        'build_doc': build_doc,
+        'deps': CheckDeps,
+    },
 )
 
