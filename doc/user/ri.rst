@@ -116,7 +116,7 @@ dependencies, might look in the following way::
     Checking optional Python module serial... not found
     Checking R package Hmisc... not found
 
-    Missing core dependencies:
+    Missing optional dependencies:
 
       Install serial Python module with command
 

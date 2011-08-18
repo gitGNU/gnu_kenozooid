@@ -9,6 +9,21 @@ version = __import__('kenozooid').__version__
 from distutils.cmd import Command
 import os.path
 
+
+def _py_inst(mods, names, py_miss):
+    """
+    Print Python module installation suggestion.
+    """
+    for i, (m, n) in enumerate(zip(mods, names)):
+        if m not in py_miss:
+            continue
+
+        print('''\
+  Install {} Python module with command
+
+      easy_install-3.2 --user {}
+'''.format(m, n))
+
 class CheckDeps(Command):
     description = 'Check core and optional Kenozooid dependencies'
     user_options = []
@@ -60,22 +75,15 @@ class CheckDeps(Command):
             print('No rpy2 installed, not checking R packages installation')
 
         # print installation suggestions
-        if py_miss or not python_ok:
+        if py_miss and py_miss.intersection(mods[:ic]) or not python_ok :
             print('\nMissing core dependencies:\n')
         if not python_ok:
             print('  Use Python 3.2 at least!!!\n')
+        _py_inst(mods[:ic], names, py_miss)
 
-        for i, (m, n) in enumerate(zip(mods, names)):
-            if m not in py_miss:
-                continue
-
-            if i == ic:
-                print('Missing optional dependencies:\n')
-            print('''\
-  Install {} Python module with command
-
-      easy_install-3.2 --user {}
-'''.format(m, n))
+        if py_miss and py_miss.intersection(mods[ic:]):
+            print('\nMissing optional dependencies:\n')
+        _py_inst(mods[ic:], names, py_miss)
 
         for p in r_miss:
             print('''\
