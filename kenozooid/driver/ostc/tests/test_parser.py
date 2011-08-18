@@ -34,23 +34,11 @@ from . import data as od
 class ParserTestCase(unittest.TestCase):
     """
     OSTC binary data parsing tests.
-
-    :Attributes:
-     dump_data
-        OSTC dump data from DATA_OSTC.
-
     """
-    def setUp(self):
-        """
-        Create test dump data.
-        """
-        self.dump_data = ku._dump_decode(od.DATA_OSTC)
-
-
     def test_status_parsing(self):
         """Test status parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(od.RAW_DATA_OSTC)
 
         self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
 
@@ -67,7 +55,7 @@ class ParserTestCase(unittest.TestCase):
     def test_eeprom_parsing(self):
         """Test EEPROM data parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(od.RAW_DATA_OSTC)
         eeprom = dump.eeprom
 
         self.assertEquals(155, eeprom.serial)
@@ -78,7 +66,7 @@ class ParserTestCase(unittest.TestCase):
     def test_profile_split(self):
         """Test profile splitting
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profile(dump.profile))
         # five dives expected
         self.assertEquals(5, len(profile))
@@ -91,7 +79,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profile(dump.profile))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -131,7 +119,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        dump = ostc_parser.status(self.dump_data)
+        dump = ostc_parser.status(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profile(dump.profile))
         h, p = profile[0]
         header = ostc_parser.header(h)
