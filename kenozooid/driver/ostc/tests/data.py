@@ -426,7 +426,7 @@ DATA_OSTC_MK2_191 = \
     '8ej8u6HwseVac4hsSkA4EFrNKweO1LZblJkTFkNik8c3absDY6mysXd0hiDb/8XckU4UJB' \
     'SUka1A=='
 
-DATA_OSTC_MK2_191_HW = \
+DATA_OSTC_N2_191_HW = \
    r'QlpoOTFBWSZTWYRTXWkACdP////////////f////////////7/9/////+///////////4A' \
     'tfO7LHidJ6fT3MH19zweYAXcD0ZhqgACIkRNpPU9NTJpoaNqHp6iMamhmp5QDQ0aaY1Gmm' \
     'jQyaaGjTahsoGINNNqZqekaGTTTRpiANAekaaGajTYpo9NT1Bk0MEzUekGj1D1PUbRGhE1' \
@@ -1523,7 +1523,7 @@ DATA_OSTC_BROKEN = \
 
 RAW_DATA_OSTC = ku._dump_decode(DATA_OSTC)
 RAW_DATA_OSTC_MK2_191 = ku._dump_decode(DATA_OSTC_MK2_191)
-RAW_DATA_OSTC_MK2_191_HW = ku._dump_decode(DATA_OSTC_MK2_191_HW)
+RAW_DATA_OSTC_N2_191_HW = ku._dump_decode(DATA_OSTC_N2_191_HW)
 RAW_DATA_OSTC_MK2_194 = ku._dump_decode(DATA_OSTC_MK2_194)
 RAW_DATA_OSTC_MK2_196 = ku._dump_decode(DATA_OSTC_MK2_196)
 

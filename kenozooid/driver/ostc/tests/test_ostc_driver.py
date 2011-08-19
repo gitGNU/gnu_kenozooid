@@ -141,7 +141,7 @@ class MemoryDumpTestCase(unittest.TestCase):
         Test OSTC N2 model and version parsing from raw data
         """
         dc = OSTCMemoryDump()
-        ver = dc.version(od.RAW_DATA_OSTC_MK2_191_HW)
+        ver = dc.version(od.RAW_DATA_OSTC_N2_191_HW)
         self.assertEquals('OSTC N2 1.91', ver)
 
 
