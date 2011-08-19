@@ -81,9 +81,9 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(252, len(eeprom.data))
 
 
-    def test_profile_split(self):
+    def test_data_get(self):
         """
-        Test OSTC data profile splitting (< 1.91)
+        Test OSTC data getting (< 1.91)
         """
         dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profiles(dump.profiles))
@@ -97,9 +97,9 @@ class ParserTestCase(unittest.TestCase):
             self.assertEquals(b'\xfd\xfd', block[-2:])
 
 
-    def test_profile_split_191(self):
+    def test_data_get_191(self):
         """
-        Test OSTC data profile splitting (>= 1.91)
+        Test OSTC data getting (>= 1.91)
         """
         dump = ostc_parser.get_data(od.RAW_DATA_OSTC_MK2_194)
         profile = tuple(ostc_parser.profiles(dump.profiles))
@@ -118,13 +118,12 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_dive_profile_header_parsing(self):
-        """Test dive profile header parsing
+        """
+        Test dive profile header parsing (< 1.91)
         """
         dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profiles(dump.profiles))
         header = ostc_parser.header(profile[0][0])
-        self.assertEquals(0xfafa, header.start)
-        self.assertEquals(0xfbfb, header.end)
         self.assertEquals(0x20, header.version)
         self.assertEquals(1, header.month)
         self.assertEquals(31, header.day)
@@ -154,7 +153,56 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(48, header.div_ppo2)
         self.assertEquals(0, header.div_deco_debug)
         self.assertEquals(0, header.div_res2)
-        self.assertEquals(0, header.spare)
+        self.assertEquals(0, header.salnity)
+        self.assertEquals(0, header.max_cns)
+
+
+    def test_dive_profile_header_parsing_191(self):
+        """
+        Test dive profile header parsing (>= 1.91)
+        """
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC_MK2_194)
+        profiles = tuple(ostc_parser.profiles(dump.profiles))
+        header = ostc_parser.header(profiles[8][0])
+        self.assertEquals(0x21, header.version)
+        self.assertEquals(7, header.month)
+        self.assertEquals(28, header.day)
+        self.assertEquals(11, header.year)
+        self.assertEquals(22, header.hour)
+        self.assertEquals(31, header.minute)
+        self.assertEquals(6016, header.max_depth)
+        self.assertEquals(64, header.dive_time_m)
+        self.assertEquals(4, header.dive_time_s)
+        self.assertEquals(57, header.min_temp)
+        self.assertEquals(975, header.surface_pressure)
+        self.assertEquals(248, header.desaturation)
+        self.assertEquals(21, header.gas1)
+        self.assertEquals(47, header.gas2)
+        self.assertEquals(100, header.gas3)
+        self.assertEquals(11532, header.gas4)
+        self.assertEquals(9489, header.gas5)
+        self.assertEquals(12810, header.gas6)
+        self.assertEquals(4, header.gas)
+        self.assertEquals(1, header.ver1)
+        self.assertEquals(93, header.ver2)
+        self.assertEquals(4066, header.voltage)
+        self.assertEquals(4, header.sampling)
+        self.assertEquals(47, header.div_temp)
+        self.assertEquals(47, header.div_deco)
+        self.assertEquals(16, header.div_tank)
+        self.assertEquals(48, header.div_ppo2)
+        self.assertEquals(144, header.div_deco_debug)
+        self.assertEquals(16, header.div_res2)
+        self.assertEquals(100, header.salnity)
+        self.assertEquals(36, header.max_cns)
+        self.assertEquals(2085, header.avg_depth)
+        self.assertEquals(4123, header.dive_time_total_s)
+        self.assertEquals(10, header.gf_lo)
+        self.assertEquals(85, header.gf_hi)
+        self.assertEquals(5, header.deco_type)
+        self.assertEquals(0, header.reserved1)
+        self.assertEquals(0, header.reserved2)
+        self.assertEquals(0, header.reserved3)
 
 
     def test_dive_profile_block_parsing(self):

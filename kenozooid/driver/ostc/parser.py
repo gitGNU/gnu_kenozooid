@@ -47,12 +47,18 @@ RE_PROFILES = re.compile(b'(\xfa\xfa' \
 
 # dive profile header
 DiveHeader = namedtuple('DiveHeader', """\
-start version month day year hour minute max_depth dive_time_m dive_time_s
+version month day year hour minute max_depth dive_time_m dive_time_s
 min_temp surface_pressure desaturation gas1 gas2 gas3 gas4 gas5 gas6 gas
 ver1 ver2 voltage sampling div_temp div_deco div_tank div_ppo2
-div_deco_debug div_res2 spare end
+div_deco_debug div_res2 salnity max_cns
 """)
-FMT_DIVE_HEADER = '<H6BHHB' 'HHH6HB' 'BBHB4B' 'BBHH'
+FMT_DIVE_HEADER = '<6BHHB' 'HHH6HB' 'BBHB4B' 'BBBB'
+
+DiveHeader_191 = namedtuple('DiveHeader_191',
+        DiveHeader._fields + ('avg_depth', 'dive_time_total_s',
+            'gf_lo', 'gf_hi', 'deco_type',
+            'reserved1', 'reserved2', 'reserved3'))
+FMT_DIVE_HEADER_191 = FMT_DIVE_HEADER + 'HH' 'BB' 'BBBB'
 
 # dive profile data block sample
 DiveSample = namedtuple('DiveSample', 'depth alarm gas_set_o2 gas_set_he'
@@ -92,7 +98,13 @@ def header(data):
     """
     Parse OSTC dive profile header, see `DiveHeader` named tuple.
     """
-    header = DiveHeader._make(unpack(FMT_DIVE_HEADER, data))
+    if len(data) == 47:
+        header = DiveHeader(*unpack(FMT_DIVE_HEADER, data[2:-2]))
+    elif len(data) == 57:
+        header = DiveHeader_191(*unpack(FMT_DIVE_HEADER_191, data[2:-2]))
+    else:
+        raise ValueError('Unknown length of profile header: {}'.format(len(data)))
+
     log.debug('parsed dive header {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
         ' {0.hour:>02d}:{0.minute:>02d}' \
         ' max depth={0.max_depth}'.format(header))
