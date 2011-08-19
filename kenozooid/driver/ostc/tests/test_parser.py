@@ -43,7 +43,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
 
         # first dive is deleted one so no \xfa\xfa
-        self.assertEquals(b'\xfa\x20', dump.profile[:2])
+        self.assertEquals(b'\xfa\x20', dump.profiles[:2])
 
         self.assertEquals(4142, dump.voltage)
 
@@ -51,7 +51,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(1, dump.ver1)
         self.assertEquals(26, dump.ver2)
 
-        self.assertEquals(32768, dump.profile)
+        self.assertEquals(32768, dump.profiles)
 
 
     def test_data_parsing(self):
@@ -67,7 +67,7 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(1, dump.ver1)
         self.assertEquals(94, dump.ver2)
         
-        self.assertEquals(65536, len(dump.profile))
+        self.assertEquals(65536, len(dump.profiles))
 
 
     def test_eeprom_parsing(self):
@@ -86,7 +86,7 @@ class ParserTestCase(unittest.TestCase):
         Test OSTC data profile splitting (< 1.91)
         """
         dump = ostc_parser.status(od.RAW_DATA_OSTC)
-        profile = tuple(ostc_parser.profile(dump.profile))
+        profile = tuple(ostc_parser.profiles(dump.profiles))
         # five dives expected
         self.assertEquals(5, len(profile))
         for header, block in profile:
@@ -102,7 +102,7 @@ class ParserTestCase(unittest.TestCase):
         Test OSTC data profile splitting (>= 1.91)
         """
         dump = ostc_parser.status(od.RAW_DATA_OSTC_MK2_194)
-        profile = tuple(ostc_parser.profile(dump.profile))
+        profile = tuple(ostc_parser.profiles(dump.profiles))
         # five dives expected
         self.assertEquals(9, len(profile))
         for i, (header, block) in enumerate(profile):
@@ -121,7 +121,7 @@ class ParserTestCase(unittest.TestCase):
         """Test dive profile header parsing
         """
         dump = ostc_parser.status(od.RAW_DATA_OSTC)
-        profile = tuple(ostc_parser.profile(dump.profile))
+        profile = tuple(ostc_parser.profiles(dump.profiles))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
         self.assertEquals(0xfbfb, header.end)
@@ -161,8 +161,8 @@ class ParserTestCase(unittest.TestCase):
         """Test dive profile data block parsing
         """
         dump = ostc_parser.status(od.RAW_DATA_OSTC)
-        profile = tuple(ostc_parser.profile(dump.profile))
-        h, p = profile[0]
+        profiles = tuple(ostc_parser.profiles(dump.profiles))
+        h, p = profiles[0]
         header = ostc_parser.header(h)
         dive = tuple(ostc_parser.dive_data(header, p))
         # 217 samples, but dive time is 32:09 (sampling 10)
@@ -237,7 +237,7 @@ class ParserTestCase(unittest.TestCase):
     def test_invalid_profile(self):
         """Test parsing invalid profile
         """
-        data = tuple(ostc_parser.profile(ku._dump_decode(od.DATA_OSTC_BROKEN)))
+        data = tuple(ostc_parser.profiles(ku._dump_decode(od.DATA_OSTC_BROKEN)))
         assert 32 == len(data)
 
         # dive no 31 is broken (count from 0)

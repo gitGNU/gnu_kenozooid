@@ -30,7 +30,7 @@ from binascii import hexlify
 log = logging.getLogger('kenozooid.driver.ostc')
 
 # command 'a' output
-StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile')
+StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profiles')
 FMT_STATUS = '<6s256sHbb'
 LEN_STATUS = calcsize(FMT_STATUS)
 
@@ -64,7 +64,7 @@ def status(data):
     Split status and profile data, see `StatusDump` named tuple.
     """
     dump = StatusDump(*unpack(FMT_STATUS, data[:LEN_STATUS]),
-            profile=data[LEN_STATUS:])
+            profiles=data[LEN_STATUS:])
     eeprom = EEPROMData(*unpack(FMT_EEPROM, dump.eeprom))
     dump = dump._replace(eeprom=eeprom)
     log.debug('unpacked status dump, voltage {}, version {}.{}, serial {}' \
@@ -72,7 +72,7 @@ def status(data):
     return dump
 
 
-def profile(data):
+def profiles(data):
     """
     Split profile data into individual dive profiles using profile
     regular expression `RE_PROFILES`.
