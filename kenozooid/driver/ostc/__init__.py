@@ -160,14 +160,14 @@ class OSTCMemoryDump(object):
         Convert dive data into UDDF format.
         """
         nodes = []
-        dive_data = ostc_parser.status(dump.data)
+        dive_data = ostc_parser.get_data(dump.data)
 
         # uddf dive profile sample
         _f = 'alarm', 'depth', 'time', 'temp'
         _q = 'uddf:alarm', 'uddf:depth', 'uddf:divetime', 'uddf:temperature'
         UDDF_SAMPLE = OrderedDict(zip(_f, _q))
 
-        for h, p in ostc_parser.profile(dive_data.profile):
+        for h, p in ostc_parser.profiles(dive_data.profiles):
             log.debug('header: {}'.format(hexlify(h)))
             log.debug('profile: {}'.format(hexlify(p)))
 
@@ -228,7 +228,7 @@ class OSTCMemoryDump(object):
         """
         Get OSTC model and version information from raw data.
         """
-        status = ostc_parser.status(data)
+        status = ostc_parser.get_data(data)
         model = 'OSTC'
         if status.eeprom.serial > 2047:
             model = 'OSTC N2'

@@ -30,7 +30,7 @@ from binascii import hexlify
 log = logging.getLogger('kenozooid.driver.ostc')
 
 # command 'a' output
-StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profiles')
+Data = namedtuple('Data', 'preamble eeprom voltage ver1 ver2 profiles')
 FMT_STATUS = '<6s256sHbb'
 LEN_STATUS = calcsize(FMT_STATUS)
 
@@ -59,11 +59,11 @@ DiveSample = namedtuple('DiveSample', 'depth alarm gas_set_o2 gas_set_he'
     ' current_gas setpoint temp deco_depth deco_time tank ppo2')
 
 
-def status(data):
+def get_data(data):
     """
-    Split status and profile data, see `StatusDump` named tuple.
+    Get status information and profile raw data, see `Data` named tuple.
     """
-    dump = StatusDump(*unpack(FMT_STATUS, data[:LEN_STATUS]),
+    dump = Data(*unpack(FMT_STATUS, data[:LEN_STATUS]),
             profiles=data[LEN_STATUS:])
     eeprom = EEPROMData(*unpack(FMT_EEPROM, dump.eeprom))
     dump = dump._replace(eeprom=eeprom)

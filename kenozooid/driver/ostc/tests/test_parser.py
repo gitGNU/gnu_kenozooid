@@ -38,7 +38,7 @@ class ParserTestCase(unittest.TestCase):
     def test_data_parsing(self):
         """Test OSTC data parsing (< 1.91)
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
 
         self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
 
@@ -57,7 +57,7 @@ class ParserTestCase(unittest.TestCase):
     def test_data_parsing(self):
         """Test OSTC data parsing (>= 1.91)
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC_MK2_194)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC_MK2_194)
 
         self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
 
@@ -73,7 +73,7 @@ class ParserTestCase(unittest.TestCase):
     def test_eeprom_parsing(self):
         """Test EEPROM data parsing
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         eeprom = dump.eeprom
 
         self.assertEquals(155, eeprom.serial)
@@ -85,7 +85,7 @@ class ParserTestCase(unittest.TestCase):
         """
         Test OSTC data profile splitting (< 1.91)
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profiles(dump.profiles))
         # five dives expected
         self.assertEquals(5, len(profile))
@@ -101,7 +101,7 @@ class ParserTestCase(unittest.TestCase):
         """
         Test OSTC data profile splitting (>= 1.91)
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC_MK2_194)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC_MK2_194)
         profile = tuple(ostc_parser.profiles(dump.profiles))
         # five dives expected
         self.assertEquals(9, len(profile))
@@ -120,7 +120,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_header_parsing(self):
         """Test dive profile header parsing
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profiles(dump.profiles))
         header = ostc_parser.header(profile[0][0])
         self.assertEquals(0xfafa, header.start)
@@ -160,7 +160,7 @@ class ParserTestCase(unittest.TestCase):
     def test_dive_profile_block_parsing(self):
         """Test dive profile data block parsing
         """
-        dump = ostc_parser.status(od.RAW_DATA_OSTC)
+        dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         profiles = tuple(ostc_parser.profiles(dump.profiles))
         h, p = profiles[0]
         header = ostc_parser.header(h)
