@@ -230,10 +230,10 @@ class OSTCMemoryDump(object):
         """
         status = ostc_parser.status(data)
         model = 'OSTC'
-        if status.eeprom.serial > 300:
-            model = 'OSTC Mk.2'
-        elif status.eeprom.serial > 2047:
+        if status.eeprom.serial > 2047:
             model = 'OSTC N2'
+        elif status.eeprom.serial > 300:
+            model = 'OSTC Mk.2'
         return '{} {}.{}'.format(model, status.ver1, status.ver2)
 
 

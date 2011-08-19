@@ -136,13 +136,20 @@ class MemoryDumpTestCase(unittest.TestCase):
         self.assertEquals('OSTC Mk.2 1.90', ver)
 
 
+    def test_version_ostc_n2(self):
+        """
+        Test OSTC N2 model and version parsing from raw data
+        """
+        dc = OSTCMemoryDump()
+        ver = dc.version(od.RAW_DATA_OSTC_MK2_191_HW)
+        self.assertEquals('OSTC N2 1.91', ver)
+
+
     def test_version_191(self):
         """
         Test OSTC 1.91 and higher version parsing
         """
         dc = OSTCMemoryDump()
-        ver = dc.version(od.RAW_DATA_OSTC_MK2_191_HW)
-        self.assertEquals('OSTC Mk.2 1.91', ver)
 
         ver = dc.version(od.RAW_DATA_OSTC_MK2_194)
         self.assertEquals('OSTC Mk.2 1.94', ver)
