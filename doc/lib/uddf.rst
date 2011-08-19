@@ -1,8 +1,6 @@
 UDDF
 ====
 
-**Source code:** :source:`kenozooid/uddf.py`
-
 .. automodule:: kenozooid.uddf
 
 XML Nodes Pasrsing, Searching and Manipulation
