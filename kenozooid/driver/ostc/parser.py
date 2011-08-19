@@ -31,15 +31,19 @@ log = logging.getLogger('kenozooid.driver.ostc')
 
 # command 'a' output
 StatusDump = namedtuple('StatusDump', 'preamble eeprom voltage ver1 ver2 profile')
-FMT_STATUS = '<6s256sHbb32768s'
+FMT_STATUS = '<6s256sHbb'
 LEN_STATUS = calcsize(FMT_STATUS)
 
 # EEPROM data, command 'g' output (nfy)
 EEPROMData = namedtuple('EEPROMData', 'serial dives data')
 FMT_EEPROM = '<HH252s'
 
-# profile data is FA0FA..(43)..FBFB...FDFD
-RE_PROFILE = re.compile(b'(\xfa\xfa.{43}\xfb\xfb)(.+?\xfd\xfd)', re.DOTALL)
+# profile data is one of
+# - FAFA20..(42)..FBFB...FDFD
+# - FAFA21..(52)..FBFB...FDFD
+RE_PROFILES = re.compile(b'(\xfa\xfa' \
+        b'(\x20.{42}|\x21.{52})\xfb\xfb)' \
+        b'(.+?\xfd\xfd)', re.DOTALL)
 
 # dive profile header
 DiveHeader = namedtuple('DiveHeader', """\
@@ -59,7 +63,8 @@ def status(data):
     """
     Split status and profile data, see `StatusDump` named tuple.
     """
-    dump = StatusDump(*unpack(FMT_STATUS, data[:LEN_STATUS]))
+    dump = StatusDump(*unpack(FMT_STATUS, data[:LEN_STATUS]),
+            profile=data[LEN_STATUS:])
     eeprom = EEPROMData(*unpack(FMT_EEPROM, dump.eeprom))
     dump = dump._replace(eeprom=eeprom)
     log.debug('unpacked status dump, voltage {}, version {}.{}, serial {}' \
@@ -70,7 +75,7 @@ def status(data):
 def profile(data):
     """
     Split profile data into individual dive profiles using profile
-    regular expression `RE_PROFILE`.
+    regular expression `RE_PROFILES`.
 
     Collection of tuples (header, block) is returned
 
@@ -80,7 +85,7 @@ def profile(data):
         dive profile block data
 
     """
-    return RE_PROFILE.findall(data)
+    return ((h, p) for h, _, p in RE_PROFILES.findall(data))
 
 
 def header(data):

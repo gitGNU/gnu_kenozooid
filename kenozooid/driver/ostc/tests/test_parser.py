@@ -35,8 +35,8 @@ class ParserTestCase(unittest.TestCase):
     """
     OSTC binary data parsing tests.
     """
-    def test_status_parsing(self):
-        """Test status parsing
+    def test_data_parsing(self):
+        """Test OSTC data parsing (< 1.91)
         """
         dump = ostc_parser.status(od.RAW_DATA_OSTC)
 
@@ -51,6 +51,24 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(1, dump.ver1)
         self.assertEquals(26, dump.ver2)
 
+        self.assertEquals(32768, dump.profile)
+
+
+    def test_data_parsing(self):
+        """Test OSTC data parsing (>= 1.91)
+        """
+        dump = ostc_parser.status(od.RAW_DATA_OSTC_MK2_194)
+
+        self.assertEquals(b'\xaa' * 5 + b'\x55', dump.preamble)
+
+        self.assertEquals(4221, dump.voltage)
+
+        # ver. 1.94
+        self.assertEquals(1, dump.ver1)
+        self.assertEquals(94, dump.ver2)
+        
+        self.assertEquals(65536, len(dump.profile))
+
 
     def test_eeprom_parsing(self):
         """Test EEPROM data parsing
@@ -64,7 +82,8 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_profile_split(self):
-        """Test profile splitting
+        """
+        Test OSTC data profile splitting (< 1.91)
         """
         dump = ostc_parser.status(od.RAW_DATA_OSTC)
         profile = tuple(ostc_parser.profile(dump.profile))
@@ -72,6 +91,28 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(5, len(profile))
         for header, block in profile:
             self.assertEquals(b'\xfa\xfa', header[:2])
+            self.assertEquals(0x20, header[2])
+            self.assertEquals(b'\xfb\xfb', header[-2:])
+            self.assertEquals(47, len(header))
+            self.assertEquals(b'\xfd\xfd', block[-2:])
+
+
+    def test_profile_split_191(self):
+        """
+        Test OSTC data profile splitting (>= 1.91)
+        """
+        dump = ostc_parser.status(od.RAW_DATA_OSTC_MK2_194)
+        profile = tuple(ostc_parser.profile(dump.profile))
+        # five dives expected
+        self.assertEquals(9, len(profile))
+        for i, (header, block) in enumerate(profile):
+            self.assertEquals(b'\xfa\xfa', header[:2])
+            if i < 2:
+                self.assertEquals(0x20, header[2])
+                self.assertEquals(47, len(header))
+            else:
+                self.assertEquals(0x21, header[2])
+                self.assertEquals(57, len(header))
             self.assertEquals(b'\xfb\xfb', header[-2:])
             self.assertEquals(b'\xfd\xfd', block[-2:])
 
