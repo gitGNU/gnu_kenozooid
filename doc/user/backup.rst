@@ -13,9 +13,9 @@ The backup files are useful in several situations
 
 - snapshot of dive computer data is preserved - if data processing software
   uses universal data format independent from dive computer model or
-  manufacturer (i.e.  UDDF), then data in universal format can be
-  regenerated from a snapshot, when new software features or bug fixes are
-  implemented
+  manufacturer (i.e.  UDDF), then, when new software features or bug fixes
+  are implemented, the data in universal format can be regenerated from
+  a snapshot
 - the binary data from a backup can be sent to developers of data parsing
   software to investigate software related problems
 - or it can be sent to dive computer manufacturer to investigate dive
