@@ -3,6 +3,8 @@ Dive Logbook
 Kenozooid supports basic dive logbook functionality, which allows to list,
 search, add and remove dives, buddies and dive sites.
 
+.. _logbook-ls:
+
 Listing and Searching
 ---------------------
 
