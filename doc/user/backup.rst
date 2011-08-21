@@ -38,6 +38,20 @@ list the dives (see :ref:`logbook-ls`) from a backup file::
 
 Dive Data Extraction
 ^^^^^^^^^^^^^^^^^^^^
+Kenozooid provides a command to extract dive data from a backup file
+containing dive computer binary data stored. As mentioned above, the
+command can be very useful when Kenozooid new functionality or bug fixes
+are implemented.
+
+To extract dives from a backup file run ``dive extract`` command::
+
+    kz dive extract backup-su-20090214.uddf backup-su-20090214-01.uddf
+
+The ``dive extract`` command behaves in similar way to backup command - the
+dive data is stored along with binary data, which was used as source of
+extraction. Therefore, the new file (``backup-su-20090214-01.uddf`` in
+above example) can be used as dive extraction source once again and old
+file can be removed.
 
 Binary Data
 ^^^^^^^^^^^
