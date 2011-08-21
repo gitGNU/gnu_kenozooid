@@ -32,7 +32,7 @@ or to backup Sensus Ultra data::
 During the backup, Kenozooid converts the binary data into universal format
 and stores both binary and universal data in a backup file, which allows to
 access the dive computer data with other Kenozooid commands immediately.
-For example, to list the dives from a backup file (see :ref:`logbook-ls`)::
+For example, to list the dives (see :ref:`logbook-ls`) from a backup file::
 
     kz dive list backup-su-20090214.uddf
 
