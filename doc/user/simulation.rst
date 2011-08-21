@@ -28,7 +28,7 @@ Please, read about dive simulation capabilities in your dive computer
 manual before starting to use Kenozooid software to simulate dives.
 
 Performing Simulation
-~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^
 Dive simulation is performed using ``simulate`` command. There are two
 parameters required
 
@@ -53,7 +53,7 @@ Time can be specified in seconds (i.e. 15, 20, 3600) or in minutes (i.e.
 12:20, 14:00, 67:13). Depth is always specified in meters.
 
 Continuing Simulation
-~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^
 Dive simulation can be executed in mixed manner. For example, it can be
 started with aid of a (non-dive) computer and then performed manually using
 dive computer buttons.
