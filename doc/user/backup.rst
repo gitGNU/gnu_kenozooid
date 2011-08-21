@@ -1,39 +1,43 @@
+.. _dc-backup:
+
 Data Backup
 -----------
-The simplest approach to store data of a dive computer is to dump its
-whole memory (usually binary data of configuration settings and dive
-profiles) to a file with very minimal or no processing.
+The data in a dive computer memory, like configuration settings or dive
+profiles, is usually kept in some binary format specific to a dive computer
+manufacturer or model.
 
-Such backup files can be useful in several situations
+Kenozooid ``backup`` command provides functionality to fetch and store such
+dive computer memory data in a backup file.
 
-- all dive profile data is preserved - if data parsing software uses
-  some intermediate, application and user friendly format (UDDF in case of
-  Kenozooid), then the binary data can be regenerated, when new software
-  features or bug fixes are implemented
-- configuration settings of dive computer could be restored after dive
-  computer reset
+The backup files are useful in several situations
+
+- snapshot of dive computer data is preserved - if data processing software
+  uses universal data format independent from dive computer model or
+  manufacturer (i.e.  UDDF), then data in universal format can be
+  regenerated from a snapshot, when new software features or bug fixes are
+  implemented
 - the binary data from a backup can be sent to developers of data parsing
   software to investigate software related problems
-- the binary data from a backup can be sent to dive computer manufacturer
-  to investigate dive computer related problems
+- or it can be sent to dive computer manufacturer to investigate dive
+  computer related problems
 
-Run following command to create a backup file of data from OSTC::
+To create a backup file of OSTC dive computer data::
 
     kz backup ostc /dev/ttyUSB0 backup-ostc-20090214.uddf
 
-or from Sensus Ultra::
+or to backup Sensus Ultra data::
 
     kz backup su /dev/ttyUSB0 backup-su-20090214.uddf
 
-The backup files (``backup-su-20090214.uddf`` and ``backup-su-20090214.uddf``
-above) contain all binary data from dive computer memory in format
-compliant with UDDF standard. When backup is performed, the binary data
-is immediately parsed as well, so both binary and application data are
-stored in a backup. 
+During the backup, Kenozooid converts the binary data into universal format
+and stores both binary and universal data in a backup file, which allows to
+access the dive computer data with other Kenozooid commands immediately.
+For example, to list the dives from a backup file (see :ref:`logbook-ls`)::
 
-The application data is ready to be used with other Kenozooid commands (see
-:ref:`logbook-ls` for the start) and binary data can be regenerated in the
-future (see below).
+    kz dive list backup-su-20090214.uddf
+
+The regeneration of data in universal format from binary data stored in a
+backup file is described in the next section.
 
 Data Regeneration
 ^^^^^^^^^^^^^^^^^
