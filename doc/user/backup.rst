@@ -53,7 +53,26 @@ extraction. Therefore, the new file (``backup-su-20090214-01.uddf`` in
 above example) can be used as dive extraction source once again and old
 file can be removed.
 
-Binary Data
-^^^^^^^^^^^
+Binary Data Import
+^^^^^^^^^^^^^^^^^^
+The Kenozooid backup command produces files compliant with UDDF. This
+allows to describe stored binary data, i.e. with date and time of fetching
+the data and dive computer model information.
+
+There are applications, which dump dive computer memory as binary, raw
+file. Such files can be converted (imported) by Kenozooid into UDDF file
+with ``convert`` command.
+
+To convert OSTC dive computer binary data into UDDF format::
+
+    kz convert ostc ostc-20090214.dump backup-ostc-20090214.uddf
+
+As in case of ``backup`` and ``dive extract`` commands, the UDDF file
+contains both dive data and binary data
+
+- the dive data in UDDF file can be accessed with other Kenozooid commands
+- or the UDDF file can be reprocessed with ``dive extract`` command when
+  necessary
+- the source of conversion can be safely removed
 
 .. vim: sw=4:et:ai
