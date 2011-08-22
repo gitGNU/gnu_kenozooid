@@ -149,10 +149,10 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(10, header.sampling)
         self.assertEquals(38, header.div_temp)
         self.assertEquals(38, header.div_deco)
-        self.assertEquals(32, header.div_tank)
+        self.assertEquals(32, header.div_gf)
         self.assertEquals(48, header.div_ppo2)
         self.assertEquals(0, header.div_deco_debug)
-        self.assertEquals(0, header.div_res2)
+        self.assertEquals(0, header.div_cns)
         self.assertEquals(0, header.salnity)
         self.assertEquals(0, header.max_cns)
 
@@ -189,10 +189,10 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(4, header.sampling)
         self.assertEquals(47, header.div_temp)
         self.assertEquals(47, header.div_deco)
-        self.assertEquals(16, header.div_tank)
+        self.assertEquals(16, header.div_gf)
         self.assertEquals(48, header.div_ppo2)
         self.assertEquals(144, header.div_deco_debug)
-        self.assertEquals(16, header.div_res2)
+        self.assertEquals(16, header.div_cns)
         self.assertEquals(100, header.salnity)
         self.assertEquals(36, header.max_cns)
         self.assertEquals(2085, header.avg_depth)
@@ -206,7 +206,8 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_dive_profile_block_parsing(self):
-        """Test dive profile data block parsing
+        """
+        Test dive profile data block parsing
         """
         dump = ostc_parser.get_data(od.RAW_DATA_OSTC)
         profiles = tuple(ostc_parser.profiles(dump.profiles))
@@ -235,7 +236,8 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_sample_data_parsing(self):
-        """Test sample data parsing
+        """
+        Test sample data parsing
         """
         from struct import unpack
 
@@ -255,7 +257,8 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_divisor(self):
-        """Test getting divisor information
+        """
+        Test getting divisor information
         """
         divisor, size = ostc_parser.divisor(38)
         self.assertEquals(6, divisor)
@@ -271,7 +274,8 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_flag_byte_split(self):
-        """Test splitting profile flag byte
+        """
+        Test splitting profile flag byte
         """
         size, event = ostc_parser.flag_byte(132)
         self.assertEquals(4, size)
@@ -283,7 +287,8 @@ class ParserTestCase(unittest.TestCase):
 
 
     def test_invalid_profile(self):
-        """Test parsing invalid profile
+        """
+        Test parsing invalid profile
         """
         data = tuple(ostc_parser.profiles(ku._dump_decode(od.DATA_OSTC_BROKEN)))
         assert 32 == len(data)
