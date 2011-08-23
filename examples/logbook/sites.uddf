@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+  <generator>
+    <name>kenozooid</name>
+    <manufacturer id="kenozooid">
+      <name>Kenozooid Team</name>
+      <contact>
+        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
+      </contact>
+    </manufacturer>
+    <version>0.1.0</version>
+    <datetime>2011-08-23T21:35:59</datetime>
+  </generator>
+  <diver>
+    <owner id="owner">
+      <personal>
+        <firstname>Anonymous</firstname>
+        <lastname>Guest</lastname>
+      </personal>
+    </owner>
+  </diver>
+  <divesite>
+    <site id="sckg">
+      <name>SMS Konig</name>
+      <geography>
+        <location>Scapa Flow</location>
+      </geography>
+    </site>
+    <site id="sckn">
+      <name>SMS Koln</name>
+      <geography>
+        <location>Scapa Flow</location>
+      </geography>
+    </site>
+    <site id="scmk">
+      <name>SMS Markgraf</name>
+      <geography>
+        <location>Scapa Flow</location>
+      </geography>
+    </site>
+  </divesite>
+</uddf>

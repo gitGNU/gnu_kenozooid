@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+  <generator>
+    <name>kenozooid</name>
+    <manufacturer id="kenozooid">
+      <name>Kenozooid Team</name>
+      <contact>
+        <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
+      </contact>
+    </manufacturer>
+    <version>0.1.0</version>
+    <datetime>2011-08-23T21:45:32</datetime>
+  </generator>
+  <diver>
+    <owner id="owner">
+      <personal>
+        <firstname>Anonymous</firstname>
+        <lastname>Guest</lastname>
+      </personal>
+    </owner>
+    <buddy id="tcora">
+      <personal>
+        <firstname>Tom</firstname>
+        <lastname>Cora</lastname>
+      </personal>
+    </buddy>
+    <buddy id="tex">
+      <personal>
+        <firstname>Thelma</firstname>
+        <lastname>Ex</lastname>
+      </personal>
+    </buddy>
+    <buddy id="jn">
+      <personal>
+        <firstname>John</firstname>
+        <lastname>Neurosis</lastname>
+      </personal>
+    </buddy>
+  </diver>
+</uddf>
