@@ -240,7 +240,7 @@ class ListDiveSites(object):
         """
         import kenozooid.uddf as ku
 
-        fmt = '{0:4} {1.id:10} {1.name:12} {1.location:20}'
+        fmt = '{0:4} {1.id:10} {1.location:20} {1.name:12}'
 
         if args.site:
             query = ku.XP_FIND_SITE
