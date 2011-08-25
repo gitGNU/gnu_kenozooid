@@ -27,14 +27,11 @@ may apply to some of dive computers
 Please, read about dive simulation capabilities in your dive computer
 manual before starting to use Kenozooid software to simulate dives.
 
-Performing Simulation
-^^^^^^^^^^^^^^^^^^^^^
-Dive simulation is performed using ``simulate`` command. There are two
-parameters required
+Diving Plan
+^^^^^^^^^^^
+Simulation of a dive plan is performed using ``sim plan`` command.
 
-- device id
-- dive plan specification
-
+.. todo: make a real dive plan
 Sample dive plan could be described as follows
 
 - dive starts at zero meters
@@ -45,7 +42,7 @@ Sample dive plan could be described as follows
 To perform above dive simulation with OSTC dive computer the command should
 be used::
 
-    kenozooid simulate ostc '0:30,10 3:30,10 13:30,0'
+    kz simulate ostc /dev/ttyUSB0 '0:30,10 3:30,10 13:30,0'
 
 Dive specification is space separated list of dive time and depth values. 
 
@@ -67,16 +64,16 @@ To support such flexiblity, two options are provided
 For example, to leave dive computer at 10m depth and then continue
 simulation with dive computer buttons::
 
-    kenozooid --no-stop simulate ostc '0:30,10'
+    kz --no-stop sim plan ostc /dev/ttyUSB0 '0:30,10'
 
 Above simulation can be continued manually or it can be stopped using
 Kenozooid::
 
-    kenozooid --no-start simulate ostc '0,10 1:00,0'
+    kz --no-start sim plan ostc /dev/ttyUSB0 '0,10 1:00,0'
 
 To execute part of dive plan, no start and no stop options can be used at
 once. For example, to ascend from 30m to 20m within 2 minutes::
 
-    kenozooid --no-start --no-stop simulate ostc '0,30 120,20'
+    kz --no-start --no-stop sim ostc /dev/ttyUSB0 '0,30 120,20'
 
 .. vim: sw=4:et:ai

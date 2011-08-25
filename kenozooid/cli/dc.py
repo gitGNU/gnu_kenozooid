@@ -25,11 +25,16 @@ import optparse
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError
+from kenozooid.cli import CLIModule, ArgumentError, add_master_command
 from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump
 
 log = logging.getLogger('kenozooid.cli.dc')
+
+# for commands 'sim plan', 'sim replay'
+add_master_command('sim',
+        'Kenozooid dive simulation commands',
+        'simulate dives with a dive computer')
 
 @inject(CLIModule, name='drivers')
 class ListDrivers(object):
@@ -86,7 +91,7 @@ class ListDrivers(object):
 ###                 print >> sys.stderr, 'Device %s (%s) error: %s' % (id, name, ex)
 
 
-@inject(CLIModule, name='simulate')
+@inject(CLIModule, name='sim plan')
 class Simulate(object):
     """
     Simulate dive on a dive computer.
@@ -133,9 +138,10 @@ class Simulate(object):
         sim = find_driver(Simulator, drv, port)
 
         if sim is None:
-            print('Device driver %s does not support simulation' % drv)
-            sys.exit(3)
-        simulate(sim, spec, args.sim_start, args.sim_stop) # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+            raise ArgumentError('Device driver %s does not support simulation'
+                    .format(drv))
+        # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
+        simulate(sim, spec, args.sim_start, args.sim_stop)
 
 
 
