@@ -51,8 +51,8 @@ def parse(spec):
 
     Depth is always specified in meters.
 
-    Dive plan specification is returned as iterator of run time and depth
-    pairs is returned. Returned run time is always in seconds since start
+    Dive plan specification is returned as iterator of runtime and depth
+    pairs is returned. Returned runtime is always in seconds since start
     of a dive. Depth is specified in meters.
 
     :Parameters:
@@ -69,7 +69,7 @@ def parse(spec):
             else:
                 t = int(t.strip())
         except:
-            raise ValueError('Invalid run time specification for {}'
+            raise ValueError('Invalid runtime specification for {}'
                     .format(chunk))
 
         try:
