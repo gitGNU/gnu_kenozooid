@@ -130,7 +130,7 @@ class OSTCSimulator(object):
         appropriate period of time passes, which is configured with option
         CF2.
         """
-        self.driver._write(b'0')
+        self.driver._write(b'\x00')
 
 
     def depth(self, depth):

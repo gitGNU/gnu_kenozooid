@@ -7,6 +7,8 @@ search, add and remove dives, buddies and dive sites.
 
 Listing and Searching
 ---------------------
+Kenozooid supports dive, buddy and dive site listing and searching with
+``dive list``, ``buddy list`` and ``site list`` commands.
 
 Adding Buddies and Dive Sites
 -----------------------------
