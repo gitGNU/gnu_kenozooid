@@ -25,37 +25,39 @@ import time
 
 def parse(spec):
     """
-    Parse dive simulation specification.
+    Parse dive plan specification.
 
-    Simulation specification string is a space separated list of dive time
-    and depth values. For example::
+    Dive plan specification string is a space separated list of dive run
+    time and depth values. For example dive plan
+
+    |   RT[min]  | Depth[m] |
+    |  1:00      |    10    |
+    |  12:20     |    21    |
+    |  18:30     |    21    |
+    |  40:00     |     5    |
+    |  43:00     |     5    |
+    |  45:00     |     0    |
+
+    is represented by string as follows::
 
         1:00,10 12:20,21 18:30,21 40:00,5 43:00,5 45:00,0
 
-    Above dive simulation specification can be described
+    which can be described as
 
-    - diver descents within one minute to 10m
-    - descent is carried on to 21m, which is reached at 12 minutes and 20s
-      from the start of the dive
-    - diver remains at 21m until 18 minutes and 30s of the dive
-    - diver descents slowly to 5m, the depth is not reached until 40th
-      minute of the dive
-    - 3 minutes stop is performed at 5m
-    - diver surfaces at 45th minute of the dive
-
-    Time is specified in
+    Run time can be specified in
     
     - seconds, i.e. 15, 20, 3600
     - minutes, i.e. 12:20, 14:00, 67:13
 
     Depth is always specified in meters.
 
-    Iterator of time and depth pairs is returned. Returned time is always
-    in seconds since start of a dive. Depth is specified in meters.
+    Dive plan specification is returned as iterator of run time and depth
+    pairs is returned. Returned run time is always in seconds since start
+    of a dive. Depth is specified in meters.
 
     :Parameters:
      spec
-        Simulation specification string.
+        Dive plan specification string.
     """
     for chunk in spec.split():
         try:
@@ -67,23 +69,28 @@ def parse(spec):
             else:
                 t = int(t.strip())
         except:
-            raise ValueError('Invalid time specification for "%s"' % chunk)
+            raise ValueError('Invalid run time specification for {}'
+                    .format(chunk))
 
         try:
             d = int(d)
         except:
-            raise ValueError('Invalid depth specification for "%s"' % chunk)
+            raise ValueError('Invalid depth specification for {}'
+                    .format(chunk))
 
         yield t, d
 
 
 def interpolate(spec):
     """
-    Interpolate dive simulation times and depths.
+    Interpolate dive plan times and depths.
 
     :Parameters:
      spec
-        Specification of dive simulation.
+        Dive plan specification (as returned by ``parse`` function).
+
+    .. seealso::
+        ``parse``
     """
     ptime = 0
     pdepth = 0
@@ -123,13 +130,13 @@ def simulate(simulator, spec, start=True, stop=True):
      simulator
         Device driver simulator implementation.
      spec
-        Dive simulation
+        Dive plan specification.
      start
         If `False` then simulation is assumed to be started.
      stop
         If `False` then simulation won't be stopped.
     """
-    data = interpolate(tuple(parse(spec)))
+    data = interpolate(parse(spec))
     if start:
         simulator.start()
     try:

@@ -26,37 +26,42 @@ class SpecParserTestCase(unittest.TestCase):
     Parser of specification of dive simulation tests.
     """
     def test_single_sec(self):
-        """Test parsing single value with seconds
+        """
+        Test parsing single value with seconds
         """
         result = tuple(parse('14,5'))
         self.assertEquals(((14, 5),), result)
 
 
     def test_multiple_sec(self):
-        """Test parsing multiple values with seconds
+        """
+        Test parsing multiple values with seconds
         """
         result = tuple(parse('14,5  15,8'))
         self.assertEquals(((14, 5), (15, 8)), result)
 
 
     def test_minutes(self):
-        """Test parsing values with minutes
+        """
+        Test parsing values with minutes
         """
         result = tuple(parse('0:14,5  5:15,8'))
         self.assertEquals(((14, 5), (315, 8)), result)
 
 
     def test_invalid_time(self):
-        """Test parsing when invalid time specified
+        """
+        Test parsing when invalid time specified
         """
         try:
             tuple(parse('0:14,5  5-15,8'))
         except ValueError as ex:
-            self.assertTrue('Invalid time specification' in str(ex))
+            self.assertTrue('Invalid run time specification' in str(ex))
 
 
     def test_invalid_depth(self):
-        """Test parsing when invalid depth specified
+        """
+        Test parsing when invalid depth specified
         """
         try:
             tuple(parse('0:14,5  5:15,'))
@@ -70,7 +75,8 @@ class InterpolationTestCase(unittest.TestCase):
     Dive simulation times and depths interpolation tests.
     """
     def test_descent(self):
-        """Test descent interpolation
+        """
+        Test descent interpolation
         """
         spec = ((1, 1), (2, 2))
         result = interpolate(spec)
@@ -96,7 +102,8 @@ class InterpolationTestCase(unittest.TestCase):
 
 
     def test_ascent(self):
-        """Test ascent interpolation
+        """
+        Test ascent interpolation
         """
         spec = ((2, 10), (4, 5))
         result = interpolate(spec)
@@ -112,7 +119,8 @@ class InterpolationTestCase(unittest.TestCase):
 
 
     def test_no_depth_change(self):
-        """Test no depth change interpolation
+        """
+        Test no depth change interpolation
         """
         spec = ((1, 15), (5, 15))
         result = interpolate(spec)
@@ -120,7 +128,8 @@ class InterpolationTestCase(unittest.TestCase):
 
 
     def test_slow_descent(self):
-        """Test slow descent interpolation
+        """
+        Test slow descent interpolation
         """
         spec = ((4, 1),)
         result = interpolate(spec)
@@ -136,7 +145,8 @@ class InterpolationTestCase(unittest.TestCase):
 
 
     def test_slow_ascent(self):
-        """Test slow ascent interpolation
+        """
+        Test slow ascent interpolation
         """
         spec = ((4, 1), (5, 0))
         result = interpolate(spec)
