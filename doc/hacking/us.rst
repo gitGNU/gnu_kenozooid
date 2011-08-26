@@ -35,10 +35,25 @@ save.
 The resulting file should be similar or the same as in case of backuping
 data directly from a dive computer.
 
-Simulation
-^^^^^^^^^^
+.. _us-sim-plan:
 
-.. _logbook:
+Dive Plan Simulation
+^^^^^^^^^^^^^^^^^^^^
+Some of the dive computers allow to enter dive mode and simulate a dive
+with dive computer buttons, by controlling it from a personal computer or
+by using both techniques.
+
+The diver starts simulation on a dive computer from a personal computer
+to simulate a dive plan.
+
+.. _us-sim-replay:
+
+Dive Replay
+^^^^^^^^^^^
+The diver starts dive simulation on a dive computer from a personal
+computer to replay a dive profile stored in dive logbook.
+
+.. _us-logbook:
 
 Logbook
 -------
