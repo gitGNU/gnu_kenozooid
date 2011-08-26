@@ -21,11 +21,12 @@
 Dive computer related Kenozooid command line commands.
 """
 
-import optparse
+import itertools
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError, add_master_command
+from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
+        _dive_data
 from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, MemoryDump
 
@@ -128,7 +129,7 @@ class Simulate(object):
         """
         Execute dive computer dive simulation.
         """
-        from kenozooid.simulation import simulate
+        import kenozooid.simulation as ks
         from kenozooid.driver import Simulator, find_driver
 
         drv = args.driver[0]
@@ -141,7 +142,56 @@ class Simulate(object):
             raise ArgumentError('Device driver %s does not support simulation'
                     .format(drv))
         # '0:30,15 3:00,25 9:00,25 10:30,5 13:30,5 14:00,0')
-        simulate(sim, spec, args.sim_start, args.sim_stop)
+        p = ks.interpolate(ks.parse(spec))
+        ks.simulate(sim, p, args.sim_start, args.sim_stop)
+
+
+
+@inject(CLIModule, name='sim replay')
+class Simulate(object):
+    """
+    Replay dive profile on a dive computer.
+    """
+    description = 'replay dive on a dive computer'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add dive computer dive replay arguments.
+        """
+        parser.add_argument('driver',
+                nargs=1,
+                help='device driver id')
+        parser.add_argument('port',
+                nargs=1,
+                help='device port, i.e. /dev/ttyUSB0, COM1')
+        parser.add_argument('input',
+                nargs='+',
+                metavar='[dives] input',
+                help='dives from specified UDDF file (i.e.  1-3,6 is dive'
+                    ' 1, 2, 3, and 6 from a file, all by default)')
+
+
+    def __call__(self, args):
+        """
+        Execute dive computer dive replay.
+        """
+        import kenozooid.simulation as ks
+        from kenozooid.driver import Simulator, find_driver
+
+        drv = args.driver[0]
+        port = args.port[0]
+        # fetch dives and profiles from files provided on command line
+        dives = itertools.chain(*_dive_data(args.input))
+
+        sim = find_driver(Simulator, drv, port)
+
+        if sim is None:
+            raise ArgumentError('Device driver %s does not support simulation'
+                    .format(drv))
+
+        for d, p in dives:
+            ks.simulate(sim, p)
 
 
 

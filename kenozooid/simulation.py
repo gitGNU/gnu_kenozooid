@@ -136,15 +136,14 @@ def simulate(simulator, spec, start=True, stop=True):
      stop
         If `False` then simulation won't be stopped.
     """
-    data = interpolate(parse(spec))
     if start:
         simulator.start()
     try:
         # start simulation
-        pt, d = next(data)
+        pt, d, *_ = next(spec)
         simulator.depth(d)
 
-        for t, d in data:
+        for t, d, *_ in spec:
             time.sleep(t - pt)
             simulator.depth(d)
             pt = t
@@ -153,3 +152,4 @@ def simulate(simulator, spec, start=True, stop=True):
         if stop:
             simulator.stop()
 
+# vim: sw=4:et:ai

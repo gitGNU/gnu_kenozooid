@@ -76,4 +76,14 @@ once. For example, to ascend from 30m to 20m within 2 minutes::
 
     kz --no-start --no-stop sim ostc /dev/ttyUSB0 '0,30 120,20'
 
+Dive Replay
+^^^^^^^^^^^
+Existing dive profile can be replayed with a dive computer having dive
+simulation capabilities, i.e. OSTC. Kenozooid supports such functionality
+with ``sim replay`` command.
+
+To replay first dive from a backup file::
+
+    kz sim replay ostc /dev/ttyUSB0 1 backup-ostc-20090214.uddf
+
 .. vim: sw=4:et:ai

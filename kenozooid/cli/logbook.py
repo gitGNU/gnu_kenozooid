@@ -30,9 +30,9 @@ from lxml import etree as et
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError, add_master_command
+from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
+        _dive_data
 from kenozooid.component import query, params
-from kenozooid.uddf import node_range
 from kenozooid.util import nformat
 
 log = logging.getLogger('kenozooid.cli.uddf')
@@ -508,7 +508,7 @@ class PlotProfiles(object):
             raise ArgumentError('Unknown format: {0}'.format(ext))
 
         # fetch dives and profiles from files provided on command line
-        data = itertools.chain(*_fetch(args.input))
+        data = itertools.chain(*_dive_data(args.input))
         if args.plot_overlay:
             plotf = plot_overlay
 
@@ -561,29 +561,8 @@ class Analyze(object):
         from kenozooid.analyze import analyze
 
         # fetch dives and profiles from files provided on command line
-        data = itertools.chain(*_fetch(args.input))
+        data = itertools.chain(*_dive_data(args.input))
         analyze(args.script[0], data, args.args)
-
-
-
-def _fetch(args):
-    from kenozooid.uddf import parse, dive_data, dive_profile
-    i = 0
-    while i < len(args):
-        q = '//uddf:dive'
-        if os.path.exists(args[i]):
-            f = args[i] # no range spec, just filename; take all
-        else:
-            q += '[' + node_range(args[i]) + ']'
-            i += 1 # skip range spec
-            f = args[i]
-            if not os.path.exists(f):
-                raise ArgumentError('File does not exist: {0}'.format(f))
-
-        # return generator of dive data and its profile data tuples
-        nodes = parse(f, q)
-        yield ((dive_data(n), dive_profile(n)) for n in nodes)
-        i += 1
 
 
 def _name_parse(name):

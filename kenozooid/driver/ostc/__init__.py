@@ -137,7 +137,7 @@ class OSTCSimulator(object):
         """
         Send dive computer to given depth.
         """
-        p = pressure(depth)
+        p = pressure(round(depth))
         self.driver._write(bytearray((p,)))
 
 

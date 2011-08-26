@@ -21,8 +21,10 @@
 Commmand line user interface.
 """
 
-from kenozooid.component import query, params, inject
+import os
 
+from kenozooid.uddf import node_range
+from kenozooid.component import query, params, inject
 
 class CLIModule(object):
     """
@@ -134,6 +136,26 @@ def add_master_command(name, title, desc):
         def __call__(self, args):
             raise ArgumentError()
     return Command
+
+
+def _dive_data(args):
+    from kenozooid.uddf import parse, dive_data, dive_profile
+    i = 0
+    while i < len(args):
+        q = '//uddf:dive'
+        if os.path.exists(args[i]):
+            f = args[i] # no range spec, just filename; take all
+        else:
+            q += '[' + node_range(args[i]) + ']'
+            i += 1 # skip range spec
+            f = args[i]
+            if not os.path.exists(f):
+                raise ArgumentError('File does not exist: {0}'.format(f))
+
+        # return generator of dive data and its profile data tuples
+        nodes = parse(f, q)
+        yield ((dive_data(n), dive_profile(n)) for n in nodes)
+        i += 1
 
 
 # vim: sw=4:et:ai
