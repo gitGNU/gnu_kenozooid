@@ -6,7 +6,7 @@ User Manual
 ###########
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    intro
    qt

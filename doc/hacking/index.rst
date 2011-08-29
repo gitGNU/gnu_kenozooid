@@ -11,7 +11,7 @@ Kenozooid architecture, design and programming technical documentation.
 Design
 ******
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    us
    uc
@@ -20,7 +20,7 @@ Design
 Architecture
 ************
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    drvarch
 
@@ -28,7 +28,7 @@ Architecture
 Library
 *******
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    lib
 
