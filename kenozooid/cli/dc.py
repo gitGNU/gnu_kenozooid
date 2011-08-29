@@ -68,7 +68,7 @@ class ListDrivers(object):
             if len(tuple(query(Simulator, id=id))) > 0:
                 caps.append('simulation')
             if len(tuple(query(MemoryDump, id=id))) > 0:
-                caps.append('dump')
+                caps.append('backup')
             #if len(tuple(query(DiveLog, id=id))) > 0:
             #    caps.append('divelog')
             # ... etc ...

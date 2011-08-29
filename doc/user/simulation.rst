@@ -1,3 +1,5 @@
+.. _dc-simulation:
+
 Dive Simulation
 ---------------
 
