@@ -186,11 +186,12 @@ Kenozooid is dive planning and analysis toolbox.
     ],
     keywords='diving dive computer logger plot dump uddf analytics',
     license='GPL',
+    # install all, even optional modules
     install_requires=[
         'lxml >= 2.3',
         'python-dateutil >= 2.0',
-        #'pyserial >= 2.5',
-        #'rpy2 >= 2.2.2',
+        'pyserial >= 2.5',
+        'rpy2 >= 2.2.2',
         'distribute',
         'setuptools-git',
     ],
