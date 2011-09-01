@@ -4,10 +4,13 @@ import sys
 import os.path
 
 from setuptools import setup, find_packages
+from pkg_resources import require, VersionConflict, DistributionNotFound
 from distutils.cmd import Command
 
-version = __import__('kenozooid').__version__
+VERSION = __import__('kenozooid').__version__
 
+MODS = ['lxml >= 2.3', 'python-dateutil >= 2.0', 'rpy2 >= 2.2.2',
+    'pyserial_py3k >= 2.5']
 
 def _py_inst(mods, names, py_miss):
     """
@@ -36,7 +39,7 @@ class CheckDeps(Command):
     def run(self):
         python_ok = sys.version_info >= (3, 2)
         rpy_ok = False
-        mods = 'lxml', 'dateutil', 'rpy2', 'serial'
+        mods = MODS
         names = 'lxml', 'python-dateutil', 'rpy2', 'pyserial'
         ic = 2
         py_miss = set()
@@ -52,15 +55,13 @@ class CheckDeps(Command):
             try:
                 t = 'core' if i < ic else 'optional'
                 print('Checking {} Python module {}... '.format(t, m), end='')
-                __import__(m)
+                require(m)
                 print('ok')
-            except ImportError:
+            except (VersionConflict, DistributionNotFound):
                 print('not found')
                 py_miss.add(m)
 
-        # check R packages
-        rpy_ok = 'rpy2' not in py_miss 
-        if rpy_ok:
+        try:
             import rpy2
             from rpy2.robjects.packages import importr
             try:
@@ -70,7 +71,7 @@ class CheckDeps(Command):
             except rpy2.rinterface.RRuntimeError:
                 print('not found')
                 r_miss.add('Hmisc')
-        else:
+        except ImportError:
             print('No rpy2 installed, not checking R packages installation')
 
         # print installation suggestions
@@ -82,7 +83,7 @@ class CheckDeps(Command):
 
         if py_miss and py_miss.intersection(mods[ic:]):
             print('\nMissing optional dependencies:\n')
-        _py_inst(mods[ic:], names, py_miss)
+        _py_inst(mods[ic:], names[ic:], py_miss)
 
         for p in r_miss:
             print('''\
@@ -167,7 +168,7 @@ class build_doc(Command):
 
 setup(
     name='kenozooid',
-    version=version,
+    version=VERSION,
     description='Kenozooid is dive planning and analysis toolbox',
     author='Artur Wroblewski',
     author_email='wrobell@pld-linux.org',
@@ -187,14 +188,7 @@ Kenozooid is dive planning and analysis toolbox.
     keywords='diving dive computer logger plot dump uddf analytics',
     license='GPL',
     # install all, even optional modules
-    install_requires=[
-        'lxml >= 2.3',
-        'python-dateutil >= 2.0',
-        'pyserial >= 2.5',
-        'rpy2 >= 2.2.2',
-        'distribute',
-        'setuptools-git',
-    ],
+    install_requires=MODS + ['distribute', 'setuptools-git'],
     test_suite='nose.collector',
     cmdclass={
         'build_epydoc': EpydocBuildDoc,
