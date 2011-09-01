@@ -55,6 +55,7 @@ import base64
 import bz2
 import hashlib
 import logging
+import pkg_resources
 
 import kenozooid
 
@@ -630,7 +631,10 @@ def save(doc, f, validate=True):
 
     if validate:
         log.debug('validating uddf file')
-        schema = et.XMLSchema(et.parse(open('uddf/uddf_3.0.1.xsd')))
+        fs = pkg_resources.resource_stream('kenozooid', 'uddf_3.0.1.xsd')
+        if hasattr(fs, 'name'):
+            log.debug('uddf xsd found: {}'.format(fs.name))
+        schema = et.XMLSchema(et.parse(fs))
         try:
             schema.assertValid(doc)
         except et.DocumentInvalid as ex:
