@@ -23,6 +23,7 @@ Dive analytics via R statistical package.
 
 import rpy2.robjects as ro
 import logging
+import pkg_resources
 
 import kenozooid.uddf as ku
 import kenozooid.rglue as kr
@@ -50,39 +51,56 @@ def analyze(script, dives, args):
      args
         R script arguments.
     """
-    with open(script) as f:
-        dive_times = []
+    f = None
+    try:
+        log.debug('opening {} script as file'.format(script))
+        f = open(script)
+    except:
+        log.debug('opening {} script as file failed'.format(script))
 
-        profiles = ro.DataFrame({})
+    if f is None:
+        log.debug('opening {} script as resource'.format(script))
+        try:
+            f = pkg_resources.resource_stream('kenozooid',
+                    'stats/{}'.format(script))
+        except IOError:
+            log.debug('opening {} script as resource failed'.format(script))
+    if f is None:
+        raise ValueError('Cannot load script {}'.format(script))
 
-        for dive, dp in dives:
-            dt = ku._format_time(dive.time)
-            dive_times.append(dt)
+    dive_times = []
 
-            vtime, vdepth, vtemp = zip(*dp)
-            profiles = profiles.rbind(ro.DataFrame({
-                'dive': ro.StrVector([dt]),
-                'time': kr.float_vec(vtime),
-                'depth': kr.float_vec(vdepth),
-                'temp': kr.float_vec(vtemp),
-            }))
-            
+    profiles = ro.DataFrame({})
 
-        if args:
-            ro.globalenv['args'] = ro.StrVector(args)
-        else:
-            R('args = list()')
-        ro.globalenv['dives'] = ro.DataFrame({'time': ro.StrVector(dive_times)})
-        ro.globalenv['profiles'] = profiles
-        R("""
+    for dive, dp in dives:
+        dt = ku._format_time(dive.time)
+        dive_times.append(dt)
+
+        vtime, vdepth, vtemp = zip(*dp)
+        profiles = profiles.rbind(ro.DataFrame({
+            'dive': ro.StrVector([dt]),
+            'time': kr.float_vec(vtime),
+            'depth': kr.float_vec(vdepth),
+            'temp': kr.float_vec(vtemp),
+        }))
+        
+
+    if args:
+        ro.globalenv['args'] = ro.StrVector(args)
+    else:
+        R('args = list()')
+    ro.globalenv['dives'] = ro.DataFrame({'time': ro.StrVector(dive_times)})
+    ro.globalenv['profiles'] = profiles
+    R("""
 dives$time = as.POSIXct(dives$time)
 profiles$dive = as.POSIXct(profiles$dive)
-        """)
+    """)
 
-        data = f.read(MAX_SCRIPT_SIZE)
-        if f.read(1):
-            raise ValueError('The script {} is too big'.format(script))
-        R(data)
+    data = f.read(MAX_SCRIPT_SIZE)
+    if f.read(1):
+        raise ValueError('The script {} is too long'.format(script))
+    R(data)
+    f.close()
 
 
 # vim: sw=4:et:ai
