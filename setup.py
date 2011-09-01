@@ -183,27 +183,26 @@ Kenozooid is dive planning and analysis toolbox.
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Programming Language :: Python',
         'Development Status :: 3 - Alpha',
-        'Topic :: Internet',
+        'Topic :: Scientific/Engineering :: Information Analysis',
+        'Topic :: Scientific/Engineering :: Visualization',
     ],
-    keywords='diving dive computer logger plot dump uddf',
+    keywords='diving dive computer logger plot dump uddf analytics',
     license='GPL',
     install_requires=[
         'lxml >= 2.3',
         'python-dateutil >= 2.0',
         #'pyserial >= 2.5',
         #'rpy2 >= 2.2.2',
-        #'distribute',
+        'distribute',
+        'setuptools-git',
     ],
-    entry_points={
-        'console_scripts': [
-            'kenozooid = kenozooid.cli:main',
-        ],
-    },
     test_suite='nose.collector',
     cmdclass={
         'build_epydoc': EpydocBuildDoc,
         'build_doc': build_doc,
         'deps': CheckDeps,
     },
+    include_package_data=True,
 )
 
+# vim: sw=4:et:ai
