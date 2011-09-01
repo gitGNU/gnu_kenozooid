@@ -14,6 +14,7 @@ master_doc = 'index'
 
 version = kenozooid.__version__
 release = kenozooid.__version__
+copyright = 'Kenozooid team'
 
 
 # see https://bitbucket.org/birkenfeld/sphinx/issue/635/no-attribute-next
