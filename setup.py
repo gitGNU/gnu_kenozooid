@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-from setuptools import setup, find_packages
-from collections import OrderedDict
 import sys
+import os.path
+
+from setuptools import setup, find_packages
+from distutils.cmd import Command
 
 version = __import__('kenozooid').__version__
-
-from distutils.cmd import Command
-import os.path
 
 
 def _py_inst(mods, names, py_miss):
@@ -108,7 +107,6 @@ class EpydocBuildDoc(Command):
         epydoc_conf = 'doc/epydoc.conf'
 
         try:
-            import sys
             from epydoc import cli
             old_argv = sys.argv[1:]
             sys.argv[1:] = [
