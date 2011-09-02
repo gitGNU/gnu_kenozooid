@@ -160,11 +160,11 @@ class OSTCMemoryDump(object):
         Convert dive data into UDDF format.
         """
         # uddf dive profile sample
-        _f = 'alarm', 'depth', 'time', 'temp', 'deco_time', 'deco_depth', \
-            'deco_kind'
-        _q = 'uddf:alarm', 'uddf:depth', 'uddf:divetime', 'uddf:temperature', \
-                'uddf:decostop/@duration', 'uddf:decostop/@decodepth', \
-                'uddf:decostop/@kind'
+        _f = 'alarm', 'deco_depth', 'deco_time', 'deco_kind', 'depth', 'time', 'temp'
+        _q = 'uddf:alarm', \
+            'uddf:decostop/@duration', 'uddf:decostop/@decodepth', 'uddf:decostop/@kind', \
+            'uddf:depth', 'uddf:divetime', 'uddf:temperature',
+                
         UDDF_SAMPLE = OrderedDict(zip(_f, _q))
 
         nodes = []
