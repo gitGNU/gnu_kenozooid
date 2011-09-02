@@ -160,8 +160,11 @@ class OSTCMemoryDump(object):
         Convert dive data into UDDF format.
         """
         # uddf dive profile sample
-        _f = 'alarm', 'depth', 'time', 'temp'
-        _q = 'uddf:alarm', 'uddf:depth', 'uddf:divetime', 'uddf:temperature'
+        _f = 'alarm', 'depth', 'time', 'temp', 'deco_time', 'deco_depth', \
+            'deco_kind'
+        _q = 'uddf:alarm', 'uddf:depth', 'uddf:divetime', 'uddf:temperature', \
+                'uddf:decostop/@duration', 'uddf:decostop/@decodepth', \
+                'uddf:decostop/@kind'
         UDDF_SAMPLE = OrderedDict(zip(_f, _q))
 
         nodes = []
@@ -194,25 +197,34 @@ class OSTCMemoryDump(object):
                 create_sample = partial(ku.create_dive_profile_sample, dn,
                         queries=UDDF_SAMPLE)
 
-                deco = False
+                deco_alarm = False
 
                 # ostc start dive below zero, add (0, 0) waypoint to
                 # comply with uddf
                 create_sample(time=0, depth=0.0)
 
                 for i, sample in enumerate(dive_data):
+                    temp = C2K(sample.temp) if sample.temp else None
+
+                    # deco info
+                    deco_time = sample.deco_time if sample.deco_depth else None
+                    deco_depth = sample.deco_depth if sample.deco_depth else None
+                    deco_kind = 'mandatory' if sample.deco_depth else None
+
                     # deco info is not stored in each ostc sample, but each
                     # uddf waypoint shall be annotated with deco alarm
-                    if deco and deco_end(sample):
-                        deco = False
-                    elif not deco and deco_start(sample):
-                        deco = True
+                    if deco_alarm and deco_alarm_end(sample):
+                        deco_alarm = False
+                    elif not deco_alarm and deco_alarm_start(sample):
+                        deco_alarm = True
 
-                    temp = C2K(sample.temp) if sample.temp else None
                     create_sample(time=(i + 1) * header.sampling,
                             depth=sample.depth,
-                            alarm='deco' if deco else None,
-                            temp=temp)
+                            alarm='deco' if deco_alarm else None,
+                            temp=temp,
+                            deco_time=deco_time,
+                            deco_depth=deco_depth,
+                            deco_kind=deco_kind)
 
                 create_sample(time=(i + 2) * header.sampling, depth=0.0)
 
@@ -237,7 +249,7 @@ class OSTCMemoryDump(object):
         return '{} {}.{}'.format(model, status.ver1, status.ver2)
 
 
-def deco_start(sample):
+def deco_alarm_start(sample):
     """
     Check if a dive sample start deco period.
 
@@ -251,7 +263,7 @@ def deco_start(sample):
         and sample.depth - sample.deco_depth <= 1.0
 
 
-def deco_end(sample):
+def deco_alarm_end(sample):
     """
     Check if a dive sample ends deco period.
 
