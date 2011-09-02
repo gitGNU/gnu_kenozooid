@@ -71,11 +71,13 @@ def _inject_profile(dp):
         Dive profile.   
     """
 
-    vtime, vdepth, vtemp = zip(*dp)
+    vtime, vdepth, vtemp, vdtime, vddepth = zip(*dp)
     df = ro.DataFrame({
         'time': kr.float_vec(vtime),
         'depth': kr.float_vec(vdepth),
         'temp': kr.float_vec(vtemp),
+        'deco_time': kr.float_vec(vdtime),
+        'deco_depth': kr.float_vec(vddepth),
     })
     ro.globalenv['dp'] = df
     return df
@@ -135,6 +137,31 @@ ylim = rev(range(dp$depth))
 plot(dp$time / 60.0, dp$depth, ylim=ylim,
     type='l', col='blue',
     xlab='Time [min]', ylab='Depth [m]')
+
+# deco info
+dpd=dp[!is.na(dp$deco_time),]
+if (nrow(dpd) > 0) {
+    t=rep(dpd$time / 60.0, each=2)
+    dc=rep(dpd$deco_depth, each=2)
+    d=rep(dpd$depth, each=2)
+
+    n = length(t)
+    t=t[2:n]
+    dc=dc[1:n - 1]
+    d=d[2:n]
+
+    # ceiling
+    t = c(t[1], t, t[n - 1])
+    dc = c(0, dc, 0)
+    d = c(0, d, 0)
+    polygon(t, dc, col=rgb(0, 0, 1.0, 0.1), border=NA)
+
+    # deco stop missed by 1m
+    dm = dc
+    dm[which(d + 1 > dc)] <- NA
+    lines(t, dm, type='s', col=rgb(1, 0, 0, 0.7))
+}
+
 minor.tick(nx=5, ny=2)
 grid()
         """)
