@@ -159,13 +159,13 @@ class OSTCMemoryDump(object):
         """
         Convert dive data into UDDF format.
         """
-        nodes = []
-        dive_data = ostc_parser.get_data(dump.data)
-
         # uddf dive profile sample
         _f = 'alarm', 'depth', 'time', 'temp'
         _q = 'uddf:alarm', 'uddf:depth', 'uddf:divetime', 'uddf:temperature'
         UDDF_SAMPLE = OrderedDict(zip(_f, _q))
+
+        nodes = []
+        dive_data = ostc_parser.get_data(dump.data)
 
         for h, p in ostc_parser.profiles(dive_data.profiles):
             log.debug('header: {}'.format(hexlify(h)))
