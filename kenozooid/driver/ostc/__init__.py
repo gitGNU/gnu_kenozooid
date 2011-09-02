@@ -207,7 +207,7 @@ class OSTCMemoryDump(object):
                     temp = C2K(sample.temp) if sample.temp else None
 
                     # deco info
-                    deco_time = sample.deco_time if sample.deco_depth else None
+                    deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
                     deco_depth = sample.deco_depth if sample.deco_depth else None
                     deco_kind = 'mandatory' if sample.deco_depth else None
 

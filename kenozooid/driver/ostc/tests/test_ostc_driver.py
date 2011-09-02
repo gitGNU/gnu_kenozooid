@@ -118,15 +118,15 @@ class UDDFTestCase(unittest.TestCase):
 
         wps = list(ku.xp(dive, 'uddf:samples/uddf:waypoint'))[24:181:6]
 
-        # index, depth, time
-        deco = ((  3, 1), (12, 1), ( 9, 1), (12, 1), (12, 1), ( 3, 1), ( 6, 1),
-                 ( 6, 1), ( 6, 1), ( 6, 1), (12, 1), (12, 1), ( 9, 1), ( 9, 1),
-                 (12, 1), (12, 1), (15, 1), (12, 2), (15, 1), ( 9, 2), ( 9, 1),
-                 ( 6, 2), ( 6, 1), ( 3, 5), ( 3, 3), ( 3, 2), ( 3, 1),)
+        # depth, time
+        deco = ((3, 60), (12, 60), (9, 60), (12, 60), (12, 60), (3, 60), (6, 60),
+                (6, 60), (6, 60), (6, 60), (12, 60), (12, 60), (9, 60), (9, 60),
+                (12, 60), (12, 60), (15, 60), (12, 120), (15, 60), (9, 120), (9, 60),
+                (6, 120), (6, 60), (3, 300), (3, 180), (3, 120), (3, 60),)
 
         self.assertEquals(deco,
-            tuple((int(ku.xp_first(n, 'uddf:decostop/@decodepth')),
-                   int(ku.xp_first(n, 'uddf:decostop/@duration'))) for n in wps),
+            tuple((float(ku.xp_first(n, 'uddf:decostop/@decodepth')),
+                   float(ku.xp_first(n, 'uddf:decostop/@duration'))) for n in wps),
             sd)
 
         m = [ku.xp_first(n, 'uddf:decostop/@kind') == 'mandatory' for n in wps]
