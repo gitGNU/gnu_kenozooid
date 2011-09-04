@@ -9,7 +9,7 @@
       </contact>
     </manufacturer>
     <version>0.1.0</version>
-    <datetime>2011-08-22T18:45:53</datetime>
+    <datetime>2011-09-05T00:09:13</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -32,8 +32,8 @@
     </divecomputerdump>
   </divecomputercontrol>
   <profiledata>
-    <repetitiongroup id="id-b32f3cc237fc447ca01f800e17004ad1">
-      <dive id="id-0ab35f2b5b6d4e3fba06b904a8434ad7">
+    <repetitiongroup id="id-a3e54b7498b94d5fae28aaa5e663c8db">
+      <dive id="id-4a3a16a9fb39450598ed50f4241ecb1f">
         <informationbeforedive>
           <datetime>2011-08-03T13:21:16</datetime>
         </informationbeforedive>
@@ -3577,7 +3577,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-f9014ae8ee8044a6a8fb24039955e20f">
+      <dive id="id-64ab1c86e5a541338b6cfb1b7428680b">
         <informationbeforedive>
           <datetime>2011-08-03T16:20:37</datetime>
         </informationbeforedive>
@@ -7646,7 +7646,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-904b92fed04746ed89c96174e76945bc">
+      <dive id="id-9b7a706701484230ae86b4bcccab4246">
         <informationbeforedive>
           <datetime>2011-08-04T11:10:02</datetime>
         </informationbeforedive>
@@ -11202,7 +11202,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-0f9715dcb8d94e5abda62eeaee96297c">
+      <dive id="id-149fcd2a2a364200bc6dc7d309ac930a">
         <informationbeforedive>
           <datetime>2011-08-04T13:37:32</datetime>
         </informationbeforedive>
@@ -14120,7 +14120,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-9257fa8f76b84f45a7f7baaeacfa529e">
+      <dive id="id-a47e32fa184b4c13b6d4413d9837e2a5">
         <informationbeforedive>
           <datetime>2011-08-04T22:15:35</datetime>
         </informationbeforedive>
@@ -19840,7 +19840,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-0ff6dfc7a43a41459a3033cea0e6d362">
+      <dive id="id-212c1610305f4028a3bc96af34e0a5b8">
         <informationbeforedive>
           <datetime>2011-08-05T11:36:57</datetime>
         </informationbeforedive>
@@ -23645,7 +23645,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-cc36afd552db498b9d797bcaaf068fa1">
+      <dive id="id-eb74d7b512e24403a3c5e579430d4c62">
         <informationbeforedive>
           <datetime>2011-08-05T14:38:04</datetime>
         </informationbeforedive>
@@ -26652,7 +26652,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-b19bd4fe719545f482bba4060b7cd1eb">
+      <dive id="id-8369152b38324682b1027361e2b69339">
         <informationbeforedive>
           <datetime>2011-08-07T13:42:03</datetime>
         </informationbeforedive>
@@ -27328,6 +27328,7 @@
             <divetime>656</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="24" kind="mandatory"/>
             <depth>75.9</depth>
             <divetime>660</divetime>
             <temperature>281.1</temperature>
@@ -27389,6 +27390,7 @@
             <divetime>716</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="33" kind="mandatory"/>
             <depth>84.0</depth>
             <divetime>720</divetime>
             <temperature>280.3</temperature>
@@ -27450,6 +27452,7 @@
             <divetime>776</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="33" kind="mandatory"/>
             <depth>85.2</depth>
             <divetime>780</divetime>
             <temperature>279.8</temperature>
@@ -27511,6 +27514,7 @@
             <divetime>836</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="36" kind="mandatory"/>
             <depth>86.7</depth>
             <divetime>840</divetime>
             <temperature>279.4</temperature>
@@ -27572,6 +27576,7 @@
             <divetime>896</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="36" kind="mandatory"/>
             <depth>86.0</depth>
             <divetime>900</divetime>
             <temperature>279.1</temperature>
@@ -27633,6 +27638,7 @@
             <divetime>956</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="36" kind="mandatory"/>
             <depth>89.4</depth>
             <divetime>960</divetime>
             <temperature>278.8</temperature>
@@ -27694,6 +27700,7 @@
             <divetime>1016</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="42" kind="mandatory"/>
             <depth>95.2</depth>
             <divetime>1020</divetime>
             <temperature>278.6</temperature>
@@ -27755,6 +27762,7 @@
             <divetime>1076</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="39" kind="mandatory"/>
             <depth>99.1</depth>
             <divetime>1080</divetime>
             <temperature>278.2</temperature>
@@ -27816,6 +27824,7 @@
             <divetime>1136</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="39" kind="mandatory"/>
             <depth>97.1</depth>
             <divetime>1140</divetime>
             <temperature>277.9</temperature>
@@ -27877,6 +27886,7 @@
             <divetime>1196</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="45" kind="mandatory"/>
             <depth>95.3</depth>
             <divetime>1200</divetime>
             <temperature>277.8</temperature>
@@ -27938,6 +27948,7 @@
             <divetime>1256</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="51" kind="mandatory"/>
             <depth>91.2</depth>
             <divetime>1260</divetime>
             <temperature>277.8</temperature>
@@ -27999,6 +28010,7 @@
             <divetime>1316</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="48" kind="mandatory"/>
             <depth>85.9</depth>
             <divetime>1320</divetime>
             <temperature>277.8</temperature>
@@ -28060,6 +28072,7 @@
             <divetime>1376</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="51" kind="mandatory"/>
             <depth>81.9</depth>
             <divetime>1380</divetime>
             <temperature>277.6</temperature>
@@ -28121,6 +28134,7 @@
             <divetime>1436</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="48" kind="mandatory"/>
             <depth>75.7</depth>
             <divetime>1440</divetime>
             <temperature>277.6</temperature>
@@ -28182,6 +28196,7 @@
             <divetime>1496</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="48" kind="mandatory"/>
             <depth>72.2</depth>
             <divetime>1500</divetime>
             <temperature>277.6</temperature>
@@ -28243,6 +28258,7 @@
             <divetime>1556</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="48" kind="mandatory"/>
             <depth>68.5</depth>
             <divetime>1560</divetime>
             <temperature>277.6</temperature>
@@ -28304,6 +28320,7 @@
             <divetime>1616</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="48" kind="mandatory"/>
             <depth>64.8</depth>
             <divetime>1620</divetime>
             <temperature>277.8</temperature>
@@ -28365,6 +28382,7 @@
             <divetime>1676</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="45" kind="mandatory"/>
             <depth>59.4</depth>
             <divetime>1680</divetime>
             <temperature>277.8</temperature>
@@ -28426,6 +28444,7 @@
             <divetime>1736</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="45" kind="mandatory"/>
             <depth>51.8</depth>
             <divetime>1740</divetime>
             <temperature>277.8</temperature>
@@ -28487,6 +28506,7 @@
             <divetime>1796</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="42" kind="mandatory"/>
             <depth>47.0</depth>
             <divetime>1800</divetime>
             <temperature>277.9</temperature>
@@ -28548,6 +28568,7 @@
             <divetime>1856</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="39" kind="mandatory"/>
             <depth>42.5</depth>
             <divetime>1860</divetime>
             <temperature>278.0</temperature>
@@ -28609,6 +28630,7 @@
             <divetime>1916</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="36" kind="mandatory"/>
             <depth>38.2</depth>
             <divetime>1920</divetime>
             <temperature>278.1</temperature>
@@ -28670,6 +28692,7 @@
             <divetime>1976</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="120.0" decodepth="33" kind="mandatory"/>
             <depth>36.6</depth>
             <divetime>1980</divetime>
             <temperature>278.1</temperature>
@@ -28731,6 +28754,7 @@
             <divetime>2036</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="120.0" decodepth="30" kind="mandatory"/>
             <depth>34.1</depth>
             <divetime>2040</divetime>
             <temperature>278.2</temperature>
@@ -28793,6 +28817,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="30" kind="mandatory"/>
             <depth>30.5</depth>
             <divetime>2100</divetime>
             <temperature>278.3</temperature>
@@ -28869,6 +28894,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="30" kind="mandatory"/>
             <depth>29.7</depth>
             <divetime>2160</divetime>
             <temperature>278.5</temperature>
@@ -28945,6 +28971,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="27" kind="mandatory"/>
             <depth>27.8</depth>
             <divetime>2220</divetime>
             <temperature>278.8</temperature>
@@ -29021,6 +29048,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="27" kind="mandatory"/>
             <depth>27.4</depth>
             <divetime>2280</divetime>
             <temperature>278.9</temperature>
@@ -29097,6 +29125,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="24" kind="mandatory"/>
             <depth>22.9</depth>
             <divetime>2340</divetime>
             <temperature>279.1</temperature>
@@ -29173,6 +29202,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="24" kind="mandatory"/>
             <depth>24.0</depth>
             <divetime>2400</divetime>
             <temperature>279.3</temperature>
@@ -29249,6 +29279,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="180.0" decodepth="21" kind="mandatory"/>
             <depth>21.0</depth>
             <divetime>2460</divetime>
             <temperature>279.4</temperature>
@@ -29325,6 +29356,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="21" kind="mandatory"/>
             <depth>20.9</depth>
             <divetime>2520</divetime>
             <temperature>279.8</temperature>
@@ -29401,6 +29433,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="21" kind="mandatory"/>
             <depth>20.8</depth>
             <divetime>2580</divetime>
             <temperature>280.0</temperature>
@@ -29477,6 +29510,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="180.0" decodepth="18" kind="mandatory"/>
             <depth>18.9</depth>
             <divetime>2640</divetime>
             <temperature>280.3</temperature>
@@ -29553,6 +29587,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="18" kind="mandatory"/>
             <depth>17.6</depth>
             <divetime>2700</divetime>
             <temperature>280.8</temperature>
@@ -29629,6 +29664,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="18" kind="mandatory"/>
             <depth>17.7</depth>
             <divetime>2760</divetime>
             <temperature>281.1</temperature>
@@ -29704,6 +29740,7 @@
             <divetime>2816</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="300.0" decodepth="15" kind="mandatory"/>
             <depth>17.8</depth>
             <divetime>2820</divetime>
             <temperature>281.5</temperature>
@@ -29765,6 +29802,7 @@
             <divetime>2876</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="240.0" decodepth="15" kind="mandatory"/>
             <depth>16.5</depth>
             <divetime>2880</divetime>
             <temperature>281.8</temperature>
@@ -29827,6 +29865,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="180.0" decodepth="15" kind="mandatory"/>
             <depth>15.8</depth>
             <divetime>2940</divetime>
             <temperature>282.5</temperature>
@@ -29903,6 +29942,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="15" kind="mandatory"/>
             <depth>15.7</depth>
             <divetime>3000</divetime>
             <temperature>283.1</temperature>
@@ -29978,6 +30018,7 @@
             <divetime>3056</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="15" kind="mandatory"/>
             <depth>16.2</depth>
             <divetime>3060</divetime>
             <temperature>283.6</temperature>
@@ -30039,6 +30080,7 @@
             <divetime>3116</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="360.0" decodepth="12" kind="mandatory"/>
             <depth>16.2</depth>
             <divetime>3120</divetime>
             <temperature>284.1</temperature>
@@ -30100,6 +30142,7 @@
             <divetime>3176</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="300.0" decodepth="12" kind="mandatory"/>
             <depth>16.8</depth>
             <divetime>3180</divetime>
             <temperature>284.5</temperature>
@@ -30162,6 +30205,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="240.0" decodepth="12" kind="mandatory"/>
             <depth>12.4</depth>
             <divetime>3240</divetime>
             <temperature>284.8</temperature>
@@ -30238,6 +30282,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="240.0" decodepth="12" kind="mandatory"/>
             <depth>12.0</depth>
             <divetime>3300</divetime>
             <temperature>285.5</temperature>
@@ -30314,6 +30359,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="12" kind="mandatory"/>
             <depth>11.6</depth>
             <divetime>3360</divetime>
             <temperature>285.9</temperature>
@@ -30390,6 +30436,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="12" kind="mandatory"/>
             <depth>12.2</depth>
             <divetime>3420</divetime>
             <temperature>286.8</temperature>
@@ -30465,6 +30512,7 @@
             <divetime>3476</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="540.0" decodepth="9" kind="mandatory"/>
             <depth>11.8</depth>
             <divetime>3480</divetime>
             <temperature>287.1</temperature>
@@ -30526,6 +30574,7 @@
             <divetime>3536</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="480.0" decodepth="9" kind="mandatory"/>
             <depth>11.8</depth>
             <divetime>3540</divetime>
             <temperature>287.3</temperature>
@@ -30587,6 +30636,7 @@
             <divetime>3596</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="420.0" decodepth="9" kind="mandatory"/>
             <depth>12.0</depth>
             <divetime>3600</divetime>
             <temperature>287.6</temperature>
@@ -30648,6 +30698,7 @@
             <divetime>3656</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="360.0" decodepth="9" kind="mandatory"/>
             <depth>10.1</depth>
             <divetime>3660</divetime>
             <temperature>288.1</temperature>
@@ -30710,6 +30761,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="300.0" decodepth="9" kind="mandatory"/>
             <depth>9.8</depth>
             <divetime>3720</divetime>
             <temperature>288.9</temperature>
@@ -30786,6 +30838,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="240.0" decodepth="9" kind="mandatory"/>
             <depth>9.4</depth>
             <divetime>3780</divetime>
             <temperature>289.6</temperature>
@@ -30862,6 +30915,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="180.0" decodepth="9" kind="mandatory"/>
             <depth>8.7</depth>
             <divetime>3840</divetime>
             <temperature>290.1</temperature>
@@ -30938,6 +30992,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="9" kind="mandatory"/>
             <depth>9.1</depth>
             <divetime>3900</divetime>
             <temperature>290.6</temperature>
@@ -31014,6 +31069,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="9" kind="mandatory"/>
             <depth>8.9</depth>
             <divetime>3960</divetime>
             <temperature>290.8</temperature>
@@ -31089,6 +31145,7 @@
             <divetime>4016</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="720.0" decodepth="6" kind="mandatory"/>
             <depth>8.5</depth>
             <divetime>4020</divetime>
             <temperature>291.1</temperature>
@@ -31150,6 +31207,7 @@
             <divetime>4076</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="660.0" decodepth="6" kind="mandatory"/>
             <depth>8.9</depth>
             <divetime>4080</divetime>
             <temperature>291.4</temperature>
@@ -31211,6 +31269,7 @@
             <divetime>4136</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="660.0" decodepth="6" kind="mandatory"/>
             <depth>9.0</depth>
             <divetime>4140</divetime>
             <temperature>291.6</temperature>
@@ -31272,6 +31331,7 @@
             <divetime>4196</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="600.0" decodepth="6" kind="mandatory"/>
             <depth>7.2</depth>
             <divetime>4200</divetime>
             <temperature>291.8</temperature>
@@ -31334,6 +31394,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="540.0" decodepth="6" kind="mandatory"/>
             <depth>6.6</depth>
             <divetime>4260</divetime>
             <temperature>292.2</temperature>
@@ -31410,6 +31471,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="480.0" decodepth="6" kind="mandatory"/>
             <depth>6.2</depth>
             <divetime>4320</divetime>
             <temperature>292.5</temperature>
@@ -31486,6 +31548,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="360.0" decodepth="6" kind="mandatory"/>
             <depth>6.3</depth>
             <divetime>4380</divetime>
             <temperature>292.8</temperature>
@@ -31562,6 +31625,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="300.0" decodepth="6" kind="mandatory"/>
             <depth>5.8</depth>
             <divetime>4440</divetime>
             <temperature>293.0</temperature>
@@ -31638,6 +31702,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="240.0" decodepth="6" kind="mandatory"/>
             <depth>6.2</depth>
             <divetime>4500</divetime>
             <temperature>293.2</temperature>
@@ -31714,6 +31779,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="180.0" decodepth="6" kind="mandatory"/>
             <depth>6.2</depth>
             <divetime>4560</divetime>
             <temperature>293.3</temperature>
@@ -31790,6 +31856,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="6" kind="mandatory"/>
             <depth>6.5</depth>
             <divetime>4620</divetime>
             <temperature>293.5</temperature>
@@ -31865,6 +31932,7 @@
             <divetime>4676</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
             <depth>7.0</depth>
             <divetime>4680</divetime>
             <temperature>293.5</temperature>
@@ -31926,6 +31994,7 @@
             <divetime>4736</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="1140.0" decodepth="3" kind="mandatory"/>
             <depth>6.2</depth>
             <divetime>4740</divetime>
             <temperature>293.5</temperature>
@@ -31987,6 +32056,7 @@
             <divetime>4796</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="1080.0" decodepth="3" kind="mandatory"/>
             <depth>6.3</depth>
             <divetime>4800</divetime>
             <temperature>293.6</temperature>
@@ -32048,6 +32118,7 @@
             <divetime>4856</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="1020.0" decodepth="3" kind="mandatory"/>
             <depth>6.1</depth>
             <divetime>4860</divetime>
             <temperature>293.8</temperature>
@@ -32109,6 +32180,7 @@
             <divetime>4916</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="960.0" decodepth="3" kind="mandatory"/>
             <depth>6.2</depth>
             <divetime>4920</divetime>
             <temperature>293.8</temperature>
@@ -32170,6 +32242,7 @@
             <divetime>4976</divetime>
           </waypoint>
           <waypoint>
+            <decostop duration="900.0" decodepth="3" kind="mandatory"/>
             <depth>4.5</depth>
             <divetime>4980</divetime>
             <temperature>293.8</temperature>
@@ -32232,6 +32305,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="840.0" decodepth="3" kind="mandatory"/>
             <depth>3.5</depth>
             <divetime>5040</divetime>
             <temperature>293.9</temperature>
@@ -32308,6 +32382,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="840.0" decodepth="3" kind="mandatory"/>
             <depth>3.1</depth>
             <divetime>5100</divetime>
             <temperature>293.9</temperature>
@@ -32384,6 +32459,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="780.0" decodepth="3" kind="mandatory"/>
             <depth>3.2</depth>
             <divetime>5160</divetime>
             <temperature>293.9</temperature>
@@ -32460,6 +32536,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="660.0" decodepth="3" kind="mandatory"/>
             <depth>3.2</depth>
             <divetime>5220</divetime>
             <temperature>293.9</temperature>
@@ -32536,6 +32613,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="600.0" decodepth="3" kind="mandatory"/>
             <depth>3.2</depth>
             <divetime>5280</divetime>
             <temperature>294.0</temperature>
@@ -32612,6 +32690,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="540.0" decodepth="3" kind="mandatory"/>
             <depth>3.4</depth>
             <divetime>5340</divetime>
             <temperature>294.0</temperature>
@@ -32688,6 +32767,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="480.0" decodepth="3" kind="mandatory"/>
             <depth>3.5</depth>
             <divetime>5400</divetime>
             <temperature>294.0</temperature>
@@ -32764,6 +32844,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="1980.0" decodepth="3" kind="mandatory"/>
             <depth>3.3</depth>
             <divetime>5460</divetime>
             <temperature>294.0</temperature>
@@ -32840,6 +32921,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="420.0" decodepth="3" kind="mandatory"/>
             <depth>3.1</depth>
             <divetime>5520</divetime>
             <temperature>294.1</temperature>
@@ -32916,6 +32998,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="360.0" decodepth="3" kind="mandatory"/>
             <depth>2.9</depth>
             <divetime>5580</divetime>
             <temperature>294.1</temperature>
@@ -32992,6 +33075,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="300.0" decodepth="3" kind="mandatory"/>
             <depth>3.3</depth>
             <divetime>5640</divetime>
             <temperature>294.1</temperature>
@@ -33068,6 +33152,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="240.0" decodepth="3" kind="mandatory"/>
             <depth>3.0</depth>
             <divetime>5700</divetime>
             <temperature>294.1</temperature>
@@ -33144,6 +33229,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="180.0" decodepth="3" kind="mandatory"/>
             <depth>3.1</depth>
             <divetime>5760</divetime>
             <temperature>294.1</temperature>
@@ -33220,6 +33306,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="120.0" decodepth="3" kind="mandatory"/>
             <depth>2.9</depth>
             <divetime>5820</divetime>
             <temperature>294.1</temperature>
@@ -33296,6 +33383,7 @@
           </waypoint>
           <waypoint>
             <alarm>deco</alarm>
+            <decostop duration="60.0" decodepth="3" kind="mandatory"/>
             <depth>2.9</depth>
             <divetime>5880</divetime>
             <temperature>294.2</temperature>
