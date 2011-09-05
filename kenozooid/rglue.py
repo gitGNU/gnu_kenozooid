@@ -31,4 +31,13 @@ def float_vec(data):
     c = ro.FloatVector([ro.NA_Real if v is None else float(v) for v in data])
     return c
 
+
+def bool_vec(data):
+    """
+    Create R bool vector using RPy interface.
+    """
+    # unfortunately, rpy does not convert None to NA anymore
+    c = ro.BoolVector([ro.NA_Bool if v is None else bool(v) for v in data])
+    return c
+
 # vim: sw=4:et:ai
