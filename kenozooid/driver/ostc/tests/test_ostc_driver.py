@@ -93,11 +93,12 @@ class UDDFTestCase(unittest.TestCase):
         """
         Test OSTC deco alarm data to UDDF conversion
         """
-        # get first dive, there are two deco alarm periods
-        dive = self.dives[0]
+        dive = self.dives[3] # dive no 3 contains deco alarms
         wps = list(ku.xp(dive, 'uddf:samples/uddf:waypoint'))
-        d1 = wps[156:162]
-        d2 = wps[168:186]
+        d1 = wps[587:594]
+        d2 = wps[743:749]
+        d3 = wps[972:976]
+        d4 = wps[1320:1343]
 
         # check if all deco waypoints have appropriate alarms
         def alarms(wps):
@@ -105,8 +106,12 @@ class UDDFTestCase(unittest.TestCase):
 
         t1 = list(alarms(d1))
         t2 = list(alarms(d2))
+        t3 = list(alarms(d3))
+        t4 = list(alarms(d4))
         self.assertTrue(all(t1), '{0}\n{1}'.format(t1, et.tostring(dive)))
         self.assertTrue(all(t2), '{0}\n{1}'.format(t2, et.tostring(dive)))
+        self.assertTrue(all(t3), '{0}\n{1}'.format(t3, et.tostring(dive)))
+        self.assertTrue(all(t4), '{0}\n{1}'.format(t4, et.tostring(dive)))
 
 
     def test_deco(self):

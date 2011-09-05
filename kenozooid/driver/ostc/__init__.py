@@ -197,28 +197,20 @@ class OSTCMemoryDump(object):
                 create_sample = partial(ku.create_dive_profile_sample, dn,
                         queries=UDDF_SAMPLE)
 
-                deco_alarm = False
-
                 # ostc start dive below zero, add (0, 0) waypoint to
                 # comply with uddf
                 create_sample(time=0, depth=0.0)
 
-                for i, sample in enumerate(dive_data):
+                for i, sample in enumerate(dive_data, 1):
                     temp = C2K(sample.temp) if sample.temp else None
 
                     # deco info
                     deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
                     deco_depth = sample.deco_depth if sample.deco_depth else None
                     deco_kind = 'mandatory' if sample.deco_depth else None
+                    deco_alarm = sample.alarm in (2, 3)
 
-                    # deco info is not stored in each ostc sample, but each
-                    # uddf waypoint shall be annotated with deco alarm
-                    if deco_alarm and deco_alarm_end(sample):
-                        deco_alarm = False
-                    elif not deco_alarm and deco_alarm_start(sample):
-                        deco_alarm = True
-
-                    create_sample(time=(i + 1) * header.sampling,
+                    create_sample(time=(i * header.sampling),
                             depth=sample.depth,
                             alarm='deco' if deco_alarm else None,
                             temp=temp,
@@ -248,33 +240,5 @@ class OSTCMemoryDump(object):
             model = 'OSTC Mk.2'
         return '{} {}.{}'.format(model, status.ver1, status.ver2)
 
-
-def deco_alarm_start(sample):
-    """
-    Check if a dive sample start deco period.
-
-    :Parameters:
-     sample
-        Dive sample.
-    """
-    return sample.deco_depth is not None \
-        and sample.deco_depth > 0 \
-        and sample.deco_time > 0 \
-        and sample.depth - sample.deco_depth <= 1.0
-
-
-def deco_alarm_end(sample):
-    """
-    Check if a dive sample ends deco period.
-
-    :Parameters:
-     sample
-        Dive sample.
-    """
-    return sample.deco_time is not None \
-        and (sample.depth - sample.deco_depth > 1.0
-            or sample.deco_depth == 0
-            or sample.deco_time == 160
-            or sample.deco_time == 0)
 
 # vim: sw=4:et:ai

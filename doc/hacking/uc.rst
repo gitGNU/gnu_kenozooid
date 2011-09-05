@@ -22,7 +22,8 @@ analytics
     Analytics modules and statistical software integration.
 drivers
     Device drivers allowing other subsystems to communicate with dive
-    computers.
+    computers. Device drivers should not interpolate any data (i.e. missing
+    temperature values).
 logbook
     Dive logging functionality. Buddy and dive site management.
 planning
