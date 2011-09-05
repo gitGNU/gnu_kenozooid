@@ -87,7 +87,8 @@ XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
         XPath('uddf:depth/text()'),
         XPath('uddf:temperature/text()'),
         XPath('uddf:decostop/@duration'),
-        XPath('uddf:decostop/@decodepth'))
+        XPath('uddf:decostop/@decodepth'),
+        XPath('uddf:alarm/text()'))
 
 # XPath query to locate dive profile sample
 XP_WAYPOINT = XPath('.//uddf:waypoint')
@@ -338,9 +339,9 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('time', 'depth', 'temp', 'deco_time', 'deco_depth')
+        fields = ('time', 'depth', 'temp', 'deco_time', 'deco_depth', 'alarm')
         queries = XP_DEFAULT_PROFILE_DATA
-        parsers = (float, ) * 5
+        parsers = (float, ) * 5 + (str, )
 
     return find_data('Sample', node, fields, queries, parsers,
             nquery=XP_WAYPOINT)
