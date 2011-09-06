@@ -7,8 +7,27 @@ Call ``kz`` script to execute Kenozooid commands and sub commands, see
     $ kz -h
     usage: kz [-h] [-v]
               {analyze,backup,buddy,calc,convert,dive,drivers,plot,sim,site} ...
-    kz: error: too few arguments
 
+    Kenozooid 0.1.0.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -v, --verbose         explain what is being done
+
+    Kenozooid commands:
+      {analyze,backup,buddy,calc,convert,dive,drivers,plot,sim,site}
+        analyze             analyze dives with R script
+        backup              backup dive computer data (logbook, settings, etc.)
+        buddy               manage dive buddies in UDDF file
+        calc                air and nitrox calculations (partial pressure, EAD,
+                            MOD); metric units
+        convert             convert binary dive computer data.
+        dive                manage dives in UDDF file
+        drivers             list available dive computer drivers and their
+                            capabilities
+        plot                plot graphs of dive profiles
+        sim                 simulate dives with a dive computer
+        site                manage dive sites in UDDF file
 
 Connect dive computer to a personal computer and backup its data (see also
 :ref:`user-dc`)::
