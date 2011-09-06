@@ -1,3 +1,5 @@
+.. _user-dc:
+
 Dive Computer Support
 =====================
 Overview

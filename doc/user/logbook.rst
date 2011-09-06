@@ -1,3 +1,5 @@
+.. _user-logbook:
+
 Dive Logbook
 ============
 Kenozooid supports basic dive logbook functionality, which allows to list,
