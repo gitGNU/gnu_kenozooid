@@ -134,10 +134,10 @@ cairo_pdf('%s', width=10, height=5, onefile=T)
         _inject_profile(dp)
 
         R(r"""
-ylim = rev(range(dp$depth))
 dive_time = dp$time / 60.0
-plot(dive_time, dp$depth, ylim=ylim,
-    type='l', col='blue',
+xlim = range(dive_time)
+ylim = rev(range(dp$depth))
+plot(NA, xlim=xlim, ylim=ylim,
     xlab='Time [min]', ylab='Depth [m]')
 
 # deco info
@@ -145,14 +145,18 @@ if (any(!is.na(dp$deco_time))) {
     deco_depth = approxfun(dp$time, dp$deco_depth, method='constant')(dp$time)
 
     n = length(dp$time)
-    dc = rep(rgb(0, 0, 0.9, 0.4), n - 1)
-    dc[which(dp$deco_alarm)] = rgb(0.9, 0, 0, 0.4)
+    dc = rep(rgb(0.90, 0.90, 1.0), n - 1)
+    dc[which(dp$deco_alarm)] = rgb(1.0, 0.50, 0.50)
     rect(dive_time[1:n - 1], deco_depth[1:n - 1], dive_time[2:n], rep(0, n - 1),
-        col=dc, border=NA, lwd=0)
+        col=dc, border=dc)
 }
 
+# then the grid
 minor.tick(nx=5, ny=2)
 grid()
+
+# and finally the dive profile
+lines(dive_time, dp$depth, col='blue')
         """)
         if title:
             st = dive.time.strftime(FMT_DIVETIME)
