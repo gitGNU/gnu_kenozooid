@@ -11,3 +11,5 @@ solodiver:
 
 mk:
 - ostc-dump-25.uddf
+
+# vim: sw=4:et:ai
