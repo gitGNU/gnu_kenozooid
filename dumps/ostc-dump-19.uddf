@@ -9,7 +9,7 @@
       </contact>
     </manufacturer>
     <version>0.1.0</version>
-    <datetime>2011-09-05T00:08:07</datetime>
+    <datetime>2011-09-06T19:21:17</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -32,8 +32,8 @@
     </divecomputerdump>
   </divecomputercontrol>
   <profiledata>
-    <repetitiongroup id="id-3fa6a41e53d54a77bcffe888b7053d73">
-      <dive id="id-ca5600a0e17149c6a02f16d1d75e3064">
+    <repetitiongroup id="id-84db6b89dab34a068ba6a1249c67bca6">
+      <dive id="id-db815c2451d649a28237ea70261ec3cb">
         <informationbeforedive>
           <datetime>2011-02-27T12:18:07</datetime>
         </informationbeforedive>
@@ -1167,7 +1167,7 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2760</divetime>
+            <divetime>2770</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
@@ -1179,7 +1179,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-475a04ddd6614c27a00bf9fb1bf20449">
+      <dive id="id-18c03cd6622a4d1e9ccc4dede0d64fc4">
         <informationbeforedive>
           <datetime>2011-02-27T15:44:10</datetime>
         </informationbeforedive>
@@ -2410,7 +2410,7 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3000</divetime>
+            <divetime>3010</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
