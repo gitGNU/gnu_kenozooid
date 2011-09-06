@@ -53,10 +53,10 @@ List the dives from backup file (see also :ref:`user-logbook`)::
 
 Plot dive profiles::
 
-   kz plot --info --title backup-ostc-20110728.uddf
+   kz plot --info --title backup-ostc-20110728.uddf dives.pdf
 
 Plot dive profiles of dives 2, 3, 4 and 5::
 
-   kz plot --info --title 2-5 backup-ostc-20110728.uddf
+   kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 
 .. vim: sw=4:et:ai
