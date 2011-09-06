@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+
+# extract dive computer binary data from UDDF
+
+import sys
+import kenozooid.uddf as ku
+
+dc = ku.parse(sys.argv[1], '//uddf:dcdump')
+s = ku._dump_decode(next(dc).text)
+f = open(sys.argv[2], 'wb')
+f.write(s)
+f.close()
+

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+DIR=/tmp/kenozooid-fix-dumps
+mkdir $DIR
+
+for f in dumps/{ostc,su}-dump-*.uddf; do
+    fo=$(basename $f)
+    echo $f
+    ./bin/kz dive extract $f $DIR/$fo
+    xmllint --format $DIR/$fo > $f
+done
+
+rm -rf $DIR
