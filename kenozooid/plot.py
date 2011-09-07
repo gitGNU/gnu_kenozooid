@@ -118,12 +118,13 @@ def plot(fout, dives, title=False, info=False, temp=False, sig=True,
      format
         Format of output file (i.e. pdf, png, svg).
     """
+    plot_f = 'cairo_pdf' if format == 'pdf' else format
     R("""
 library(Hmisc)
 library(grid)
 
-cairo_pdf('%s', width=10, height=5, onefile=T)
-    """ % fout)
+{}('{}', width=10, height=5, onefile=T)
+    """.format(plot_f, fout))
 
     if not title:
         R('par(mar=c(5, 4, 1, 2) + 0.1)')
@@ -205,14 +206,14 @@ def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
      format
         Format of output file (i.e. pdf, png, svg).
     """
-
+    plot_f = 'cairo_pdf' if format == 'pdf' else format
     R("""
 library(Hmisc)
 library(grid)
 library(colorspace)
 
-cairo_pdf('%s', width=10, height=5, onefile=T)
-""" % fout)
+{}('{}', width=10, height=5, onefile=T)
+    """.format(plot_f, fout))
 
     if not title:
         R('par(mar=c(5, 4, 1, 2) + 0.1)')
