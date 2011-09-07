@@ -84,6 +84,25 @@ def _inject_profile(dp):
     return df
 
 
+def _plot_start(fout, format):
+    """
+    Start a plot.
+
+    :Parameters:
+     fout
+        Output filename.
+     format
+        File format (pdf, svg, png).
+    """
+    pf = 'cairo_pdf' if format == 'pdf' else format
+    w, h = (800, 400) if format == 'png' else (10, 5)
+    opts = {}
+    if format == 'pdf':
+        opts['onefile'] = True
+
+    R[pf](fout, width=w, height=h, **opts)
+
+
 def _plot_sig():
     """
     Display Kenozooid signature on a graph.
@@ -118,13 +137,11 @@ def plot(fout, dives, title=False, info=False, temp=False, sig=True,
      format
         Format of output file (i.e. pdf, png, svg).
     """
-    plot_f = 'cairo_pdf' if format == 'pdf' else format
     R("""
 library(Hmisc)
 library(grid)
-
-{}('{}', width=10, height=5, onefile=T)
-    """.format(plot_f, fout))
+""")
+    _plot_start(fout, format)
 
     if not title:
         R('par(mar=c(5, 4, 1, 2) + 0.1)')
@@ -206,14 +223,11 @@ def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
      format
         Format of output file (i.e. pdf, png, svg).
     """
-    plot_f = 'cairo_pdf' if format == 'pdf' else format
     R("""
 library(Hmisc)
 library(grid)
 library(colorspace)
-
-{}('{}', width=10, height=5, onefile=T)
-    """.format(plot_f, fout))
+""")
 
     if not title:
         R('par(mar=c(5, 4, 1, 2) + 0.1)')
