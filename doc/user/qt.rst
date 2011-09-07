@@ -63,6 +63,6 @@ Plot dive profiles of dives 2, 3, 4 and 5::
 .. figure:: /user/dive-2011-06-26.png
    :align: center
 
-   The 4th plot from backup-ostc-20110728.uddf backup file
+   The plot of 4th dive from backup-ostc-20110728.uddf backup file
 
 .. vim: sw=4:et:ai
