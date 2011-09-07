@@ -59,4 +59,9 @@ Plot dive profiles of dives 2, 3, 4 and 5::
 
    kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 
+.. figure:: /user/dive-2011-06-26.svg
+   :align: center
+
+   The 4th plot from backup-ostc-20110728.uddf backup file
+
 .. vim: sw=4:et:ai
