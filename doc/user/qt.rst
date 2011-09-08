@@ -1,33 +1,8 @@
 Quick Tour
 ==========
 
-Call ``kz`` script to execute Kenozooid commands and sub commands, see
-:ref:`user-ui` for more. To list the commands::
-
-    $ kz -h
-    usage: kz [-h] [-v]
-              {analyze,backup,buddy,calc,convert,dive,drivers,plot,sim,site} ...
-
-    Kenozooid 0.1.0.
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -v, --verbose         explain what is being done
-
-    Kenozooid commands:
-      {analyze,backup,buddy,calc,convert,dive,drivers,plot,sim,site}
-        analyze             analyze dives with R script
-        backup              backup dive computer data (logbook, settings, etc.)
-        buddy               manage dive buddies in UDDF file
-        calc                air and nitrox calculations (partial pressure, EAD,
-                            MOD); metric units
-        convert             convert binary dive computer data.
-        dive                manage dives in UDDF file
-        drivers             list available dive computer drivers and their
-                            capabilities
-        plot                plot graphs of dive profiles
-        sim                 simulate dives with a dive computer
-        site                manage dive sites in UDDF file
+Call ``kz`` script to execute Kenozooid commands, see
+:ref:`user-ui` for more.
 
 Connect dive computer to a personal computer and backup its data (see also
 :ref:`user-dc`)::
@@ -35,8 +10,12 @@ Connect dive computer to a personal computer and backup its data (see also
    kz backup ostc /dev/ttyUSB0 backup-ostc-20110728.uddf
    kz backup su /dev/ttyUSB0 backup-su-20110728.uddf
 
-Above commands are for OSTC dive computer and Sensus Ultra dive logger.
+Above, data from OSTC dive computer and Sensus Ultra dive data logger are
+saved to ``backup-ostc-20110728.uddf`` and ``backup-su-20110728.uddf``
+files.
 
+
+.. cmd-out: kz dive list backup-ostc-20110728.uddf
 List the dives from backup file (see also :ref:`user-logbook`)::
 
     $ kz dive list backup-ostc-20110728.uddf
@@ -51,18 +30,20 @@ List the dives from backup file (see also :ref:`user-logbook`)::
         8: 2011-07-28 21:26     60.2m     64:08     5.7°C
 
 
+.. cmd-out: kz plot --info --title backup-ostc-20110728.uddf dives.pdf
 Plot dive profiles::
 
    kz plot --info --title backup-ostc-20110728.uddf dives.pdf
 
+.. cmd-out: kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 Plot dive profiles of dives 2, 3, 4 and 5::
 
    kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 
-.. kz plot --info --title 4 dumps/ostc-dump-22.uddf doc/user/dive-2011-60-26.png
+.. cmd-out: kz plot --info --title 4 dumps/ostc-dump-22.uddf doc/user/dive-2011-60-26.png
 .. figure:: /user/dive-2011-06-26.png
    :align: center
 
-   The plot of 4th dive from backup-ostc-20110728.uddf backup file
+   Dive profile plot of 4th dive from backup-ostc-20110728.uddf backup file
 
 .. vim: sw=4:et:ai
