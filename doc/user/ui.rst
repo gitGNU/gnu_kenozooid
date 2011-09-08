@@ -12,8 +12,6 @@ The ``kz`` script is used to execute Kenozooid commands, i.e. ``backup``,
 ``plot``, ``dive list`` or ``buddy add`` (some commands consist of two
 words separated by space).
 
-.. cmd-out: kz
-
 Start by typing ``kz`` to get brief list of commands::
 
     $ kz
@@ -22,15 +20,11 @@ Start by typing ``kz`` to get brief list of commands::
     kz: error: too few arguments
 
 
-.. cmd-out: kz dive
-
 To get brief list of dive data related commands simply type::
 
     $ kz dive
     usage: kz dive [-h] {add,extract,list} ...
     kz dive: error: too few arguments
-
-.. cmd-out: kz dive -h
 
 Use ``-h`` option to get more detailed overview of commands::
 

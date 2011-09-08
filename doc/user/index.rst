@@ -12,6 +12,7 @@ User Manual
    qt
    ui
    dc
+   plot
    analysis
    logbook
    calc    

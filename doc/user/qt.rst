@@ -15,7 +15,6 @@ saved to ``backup-ostc-20110728.uddf`` and ``backup-su-20110728.uddf``
 files.
 
 
-.. cmd-out: kz dive list backup-ostc-20110728.uddf
 List the dives from backup file (see also :ref:`user-logbook`)::
 
     $ kz dive list backup-ostc-20110728.uddf
@@ -30,17 +29,14 @@ List the dives from backup file (see also :ref:`user-logbook`)::
         8: 2011-07-28 21:26     60.2m     64:08     5.7°C
 
 
-.. cmd-out: kz plot --info --title backup-ostc-20110728.uddf dives.pdf
-Plot dive profiles::
+Plot dive profiles (see :ref:`ui-plot`)::
 
    kz plot --info --title backup-ostc-20110728.uddf dives.pdf
 
-.. cmd-out: kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 Plot dive profiles of dives 2, 3, 4 and 5::
 
    kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 
-.. cmd-out: kz plot --info --title 4 dumps/ostc-dump-22.uddf doc/user/dive-2011-60-26.png
 .. figure:: /user/dive-2011-06-26.png
    :align: center
 
