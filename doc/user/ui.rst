@@ -13,6 +13,7 @@ The ``kz`` script is used to execute Kenozooid commands, i.e. ``backup``,
 words separated by space).
 
 .. cmd-out: kz
+
 Start by typing ``kz`` to get brief list of commands::
 
     $ kz
@@ -22,6 +23,7 @@ Start by typing ``kz`` to get brief list of commands::
 
 
 .. cmd-out: kz dive
+
 To get brief list of dive data related commands simply type::
 
     $ kz dive
@@ -29,6 +31,7 @@ To get brief list of dive data related commands simply type::
     kz dive: error: too few arguments
 
 .. cmd-out: kz dive -h
+
 Use ``-h`` option to get more detailed overview of commands::
 
     $ kz dive -h
@@ -43,11 +46,16 @@ Use ``-h`` option to get more detailed overview of commands::
         extract           extract dives from dive computer backup
         list              list dives stored in UDDF file
 
-Command Overview
-----------------
-
-
 Common Options
 --------------
+Kenozooid ``kz`` script has  set of common options supported by each
+command
+
+\-h, --help
+    Print command detailed overview.
+
+\-v, --verbose
+    Print debugging information. The information should be sent to
+    Kenozooid authors when reporting problems.
 
 .. vim: sw=4:et:ai
