@@ -480,6 +480,7 @@ class PlotProfiles(object):
                 default=False,
                 help='display graph legend')
         parser.add_argument('--labels',
+                nargs='*',
                 action='store',
                 dest='plot_labels',
                 help='override dives labels')
@@ -501,24 +502,21 @@ class PlotProfiles(object):
         from kenozooid.plot import plot, plot_overlay
 
         fout = args.output[0]
+        params = {} # additional plotting params
 
         _, ext = os.path.splitext(fout)
         ext = ext.replace('.', '')
         if ext.lower() not in ('pdf', 'png', 'svg'):
-            raise ArgumentError('Unknown format: {0}'.format(ext))
+            raise ArgumentError('Unknown format of plotting output file: {0}'.format(ext))
 
         # fetch dives and profiles from files provided on command line
         data = itertools.chain(*_dive_data(args.input))
         if args.plot_overlay:
             plotf = plot_overlay
-
-            params = {}
             if args.plot_labels:
-                labels = [l.strip() for l in args.plot_labels.split(',')]
-                params = { 'labels': labels }
+                params = { 'labels': args.plot_labels }
         else:
             plotf = plot
-            params = {}
 
         plotf(fout, data, format=ext,
             title=args.plot_title,

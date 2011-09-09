@@ -229,6 +229,8 @@ library(grid)
 library(colorspace)
 """)
 
+    _plot_start(fout, format)
+
     if not title:
         R('par(mar=c(5, 4, 1, 2) + 0.1)')
 
@@ -267,11 +269,15 @@ r_time = range(sapply(times, range))
 r_depth = range(sapply(depths, range))
 plot(NA, xlim=r_time, ylim=rev(r_depth),
     xlab='Time [min]', ylab='Depth [m]')
+
+# first the gird
+minor.tick(nx=5, ny=2)
+grid()
+
+# then the profiles
 for (i in 1:{nd}) {{
     lines(times[[i]], depths[[i]], col=cols[i])
 }}
-minor.tick(nx=5, ny=2)
-grid()
 """.format(nd=k))
     if legend:
         R("""
