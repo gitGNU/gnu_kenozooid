@@ -29,7 +29,7 @@ List the dives from backup file (see also :ref:`user-logbook`)::
         8: 2011-07-28 21:26     60.2m     64:08     5.7°C
 
 
-Plot dive profiles (see :ref:`ui-plot`)::
+Plot dive profiles (see :ref:`user-plot`)::
 
    kz plot --info --title backup-ostc-20110728.uddf dives.pdf
 
