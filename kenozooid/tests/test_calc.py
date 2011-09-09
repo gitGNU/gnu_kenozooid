@@ -23,7 +23,7 @@ Tests for calculation methods.
 
 import unittest
 
-from kenozooid.calc import ppg, ppO2, ppN2, mod, ead
+from kenozooid.calc import ppg, ppO2, ppN2, mod, ead, rmv
 
 
 class PPTestCase(unittest.TestCase):
@@ -99,6 +99,27 @@ class EADTestCase(unittest.TestCase):
         """
         d = ead(30, 35)
         self.assertAlmostEqual(22.9, round(d, 1), places=1)
+
+
+
+class RMVTestCase(unittest.TestCase):
+    """
+    Respiratory minute volume calculation tests.
+    """
+    def test_12_150_25_40(self):
+        """
+        Test 12l, 150bar, 25m, 40min RMV
+        """
+        v = rmv(12, 150, 25, 40)
+        self.assertAlmostEqual(12.9, v, places=1)
+
+
+    def test_15_160_20_42(self):
+        """
+        Test 12l, 160bar, 20m, 42min RMV
+        """
+        v = rmv(15, 160, 20, 42)
+        self.assertAlmostEqual(19.0, v, places=1)
 
 
 # vim: sw=4:et:ai

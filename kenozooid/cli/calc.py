@@ -56,6 +56,19 @@ class Calculate(object):
         p.add_argument('pp', type=float, nargs='?', default=1.4)
         p.add_argument('ean', type=float, nargs=1)
 
+        p = subp.add_parser('rmv',
+                help='calculate respiratory minute volume (RMV)')
+        p.set_defaults(cmd_calc='rmv')
+        p.add_argument('tank', type=float, nargs=1,
+                help='tank size in liters, i.e. 12, 15')
+        p.add_argument('pressure', type=float, nargs=1,
+                help='pressure difference between start and end of dive,' \
+                    ' i.e. 170 (220 - 50)')
+        p.add_argument('depth', type=float, nargs=1,
+                help='average depth of dive')
+        p.add_argument('duration', type=float, nargs=1,
+                help='duration of dive in minutes')
+
 
     def __call__(self, args):
         """
@@ -69,6 +82,9 @@ class Calculate(object):
             result = f(args.depth[0], args.ean[0])
         elif cmd == 'mod':
             result = f(args.ean[0], args.pp)
+        elif cmd == 'rmv':
+            result = f(args.tank[0], args.pressure[0], args.depth[0],
+                    args.duration[0])
         else:
             raise ArgumentError()
 

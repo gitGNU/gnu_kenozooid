@@ -74,6 +74,24 @@ def ead(depth, ean):
     return (depth + 10.0) * fN / 0.79 - 10.0
 
 
+def rmv(tank, pressure, depth, duration):
+    """
+    Calculate respiratory minute volume (RMV).
+
+    :Parameters:
+     tank
+        Tank size in liters, i.e. 12l, 15l.
+     pressure
+        Difference in pressure of the tank at the end and start of a dive,
+        i.e. 170 (220 at start, 50 at end of a dive).
+     depth
+        The average depth of a dive.
+     duration
+        Duration of a dive in minutes.
+    """
+    return tank * pressure / (depth / 10.0 + 1) / duration
+
+
 ppN2 = functools.partial(ppg, gas='N2')
 ppO2 = functools.partial(ppg, gas='O2')
 
