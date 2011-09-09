@@ -44,6 +44,8 @@ platform (Windows, Mac OS X).
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | Hmisc           |          | R package   |                          | used for plotting          |
 +-----------------+----------+-------------+--------------------------+----------------------------+
+| colorspace      |          | R package   |                          | used for overlay plotting  |
++-----------------+----------+-------------+--------------------------+----------------------------+
 
 Installation
 ------------
@@ -102,6 +104,7 @@ Example, fully successful output of dependency check, can be as follows::
     Checking optional Python module rpy2... ok
     Checking optional Python module serial... ok
     Checking R package Hmisc... ok
+    Checking R package colorspace... ok
 
 Example, successful output of dependency check, but with missing optional
 dependencies, might look in the following way::
@@ -115,6 +118,7 @@ dependencies, might look in the following way::
     Checking optional Python module rpy2... ok
     Checking optional Python module serial... not found
     Checking R package Hmisc... not found
+    Checking R package colorspace... ok
 
     Missing optional dependencies:
 

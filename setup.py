@@ -62,15 +62,17 @@ class CheckDeps(Command):
                 py_miss.add(m)
 
         try:
+            r_pkgs = ['Hmisc', 'colorspace']
             import rpy2
             from rpy2.robjects.packages import importr
-            try:
-                print('Checking R package Hmisc... ', end='')
-                importr('Hmisc')
-                print('ok')
-            except rpy2.rinterface.RRuntimeError:
-                print('not found')
-                r_miss.add('Hmisc')
+            for rp in r_pkgs:
+                try:
+                    print('Checking R package {}... '.format(rp), end='')
+                    importr(rp)
+                    print('ok')
+                except rpy2.rinterface.RRuntimeError:
+                    print('not found')
+                    r_miss.add(rp)
         except ImportError:
             print('No rpy2 installed, not checking R packages installation')
 
