@@ -2,38 +2,44 @@ Useful Links
 ============
 Software
 --------
-Library (free software) supporting a lot of different dive computers
+Library (free software) supporting access to data of various dive computers
 
     http://www.divesoftware.org/libdc/#download
 
 Dive logbook management software
 
-- http://www.aquadivelog.org/
 - http://www.jdivelog.org/
+- https://github.com/torvalds/diveclog
+- http://www.divinglog.de/
 - http://gdivelog.sourceforge.net/ (seems to be dead but still looks nice)
+- http://www.aquadivelog.org/
+
+Dive planning software
+
+- http://www.users.on.net/~wittig/diving/mvplan.html
 
 Hardware
 --------
-HeinrichsWeikamp's OSTC
-^^^^^^^^^^^^^^^^^^^^^^^
-OSTC is open source dive computer created by HeinrichsWeikamp GbR. Hardware
-schematic, firmware source code and communication protocols documentation
-are provided.
+HeinrichsWeikamp OSTC N2
+^^^^^^^^^^^^^^^^^^^^^^^^
+OSTC N2 (formerly OSTC and OSTC Mk.2) is open source dive computer created
+by HeinrichsWeikamp GbR.  Hardware schematic, source code of firmware and
+communication protocol documentation are provided.
 
-Project web page
+OSTC N2 web page can be found at
 
-    http://www.heinrichsweikamp.net/ostc/en/
+    http://www.heinrichsweikamp.net/
 
-OSTC dive computer communication protocol
+OSTC dive computer communication protocol can be obtained by contacting
 
-    http://www.heinrichsweikamp.net/ostc/common/ostc_interface.pdf
+    http://www.heinrichsweikamp.net/forum/file.php?2,file=138,filename=ostc_interface_description.pdf
 
-ReefNet Sensus Devices
-^^^^^^^^^^^^^^^^^^^^^^
-ReefNet Sensus is dive data logging device with officially documented
-communication protocols.
+ReefNet Sensus Ultra
+^^^^^^^^^^^^^^^^^^^^
+ReefNet Sensus Ultra is dive data logging device with officially documented
+communication protocol.
 
-Features of ReefNet's Sensus devices
+Features of ReefNet's Sensus Ultra
 
     http://reefnet.ca/products/sensus/
 
@@ -44,24 +50,14 @@ Documentation of ReefNet's Sensus devices communication protocols
 - http://reefnet.ca/downloads/public/doc/sensus_devguide_original.pdf
 
 
-UDDF File Format
-----------------
-UDDF format homepage
+UDDF Specification
+------------------
+UDDF homepage
 
     http://www.streit.cc/dive/
 
-UDDF format specification
+UDDF specification
 
-    http://www.streit.cc/extern/uddf_v220en/index.html
+    http://www.streit.cc/extern/uddf_v300/en/index.html
 
-UDDF XML Schema and examples of UDDF files
-
-    http://uddf-xsd.svn.sourceforge.net/viewvc/uddf-xsd/trunk/share/uddf.xsd?view=log 
-
-    http://uddf-xsd.svn.sourceforge.net/viewvc/uddf-xsd/trunk/test/
-
-Software supporting UDDF
-
-- http://www.aquadivelog.org/
-- http://www.divinglog.de/
-
+.. vim: sw=4:et:ai
