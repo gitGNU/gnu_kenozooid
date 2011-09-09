@@ -9,7 +9,7 @@ from distutils.cmd import Command
 
 VERSION = __import__('kenozooid').__version__
 
-MODS = ['lxml >= 2.3', 'python-dateutil >= 2.0', 'rpy2 >= 2.2.2',
+MODS = ['lxml >= 2.3', 'python-dateutil >= 2.0', 'rpy2 >= 2.2.1',
     'pyserial_py3k >= 2.5']
 
 def _py_inst(mods, names, py_miss):

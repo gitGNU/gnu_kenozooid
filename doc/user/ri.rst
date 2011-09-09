@@ -39,7 +39,7 @@ platform (Windows, Mac OS X).
 |                 |          | environment | PLD Linux, Ubuntu Natty, |                            |
 |                 |          |             | Windows                  |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| rpy             |  2.2.2   | Python      | PLD Linux                | used to communicate with R |
+| rpy             |  2.2.1   | Python      | PLD Linux                | used to communicate with R |
 |                 |          | module      |                          |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | Hmisc           |          | R package   |                          | used for plotting          |
