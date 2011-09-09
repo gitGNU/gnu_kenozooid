@@ -126,4 +126,15 @@ dependencies, might look in the following way::
 
           install.packages('Hmisc')
 
+R Packages Tips
+^^^^^^^^^^^^^^^
+R is very sophisticated and powerful statistical software with many addons
+distributed via `The Comprehensive R Archive Network <http://cran.r-project.org/>`_.
+
+When installing R packages required by Kenozooid, some additional software
+might be needed
+
+- Fortran compiler is required to compile some R packages, i.e. ``Hmisc``;
+  on Linux gcc-fortran package should be installed
+
 .. vim: sw=4:et:ai
