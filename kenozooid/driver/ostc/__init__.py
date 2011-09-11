@@ -73,13 +73,23 @@ class OSTCDriver(object):
         log.debug('returned after command {}'.format(cmd))
 
 
-    def _read(self, size):
-        assert size > 0
-        log.debug('reading {} byte(s)'.format(size))
-        data = self._device.read(size)
+    def _read(self, size=None):
+        if size is None:
+            data = b''
+            k = 1
+            while k:
+                buf = self._device.read(30000)
+                k = len(buf)
+                data += buf
+                log.debug('got {} byte(s) of data (unknown size' \
+                    ' read)'.format(k))
+        else:
+            assert size > 0
+            log.debug('reading {} byte(s)'.format(size))
+            data = self._device.read(size)
+            if len(data) != size:
+                raise DeviceError('Device communication error')
         log.debug('got {} byte(s) of data'.format(len(data)))
-        if len(data) != size:
-            raise DeviceError('Device communication error')
         return data
 
 
@@ -152,7 +162,7 @@ class OSTCMemoryDump(object):
         Download OSTC status and all dive profiles.
         """
         self.driver._write(b'a')
-        return self.driver._read(33034)
+        return self.driver._read()
 
 
     def dives(self, dump):
