@@ -240,7 +240,7 @@ class ListDiveSites(object):
         """
         import kenozooid.uddf as ku
 
-        fmt = '{0:4} {1.id:10} {1.location:20} {1.name:12}'
+        fmt = '{0:4}: {1.id:10} {1.location:20} {1.name:12}'
 
         if args.site:
             query = ku.XP_FIND_SITE
@@ -250,6 +250,7 @@ class ListDiveSites(object):
 
         for fin in files:
             nodes = ku.parse(fin, query, site=args.site)
+            print('{}:'.format(fin))
             for i, n in enumerate(nodes):
                 n = ku.site_data(n)
                 print(nformat(fmt, i + 1, n))
@@ -379,7 +380,7 @@ class ListBuddies(object):
         """
         import kenozooid.uddf as ku
 
-        fmt = '{0:4} {1.id:10} {1.fname:10} {1.lname:20}' \
+        fmt = '{0:4}: {1.id:10} {1.fname:10} {1.lname:20}' \
                 ' {1.org:5} {1.number:11}'
 
         if args.buddy:
@@ -390,6 +391,7 @@ class ListBuddies(object):
 
         for fin in files:
             nodes = ku.parse(fin, query, buddy=args.buddy)
+            print('{}:'.format(fin))
             for i, n in enumerate(nodes):
                 b = ku.buddy_data(n)
                 print(nformat(fmt, i + 1, b))
