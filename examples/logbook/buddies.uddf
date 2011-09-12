@@ -32,8 +32,14 @@
     </buddy>
     <buddy id="jn">
       <personal>
-        <firstname>John</firstname>
+        <firstname>Johnny</firstname>
         <lastname>Neurosis</lastname>
+      </personal>
+    </buddy>
+    <buddy id="jk">
+      <personal>
+        <firstname>John</firstname>
+        <lastname>Koval</lastname>
       </personal>
     </buddy>
   </diver>

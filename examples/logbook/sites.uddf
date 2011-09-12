@@ -38,5 +38,17 @@
         <location>Scapa Flow</location>
       </geography>
     </site>
+    <site id="bmlh">
+      <name>Lough Hyne</name>
+      <geography>
+        <location>Baltimore</location>
+      </geography>
+    </site>
+    <site id="hie">
+      <name>Ireland's Eye</name>
+      <geography>
+        <location>Howth</location>
+      </geography>
+    </site>
   </divesite>
 </uddf>
