@@ -322,8 +322,14 @@ class FindDataTestCase(unittest.TestCase):
         """
         Test dive site XPath query.
         """
-        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'konig', site='konig') # by id
-        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'markgraf', site='Markg') # by name
+        # by id
+        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'konig', site='konig') 
+
+        # by name
+        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'markgraf', site='Markg')
+
+        # by location
+        self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'markgraf', site='Scapa Flow')
 
 
 
