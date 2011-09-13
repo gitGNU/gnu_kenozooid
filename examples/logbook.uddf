@@ -74,8 +74,8 @@
       <name>Ireland's Eye</name>
       <geography>
         <location>Howth</location>
-        <longitude>53.408317</longitude>
-        <latitude>-6.064169</latitude>
+        <longitude>-6.064169</longitude>
+        <latitude>53.408317</latitude>
       </geography>
     </site>
   </divesite>
