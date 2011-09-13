@@ -43,74 +43,78 @@ The buddy data list consists of
 - buddy id
 - first name
 - family name
-- diving organization, i.e. CFT, PADI
-- diving organization membership id
+- diving organisation, i.e. CFT, PADI
+- diving organisation membership id
 
 To list buddies::
 
-    $ kz buddy list buddies.uddf
-    buddies.uddf:
-       1: tcora      Tom        Cora                  
+    $ kz buddy list logbook.uddf    
+    logbook.uddf:
+       1: tcora      Tom        Cora                 PADI  1374       
        2: tex        Thelma     Ex                    
-       3: jn         Johnny     Neurosis
-       4: jk         John       Koval
+       3: jn         Johnny     Neurosis             CFT   1370       
+       4: jk         John       Koval                PADI  13676   
 
 Search string can be specified after the command to limit the list of
-buddies
+buddies. The search string can be one of
 
-For example to find buddy with id ``jn``::
+- buddy id
+- part of buddy name (first name, family name)
+- organisation name, i.e. ``PADI``, ``CMAS``, ``CFT``
+- organisation membership id
 
-    $ kz buddy list jn buddies.uddf
-    buddies.uddf:
-       1: jn         Johnny     Neurosis
+To find buddy by her or his name, i.e. ``John``::
 
-Buddies can be found by part of the name, i.e. (notice ``ohn``, could be
-``John`` as well)::
+    $ kz buddy list John logbook.uddf
+    logbook.uddf:
+       1: jn         Johnny     Neurosis             CFT   1370       
+       2: jk         John       Koval                PADI  13676  
 
-    $ kz buddy list ohn examples/logbook/buddies.uddf 
-    buddies.uddf:
-       1: jn         Johnny     Neurosis 
-       2: jk         John       Koval
+To find all ``PADI`` buddies::
+
+    $ kz buddy list PADI logbook.uddf 
+    logbook.uddf:
+       1: tcora      Tom        Cora                 PADI  1374       
+       2: jk         John       Koval                PADI  13676 
 
 Dive Sites Listing
 ^^^^^^^^^^^^^^^^^^
 The dive site list consists of
 
 - dive site number from a file
-- dive site location
-- dive site name
+- location (city, geographical area), i.e. ``Howth``, ``Scapa Flow``
+- dive site name, i.e. 
+- coordinates (longitude, latitude)
 
 To list dive sites::
 
-    $ kz site list sites.uddf                         
-    sites.uddf:
-       1: sckg       Scapa Flow           SMS Konig   
-       2: sckn       Scapa Flow           SMS Koln
-       3: scmk       Scapa Flow           SMS Markgraf
-       4: bmlh       Baltimore            Lough Hyne
-       5: hie        Howth                Ireland's Eye
+    $ kz site list logbook.uddf
+    logbook.uddf:
+       1: sckg       Scapa Flow           SMS Konig           
+       2: sckn       Scapa Flow           SMS Koln            
+       3: scmk       Scapa Flow           SMS Markgraf        
+       4: bmlh       Baltimore            Lough Hyne            -9.29718000, 51.5008090
+       5: hie        Howth                Ireland's Eye         -6.06416900, 53.4083170
 
-As in case of buddy data, a dive site can be found by id::
+The dive site listing can be searched with one of the search string
 
-    $ kz site list hie sites.uddf                         
-    sites.uddf:
-       1: hie        Howth                Ireland's Eye
+- id
+- part of location, i.e. ``Scapa``
+- part of name, i.e. ``Lough``
 
-To find dive sites by location name containing ``Scap`` string::
+To find dive sites by location containing ``Scapa`` string::
 
-    $ kz site list Scap sites.uddf
-    sites.uddf:
-       1: sckg       Scapa Flow           SMS Konig   
-       2: sckn       Scapa Flow           SMS Koln    
-       3: scmk       Scapa Flow           SMS Markgraf
-
-To find dive sites with name containing ``SMS`` string::
-
-    $ kz site list SMS sites.uddf
-    sites.uddf:
+    $ kz site list Scapa logbook.uddf
+    logbook.uddf:
        1: sckg       Scapa Flow           SMS Konig   
        2: sckn       Scapa Flow           SMS Koln    
        3: scmk       Scapa Flow           SMS Markgraf
+
+To find dive sites with name containing ``Lough`` string::
+
+    $ kz site list Lough logbook.uddf
+    logbook.uddf:
+       1: bmlh       Baltimore            Lough Hyne            -9.29718000, 51.5008090
 
 
 Adding Buddies and Dive Sites
