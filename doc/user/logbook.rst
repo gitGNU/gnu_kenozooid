@@ -22,18 +22,12 @@ Dive list consists of the following columns
 - duration in minutes
 - minimum temperature
 
-To list the dives from a dive computer backup file::
+To list the dives from a logbook file or from a dive computer backup file::
 
-    $ kz dive list backup-ostc-20110728.uddf 
-    backup-ostc-20110728.uddf:
-        1: 2011-06-12 21:45     40.8m     58:50     5.4°C
-        2: 2011-06-19 12:26     58.8m     48:40     6.2°C
-        3: 2011-06-24 13:18     94.1m    107:20     5.1°C
-        4: 2011-06-26 12:56     85.0m    104:42     5.5°C
-        5: 2011-06-29 21:30     42.7m     57:29     6.2°C
-        6: 2011-07-07 21:44     27.5m     60:38     7.0°C
-        7: 2011-07-20 21:50     49.9m     65:42     5.7°C
-        8: 2011-07-28 21:26     60.2m     64:08     5.7°C
+    $ kz dive list logbook.uddf
+    logbook.uddf:
+        1: 2009-10-22 15:32     30.3m     64:16    29.0°C
+        2: 2010-10-29 06:02     29.4m     61:30    26.7°C
 
 Buddies Listing 
 ^^^^^^^^^^^^^^^
@@ -155,7 +149,37 @@ with ``.bak`` extension, i.e. ``logbook.uddf.bak``.
 
 Adding Dives
 ------------
-.. basic data vs. profile data
+Kenozooid supports two modes of adding dives into logbook file
+
+- adding basic dive data (date and time of dive, maximum depth, dive duration)
+- adding dive data from another file (i.e. dive computer backup file)
+
+To add dive with basic data use ``-d`` option::
+
+    [wrobell@liquidcarbon kenozooid]$ ./bin/kz dive add -d '2011-10-12 13:14' 32.5 51 logbook.uddf                              
+    [wrobell@liquidcarbon kenozooid]$ ./bin/kz dive list logbook.uddf
+    logbook.uddf:
+        1: 2009-10-22 15:32     30.3m     64:16    29.0°C
+        2: 2010-10-29 06:02     29.4m     61:30    26.7°C
+        3: 2011-10-12 13:14     32.5m     51:00 
+
+
+To add dive from another file use ``-p`` option. For example, to add 4th
+dive from dive computer backup file to logbook file::
+
+    $ kz dive add -p 4 backup-ostc-20110728.uddf logbook.uddf
+
+    $ kz dive list logbook.uddf
+    logbook.uddf:
+        1: 2009-10-22 15:32     30.3m     64:16    29.0°C
+        2: 2010-10-29 06:02     29.4m     61:30    26.7°C
+        3: 2011-06-26 12:56     85.0m    104:42     5.5°C
+
+Adding dive with dive site and buddy data is supported, too. For example,
+to add a dive with ``Ireland's Eye`` dive site and buddies ``Johnny Neurosis``
+and ``John Koval``::
+
+    $ kz dive add -p 4 backup-ostc-20110728.uddf -s hie -b jn jk -- logbook.uddf
 
 Removing Data
 -------------
