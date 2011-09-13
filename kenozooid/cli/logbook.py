@@ -240,7 +240,7 @@ class ListDiveSites(object):
         """
         import kenozooid.uddf as ku
 
-        fmt = '{0:4}: {1.id:10} {1.location:20} {1.name:12}'
+        fmt = '{0:4}: {1.id:10} {1.location:20} {1.name:20}'
 
         if args.site:
             query = ku.XP_FIND_SITE
@@ -253,7 +253,12 @@ class ListDiveSites(object):
             print('{}:'.format(fin))
             for i, n in enumerate(nodes):
                 n = ku.site_data(n)
-                print(nformat(fmt, i + 1, n))
+
+                coords = ''
+                if n.x is not None:
+                    coords = '  {0.x: #.9},{0.y: #.9}'.format(n)
+
+                print(nformat(fmt, i + 1, n) + coords)
 
 
 
