@@ -178,11 +178,11 @@ UDDF_BUDDY = b"""\
     </personal></buddy>
     <buddy id="b3"><personal>
         <firstname>F3 CC</firstname><lastname>L3 m4</lastname>
-        <membership memberid="m3" organisation="CFT"/>
+        <membership memberid="m3" organisation="PADI"/>
     </personal></buddy>
     <buddy id="b4"><personal>
         <firstname>F4 DD</firstname><lastname>L4 m2</lastname>
-        <membership memberid="m4" organisation="CFT"/>
+        <membership memberid="m4" organisation="PADI"/>
     </personal></buddy>
 </diver>
 </uddf>
@@ -312,10 +312,16 @@ class FindDataTestCase(unittest.TestCase):
         """
         Test buddy XPath query.
         """
+        # by id and name
         self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b1', buddy='b1') # by id
-        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b1', buddy='m1') # by organisation member number
         self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b4', buddy='F4') # by firstname
         self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b3', buddy='L3') # by lastname
+
+        # by organisation
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b1', buddy='CFT')
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b3', buddy='PADI')
+        # by organisation membership number
+        self._qt(UDDF_BUDDY, ku.XP_FIND_BUDDY, 'b1', buddy='m1')
 
 
     def test_site_query(self):

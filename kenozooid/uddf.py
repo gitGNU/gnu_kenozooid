@@ -121,6 +121,7 @@ XP_DEFAULT_SITE_DATA = (XPath('@id'),
 XP_FIND_BUDDY = XPath('/uddf:uddf/uddf:diver/uddf:buddy[' \
     '@id = $buddy' \
     ' or uddf:personal/uddf:membership/@memberid = $buddy' \
+    ' or uddf:personal/uddf:membership/@organisation = $buddy' \
     ' or contains(uddf:personal/uddf:firstname/text(), $buddy)' \
     ' or contains(uddf:personal/uddf:lastname/text(), $buddy)' \
     ']')
@@ -401,7 +402,7 @@ def buddy_data(node, fields=None, queries=None, parsers=None):
     org
         Organization, which a buddy is member of.
     number
-        Member number id in the organization.
+        Member number id in the organisation.
 
     :Parameters:
      node
