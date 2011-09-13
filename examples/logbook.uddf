@@ -66,12 +66,16 @@
       <name>Lough Hyne</name>
       <geography>
         <location>Baltimore</location>
+        <longitude>-9.29718</longitude>
+        <latitude>51.500809</latitude>
       </geography>
     </site>
     <site id="hie">
       <name>Ireland's Eye</name>
       <geography>
         <location>Howth</location>
+        <longitude>53.408317</longitude>
+        <latitude>-6.064169</latitude>
       </geography>
     </site>
   </divesite>
