@@ -22,6 +22,7 @@
       <personal>
         <firstname>Tom</firstname>
         <lastname>Cora</lastname>
+        <membership memberid="1374" organisation="PADI"/>
       </personal>
     </buddy>
     <buddy id="tex">
@@ -34,12 +35,14 @@
       <personal>
         <firstname>Johnny</firstname>
         <lastname>Neurosis</lastname>
+        <membership memberid="1370" organisation="CFT"/>
       </personal>
     </buddy>
     <buddy id="jk">
       <personal>
         <firstname>John</firstname>
         <lastname>Koval</lastname>
+        <membership memberid="13676" organisation="PADI"/>
       </personal>
     </buddy>
   </diver>
