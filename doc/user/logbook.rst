@@ -159,5 +159,31 @@ Adding Dives
 
 Removing Data
 -------------
+To remove a buddy or a dive site use ``buddy del`` or ``site del``
+commands. Identify buddy or dive site to be removed with its id.
+
+For example, to remove ``John Froggy`` buddy::
+
+    $ kz buddy del frog logbook.uddf
+
+    $ kz buddy list logbook.uddf
+    logbook.uddf:
+       1: tcora      Tom        Cora                 PADI  1374       
+       2: tex        Thelma     Ex                    
+       3: jn         Johnny     Neurosis             CFT   1370       
+       4: jk         John       Koval                PADI  13676 
+
+
+To remove ``Bathroom`` dive site::
+
+    $ kz site del bath logbook.uddf
+
+    $ kz site list logbook.uddf
+    logbook.uddf:
+       1: sckg       Scapa Flow           SMS Konig           
+       2: sckn       Scapa Flow           SMS Koln            
+       3: scmk       Scapa Flow           SMS Markgraf        
+       4: bmlh       Baltimore            Lough Hyne            -9.29718000, 51.5008090
+       5: hie        Howth                Ireland's Eye         -6.06416900, 53.4083170
 
 .. vim: sw=4:et:ai
