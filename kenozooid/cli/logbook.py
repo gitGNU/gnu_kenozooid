@@ -161,11 +161,11 @@ class AddDiveSite(object):
         """
         Add options for dive site adding to UDDF file.
         """
-        parser.add_argument('-p', '--position',
+        parser.add_argument('-c', '--coords',
                 nargs=2,
                 metavar=('x', 'y'),
                 type=float,
-                help='longitude and latitude of dive site')
+                help='coordinates (longitude and latitude) of dive site')
         #parser.add_argument('-c', '--country',
         #        nargs=1,
         #        metavar='country',
@@ -195,8 +195,8 @@ class AddDiveSite(object):
         import kenozooid.uddf as ku
 
         id = args.id
-        if args.position:
-            x, y = args.position
+        if args.coords:
+            x, y = args.coords
         else:
             x, y = None, None
         location = args.location[0]
