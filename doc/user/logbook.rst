@@ -122,40 +122,36 @@ Adding Buddies and Dive Sites
 Adding buddies and dive sites to a logbook file is possible with ``buddy add``
 and ``site add`` commands.
 
-To add dive sites to a dive site or a logbook file::
+To add a dive site to a logbook file::
 
-    $ kz site add sckg 'Scapa Flow' 'SMS Konig' sites.uddf
-    $ kz site add sckn 'Scapa Flow' 'SMS Koln' sites.uddf
-    $ kz site add scmk 'Scapa Flow' 'SMS Markgraf' sites.uddf
+    $ kz site add bath Bathroom Bath logbook.uddf
 
-    $ kz site list sites.uddf
-    sites.uddf:
-       1: sckg       Scapa Flow           SMS Konig   
-       2: sckn       Scapa Flow           SMS Koln    
-       3: scmk       Scapa Flow           SMS Markgraf
+    $ kz site list logbook.uddf      
+    examples/logbook.uddf:
+       1: sckg       Scapa Flow           SMS Konig           
+       2: sckn       Scapa Flow           SMS Koln            
+       3: scmk       Scapa Flow           SMS Markgraf        
+       4: bmlh       Baltimore            Lough Hyne            -9.29718000, 51.5008090
+       5: hie        Howth                Ireland's Eye         -6.06416900, 53.4083170
+       6: bath       Bathroom             Bath 
 
-To add buddies to a buddy or a logbook file::
 
-    $ kz buddy add tcora "Tom Cora" buddies.uddf
-    $ kz buddy add tex "Thelma Ex" buddies.uddf 
-    $ kz buddy add jn "Johnny Neurosis" buddies.uddf
-    $ kz buddy add jk "John Koval" buddies.uddf
+To add a buddy to a logbook file::
 
-    $ kz buddy list buddies.uddf                  
-    buddies.uddf:
-       1: tcora      Tom        Cora                  
+    $ kz buddy add frog "John Froggy" logbook.uddf                     
+
+    $ kz buddy list logbook.uddf     
+    logbook.uddf:
+       1: tcora      Tom        Cora                 PADI  1374       
        2: tex        Thelma     Ex                    
-       3: jn         Johnny     Neurosis       
-       4: jk         Johnny     Koval       
+       3: jn         Johnny     Neurosis             CFT   1370       
+       4: jk         John       Koval                PADI  13676      
+       5: frog       John       Froggy 
 
-If output file (``dives.uddf`` and ``buddies.uddf`` above) does not exist, then
-it is created by Kenozooid. Before adding data to a file, Kenozooid creates
-backup file with ``.bak`` extension, i.e. ``dives.uddf.bak``, ``buddies.uddf.bak``.
 
-Of course, one logbook file (i.e. ``logbook.uddf``) can be used to store
-dive sites and buddies information instead of two separate files. However,
-it is easier to share buddies data only with friends and dive site list
-with larger group of unknown people, when separate files are used.
+If logbook file (``logbook.uddf`` above) does not exist, then it is created
+by Kenozooid. Before adding data to a file, Kenozooid creates backup file
+with ``.bak`` extension, i.e. ``logbook.uddf.bak``.
 
 Adding Dives
 ------------
