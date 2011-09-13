@@ -17,7 +17,7 @@ profile per graph.
 
 By default the graphs are very minimal. For example::
 
-   kz plot backup-ostc-20110728.uddf dives.pdf
+   $ kz plot backup-ostc-20110728.uddf dives.pdf
 
 gives one graph per page in PDF file with no additional information like
 dive maximum depth or dive duration.
@@ -26,12 +26,12 @@ To add basic dive information (maximum depth, duration, minimal
 temperature) and a title to a plot use ``--info`` and ``--title`` options,
 i.e.::
 
-   kz plot --info --title backup-ostc-20110728.uddf dives.pdf
+   $ kz plot --info --title backup-ostc-20110728.uddf dives.pdf
 
 The plot can be limited to specific dives, for example to limit plotting to
 dives 2,3, 4, and 5::
 
-   kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
+   $ kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
 
 Multiple input files can be also specified (plot dives 2, 3, 4 and 5 from
 backup-ostc-20110728.uddf and plot dives 6 and 8 from
@@ -61,7 +61,7 @@ example, this functionality can be useful to compare
 Use ``--overlay`` option to plot many dives on one plot (multiple dives
 from multiple files can be specified), for example::
 
-    kz plot --overlay --legend --labels Rebreather 'Open Circuit' -- 15 dumps/ostc-dump-09.uddf 16 dumps/ostc-dump-16.uddf divemode-compare.pdf
+    $ kz plot --overlay --legend --labels Rebreather 'Open Circuit' -- 1,2 logbook.uddf divemode-compare.pdf
 
 Above, Kenozooid is instructed to put a legend on a plot with appropriate
 labels for dive profiles.
