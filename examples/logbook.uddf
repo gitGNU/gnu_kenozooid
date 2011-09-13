@@ -18,6 +18,30 @@
         <lastname>Guest</lastname>
       </personal>
     </owner>
+    <buddy id="tcora">
+      <personal>
+        <firstname>Tom</firstname>
+        <lastname>Cora</lastname>
+      </personal>
+    </buddy>
+    <buddy id="tex">
+      <personal>
+        <firstname>Thelma</firstname>
+        <lastname>Ex</lastname>
+      </personal>
+    </buddy>
+    <buddy id="jn">
+      <personal>
+        <firstname>Johnny</firstname>
+        <lastname>Neurosis</lastname>
+      </personal>
+    </buddy>
+    <buddy id="jk">
+      <personal>
+        <firstname>John</firstname>
+        <lastname>Koval</lastname>
+      </personal>
+    </buddy>
   </diver>
   <divesite>
     <site id="sckg">
