@@ -305,7 +305,7 @@ def dive_data(node, fields=None, queries=None, parsers=None):
     """
 
     if fields is None:
-        fields = ('time', 'depth', 'duration', 'temp')
+        fields = ('datetime', 'depth', 'duration', 'temp')
         queries = XP_DEFAULT_DIVE_DATA
         parsers = (dparse, float, float, float)
 
@@ -319,7 +319,7 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
     By default, dive profile record contains following fields
 
     time
-        dive time is seconds
+        dive time in seconds
     depth
         dive depth in meters
     temp
@@ -360,8 +360,8 @@ def dump_data(node, fields=None, queries=None, parsers=None):
         Dive computer id.
     dc_model
         Dive computer model information.
-    time
-        Time when dive computer dump was obtained.
+    datetime
+        Date and time when dive computer dump was obtained.
     data
         Dive computer dump data.
 
@@ -379,7 +379,7 @@ def dump_data(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('dc_id', 'dc_model', 'time', 'data')
+        fields = ('dc_id', 'dc_model', 'datetime', 'data')
         queries = XP_DEFAULT_DUMP_DATA
         parsers = (str, str, dparse, _dump_decode)
     return find_data('DiveComputerDump', node, fields, queries, parsers)
@@ -600,19 +600,19 @@ UDDF_BASIC = """\
 ###</equipment>
 
 
-def create(time=datetime.now()):
+def create(datetime=datetime.now()):
     """
     Create basic UDDF structure.
 
     :Parameters:
-     time
+     datetime
         Timestamp of file creation, current time by default.
     """
     root = et.XML(UDDF_BASIC)
 
     now = datetime.now()
     n = root.xpath('//uddf:generator/uddf:datetime', namespaces=_NSMAP)[0]
-    n.text = _format_time(time)
+    n.text = _format_time(datetime)
     return root
 
 
@@ -814,7 +814,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
     if queries == None:
         bd = data.get('buddies')
         bno = len(bd) if bd else 0
-        f = ('site', 'buddies', 'time', 'depth', 'duration', 'temp')
+        f = ('site', 'buddies', 'datetime', 'depth', 'duration', 'temp')
         q = ('uddf:informationbeforedive/uddf:link/@ref',
             ['uddf:informationbeforedive/uddf:link/@ref'] * bno,
             'uddf:informationbeforedive/uddf:datetime',
@@ -824,7 +824,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
         queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = {
-            'time': _format_time,
+            'datetime': _format_time,
             'depth': partial(str.format, '{0:.1f}'),
             'duration': partial(str.format, '{0:.0f}'),
             'temp': partial(str.format, '{0:.1f}'),
@@ -852,13 +852,13 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
 
 def create_dump_data(node, queries=None, formatters=None, **data):
     if queries == None:
-        f = ('dc_id', 'time', 'data')
+        f = ('dc_id', 'datetime', 'data')
         q = ('uddf:link/@ref', 'uddf:datetime', 'uddf:dcdump')
         queries = OrderedDict(zip(f, q))
 
     if formatters == None:
         formatters = {
-            'time': _format_time,
+            'datetime': _format_time,
             'data': _dump_encode,
         }
         

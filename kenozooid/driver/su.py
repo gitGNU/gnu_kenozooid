@@ -251,7 +251,7 @@ class SensusUltraMemoryDump(object):
         assert len(dd.raw) == SIZE_MEM_DATA, len(dd.raw)
 
         # boot time = host time - device time (sensus time)
-        btime = time.mktime(dump.time.timetuple()) - hdp.time
+        btime = time.mktime(dump.datetime.timetuple()) - hdp.time
 
         dq = Queue(5)
         parse_dive = partial(self.parse_dive,
@@ -343,7 +343,7 @@ class SensusUltraMemoryDump(object):
             + header.interval
 
         # finally, create dive node
-        dn = ku.create_dive_data(time=st, depth=max_depth,
+        dn = ku.create_dive_data(datetime=st, depth=max_depth,
             duration=duration, temp=min_temp)
 
         # each dive starts below DiveHeader.threshold, therefore

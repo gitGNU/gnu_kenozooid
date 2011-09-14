@@ -56,7 +56,7 @@ class UDDFTestCase(unittest.TestCase):
     """
     def setUp(self):
         super(UDDFTestCase, self).setUp()
-        DCDump = namedtuple('DCDump', 'time data')
+        DCDump = namedtuple('DCDump', 'datetime data')
 
         data = ku._dump_decode(od.DATA_OSTC)
         dump = DCDump(datetime.now(), data)
@@ -66,7 +66,8 @@ class UDDFTestCase(unittest.TestCase):
 
 
     def test_conversion(self):
-        """Test basic OSTC data to UDDF conversion
+        """
+        Test basic OSTC data to UDDF conversion
         """
         # five dives
         self.assertEquals(5, len(self.dives))

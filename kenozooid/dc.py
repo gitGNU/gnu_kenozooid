@@ -89,10 +89,10 @@ def extract_dives(fin, fout):
     dump = ku.dump_data(nodes[0])
 
     log.debug('dive computer dump data found: ' \
-            '{0.dc_id}, {0.dc_model}, {0.time}'.format(dump))
+            '{0.dc_id}, {0.dc_model}, {0.datetime}'.format(dump))
 
     drv = _mem_dump(dump.dc_model)
-    _save_dives(drv, dump.time, dump.data, fout)
+    _save_dives(drv, dump.datetime, dump.data, fout)
 
 
 def _mem_dump(name, port=None):
@@ -142,7 +142,7 @@ def _save_dives(drv, time, data, fout):
     dc_id = dc.get('id')
 
     # store raw data
-    ddn = ku.create_dump_data(dout, dc_id=dc_id, time=time, data=data)
+    ddn = ku.create_dump_data(dout, dc_id=dc_id, datetime=time, data=data)
     dump = ku.dump_data(ddn)
 
     # convert raw data into dive data and store in output file

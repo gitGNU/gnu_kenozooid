@@ -73,7 +73,7 @@ def analyze(script, dives, args):
     profiles = ro.DataFrame({})
 
     for dive, dp in dives:
-        dt = ku._format_time(dive.time)
+        dt = ku._format_time(dive.datetime)
         dive_times.append(dt)
 
         vtime, vdepth, vtemp = zip(*dp)

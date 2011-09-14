@@ -648,7 +648,7 @@ SU_DATA = \
 def _dump():
     Dump = namedtuple('Dump', 'time data')
     data = ku._dump_decode(SU_DATA)
-    return Dump(time=SU_DATA_DOWNLOAD_TIME, data=data)
+    return Dump(datetime=SU_DATA_DOWNLOAD_TIME, data=data)
 
 
 class SensusUltraUDDFTestCase(unittest.TestCase):

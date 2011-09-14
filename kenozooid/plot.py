@@ -178,7 +178,7 @@ grid()
 lines(dive_time, dp$depth, col='blue')
         """)
         if title:
-            st = dive.time.strftime(FMT_DIVETIME)
+            st = dive.datetime.strftime(FMT_DIVETIME)
             R("""title('Dive {0}')""".format(st))
 
         #R('print(p)') # trigger R plotting procedure
@@ -248,7 +248,7 @@ times[[{k}]] = dp$time / 60.0
 depths[[{k}]] = dp$depth
         """.format(k=k + 1))
 
-        lstr.append(dive.time.strftime(FMT_DIVETIME))
+        lstr.append(dive.datetime.strftime(FMT_DIVETIME))
 
     k += 1 # total amount of dives
 

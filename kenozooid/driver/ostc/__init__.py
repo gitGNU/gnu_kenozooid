@@ -194,7 +194,7 @@ class OSTCMemoryDump(object):
             st -= duration
 
             try:
-                dn = ku.create_dive_data(time=st,
+                dn = ku.create_dive_data(datetime=st,
                         depth=header.max_depth / 100.0,
                         duration=duration.seconds,
                         temp=C2K(header.min_temp / 10.0))

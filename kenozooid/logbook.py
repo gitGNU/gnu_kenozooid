@@ -59,7 +59,7 @@ def list_dives(fin):
             temp = ''
             if dive.temp is not None:
                 temp = '{:.1f}\u00b0C'.format(K2C(dive.temp))
-            yield (format(dive.time, FMT_DIVETIME), depth,
+            yield (format(dive.datetime, FMT_DIVETIME), depth,
                     duration, temp)
         except TypeError as ex:
             log.debug(ex)

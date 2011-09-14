@@ -252,7 +252,7 @@ class FindDataTestCase(unittest.TestCase):
         f = BytesIO(UDDF_PROFILE)
         node = next(ku.parse(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
-        self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.time)
+        self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.datetime)
         self.assertEquals(20, dive.duration)
         self.assertEquals(30.2, dive.depth)
         self.assertEquals(251.4, dive.temp)
@@ -349,7 +349,7 @@ class CreateDataTestCase(unittest.TestCase):
         """
         now = datetime.now()
 
-        doc = ku.create(time=now)
+        doc = ku.create(datetime=now)
         self.assertEquals('3.0.0', doc.get('version'))
 
         q = '//uddf:generator/uddf:datetime/text()'
@@ -606,7 +606,7 @@ class CreateDataTestCase(unittest.TestCase):
         Test dive data creation
         """
         f = ku.create()
-        dive = ku.create_dive_data(f, time=datetime(2010, 12, 29, 20, 14),
+        dive = ku.create_dive_data(f, datetime=datetime(2010, 12, 29, 20, 14),
                 depth=32.15, duration=2001.0)
         s = et.tostring(f)
 
@@ -629,7 +629,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('2001', d[0], s)
 
         # create 2nd dive
-        dive = ku.create_dive_data(f, time=datetime(2010, 12, 30, 20, 14),
+        dive = ku.create_dive_data(f, datetime=datetime(2010, 12, 30, 20, 14),
                 depth=32.15, duration=2001.0)
         s = et.tostring(f, pretty_print=True)
         d = list(ku.xp(f, '//uddf:dive'))
@@ -647,7 +647,7 @@ class CreateDataTestCase(unittest.TestCase):
         doc = ku.create()
         ku.create_site_data(doc, id='markgraf', name='SMS Markgraf',
                 location='Scapa Flow')
-        dive = ku.create_dive_data(doc, time=datetime(2010, 12, 29, 20, 14),
+        dive = ku.create_dive_data(doc, datetime=datetime(2010, 12, 29, 20, 14),
                 depth=32.15, duration=2001.0, site='markgraf')
         s = et.tostring(doc, pretty_print=True)
 
@@ -665,7 +665,7 @@ class CreateDataTestCase(unittest.TestCase):
         doc = ku.create()
         ku.create_buddy_data(doc, id='b1', fname='BF1', lname='BL1')
         ku.create_buddy_data(doc, id='b2', fname='BF2', lname='BL2')
-        dive = ku.create_dive_data(doc, time=datetime(2010, 12, 29, 20, 14),
+        dive = ku.create_dive_data(doc, datetime=datetime(2010, 12, 29, 20, 14),
                 depth=32.15, duration=2001.0, buddies=('b1', 'b2'))
         s = et.tostring(doc, pretty_print=True)
 
