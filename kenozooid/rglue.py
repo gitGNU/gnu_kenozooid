@@ -27,6 +27,8 @@ import itertools
 import rpy2.robjects as ro
 R = ro.r
 
+import kenozooid
+
 def _vec(c, na, data):
     """
     Create vector for given type using rpy interface.
@@ -76,7 +78,7 @@ def dive_profiles_df(data):
     vf = (float_vec, ) * 5 + (bool_vec, )
     d = ro.DataFrame({})
     iv_f = lambda i: ro.IntVector([i])
-    return d.rbind(*(df(cols, vf, p, ('no', iv_f(i))) \
+    return d.rbind(*(df(cols, vf, p, ('dive', iv_f(i))) \
         for i, p in enumerate(data, 1)))
 
 
@@ -100,6 +102,7 @@ def inject_dive_data(dives):
 
     ro.globalenv['kz.dives'] = d_df
     ro.globalenv['kz.profiles'] = p_df
+    ro.globalenv['kz.version'] = kenozooid.__version__
     R('kz.dives$datetime = as.POSIXct(kz.dives$datetime)')
 
 

@@ -21,7 +21,19 @@ args.temp = args[4] == 'True'
 args.sig = args[5] == 'True'
 args.fmt = args[6]
 
-cairo_pdf(args.fout, width=10, height=5, onefile=TRUE)
+args.width = 10
+args.height = 5
+
+if (args.fmt == 'pdf') {
+    cair_pdf(args.fout, width=args.width, height=args.height, onefile=TRUE)
+} else if (args.fmt == 'png') {
+    fimg = png
+    args.width = 800
+    args.height = 400
+    png(args.fout, width=args.width, height=args.height)
+} else if (args.fmt == 'svg') {
+    svg(args.fout, width=args.width, height=args.height)
+}
 
 if (!args.title)
     par(mar=c(5, 4, 1, 2) + 0.1)
