@@ -45,21 +45,6 @@ import kenozooid.rglue as kr
 log = logging.getLogger('kenozooid.plot')
 
 
-def get_deco(samples):
-    """
-    Get iterator of lists containing deco waypoints.
-    """
-    deco = []
-    for s1, s2 in zip(samples[:-1], samples[1:]):
-        if has_deco(s1) and not has_deco(s2):
-            yield deco
-            deco = []
-        elif not deco and has_deco(s1):
-            deco.append((float(s1.time) / 60, float(s1.depth)))
-        if has_deco(s2):
-            deco.append((float(s2.time) / 60, float(s2.depth)))
-
-
 def _inject_profile(dp):
     """
     Inject dive profile as data frame into R namespace.
