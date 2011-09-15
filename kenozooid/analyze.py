@@ -68,33 +68,12 @@ def analyze(script, dives, args):
     if f is None:
         raise ValueError('Cannot load script {}'.format(script))
 
-    dive_times = []
-
-    profiles = ro.DataFrame({})
-
-    for dive, dp in dives:
-        dt = ku._format_time(dive.datetime)
-        dive_times.append(dt)
-
-        vtime, vdepth, vtemp = zip(*dp)
-        profiles = profiles.rbind(ro.DataFrame({
-            'dive': ro.StrVector([dt]),
-            'time': kr.float_vec(vtime),
-            'depth': kr.float_vec(vdepth),
-            'temp': kr.float_vec(vtemp),
-        }))
-        
+    kr.inject_dive_data(dives)
 
     if args:
         ro.globalenv['args'] = ro.StrVector(args)
     else:
         R('args = list()')
-    ro.globalenv['dives'] = ro.DataFrame({'time': ro.StrVector(dive_times)})
-    ro.globalenv['profiles'] = profiles
-    R("""
-dives$time = as.POSIXct(dives$time)
-profiles$dive = as.POSIXct(profiles$dive)
-    """)
 
     data = f.read(MAX_SCRIPT_SIZE)
     if f.read(1):

@@ -21,7 +21,7 @@ if (length(args) != 2) {
 
 f = read.csv(args[1])
 tank = as.integer(args[2])
-profile = profiles
+profile = kz.profiles
 
 f$time = f$time * 60
 indices = match(f$time, profile$time)

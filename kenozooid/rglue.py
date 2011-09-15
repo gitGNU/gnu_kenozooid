@@ -17,27 +17,93 @@
 #
 
 """
-Rpy integration functions.
+rpy integration functions.
 """
+
+from functools import partial
+from collections import OrderedDict
+import itertools
 
 import rpy2.robjects as ro
 R = ro.r
 
-def float_vec(data):
+def _vec(c, na, data):
     """
-    Create R float vector using RPy interface.
+    Create vector for given type using rpy interface.
+
+    :Parameters:
+     c
+        Vector class, i.e. BoolVector, FloatVector.
+     na
+        NA value, which should be used for None values.
+     data
+        Iterable, the source of vector data.
     """
-    # unfortunately, rpy does not convert None to NA anymore
-    c = ro.FloatVector([ro.NA_Real if v is None else float(v) for v in data])
-    return c
+    return c([na if v is None else v for v in data])
 
 
-def bool_vec(data):
+def df(cols, vf, data, *mc):
     """
-    Create R bool vector using RPy interface.
+    Create R data frame using rpy interface.
+
+    :Parameters:
+     cols
+        Column names.
+     vf
+        Vector constructor function. 
+     data
+        Iterable of data frame rows (not columns).
     """
-    # unfortunately, rpy does not convert None to NA anymore
-    c = ro.BoolVector([ro.NA_Bool if v is None else bool(v) for v in data])
-    return c
+    d = ((n, f(d)) for n, f, d in zip(cols, vf, zip(*data)))
+    od = OrderedDict(itertools.chain(mc, d))
+    return ro.DataFrame(od)
+
+
+def dives_df(data):
+    """
+    Create R data frame for dives using rpy interface.
+    """
+    cols = 'datetime', 'depth', 'duration', 'temp'
+    vf = ro.StrVector, float_vec, float_vec, float_vec
+    return df(cols, vf, data)
+
+
+def dive_profiles_df(data):
+    """
+    Create R data frame for dive profiles using rpy interface.
+    """
+    cols = 'time', 'depth', 'temp', 'deco_time', 'deco_depth', 'deco_alarm'
+    vf = (float_vec, ) * 5 + (bool_vec, )
+    d = ro.DataFrame({})
+    iv_f = lambda i: ro.IntVector([i])
+    return d.rbind(*(df(cols, vf, p, ('no', iv_f(i))) \
+        for i, p in enumerate(data, 1)))
+
+
+def inject_dive_data(dives):
+    """
+    Inject dive data into R space. Two variables are created
+
+    kz.dives
+        Data frame of dives.
+
+    kz.profiles
+        Data frame of dive profiles
+
+    :Parameters:
+     dives
+        Iterator of dive data: (dive, profile).
+    """
+    d, p = zip(*dives)
+    d_df = dives_df(d)
+    p_df = dive_profiles_df(p)
+
+    ro.globalenv['kz.dives'] = d_df
+    ro.globalenv['kz.profiles'] = p_df
+    R('kz.dives$datetime = as.POSIXct(kz.dives$datetime)')
+
+
+float_vec = partial(_vec, ro.FloatVector, ro.NA_Real)
+bool_vec = partial(_vec, ro.BoolVector, ro.NA_Logical)
 
 # vim: sw=4:et:ai

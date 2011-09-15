@@ -35,8 +35,6 @@ object. The following data are provided by Kenozooid
 
 The data frame containig dive information has the following columns
 
-``no``
-    Total dive number.
 ``datetime``
     Date and time of a dive.
 ``dno``
@@ -51,7 +49,7 @@ The data frame containig dive information has the following columns
 The data frame containig dive profile information has the following columns
 
 ``dive``
-    Total dive number to reference dive data.
+    Dive number to reference dive - row number in ``kz.dives`` data frame.
 ``time``
     Dive time in seconds.
 ``depth``
