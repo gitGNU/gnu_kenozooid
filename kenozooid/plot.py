@@ -38,7 +38,9 @@ import itertools
 import logging
 
 from kenozooid.util import min2str, FMT_DIVETIME
+from kenozooid.units import K2C
 import kenozooid.analyze as ka
+import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.plot')
 
@@ -65,7 +67,30 @@ def plot(fout, dives, title=False, info=False, temp=False, sig=True,
      format
         Format of output file (i.e. pdf, png, svg).
     """
-    args = (fout, title, info, temp, sig, format)
+    dives, dt = itertools.tee(dives, 2)
+
+    # dive title formatter
+    tfmt = lambda d: d.datetime.strftime(FMT_DIVETIME)
+    # dive info formatter
+    _ifmt = 't = {}\n\u21a7 = {:.1f}m\nT = {:.1f}\u00b0C'.format
+    ifmt = lambda d: _ifmt(min2str(d.duration / 60.0), d.depth, K2C(d.temp))
+    cols = []
+    t_cols = []
+    f_cols = []
+    if title:
+        cols.append('title')
+        t_cols.append(ro.StrVector)
+        f_cols.append(tfmt)
+    if info:
+        cols.append('info')
+        t_cols.append(ro.StrVector)
+        f_cols.append(ifmt)
+
+    # format optional dive data (i.e. title, info); dive per row
+    dt = (tuple(map(lambda f: f(d), f_cols)) for d, p in dt)
+    ro.globalenv['kz.dives.ui'] = kr.df(cols, t_cols, dt)
+
+    args = (fout, sig, format)
     ka.analyze('stats/pplot-details.R', dives, args)
 
 
