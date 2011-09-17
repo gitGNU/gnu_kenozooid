@@ -456,7 +456,7 @@ class PlotProfiles(object):
         """
         Add options for plotting profiles of dives command.
         """
-        parser.add_argument('--type',
+        parser.add_argument('--type', '-t',
                 dest='plot_type',
                 default='details',
                 choices=('details', 'cmp'),
