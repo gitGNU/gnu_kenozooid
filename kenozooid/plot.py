@@ -119,77 +119,19 @@ def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
      format
         Format of output file (i.e. pdf, png, svg).
     """
-    R("""
-library(Hmisc)
-library(grid)
-library(colorspace)
-""")
-
-    _plot_start(fout, format)
-
-    if not title:
-        R('par(mar=c(5, 4, 1, 2) + 0.1)')
-
-    R("""
-times = list()
-depths = list()
-    """)
-
-    lstr = []
-    for k, (dive, dp) in enumerate(dives):
-        log.debug('plotting dive profile') 
-        _inject_profile(dp)
-        R("""
-times[[{k}]] = dp$time / 60.0
-depths[[{k}]] = dp$depth
-        """.format(k=k + 1))
-
-        lstr.append(dive.datetime.strftime(FMT_DIVETIME))
-
-    k += 1 # total amount of dives
-
-    log.debug('saving graph') 
-
-    # copy labels provided by user
-    if not labels:
-        labels = []
-    for i, l in enumerate(labels):
-        if l:
-            lstr[i] = l
-    ro.globalenv['labels'] = ro.StrVector(lstr)
-
-    R("""
-cols = diverge_hcl({nd})
-
-r_time = range(sapply(times, range))
-r_depth = range(sapply(depths, range))
-plot(NA, xlim=r_time, ylim=rev(r_depth),
-    xlab='Time [min]', ylab='Depth [m]')
-
-# first the grid
-minor.tick(nx=5, ny=2)
-grid()
-
-# then the profiles
-for (i in 1:{nd}) {{
-    lines(times[[i]], depths[[i]], col=cols[i])
-}}
-""".format(nd=k))
     if legend:
-        R("""
-if ({nd} > 10) {{
-    lscale = 0.7
-}} else {{
-    lscale = 1.0
-}}
-legend('bottomright', labels, col=cols, lwd=1, inset=c(0.02, 0.05),
-    ncol=ceiling({nd} / 10), cex=lscale)
-        """.format(nd=k))
+        dives, dt = itertools.tee(dives, 2)
+        tfmt = lambda d: d.datetime.strftime(FMT_DIVETIME)
+        v = [l if l else tfmt(d.datetime) for (d, _), l in zip(dt, labels)]
+        df = ro.DataFrame({'label': ro.StrVector(v)})
+    else:
+        df = ro.DataFrame({})
 
-    if sig:
-        _plot_sig()
+    ro.globalenv['kz.dives.ui'] = df
 
-    R('dev.off()')
+    args = (fout, sig, format)
+    ka.analyze('stats/pplot-overlay.R', dives, args)
+
 
 
 # vim: sw=4:et:ai
