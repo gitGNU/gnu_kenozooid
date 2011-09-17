@@ -456,11 +456,11 @@ class PlotProfiles(object):
         """
         Add options for plotting profiles of dives command.
         """
-        parser.add_argument('--overlay',
-                action='store_true',
-                dest='plot_overlay',
-                default=False,
-                help='overlay plots in one graph')
+        parser.add_argument('--type',
+                dest='plot_type',
+                default='details',
+                choices=('details', 'cmp'),
+                help='type of plot')
         parser.add_argument('--title',
                 action='store_true',
                 dest='plot_title',
@@ -506,32 +506,26 @@ class PlotProfiles(object):
         Execute dives' profiles plotting command.
         """
         import os.path
-        from kenozooid.plot import plot, plot_overlay
+        import kenozooid.plot as kp
 
         fout = args.output[0]
-        params = {} # additional plotting params
 
         _, ext = os.path.splitext(fout)
         ext = ext.replace('.', '')
         if ext.lower() not in ('pdf', 'png', 'svg'):
-            raise ArgumentError('Unknown format of plotting output file: {0}'.format(ext))
+            raise ArgumentError('Unknown format of plotting output file: {0}' \
+                    .format(ext))
 
         # fetch dives and profiles from files provided on command line
         data = itertools.chain(*_dive_data(args.input))
-        if args.plot_overlay:
-            plotf = plot_overlay
-            if args.plot_labels:
-                params = { 'labels': args.plot_labels }
-        else:
-            plotf = plot
 
-        plotf(fout, data, format=ext,
+        kp.plot(fout, args.plot_type, data, format=ext,
             title=args.plot_title,
             info=args.plot_info,
             temp=args.plot_temp,
             sig=args.plot_sig,
             legend=args.plot_legend,
-            **params)
+            labels=args.plot_labels)
 
 
 

@@ -17,25 +17,22 @@
 #
 
 """
-Functions for plotting dive profile data.
+Routines for dive profile data plotting.
 
-Plotting functions generate graphs with dive time in minutes of x-axis and
-profile data on y-axis (usually depth in meters).
+The R scripts are used for plotting, see stats/pplot-*.R files.
 
-Basic dive information can be shown
-
-- start time of a dive
-- time length of a dive
-- maximum depth
-- minimum temperature during a dive
-
+Before R script execution, the kz.dives.ui data frame is injected into R
+space to have preformatted dive data like dive title, dive legend label or
+dive information ready for a dive graph (and formatted with Python as it is
+more convenient).
 """
+
+import itertools
+from collections import OrderedDict
+import logging
 
 import rpy2.robjects as ro
 R = ro.r
-
-import itertools
-import logging
 
 from kenozooid.util import min2str, FMT_DIVETIME
 from kenozooid.units import K2C
@@ -44,28 +41,22 @@ import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.plot')
 
-def plot(fout, dives, title=False, info=False, temp=False, sig=True,
-        legend=False, format='pdf'):
+def _inject_dives_ui(dives, title, info, temp, sig, legend, labels):
     """
-    Plot graphs of dive profiles.
-    
-    :Parameters:
-     fout
-        Name of output file.
-     dives
-        Dives and their profiles to be plotted.
-     title
-        Set plot title.
-     info
-        Display dive information (time, depth, temperature).
-     temp
-        Plot temperature graph.
-     sig
-        Display Kenozooid signature.
-     legend
-        Display graph legend.
-     format
-        Format of output file (i.e. pdf, png, svg).
+    Inject ``kz.dives.ui`` data frame in R space.
+
+    The data frame can be empty but can have any combination of the
+    following columns
+
+    info
+        Dive information string with dive duration, maximum depth and
+        dive temperature.
+    title
+        Dive title.
+    label
+        Dive label put on legend.
+
+    See ``plot`` for parameters description.
     """
     dives, dt = itertools.tee(dives, 2)
 
@@ -74,6 +65,7 @@ def plot(fout, dives, title=False, info=False, temp=False, sig=True,
     # dive info formatter
     _ifmt = 't = {}\n\u21a7 = {:.1f}m\nT = {:.1f}\u00b0C'.format
     ifmt = lambda d: _ifmt(min2str(d.duration / 60.0), d.depth, K2C(d.temp))
+    # create optional columns like title and info
     cols = []
     t_cols = []
     f_cols = []
@@ -86,22 +78,38 @@ def plot(fout, dives, title=False, info=False, temp=False, sig=True,
         t_cols.append(ro.StrVector)
         f_cols.append(ifmt)
 
-    # format optional dive data (i.e. title, info); dive per row
-    dt = (tuple(map(lambda f: f(d), f_cols)) for d, p in dt)
-    ro.globalenv['kz.dives.ui'] = kr.df(cols, t_cols, dt)
+    # format optional dive data (i.e. title, info) from dive data;
+    # dive per row
+    opt_d = (tuple(map(lambda f: f(d), f_cols)) for d, p in dt)
+    ui_df = kr.df(cols, t_cols, opt_d)
 
-    args = (fout, sig, format)
-    ka.analyze('stats/pplot-details.R', dives, args)
+    # provide optional dive data provided by user
+    udf = OrderedDict()
+    if legend:
+        dives, dt = itertools.tee(dives, 2)
+        v = [l if l else tfmt(d.datetime) for (d, _), l in zip(dt, labels)]
+        udf['label'] = ro.StrVector(v)
+
+    # merge formatted optional dive data and data provided by user
+    if udf:
+        if ui_df.ncol > 0:
+            ui_df.cbind(ro.DataFrame(udf))
+        else:
+            ui_df = ro.DataFrame(udf)
+
+    ro.globalenv['kz.dives.ui'] = ui_df
 
 
-def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
+def plot(fout, ptype, dives, title=False, info=False, temp=False, sig=True,
         legend=False, labels=None, format='pdf'):
     """
-    Plot dive profiles on one graph.
+    Plot graphs of dive profiles.
     
     :Parameters:
      fout
         Name of output file.
+     ptype
+        Plot type converted to R script name ``stats/pplot-*.R``.
      dives
         Dives and their profiles to be plotted.
      title
@@ -115,23 +123,17 @@ def plot_overlay(fout, dives, title=False, info=False, temp=False, sig=True,
      legend
         Display graph legend.
      labels
-        Alternative labels for dives.
+        Alternative legend labels.
      format
         Format of output file (i.e. pdf, png, svg).
     """
-    if legend:
-        dives, dt = itertools.tee(dives, 2)
-        tfmt = lambda d: d.datetime.strftime(FMT_DIVETIME)
-        v = [l if l else tfmt(d.datetime) for (d, _), l in zip(dt, labels)]
-        df = ro.DataFrame({'label': ro.StrVector(v)})
-    else:
-        df = ro.DataFrame({})
+    dives, dt = itertools.tee(dives, 2)
 
-    ro.globalenv['kz.dives.ui'] = df
+    _inject_dives_ui(dt, title=title, info=info, temp=temp, sig=sig,
+            legend=legend, labels=labels)
 
     args = (fout, sig, format)
-    ka.analyze('stats/pplot-overlay.R', dives, args)
-
+    ka.analyze('stats/pplot-{}.R'.format(ptype), dives, args)
 
 
 # vim: sw=4:et:ai
