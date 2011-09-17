@@ -5,6 +5,8 @@ Actors
 ------
 The following Kenozooid actors are identified
     
+analyst
+    Data anylyst running a code (script) to analyze dive data.
 dive computer
     A device storing dive data, i.e. dive computer, dive logger, etc.
     Dive computer is connectable to computer running Kenozooid software.
