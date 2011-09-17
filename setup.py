@@ -176,6 +176,8 @@ setup(
     author_email='wrobell@pld-linux.org',
     url='http://wrobell.it-zone.org/kenozooid',
     packages=find_packages('.'),
+    scripts=('bin/kz',),
+    include_package_data=True,
     long_description=\
 """\
 Kenozooid is dive planning and analysis toolbox.
@@ -199,7 +201,6 @@ Kenozooid is dive planning and analysis toolbox.
         'build_doc': build_doc,
         'deps': CheckDeps,
     },
-    include_package_data=True,
 )
 
 # vim: sw=4:et:ai

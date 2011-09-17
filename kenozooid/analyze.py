@@ -54,7 +54,7 @@ def analyze(script, dives, args):
     f = None
     try:
         log.debug('opening {} script as file'.format(script))
-        f = open(script)
+        f = open(script, encoding='UTF-8')
     except:
         log.debug('opening {} script as file failed'.format(script))
 
@@ -78,7 +78,7 @@ def analyze(script, dives, args):
     data = f.read(MAX_SCRIPT_SIZE)
     if f.read(1):
         raise ValueError('The script {} is too long'.format(script))
-    R(data)
+    R(data.decode())
     f.close()
 
 

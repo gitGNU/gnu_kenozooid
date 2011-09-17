@@ -133,7 +133,7 @@ def plot(fout, ptype, dives, title=False, info=False, temp=False, sig=True,
             legend=legend, labels=labels)
 
     args = (fout, sig, format)
-    ka.analyze('stats/pplot-{}.R'.format(ptype), dives, args)
+    ka.analyze('pplot-{}.R'.format(ptype), dives, args)
 
 
 # vim: sw=4:et:ai
