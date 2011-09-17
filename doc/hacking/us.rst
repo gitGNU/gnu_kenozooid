@@ -146,6 +146,13 @@ Remove Buddy
 ^^^^^^^^^^^^
 The diver removes buddy data from logbook file.
 
+.. _hk-analysis:
+
+Data Analysis
+-------------
+The analyst runs code (script, program) to analyze dive and dive profile
+data.
+
 .. _planning:
 
 Planning
