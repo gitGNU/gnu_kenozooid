@@ -646,7 +646,7 @@ SU_DATA = \
 
 
 def _dump():
-    Dump = namedtuple('Dump', 'time data')
+    Dump = namedtuple('Dump', 'datetime data')
     data = ku._dump_decode(SU_DATA)
     return Dump(datetime=SU_DATA_DOWNLOAD_TIME, data=data)
 
