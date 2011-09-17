@@ -151,7 +151,7 @@ The diver removes buddy data from logbook file.
 Data Analysis
 -------------
 The analyst runs code (script, program) to analyze dive and dive profile
-data.
+data. The code can be parameterised.
 
 .. _planning:
 
