@@ -23,3 +23,5 @@ computers.
 """
 
 __version__ = '0.2.0'
+
+# vim: sw=4:et:ai
