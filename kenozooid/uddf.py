@@ -43,7 +43,7 @@ capabilities of underlying `libxml2' library is used by design. The
 ElementTree XML data model is used for XML nodes.
 """
 
-from collections import namedtuple, OrderedDict
+from collections import namedtuple, OrderedDict, Counter
 from lxml import etree as et
 from functools import partial
 from datetime import datetime
@@ -303,7 +303,6 @@ def dive_data(node, fields=None, queries=None, parsers=None):
     .. seealso::
         find_data
     """
-
     if fields is None:
         fields = ('datetime', 'depth', 'duration', 'temp')
         queries = XP_DEFAULT_DIVE_DATA
@@ -505,7 +504,7 @@ def node_range(s):
     return ' or '.join(data)
 
 
-def _field(node, query, parser=float):
+def _field(node, query, parser):
     """
     Find text value of a node starting from specified XML node.
 
