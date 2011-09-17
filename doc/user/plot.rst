@@ -56,12 +56,10 @@ example, this functionality can be useful to compare
   water
 - profiles of dive buddies
 
-.. todo: move the profiles to logbook file and use logbook file name below
-
-Use ``--overlay`` option to plot many dives on one plot (multiple dives
+Use ``-t cmp`` option to plot many dives on one plot (multiple dives
 from multiple files can be specified), for example::
 
-    $ kz plot --overlay --legend --labels Rebreather 'Open Circuit' -- 1,2 logbook.uddf divemode-compare.pdf
+    $ kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -- 1,2 logbook.uddf divemode-compare.pdf
 
 Above, Kenozooid is instructed to put a legend on a plot with appropriate
 labels for dive profiles.
