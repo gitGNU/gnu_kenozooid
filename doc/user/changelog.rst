@@ -8,6 +8,7 @@ kenozooid 0.2.0
   now
 - kenozooid build improvements to distribute kenozooid code and data files
   properly
+- plot command changed to accept plot type argument
 
 kenozooid 0.1.0
 ---------------
