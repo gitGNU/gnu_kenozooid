@@ -18,6 +18,7 @@ User Manual
    calc    
    ri
    links
+   changelog
 
 * :ref:`genindex`
 * :ref:`search`
