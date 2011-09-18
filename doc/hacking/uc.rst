@@ -13,8 +13,8 @@ dive computer
 diver
     A diving person, who is interested in dive planning, logging and
     analysis.
-statistical software
-    Software to perform statistical analysis.
+analytics software
+    Software to perform dive data analysis.
 
 Subsystems
 ----------
@@ -32,7 +32,7 @@ planning
     Dive planning related activities. Includes calculators (i.e. EAD, MOD)
     and dive simulation (i.e. with dive computer).
 UI
-    Command line user interface allowing diver to access Kenozooid
+    Command line user interface allowing actors to access Kenozooid
     functionality.
 
 Use Cases
@@ -168,5 +168,41 @@ Convert Raw Dive Computer Data
 |                   |              |                               |                     |
 |                   |              | Save new backup file.         |                     |
 +-------------------+--------------+-------------------------------+---------------------+
+
+.. _hk-uc-analysis:
+
+Analyze Data
+------------
+**User Story**: :ref:`hk-us-analysis`
+
+**Pre**: files with dive data exist and dives to analyze exist
+
+**Input**: script, script arguments, names of files with dive data, dives
+to analyze
+
+Kenzooid integrates with R statistical package (analytics software) for
+dive data analysis, therefore a "script" is R script.
+
+A script can be provided by Kenozooid team and distributed with Kenozooid
+or written by an analyst or other 3rd party. Locating is finding script
+within Kenozooid directory structure (created due to installation) or
+loading it using path specified by analyst.
+
+It is up to the R script to present results of data analysis.
+
++-------------------+--------------+-------------------------------+----------------------+
+| Analyst           | UI           | Analytics                     | Analytics software   |
++===================+==============+===============================+======================+
+| Start data        | Verify input | Locate script.                | Execute R script.    |
+| analysis.         | parameters.  |                               |                      |
+|                   |              | Load dive data into R space.  |                      |
+|                   |              |                               |                      |
+|                   |              | Load script into R space.     |                      |
+|                   |              |                               |                      |
+|                   |              | Pass script arguments to      |                      |
+|                   |              | R script.                     |                      |
+|                   |              |                               |                      |
+|                   |              | Start R script execution.     |                      |
++-------------------+--------------+-------------------------------+----------------------+
 
 .. vim: sw=4:et:ai
