@@ -9,7 +9,7 @@ and allows to execute R scripts to perform data analysis and plotting.
 Several data anlysis scripts are provided by Kenozooid (see
 :ref:`user-analysis-scripts`). For example, to calculate RMV::
 
-    $ kz analyze -a examples/rmv.csv -a 15 rmv.R 19 dumps/ostc-dump-18.uddf
+    $ kz analyze rmv.R -a examples/rmv.csv -- 19 dumps/ostc-dump-18.uddf
       time    depth      rmv
     1  240 5.484000 48.43710
     2  540 6.596774 36.15160

@@ -25,6 +25,7 @@ import sys
 from kenozooid.cli import ArgumentError, add_commands
 from kenozooid.component import query, params, inject
 import kenozooid.cli.calc
+import kenozooid.cli.da
 import kenozooid.cli.dc
 import kenozooid.cli.logbook
 
