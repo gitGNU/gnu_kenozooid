@@ -37,8 +37,6 @@ The data frame containig dive information has the following columns
 
 ``datetime``
     Date and time of a dive.
-``dno``
-    Number of the dive during a day.
 ``depth``
     Maximum depth of dive in meters.
 ``duration``
