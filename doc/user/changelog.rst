@@ -15,8 +15,8 @@ Kenozooid 0.1.0
 
 - initial release with support of
 
-  - OSTC dive computer and Sensus Ultra dive data logger support (basic
-    data import, dive backup, dive simulation)
+  - OSTC dive computer and Sensus Ultra dive data logger (basic data
+    import, dive backup, dive simulation)
   - dive profile plotting (profile details and profile comparison)
   - dive calculators (ead, mod, ppO2, ppN2, rmv)
   - basic logbook management support
