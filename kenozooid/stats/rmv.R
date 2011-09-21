@@ -33,8 +33,12 @@ avg_depth = apply(indices, 1, function(p) { mean(profile$depth[p[1]:p[2]]) })
 data = merge(f, profile)
 n = nrow(data)
 
-time = data$time[2:length(data$time)]
+time = data$time[2:length(data$time)] / 60.0
 rmv = diff(-data$pressure) * tank / diff(data$time / 60.0) / (avg_depth / 10.0 + 1)
-rmv = data.frame(time=time, depth=avg_depth, rmv=rmv)
+avg_rmv = cumsum(rmv) / 1:length(rmv)
+rmv = data.frame(time=time, depth=round(avg_depth, 1), rmv=round(rmv),
+    avg_rmv=round(avg_rmv))
 
 print(rmv)
+
+# vim: sw=4:et:ai
