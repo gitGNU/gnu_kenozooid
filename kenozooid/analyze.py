@@ -24,6 +24,7 @@ Dive analytics via R statistical package.
 import rpy2.robjects as ro
 import logging
 import pkg_resources
+import os.path
 
 import kenozooid.uddf as ku
 import kenozooid.rglue as kr
@@ -51,22 +52,13 @@ def analyze(script, dives, args):
      args
         R script arguments.
     """
-    f = None
-    try:
+    if os.path.exists(script):
         log.debug('opening {} script as file'.format(script))
-        f = open(script, encoding='UTF-8')
-    except:
-        log.debug('opening {} script as file failed'.format(script))
-
-    if f is None:
+        f = open(script, 'rb')
+    else:
         log.debug('opening {} script as resource'.format(script))
-        try:
-            f = pkg_resources.resource_stream('kenozooid',
-                    'stats/{}'.format(script))
-        except IOError:
-            log.debug('opening {} script as resource failed'.format(script))
-    if f is None:
-        raise ValueError('Cannot load script {}'.format(script))
+        f = pkg_resources.resource_stream('kenozooid',
+                'stats/{}'.format(script))
 
     kr.inject_dive_data(dives)
 
