@@ -1,7 +1,7 @@
 Changelog
 =========
 
-kenozooid 0.2.0
+Kenozooid 0.2.0
 ---------------
 
 - data analysis using R scripts described in user manual and supported since
@@ -10,7 +10,7 @@ kenozooid 0.2.0
   properly
 - plot command changed to accept plot type argument
 
-kenozooid 0.1.0
+Kenozooid 0.1.0
 ---------------
 
 - initial release with support of
