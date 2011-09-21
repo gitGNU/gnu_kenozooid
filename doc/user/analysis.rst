@@ -59,6 +59,33 @@ Then execute ``rmv.R`` script for 15l tank::
 
 Custom Data Analysis Scripts
 ----------------------------
+Custom data analysis scripts consist of three steps
+
+- parse script arguments (optional)
+- perform data analysis
+- create analysis output
+
+Kenozooid will deliver all dive data and script arguments to a script. The
+data structures created by Kenozooid for a script are described in
+:ref:`user-analysis-data`.
+
+A script is responsible to deliver data analysis output, i.e. it should
+print results on screen or create PDF files.
+
+For example, create ``dhours.R`` script to summarize total amount of diving
+hours::
+
+    secs = sum(kz.dives$duration)
+    print(sprintf('Total dive hours %.1f', secs / 3600))
+
+Execute it with Kenozooid::
+
+    $ kz analyze dhours.R examples/logbook.uddf
+
+    [1] "Total dive hours 2.1"
+
+.. _user-analysis-data:
+
 Data Structures
 ^^^^^^^^^^^^^^^
 The data available for analysis on R level can be accessed with ``kz``
