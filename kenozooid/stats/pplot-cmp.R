@@ -1,17 +1,13 @@
 #
-# plot dive profiles
+# compare dive profiles on one plot
 #
-
-# arguments
-# - CSV file with time [min] and pressure [bar]
-# - tank size
 
 library(Hmisc)
 library(grid)
 library(colorspace)
 
 if (length(kz.args) != 3) {
-    stop('Arguments required: ...')
+    stop('Arguments required: output file, signature flag, output file format')
 }
 
 kz.args.fout = kz.args[1]

@@ -1,15 +1,7 @@
+#
 # read tank pressure data from CSV file (time, pressure)
 # and calculate RMV during dive
 #
-# sample run as
-#     $ kz analyze rmv.R -a stats/rmv.csv 15 -- 19 dumps/ostc-dump-18.uddf
-#       time    depth      rmv
-#     1  240 5.484000 48.43710
-#     2  540 6.596774 36.15160
-#     3 1020 6.534694 22.67959
-#     4 1440 6.632558 12.88351
-#
-
 
 # arguments
 # - CSV file with time [min] and pressure [bar]
