@@ -9,17 +9,53 @@ and allows to execute R scripts to perform data analysis and plotting.
 Several data anlysis scripts are provided by Kenozooid (see
 :ref:`user-analysis-scripts`). For example, to calculate RMV::
 
-    $ kz analyze rmv.R -a examples/rmv.csv -- 19 dumps/ostc-dump-18.uddf
-      time    depth      rmv
-    1  240 5.484000 48.43710
-    2  540 6.596774 36.15160
-    3 1020 6.534694 22.67959
-    4 1440 6.632558 12.88351
+    $ kz analyze rmv.R -a examples/rmv.csv 15 -- 19 dumps/ostc-dump-18.uddf
+
+      time depth rmv avg_rmv
+    1    4   5.5  48      48
+    2    9   6.6  36      42
+    3   17   6.5  23      36
+    4   24   6.6  13      30
 
 .. _user-analysis-scripts:
 
 Data Analysis Scripts
 ---------------------
+The list of data analysis scripts provided by Kenozooid is as follows
+
+rmv.R
+    calculate respiratory minute volume (RMV)
+
+Respiratory Minute Volume (RMV)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use ``rmv.R`` script to calculate respiratory minute volume (RMV).
+
+The script accepts two parameters
+
+csv file
+    CSV file with two columns - ``time and ``pressure``. Time is dive run
+    time in minutes and pressure is tank pressure in bars.
+tank
+    Size of tank in liters.
+
+For example, create ``dive-19-rmv.csv`` file::
+
+    time,pressure
+    0,210
+    4,190
+    9,170
+    17,150
+    24,140
+
+Then execute ``rmv.R`` script for 15l tank::
+
+    $ kz analyze rmv.R -a dive-19-rmv.csv 15 -- 19 dumps/ostc-dump-18.uddf
+
+      time depth rmv avg_rmv
+    1    4   5.5  48      48
+    2    9   6.6  36      42
+    3   17   6.5  23      36
+    4   24   6.6  13      30
 
 Custom Data Analysis Scripts
 ----------------------------
