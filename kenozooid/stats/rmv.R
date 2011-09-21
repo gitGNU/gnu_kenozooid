@@ -2,7 +2,7 @@
 # and calculate RMV during dive
 #
 # sample run as
-#     $ kz analyze -a stats/rmv.csv -a 15 stats/rmv.R 19 dumps/ostc-dump-18.uddf
+#     $ kz analyze rmv.R -a stats/rmv.csv 15 -- 19 dumps/ostc-dump-18.uddf
 #       time    depth      rmv
 #     1  240 5.484000 48.43710
 #     2  540 6.596774 36.15160
@@ -15,12 +15,12 @@
 # - CSV file with time [min] and pressure [bar]
 # - tank size
 
-if (length(args) != 2) {
+if (length(kz.args) != 2) {
     stop('Arguments required: CSV file, tank size')
 }
 
-f = read.csv(args[1])
-tank = as.integer(args[2])
+f = read.csv(kz.args[1])
+tank = as.integer(kz.args[2])
 profile = kz.profiles
 
 f$time = f$time * 60

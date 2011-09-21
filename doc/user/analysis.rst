@@ -28,6 +28,9 @@ Data Structures
 The data available for analysis on R level can be accessed with ``kz``
 object. The following data are provided by Kenozooid
 
+``kz.args``
+    List of script arguments passed from Kenozooid command line user
+    interface.
 ``kz.dives``
     Data frame containing dive data.
 ``kz.profiles``

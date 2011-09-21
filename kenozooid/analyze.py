@@ -71,9 +71,9 @@ def analyze(script, dives, args):
     kr.inject_dive_data(dives)
 
     if args:
-        ro.globalenv['args'] = ro.StrVector(args)
+        ro.globalenv['kz.args'] = ro.StrVector(args)
     else:
-        R('args = list()')
+        R('kz.args = list()')
 
     data = f.read(MAX_SCRIPT_SIZE)
     if f.read(1):

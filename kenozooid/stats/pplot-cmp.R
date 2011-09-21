@@ -10,26 +10,26 @@ library(Hmisc)
 library(grid)
 library(colorspace)
 
-if (length(args) != 3) {
+if (length(kz.args) != 3) {
     stop('Arguments required: ...')
 }
 
-args.fout = args[1]
-args.sig = args[2] == 'True'
-args.fmt = args[3]
+kz.args.fout = kz.args[1]
+kz.args.sig = kz.args[2] == 'True'
+kz.args.fmt = kz.args[3]
 
-args.width = 10
-args.height = 5
+kz.args.width = 10
+kz.args.height = 5
 
-if (args.fmt == 'pdf') {
-    cairo_pdf(args.fout, width=args.width, height=args.height, onefile=TRUE)
-} else if (args.fmt == 'png') {
+if (kz.args.fmt == 'pdf') {
+    cairo_pdf(kz.args.fout, width=kz.args.width, height=kz.args.height, onefile=TRUE)
+} else if (kz.args.fmt == 'png') {
     fimg = png
-    args.width = 800
-    args.height = 400
-    png(args.fout, width=args.width, height=args.height)
-} else if (args.fmt == 'svg') {
-    svg(args.fout, width=args.width, height=args.height)
+    kz.args.width = 800
+    kz.args.height = 400
+    png(kz.args.fout, width=kz.args.width, height=kz.args.height)
+} else if (kz.args.fmt == 'svg') {
+    svg(kz.args.fout, width=kz.args.width, height=kz.args.height)
 }
 
 if (is.null(kz.dives.ui$title))
