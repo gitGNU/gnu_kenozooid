@@ -4,7 +4,7 @@ Changelog
 kenozooid 0.2.0
 ---------------
 
-- data analysis with R scripts described in user manual and supported since
+- data analysis using R scripts described in user manual and supported since
   now
 - kenozooid build improvements to distribute kenozooid code and data files
   properly
