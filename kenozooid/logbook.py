@@ -155,7 +155,7 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
     elif (time, depth, duration) is not (None, None, None):
         log.debug('creating dive data')
         duration = int(duration * 60)
-        ku.create_dive_data(doc, time=time, depth=depth,
+        ku.create_dive_data(doc, datetime=time, depth=depth,
                 duration=duration, site=site_id, buddies=buddy_ids)
     else:
         raise ValueError('Dive data or dive profile needs to be provided')
