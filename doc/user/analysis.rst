@@ -38,6 +38,17 @@ csv file
 tank
     Size of tank in liters.
 
+The output of the script is a table with columns
+
+time
+    Dive run time in minutes.
+depth
+    Dive depth.
+rmv
+    RMV at given dive time and depth.
+avg_rvm
+    Average RMV at given dive time and depth.
+
 For example, create ``dive-19-rmv.csv`` file::
 
     time,pressure
