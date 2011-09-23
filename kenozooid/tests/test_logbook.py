@@ -29,7 +29,7 @@ import unittest
 import kenozooid.logbook as kl
 import kenozooid.uddf as ku
 
-class DiveAddingTestCase(unittest.TestCase):
+class DiveAddingIntegrationTestCase(unittest.TestCase):
     """
     Dive adding tests.
     """
@@ -78,7 +78,54 @@ class DiveAddingTestCase(unittest.TestCase):
         """
         Test adding dive with time, depth, duration and dive site
         """
-        assert False
+        f = '{}/dive_add_site.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_site_data(doc, id='s1', location='L1', name='N1')
+        ku.save(doc, f)
+
+        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59, qsite='s1')
+
+        nodes = ku.parse(f, '//uddf:dive')
+        dn = next(nodes)
+        self.assertTrue('s1', ku.xp_first(dn, './/uddf:link/@ref'))
+
+
+    def test_dive_add_with_buddy(self):
+        """
+        Test adding dive with time, depth, duration and buddy
+        """
+        f = '{}/dive_add_buddy.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_buddy_data(doc, id='b1', fname='F', lname='N');
+        ku.save(doc, f)
+
+        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59,
+                qbuddies=['b1'])
+
+        nodes = ku.parse(f, '//uddf:dive')
+        dn = next(nodes)
+        self.assertTrue('b1', ku.xp_first(dn, './/uddf:link/@ref'))
+
+
+    def test_dive_add_with_buddies(self):
+        """
+        Test adding dive with time, depth, duration and two buddies
+        """
+        f = '{}/dive_add_buddy.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_buddy_data(doc, id='b1', fname='F', lname='N');
+        ku.create_buddy_data(doc, id='b2', fname='F', lname='N');
+        ku.save(doc, f)
+
+        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59,
+                qbuddies=['b1'])
+
+        nodes = ku.parse(f, '//uddf:dive')
+        dn = next(nodes)
+        self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
 
 
     def test_dive_with_profile_with_site(self):

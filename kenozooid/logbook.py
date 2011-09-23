@@ -65,7 +65,7 @@ def list_dives(fin):
             log.warn('invalid dive data, skipping dive')
 
 
-def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
+def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
         pfile=None, qsite=None, qbuddies=()):
     """
     Add new dive to logbook file.
@@ -78,8 +78,8 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
     :Parameters:
      lfile
         Logbook file.
-     time
-        Dive time.
+     datetime
+        Dive date and time.
      depth
         Dive maximum depth.
      duration
@@ -152,10 +152,10 @@ def add_dive(lfile, time=None, depth=None, duration=None, dive_no=None,
         l, *_ = ku.create_node('uddf:link', parent=n, append=False)
         l.set('ref', site_id)
 
-    elif (time, depth, duration) is not (None, None, None):
+    elif (datetime, depth, duration) is not (None, None, None):
         log.debug('creating dive data')
         duration = int(duration * 60)
-        ku.create_dive_data(doc, datetime=time, depth=depth,
+        ku.create_dive_data(doc, datetime=datetime, depth=depth,
                 duration=duration, site=site_id, buddies=buddy_ids)
     else:
         raise ValueError('Dive data or dive profile needs to be provided')
