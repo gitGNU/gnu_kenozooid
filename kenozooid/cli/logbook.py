@@ -102,9 +102,9 @@ class AddDive(object):
         g = parser.add_mutually_exclusive_group(required=True)
         g.add_argument('-d', '--with-depth',
                 nargs=3,
-                metavar=('time', 'depth', 'duration'),
-                help='add dive with dive time, maximum depth and dive'
-                    ' duration data')
+                metavar=('datetime', 'depth', 'duration'),
+                help='add dive with dive date and optional time'
+                    ', maximum depth and dive duration data')
         g.add_argument('-p', '--with-profile',
                 nargs=2,
                 metavar=('dive', 'pfile'),
@@ -116,7 +116,7 @@ class AddDive(object):
                 nargs='+',
                 metavar='buddy',
                 help='dive buddies')
-        parser.add_argument('logbook', nargs=1, help='UDDF output file')
+        parser.add_argument('logbook', nargs=1, help='logbook file')
 
 
     def __call__(self, args):
@@ -126,18 +126,18 @@ class AddDive(object):
         import kenozooid.logbook as kl
         from dateutil.parser import parse as dparse
 
-        time, depth, duration = None, None, None
+        datetime, depth, duration = None, None, None
         dive_no, pfile = None, None
 
         lfile = args.logbook[0]
 
         if args.with_depth:
             try:
-                time = dparse(args.with_depth[0])
+                datetime = dparse(args.with_depth[0])
                 depth = float(args.with_depth[1])
                 duration = float(args.with_depth[2])
             except ValueError:
-                raise ArgumentError('Invalid time, depth or duration parameter')
+                raise ArgumentError('Invalid date, depth or duration parameter')
         else:
             dive_no, pfile = args.with_profile
             dive_no = int(dive_no)
@@ -145,7 +145,7 @@ class AddDive(object):
         site = args.site
         buddy = args.buddy
 
-        kl.add_dive(lfile, time, depth, duration, dive_no, pfile, site, buddy)
+        kl.add_dive(lfile, datetime, depth, duration, dive_no, pfile, site, buddy)
 
 
 
