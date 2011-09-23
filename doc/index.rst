@@ -4,7 +4,7 @@ Kenozooid Documentation
 
 :ref:`part-user` contains Kenozooid tutorial, tour of the supported
 functions and their detailed description including data workflows and
-statistical analysis examples.
+dive data analysis examples.
 
 Software developers interested in Kenozooid library shall study
 :ref:`part-lib` and `API Documentation`_.
