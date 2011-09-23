@@ -9,7 +9,7 @@ Library (free software) supporting access to data of various dive computers
 Dive logbook management software
 
 - http://www.jdivelog.org/
-- https://github.com/torvalds/diveclog
+- https://github.com/torvalds/subsurface
 - http://www.divinglog.de/
 - http://gdivelog.sourceforge.net/ (seems to be dead but still looks nice)
 - http://www.aquadivelog.org/
