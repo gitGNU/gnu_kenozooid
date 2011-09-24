@@ -6,6 +6,10 @@ Kenozooid Documentation
 functions and their detailed description including data workflows and
 dive data analysis examples.
 
+.. image:: kenozooid-logo.svg
+    :width: 200px
+    :align: right
+
 Software developers interested in Kenozooid library shall study
 :ref:`part-lib` and `API Documentation`_.
 
