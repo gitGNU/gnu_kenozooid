@@ -156,8 +156,8 @@ Kenozooid supports two modes of adding dives into logbook file
 
 To add dive with basic data use ``-d`` option::
 
-    [wrobell@liquidcarbon kenozooid]$ ./bin/kz dive add -d '2011-10-12 13:14' 32.5 51 logbook.uddf                              
-    [wrobell@liquidcarbon kenozooid]$ ./bin/kz dive list logbook.uddf
+    kz dive add -d '2011-10-12 13:14' 32.5 51 logbook.uddf                              
+    kz dive list logbook.uddf
     logbook.uddf:
         1: 2009-10-22 15:32     30.3m     64:16    29.0°C
         2: 2010-10-29 06:02     29.4m     61:30    26.7°C
