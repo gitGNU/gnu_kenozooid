@@ -59,9 +59,9 @@ UDDF_PROFILE = b"""\
   </diver>
   <profiledata>
     <repetitiongroup>
-      <dive>
+      <dive id='d01'>
         <informationbeforedive>
-            <datetime>2009-09-19 13:10:23</datetime>
+            <datetime>2009-09-19T13:10:23</datetime>
         </informationbeforedive>
         <informationafterdive>
             <diveduration>20</diveduration>
@@ -85,9 +85,9 @@ UDDF_PROFILE = b"""\
           </waypoint>
         </samples>
       </dive>
-      <dive>
+      <dive id='d02'>
         <informationbeforedive>
-            <datetime>2010-10-30 13:24:43</datetime>
+            <datetime>2010-10-30T13:24:43</datetime>
         </informationbeforedive>
         <informationafterdive>
             <diveduration>30</diveduration>

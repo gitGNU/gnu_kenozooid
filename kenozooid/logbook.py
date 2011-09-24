@@ -65,6 +65,9 @@ def list_dives(fin):
             log.warn('invalid dive data, skipping dive')
 
 
+# split into add_dive and copy_dive
+# extract buddies adding and setting dive site functionality into separate
+# functions
 def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
         pfile=None, qsite=None, qbuddies=()):
     """
@@ -149,8 +152,9 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
             l.set('ref', b_id)
 
         # set reference to dive site (as first link)
-        l, *_ = ku.create_node('uddf:link', parent=n, append=False)
-        l.set('ref', site_id)
+        if site_id:
+            l, *_ = ku.create_node('uddf:link', parent=n, append=False)
+            l.set('ref', site_id)
 
     elif (datetime, depth, duration) is not (None, None, None):
         log.debug('creating dive data')

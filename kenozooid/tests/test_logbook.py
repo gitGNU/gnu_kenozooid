@@ -31,7 +31,7 @@ import kenozooid.uddf as ku
 
 class DiveAddingIntegrationTestCase(unittest.TestCase):
     """
-    Dive adding tests.
+    Dive adding integration tests.
     """
     def setUp(self):
         """
@@ -56,7 +56,6 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         nodes = ku.parse(f, '//uddf:dive')
 
         dn = next(nodes)
-
         self.assertTrue(next(nodes, None) is None)
 
         self.assertEquals('2010-01-02T05:07:00',
@@ -65,13 +64,6 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
             ku.xp_first(dn, './/uddf:greatestdepth/text()'))
         self.assertEquals('3540',
             ku.xp_first(dn, './/uddf:diveduration/text()'))
-
-
-    def test_dive_with_profile(self):
-        """
-        Test adding dive with dive profile.
-        """
-        assert False
 
 
     def test_dive_add_with_site(self):
@@ -128,11 +120,100 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
 
 
+    def test_dive_with_profile(self):
+        """
+        Test adding dive with dive profile.
+        """
+        import kenozooid.tests.test_uddf as ktu
+        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
+        f = open(pf, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        f = '{}/dive_add.uddf'.format(self.tdir)
+        kl.add_dive(f, dive_no=1, pfile=pf)
+        nodes = ku.parse(f, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertTrue(next(nodes, None) is None)
+
+        self.assertEquals('2009-09-19T13:10:23',
+            ku.xp_first(dn, './/uddf:datetime/text()'))
+        self.assertEquals('30.2',
+            ku.xp_first(dn, './/uddf:greatestdepth/text()'))
+        self.assertEquals('20',
+            ku.xp_first(dn, './/uddf:diveduration/text()'))
+
+
     def test_dive_with_profile_with_site(self):
         """
         Test adding dive with dive profile and dive site
         """
-        assert False
+        import kenozooid.tests.test_uddf as ktu
+        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
+        f = open(pf, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        f = '{}/dive_add.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_site_data(doc, id='s1', location='L1', name='N1')
+        ku.save(doc, f)
+
+        kl.add_dive(f, dive_no=1, pfile=pf)
+        nodes = ku.parse(f, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertTrue('s1', ku.xp_first(dn, './/uddf:link/@ref'))
+
+
+    def test_dive_with_profile_with_buddy(self):
+        """
+        Test adding dive with dive profile and a buddy
+        """
+        import kenozooid.tests.test_uddf as ktu
+        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
+        f = open(pf, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        f = '{}/dive_add.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_buddy_data(doc, id='b1', fname='F', lname='N');
+        ku.save(doc, f)
+
+        kl.add_dive(f, dive_no=1, pfile=pf)
+        nodes = ku.parse(f, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertTrue('b1', ku.xp_first(dn, './/uddf:link/@ref'))
+
+
+    def test_dive_with_profile_with_buddies(self):
+        """
+        Test adding dive with dive profile and dive buddies
+        """
+        import kenozooid.tests.test_uddf as ktu
+        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
+        f = open(pf, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        f = '{}/dive_add.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_buddy_data(doc, id='b1', fname='F1', lname='N1');
+        ku.create_buddy_data(doc, id='b2', fname='F2', lname='N2');
+        ku.save(doc, f)
+
+        kl.add_dive(f, dive_no=1, pfile=pf)
+        nodes = ku.parse(f, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
+
 
 
 # vim: sw=4:et:ai
