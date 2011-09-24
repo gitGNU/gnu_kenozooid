@@ -1,9 +1,9 @@
 Introduction
 ============
 Kenozooid is software used to plan and analyse diving activities. Features
-like dive data analysis, dive profile plotting, dive computer support
-along with simple but powerful logbook maintenance and dive calculators are
-already implemented with further functions such as dive planning to come.
+like dive data plotting and analysis, dive computer support along with
+simple but powerful logbook maintenance and dive calculators are already
+implemented with further functions such as dive planning to come.
 
 Kenozooid is free software licensed under terms of
 `GPL <http://www.fsf.org/licensing/licenses/gpl.html>`_ license.
@@ -13,7 +13,7 @@ Features
 Kenozooid is under heavy development, but following features are already
 implemented
 
-- high quality dive profile plotting using `R <http://www.r-project.org/>`_
+- high quality dive data plotting using `R <http://www.r-project.org/>`_
   statistical software
 
     - one plot per page
@@ -33,7 +33,7 @@ implemented
 
 - dive computers support
 
-    - dive profile data fetching
+    - dive data fetching
     - execution of dive simulation using dive computers providing such
       capabilities
     - backup of dive computer data

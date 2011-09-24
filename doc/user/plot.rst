@@ -1,7 +1,7 @@
 .. _user-plot:
 
-Plotting Dive Profiles
-======================
+Dive Data Plotting
+==================
 Plotting of dive profiles can be performed with Kenozooid's ``plot`` command.
 
 Two plotting modes are supported at the moment - standard and overlay.
