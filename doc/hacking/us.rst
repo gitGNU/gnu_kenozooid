@@ -78,13 +78,13 @@ Optionally, diver can specify
 
 .. _adddivep:
 
-Add Dive With Profile
-^^^^^^^^^^^^^^^^^^^^^
-The diver adds a dive with profile data to dive logbook.
+Copy Dive Data
+^^^^^^^^^^^^^^
+The diver adds a dive by copying dive computer data to dive logbook.
 
-Some of the dive data is extracted from profile data (i.e. dive duration)
-and some is provided by diver (i.e. buddy). See adddive_ for list of dive
-data.
+Some of the dive data is extracted from dive compter data (i.e. dive
+duration, maximum depth, temperature, profile data) and some is provided by
+diver (i.e. buddy). See adddive_ for list of dive data.
 
 List Dives
 ^^^^^^^^^^
