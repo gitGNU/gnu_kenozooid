@@ -58,7 +58,7 @@ computer to replay a dive profile stored in dive logbook.
 Logbook
 -------
 
-.. _adddive:
+.. _us-adddive:
 
 Add Dive
 ^^^^^^^^
@@ -76,15 +76,15 @@ Optionally, diver can specify
 - buddy
 - dive site
 
-.. _adddivep:
+.. _us-copydive:
 
 Copy Dive Data
 ^^^^^^^^^^^^^^
 The diver adds a dive by copying dive computer data to dive logbook.
 
-Some of the dive data is extracted from dive compter data (i.e. dive
-duration, maximum depth, temperature, profile data) and some is provided by
-diver (i.e. buddy). See adddive_ for list of dive data.
+The dive data is extracted from dive computer data (i.e. dive duration,
+maximum depth, temperature, profile data) and some is provided by diver
+(i.e. buddy). See :ref:`us-adddive` for list of dive data.
 
 List Dives
 ^^^^^^^^^^
