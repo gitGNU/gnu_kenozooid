@@ -90,33 +90,24 @@ class ListDives(object):
 @inject(CLIModule, name='dive add')
 class AddDive(object):
     """
-    Add a dive to UDDF file.
+    Add a dive to logbook file.
     """
-    description = 'add dive to UDDF file'
+    description = 'add dive to logbook file'
 
     @classmethod
     def add_arguments(self, parser):
         """
-        Add options for dive adding to UDDF file.
+        Add options for dive adding to logbook file.
         """
-        g = parser.add_mutually_exclusive_group(required=True)
-        g.add_argument('-d', '--with-depth',
-                nargs=3,
-                metavar=('datetime', 'depth', 'duration'),
-                help='add dive with dive date and optional time'
-                    ', maximum depth and dive duration data')
-        g.add_argument('-p', '--with-profile',
-                nargs=2,
-                metavar=('dive', 'pfile'),
-                help='add dive data with profile data from an UDDF file')
-
-        parser.add_argument('-s', '--site', metavar='site',
-                help='dive site')
+        parser.add_argument('datetime', help='date and optional time of a dive')
+        parser.add_argument('depth', help='maximum depth of a dive')
+        parser.add_argument('duration', help='duration of a dive')
+        parser.add_argument('-s', '--site', metavar='site', help='dive site')
         parser.add_argument('-b', '--buddy',
                 nargs='+',
                 metavar='buddy',
                 help='dive buddies')
-        parser.add_argument('logbook', nargs=1, help='logbook file')
+        parser.add_argument('logbook', help='logbook file')
 
 
     def __call__(self, args):
@@ -126,26 +117,60 @@ class AddDive(object):
         import kenozooid.logbook as kl
         from dateutil.parser import parse as dparse
 
-        datetime, depth, duration = None, None, None
-        dive_no, pfile = None, None
+        lfile = args.logbook
 
-        lfile = args.logbook[0]
-
-        if args.with_depth:
-            try:
-                datetime = dparse(args.with_depth[0])
-                depth = float(args.with_depth[1])
-                duration = float(args.with_depth[2])
-            except ValueError:
-                raise ArgumentError('Invalid date, depth or duration parameter')
-        else:
-            dive_no, pfile = args.with_profile
-            dive_no = int(dive_no)
+        datetime = dparse(args.datetime)
+        depth = float(args.depth)
+        duration = float(args.duration)
 
         site = args.site
         buddy = args.buddy
 
-        kl.add_dive(lfile, datetime, depth, duration, dive_no, pfile, site, buddy)
+        kl.add_dive(lfile, datetime, depth, duration, qsite=site,
+                qbuddies=buddy)
+
+
+
+@inject(CLIModule, name='dive copy')
+class CopyDive(object):
+    """
+    Copy dive to logbook file.
+    """
+    description = 'copy dive to logbook file'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive copying to logbook file.
+        """
+        parser.add_argument('dive', help='dive number in input file')
+        parser.add_argument('input', help='input file with dive data')
+        parser.add_argument('-s', '--site', metavar='site', help='dive site')
+        parser.add_argument('-b', '--buddy',
+                nargs='+',
+                metavar='buddy',
+                help='dive buddies')
+        parser.add_argument('logbook', help='logbook file')
+
+
+    def __call__(self, args):
+        """
+        Execute command for adding dives into logbook file.
+        """
+        import kenozooid.logbook as kl
+        from dateutil.parser import parse as dparse
+
+        dive_no = args.dive
+        ifile = args.input
+        lfile = args.logbook
+
+        dive_no = int(dive_no)
+
+        site = args.site
+        buddy = args.buddy
+
+        kl.add_dive(lfile, dive_no=dive_no, pfile=ifile, qsite=site,
+                qbuddies=buddy)
 
 
 
