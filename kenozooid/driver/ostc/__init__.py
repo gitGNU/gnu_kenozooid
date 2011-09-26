@@ -172,9 +172,9 @@ class OSTCMemoryDump(object):
                 
         UDDF_SAMPLE = OrderedDict(zip(_f, _q))
 
-        dive_data = ostc_parser.get_data(dump.data)
+        ostc_data = ostc_parser.get_data(dump.data)
 
-        for h, p in ostc_parser.profiles(dive_data.profiles):
+        for h, p in ostc_parser.profiles(ostc_data.profiles):
             log.debug('header: {}'.format(hexlify(h)))
             log.debug('profile: {}'.format(hexlify(p)))
 
