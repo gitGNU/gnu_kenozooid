@@ -42,7 +42,7 @@ log = logging.getLogger('kenozooid.driver.su')
 
 import kenozooid.uddf as ku
 import kenozooid.component as kc
-from kenozooid.driver import DeviceDriver, MemoryDump, DeviceError
+from kenozooid.driver import DeviceDriver, DataParser, DeviceError
 from kenozooid.units import C2K
 
 SIZE_MEM_USER = 16384
@@ -184,10 +184,10 @@ class SensusUltraDriver(object):
 
 
 
-@kc.inject(MemoryDump, id='su')
-class SensusUltraMemoryDump(object):
+@kc.inject(DataParser, id='su')
+class SensusUltraDataParser(object):
     """
-    Reefnet Sensus Ultra dive logger memory dump.
+    Reefnet Sensus Ultra dive logger data parser.
     """
 
     def dump(self):

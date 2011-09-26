@@ -97,7 +97,7 @@ def extract_dives(fin, fout):
 
 def _mem_dump(name, port=None):
     """
-    Find memory dump device driver.
+    Find data parser device driver.
 
     :Parameters:
      name
@@ -105,11 +105,11 @@ def _mem_dump(name, port=None):
      port
         Dive computer port.
     """
-    from kenozooid.driver import MemoryDump, find_driver
+    from kenozooid.driver import DataParser, find_driver
 
-    drv = find_driver(MemoryDump, name, port)
+    drv = find_driver(DataParser, name, port)
     if drv is None:
-        raise ValueError('Device driver {} does not support memory dump'
+        raise ValueError('Device driver {} does not support data parsing'
             .format(name))
     return drv
 

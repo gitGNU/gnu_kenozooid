@@ -38,7 +38,7 @@ log = logging.getLogger('kenozooid.driver.ostc')
 
 import kenozooid.uddf as ku
 import kenozooid.component as kc
-from kenozooid.driver import DeviceDriver, Simulator, MemoryDump, DeviceError
+from kenozooid.driver import DeviceDriver, Simulator, DataParser, DeviceError
 from kenozooid.units import C2K
 from . import parser as ostc_parser
 
@@ -142,10 +142,10 @@ class OSTCSimulator(object):
 
 
 
-@kc.inject(MemoryDump, id='ostc')
-class OSTCMemoryDump(object):
+@kc.inject(DataParser, id='ostc')
+class OSTCDataParser(object):
     """
-    OSTC dive computer memory dump.
+    OSTC dive computer data parser.
     """
     def dump(self):
         """

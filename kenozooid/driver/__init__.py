@@ -101,9 +101,9 @@ class Simulator(object):
 
 
 
-class MemoryDump(object):
+class DataParser(object):
     """
-    Diving computer memory dump interface.
+    Diving computer data parser interface.
 
     Depending on dive computer firmware capabilities, driver implementing
     the interface shall dump all possible data from dive computer like

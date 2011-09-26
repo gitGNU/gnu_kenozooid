@@ -28,7 +28,7 @@ from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
         _dive_data
 from kenozooid.component import query, params
-from kenozooid.driver import DeviceDriver, Simulator, MemoryDump
+from kenozooid.driver import DeviceDriver, Simulator, DataParser
 
 log = logging.getLogger('kenozooid.cli.dc')
 
@@ -67,7 +67,7 @@ class ListDrivers(object):
             caps = []
             if len(tuple(query(Simulator, id=id))) > 0:
                 caps.append('simulation')
-            if len(tuple(query(MemoryDump, id=id))) > 0:
+            if len(tuple(query(DataParser, id=id))) > 0:
                 caps.append('backup')
             #if len(tuple(query(DiveLog, id=id))) > 0:
             #    caps.append('divelog')

@@ -28,7 +28,7 @@ import unittest
 
 import kenozooid.uddf as ku
 import kenozooid.driver.ostc.parser as ostc_parser
-from kenozooid.driver.ostc import pressure, OSTCMemoryDump
+from kenozooid.driver.ostc import pressure, OSTCDataParser
 
 from . import data as od
 
@@ -61,7 +61,7 @@ class UDDFTestCase(unittest.TestCase):
         data = ku._dump_decode(od.DATA_OSTC)
         dump = DCDump(datetime.now(), data)
 
-        dc = OSTCMemoryDump()
+        dc = OSTCDataParser()
         self.dives = list(dc.dives(dump))
 
 
@@ -140,9 +140,9 @@ class UDDFTestCase(unittest.TestCase):
 
 
 
-class MemoryDumpTestCase(unittest.TestCase):
+class DataParserTestCase(unittest.TestCase):
     """
-    OSTC memory dump tests.
+    OSTC data parser tests.
 
     :Attributes:
      dump_data
@@ -153,7 +153,7 @@ class MemoryDumpTestCase(unittest.TestCase):
         """
         Test OSTC model and version parsing from raw data
         """
-        dc = OSTCMemoryDump()
+        dc = OSTCDataParser()
         ver = dc.version(od.RAW_DATA_OSTC)
         self.assertEquals('OSTC 1.26', ver)
 
@@ -162,7 +162,7 @@ class MemoryDumpTestCase(unittest.TestCase):
         """
         Test OSTC Mk.2 model and version parsing from raw data
         """
-        dc = OSTCMemoryDump()
+        dc = OSTCDataParser()
         ver = dc.version(od.RAW_DATA_OSTC_MK2_190)
         self.assertEquals('OSTC Mk.2 1.90', ver)
 
@@ -171,7 +171,7 @@ class MemoryDumpTestCase(unittest.TestCase):
         """
         Test OSTC N2 model and version parsing from raw data
         """
-        dc = OSTCMemoryDump()
+        dc = OSTCDataParser()
         ver = dc.version(od.RAW_DATA_OSTC_N2_191_HW)
         self.assertEquals('OSTC N2 1.91', ver)
 
@@ -180,7 +180,7 @@ class MemoryDumpTestCase(unittest.TestCase):
         """
         Test OSTC 1.91 and higher version parsing
         """
-        dc = OSTCMemoryDump()
+        dc = OSTCDataParser()
 
         ver = dc.version(od.RAW_DATA_OSTC_MK2_194)
         self.assertEquals('OSTC Mk.2 1.94', ver)

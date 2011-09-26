@@ -29,7 +29,7 @@ import lxml.etree as et
 import unittest
 
 import kenozooid.uddf as ku
-from kenozooid.driver.su import SensusUltraMemoryDump, _handshake, _dive_header
+from kenozooid.driver.su import SensusUltraDataParser, _handshake, _dive_header
 
 SU_DATA_DOWNLOAD_TIME = datetime(2010, 2, 22, 21, 34, 22)
 SU_DATA_INTERVAL = 10
@@ -661,7 +661,7 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         """
         dump = _dump()
 
-        dumper = SensusUltraMemoryDump()
+        dumper = SensusUltraDataParser()
         dives = list(dumper.dives(dump))
 
         # 43 dives
@@ -746,16 +746,16 @@ class ParserTestCase(unittest.TestCase):
         self.assertEquals(1, v.averaging)
 
 
-class MemoryDumpTestCase(unittest.TestCase):
+class DataParserTestCase(unittest.TestCase):
     """
-    Sensus Ultra memory dump driver tests.
+    Sensus Ultra data parser driver tests.
     """
     def test_version(self):
         """
         Test Sensus Ultra version parsing from raw data
         """
         data = ku._dump_decode(SU_DATA)
-        drv = SensusUltraMemoryDump()
+        drv = SensusUltraDataParser()
         ver = drv.version(data)
         self.assertEquals('Sensus Ultra 3.2', ver)
 
