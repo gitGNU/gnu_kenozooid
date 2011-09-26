@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Kenozooid 0.3.0
+---------------
+
+- dive adding user interface simplified
+
 Kenozooid 0.2.0
 ---------------
 
