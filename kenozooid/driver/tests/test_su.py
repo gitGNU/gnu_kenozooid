@@ -760,5 +760,16 @@ class DataParserTestCase(unittest.TestCase):
         self.assertEquals('Sensus Ultra 3.2', ver)
 
 
+    def test_gases(self):
+        """
+        Test Sensus Ultra gases parsing from raw data
+        """
+        # no gas info stored by Sensus Ultra
+        data = ku._dump_decode(SU_DATA)
+        drv = SensusUltraDataParser()
+        
+        self.assertEquals((), tuple(drv.gases(data)))
+
+
 
 # vim: sw=4:et:ai

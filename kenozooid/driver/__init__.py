@@ -117,17 +117,30 @@ class DataParser(object):
     def dump(self):
         """
         Get raw data from dive computer.
-
-        Raw data will be saved to a file by Kenozooid.
         """
 
-    def dives(self, dump):
+    def dives(self, data):
         """
-        Extract dive data from raw data into UDDF format.
+        Parse dive data from raw data.
+        
+        Iterator of dives is returned.
 
         :Parameters:
-         dump
-            Dive computer data (time, data). 
+         data
+            Raw dive computer data.
+        """
+
+
+    def gases(self, data):
+        """
+        Get list of gases per dive.
+
+        Iterator of tuples of gases is returned. A tuple of gases is list
+        of gases used during a dive.
+
+        :Parameters:
+         data
+            Raw dive computer data.
         """
 
 

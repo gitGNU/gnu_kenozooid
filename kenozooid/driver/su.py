@@ -263,6 +263,17 @@ class SensusUltraDataParser(object):
         return _iterate(dq, extract_dives)
 
 
+    def gases(self, data):
+        """
+        Return empty tuple - no gas information stored by Sensus Ultra.
+        
+        :Parameters:
+         data
+            Sensus Ultra data.
+        """
+        return ()
+
+
     def version(self, data):
         """
         Get Sensus Ultra version from raw data.
