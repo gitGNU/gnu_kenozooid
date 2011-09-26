@@ -152,11 +152,11 @@ Adding Dives
 Kenozooid supports two modes of adding dives into logbook file
 
 - adding basic dive data (date and time of dive, maximum depth, dive duration)
-- adding dive data from another file (i.e. dive computer backup file)
+- copying dive data from another file (i.e. dive computer backup file)
 
-To add dive with basic data use ``-d`` option::
+To add a dive with basic data use ``dive add`` command::
 
-    kz dive add -d '2011-10-12 13:14' 32.5 51 logbook.uddf                              
+    kz dive add '2011-10-12 13:14' 32.5 51 logbook.uddf                              
     kz dive list logbook.uddf
     logbook.uddf:
         1: 2009-10-22 15:32     30.3m     64:16    29.0°C
@@ -164,10 +164,10 @@ To add dive with basic data use ``-d`` option::
         3: 2011-10-12 13:14     32.5m     51:00 
 
 
-To add dive from another file use ``-p`` option. For example, to add 4th
-dive from dive computer backup file to logbook file::
+To copy dive from another file use ``dive copy`` command. For example, to
+add 4th dive from dive computer backup file to logbook file::
 
-    $ kz dive add -p 4 backup-ostc-20110728.uddf logbook.uddf
+    $ kz dive copy 4 backup-ostc-20110728.uddf logbook.uddf
 
     $ kz dive list logbook.uddf
     logbook.uddf:
@@ -175,11 +175,11 @@ dive from dive computer backup file to logbook file::
         2: 2010-10-29 06:02     29.4m     61:30    26.7°C
         3: 2011-06-26 12:56     85.0m    104:42     5.5°C
 
-Adding dive with dive site and buddy data is supported, too. For example,
-to add a dive with ``Ireland's Eye`` dive site and buddies ``Johnny Neurosis``
-and ``John Koval``::
+Copying a dive and adding dive site and buddy data at the same time is also
+supported. For example, to copy a dive with ``Ireland's Eye`` dive site and
+buddies ``Johnny Neurosis`` and ``John Koval``::
 
-    $ kz dive add -p 4 backup-ostc-20110728.uddf -s hie -b jn jk -- logbook.uddf
+    $ kz dive copy 4 backup-ostc-20110728.uddf -s hie -b jn jk -- logbook.uddf
 
 Removing Data
 -------------
