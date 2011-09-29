@@ -9,8 +9,8 @@ from distutils.cmd import Command
 
 VERSION = __import__('kenozooid').__version__
 
-MODS = ['lxml >= 2.3', 'python-dateutil >= 2.0', 'rpy2 >= 2.2.1',
-    'pyserial_py3k >= 2.5']
+MODS = ['lxml >= 2.3', 'python-dateutil >= 2.0', 'dirty >= 1.0.2',
+    'rpy2 >= 2.2.1', 'pyserial_py3k >= 2.5', 'dirty >= 1.0.2']
 MODS_DEPS = ['lxml >= 2.3', 'python-dateutil >= 2.0', 'rpy2 >= 2.2.1',
     'pyserial >= 2.5', 'distribute', 'setuptools-git']
 
@@ -42,7 +42,7 @@ class CheckDeps(Command):
         python_ok = sys.version_info >= (3, 2)
         rpy_ok = False
         mods = MODS
-        names = 'lxml', 'python-dateutil', 'rpy2', 'pyserial'
+        names = 'lxml', 'dirty', 'python-dateutil', 'rpy2', 'pyserial'
         ic = 2
         py_miss = set()
         r_miss = set()

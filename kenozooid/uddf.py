@@ -25,18 +25,16 @@ The functions implemented in this module can be divided into the following
 categories
 
 - XML nodes functions
-- generic data searching and manipulation functions
+- generic XML data searching and manipulation functions
 - functions for searching and manipulation of diving specific data
 
-Almost each function accepts XPath expression (query) to find or modify
-data. Each tag name in an query should be prefixed with 'uddf:' string to
-indicate UDDF namespace, i.e. 'uddf:diver', 'uddf:waypoint' - appropriate
-namespace mapping for this prefix is defined for each XPath call or during
-XML node creation.
+Searching functions use XPath expressions (queries) to find data. Each tag
+name in an query should be prefixed with 'uddf:' string to indicate UDDF
+namespace, i.e. 'uddf:diver', 'uddf:waypoint' - appropriate namespace
+mapping for this prefix is defined for each XPath call.
 
 The result of parsing or search of data is usually iterator of XML nodes or
-data records (named tuples in Python terms) depending on type of function
-(see categories above).
+data records (named tuples in Python terms).
 
 Module `lxml` is used for XML parsing and querying with XPath. Full
 capabilities of underlying `libxml2' library is used by design. The
@@ -51,13 +49,16 @@ from dateutil.parser import parse as dparse
 from operator import itemgetter
 from uuid import uuid4 as uuid
 from copy import deepcopy
+from dirty.xml import xml
 import base64
 import bz2
+import itertools
 import hashlib
 import logging
 import pkg_resources
 
 import kenozooid
+import kenozooid.util as kt
 
 log = logging.getLogger('kenozooid.uddf')
 
@@ -68,6 +69,10 @@ _NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.0/'}
 
 # Node id formatter
 FORMAT_ID = 'id-{}'
+
+FMT_F = partial(str.format, '{0:.1f}')
+FMT_I = lambda v: '{}'.format(int(round(v)))
+FMT_DT = lambda dt: format(dt, '%Y-%m-%dT%H:%M:%S%z')
 
 #
 # Parsing and searching.
@@ -559,15 +564,13 @@ def _dump_decode(data):
 # Creating UDDF data.
 #
 
-# default format for timestamps within UDDF file
-FMT_DATETIME = '%Y-%m-%dT%H:%M:%S%z'
-
 DEFAULT_FMT_DIVE_PROFILE = {
     'depth': lambda d: str.format('{0:.1f}', max(d, 0)),
     'temp': partial(str.format, '{0:.1f}'),
 }
 
 # basic data for an UDDF file
+# fixme: obsolete
 UDDF_BASIC = """\
 <uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
 <generator>
@@ -592,15 +595,11 @@ UDDF_BASIC = """\
 </uddf>
 """.format(kzver=kenozooid.__version__)
 
-###<equipment>
-###    <divecomputer id=''>
-###        <model></model>
-###    </divecomputer>
-###</equipment>
-
 
 def create(datetime=datetime.now()):
     """
+    fixme: obsolete
+
     Create basic UDDF structure.
 
     :Parameters:
@@ -611,12 +610,14 @@ def create(datetime=datetime.now()):
 
     now = datetime.now()
     n = root.xpath('//uddf:generator/uddf:datetime', namespaces=_NSMAP)[0]
-    n.text = _format_time(datetime)
+    n.text = FMT_DT(datetime)
     return root
 
 
 def save(doc, f, validate=True):
     """
+    fixme: obsolete
+
     Save UDDF data to a file.
 
     A file can be a file name, file like object or anything supported by
@@ -758,44 +759,6 @@ def create_node(path, parent=None, append=True):
         yield n
 
 
-def create_dc_data(node, queries=None, formatters=None,
-        dc_id=None, dc_model=None, **data):
-    """
-    Create dive computer information data in UDDF file.
-    """
-    _f = ('dc_id', 'dc_model')
-    _q = ('@id', 'uddf:model')
-    _queries = OrderedDict(zip(_f, _q))
-    if queries is not None:
-        _queries.update(queries)
-
-    data['dc_id'] = dc_id
-    data['dc_model'] = dc_model
-
-    dc = None
-
-    if dc_id:
-        xp = XPath('uddf:equipment/uddf:divecomputer[id@$dc_id]')
-        nodes = xp(node, dc_id=dc_id)
-        if nodes:
-            dc = nodes[0]
-    else:
-        xp = XPath('uddf:equipment/uddf:divecomputer[uddf:model/text() = $dc_model]')
-        nodes = xp(node, dc_model=dc_model)
-        if nodes:
-            dc = nodes[0]
-
-    if dc is None:
-        if not dc_id:
-            dc_id = FORMAT_ID.format(hashlib.md5(dc_model.encode()).hexdigest())
-            data['dc_id'] = dc_id
-
-        # create new dive computer node
-        _, dc = create_node('uddf:equipment/uddf:divecomputer', parent=node)
-        set_data(dc, _queries, formatters, **data)
-    return dc
-
-
 def create_dive_data(node=None, queries=None, formatters=None, **data):
     """
     Create dive data.
@@ -823,7 +786,7 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
         queries = OrderedDict(zip(f, q))
     if formatters == None:
         formatters = {
-            'datetime': _format_time,
+            'datetime': FMT_DT,
             'depth': partial(str.format, '{0:.1f}'),
             'duration': partial(str.format, '{0:.0f}'),
             'temp': partial(str.format, '{0:.1f}'),
@@ -847,24 +810,6 @@ def create_dive_profile_sample(node, queries=None, formatters=None, **data):
     _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
     set_data(wn, queries, formatters, **data)
     return wn
-
-
-def create_dump_data(node, queries=None, formatters=None, **data):
-    if queries == None:
-        f = ('dc_id', 'datetime', 'data')
-        q = ('uddf:link/@ref', 'uddf:datetime', 'uddf:dcdump')
-        queries = OrderedDict(zip(f, q))
-
-    if formatters == None:
-        formatters = {
-            'datetime': _format_time,
-            'data': _dump_encode,
-        }
-        
-    _, dcd = create_node('uddf:divecomputercontrol/uddf:divecomputerdump',
-            parent=node)
-    set_data(dcd, queries, formatters, **data)
-    return dcd
 
 
 def create_buddy_data(node, queries=None, formatters=None, **data):
@@ -938,13 +883,6 @@ def create_site_data(node, queries=None, formatters=None, **data):
     return site
         
 
-def _format_time(t):
-    """
-    Format timestamp into ISO 8601 string compatible with UDDF.
-    """
-    return format(t, FMT_DATETIME)
-
-
 def _dump_encode(data):
     """
     Encode dive computer data, so it can be stored in UDDF file.
@@ -953,6 +891,157 @@ def _dump_encode(data):
     """
     s = bz2.compress(data)
     return base64.b64encode(s)
+
+
+def create_uddf(datetime=datetime.now(), equipment=None, dives=None,
+        dump=None):
+    """
+    Create UDDF XML data.
+
+    :Parameters:
+     datetime
+        Timestamp of UDDF creation.
+     equipment
+        Diver's (owner) equipment XML data (see create_dc_data).
+     dives
+        Dives XML data (see create_dives).
+     dump
+        Dive computer dump XML data (see create_dump_data).
+    """
+
+    doc = xml.uddf(
+        xml.generator(
+            xml.name('kenozooid'),
+            xml.manufacturer(
+                xml.name('Kenozooid Team'),
+                xml.contact(xml.homepage('http://wrobell.it-zone.org/kenozooid/')),
+                id='kenozooid'),
+            xml.version(kenozooid.__version__),
+            xml.datetime(FMT_DT(datetime)),
+        ),
+
+        xml.diver(
+            xml.owner(
+                xml.personal(xml.firstname('Anonymous'), xml.lastname('Guest')),
+                xml.equipment(equipment) if equipment else None,
+                id='owner')),
+
+        xml.divecomputercontrol(dump) if dump else None,
+        xml.profiledata(xml.repetitiongroup(dives, id=gen_id()))
+            if dives else None,
+
+        xmlns=_NSMAP['uddf'],
+        version='3.0.0',
+    )
+    return doc
+
+
+def create_dives(dives, equipment=None):
+    """
+    Create dives UDDF XML data.
+
+    :Parameters:
+     dives
+        Iterable of dive tuples.
+     equipment
+        List of used equipment references.
+    """
+    for d in dives:
+        eq = itertools.chain(kt.nit(d.equipment), kt.nit(equipment))
+        yield xml.dive(
+            xml.informationbeforedive(xml.datetime(FMT_DT(d.datetime))),
+            xml.samples(create_dive_samples(d.profile)),
+            xml.informationafterdive(
+                xml.greatestdepth(FMT_F(d.depth)),
+                xml.diveduration(FMT_I(d.duration)),
+                None if d.temp is None else xml.lowesttemperature(FMT_F(d.temp)),
+                xml.equipmentused((xml.link(ref=v) for v in eq)),
+            ),
+            id=gen_id(),
+        )
+
+
+def create_dive_samples(samples):
+    """
+    Create dive samples UDDF XML data.
+
+    :Parameters:
+     samples
+        Iterable of tuples of dive samples.
+    """
+    for s in samples:
+        yield xml.waypoint(
+            None if s.deco_time is None else
+                xml.decostop(
+                    duration=FMT_I(s.deco_time),
+                    decodepth=FMT_I(s.deco_depth),
+                    kind='mandatory'
+                ),
+            xml.depth(FMT_F(s.depth)),
+            xml.divetime(FMT_I(s.time)),
+            None if s.temp is None else xml.temperature(FMT_F(s.temp)),
+        )
+
+
+def create_dc_data(dc_id, model):
+    """
+    Create dive computer UDDF XML data.
+
+    :Parameters:
+     dc_id
+        Dive computer id.
+     model
+        Dive computer model.
+    """
+    yield xml.divecomputer(xml.model(model), id=dc_id)
+
+
+def create_dump_data(dc_id, datetime, data):
+    """
+    Create dive computer dump UDDF XML data.
+
+    :Parameters:
+     dc_id
+        Dive computer id.
+     datetime
+        Date and time when the dump was created.
+     data
+        Dive computer binary data.
+    """
+    yield xml.divecomputerdump(
+        xml.link(ref=dc_id),
+        xml.datetime(FMT_DT(datetime)),
+        xml.dcdump(_dump_encode(data).decode()),
+    )
+
+
+def save_uddf(doc, fout, validate=True):
+    """
+    Save UDDF XML data into a file.
+
+    :Parameters:
+     doc
+        UDDF XML data.
+     fout
+        Output file.
+     validate
+        Validate UDDF file after saving if True.
+    """
+    log.debug('saving uddf file')
+    with open(fout, 'w') as f:
+        f.writelines(doc)
+    if validate:
+        log.debug('validating uddf file')
+        fs = pkg_resources.resource_stream('kenozooid', 'uddf_3.0.1.xsd')
+        if hasattr(fs, 'name'):
+            log.debug('uddf xsd found: {}'.format(fs.name))
+        schema = et.XMLSchema(et.parse(fs))
+        try:
+            schema.assertValid(et.parse(fout))
+            log.debug('uddf file is valid')
+        except et.DocumentInvalid as ex:
+            log.info(et.tostring(doc, pretty_print=True))
+            raise ex
 
 
 #
@@ -983,6 +1072,8 @@ def remove_nodes(node, query, **params):
 
 def reorder(doc):
     """
+    fixme: obsolete
+
     Reorder and cleanup dives in UDDF document.
 
     Following operations are being performed
@@ -993,8 +1084,6 @@ def reorder(doc):
     :Parameters:
      doc
         UDDF document.
-
-    TODO: Put dives into appropriate repetition groups.
     """
     find = partial(doc.xpath, namespaces=_NSMAP)
 
@@ -1088,6 +1177,23 @@ def _set_id(node):
     """
     if node.get('id') is None:
         node.set('id', FORMAT_ID.format(uuid().hex))
+
+
+def gen_id(value=None):
+    """
+    Generate id for a value.
+    
+    If value is specified then id is MD5 hash of value. If not specified,
+    then id is generated with UUID 4.
+
+    The returned id is a string prefixed with ``id-`` to make it XML
+    compliant.
+    """
+    if value is None:
+        vid = uuid().hex
+    else:
+        vid = hashlib.md5(str(value).encode()).hexdigest()
+    return 'id-{}'.format(vid)
 
 
 # vim: sw=4:et:ai

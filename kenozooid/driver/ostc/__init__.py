@@ -41,6 +41,7 @@ import kenozooid.component as kc
 from kenozooid.driver import DeviceDriver, Simulator, DataParser, DeviceError
 from kenozooid.units import C2K
 from . import parser as ostc_parser
+from kenozooid.data import Dive, Sample, Gas
 
 
 def pressure(depth):
@@ -192,44 +193,42 @@ class OSTCDataParser(object):
                     seconds=header.dive_time_s + header.sampling)
             st -= duration
 
-            try:
-                dn = ku.create_dive_data(datetime=st,
-                        depth=header.max_depth / 100.0,
-                        duration=duration.seconds,
-                        temp=C2K(header.min_temp / 10.0))
+            yield Dive(datetime=st,
+                depth=header.max_depth / 100.0,
+                duration=duration.seconds,
+                temp=C2K(header.min_temp / 10.0),
+                profile=self._get_profile(header, dive_data))
 
-                create_sample = partial(ku.create_dive_profile_sample, dn,
-                        queries=UDDF_SAMPLE)
 
-                # ostc start dive below zero, add (0, 0) waypoint to
-                # comply with uddf
-                create_sample(time=0, depth=0.0)
+    def _get_profile(self, header, dive_data):
+        """
+        Parse OSTC dive samples.
+        """
+        ### try:
+        # ostc starts dive below at a depth, so add (0, 0) sample
+        yield Sample(depth=0.0, time=0)
 
-                for i, sample in enumerate(dive_data, 1):
-                    temp = C2K(sample.temp) if sample.temp else None
+        for i, sample in enumerate(dive_data, 1):
+            temp = C2K(sample.temp) if sample.temp else None
 
-                    # deco info
-                    deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
-                    deco_depth = sample.deco_depth if sample.deco_depth else None
-                    deco_kind = 'mandatory' if sample.deco_depth else None
-                    deco_alarm = sample.alarm in (2, 3)
+            # deco info
+            deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
+            deco_depth = sample.deco_depth if sample.deco_depth else None
+            deco_alarm = sample.alarm in (2, 3)
 
-                    create_sample(time=(i * header.sampling),
-                            depth=sample.depth,
-                            alarm='deco' if deco_alarm else None,
-                            temp=temp,
-                            deco_time=deco_time,
-                            deco_depth=deco_depth,
-                            deco_kind=deco_kind)
+            yield Sample(depth=sample.depth,
+                    time=(i * header.sampling),
+                    alarm='deco' if deco_alarm else None,
+                    temp=temp,
+                    deco_time=deco_time,
+                    deco_depth=deco_depth)
 
-                create_sample(time=(i + 2) * header.sampling, depth=0.0)
+        yield Sample(depth=0.0, time=(i + 1) * header.sampling)
 
-                yield dn
-
-            except ValueError as ex:
-                log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
-                    ' {0.hour:>02d}:{0.minute:>02d}' \
-                    ' max depth={0.max_depth}'.format(header))
+        ### except ValueError as ex:
+        ###     log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
+        ###         ' {0.hour:>02d}:{0.minute:>02d}' \
+        ###         ' max depth={0.max_depth}'.format(header))
 
 
     def version(self, data):

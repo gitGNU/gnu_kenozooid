@@ -21,11 +21,14 @@
 Dive computer functionality.
 """
 
-import lxml.etree as et
 from datetime import datetime
+from functools import partial
+import lxml.etree as et
 import logging
 
 import kenozooid.uddf as ku
+import kenozooid.data as kd
+import kenozooid.util as kt
 
 log = logging.getLogger('kenozooid.dc')
 
@@ -43,7 +46,6 @@ def backup(drv_name, port, fout):
     """
     drv = _mem_dump(drv_name, port)
     data = drv.dump()
-    model = drv.version(data)
 
     _save_dives(drv, datetime.now(), data, fout)
 
@@ -129,34 +131,20 @@ def _save_dives(drv, time, data, fout):
      fout
         Output file.
     """
-    import kenozooid.uddf as ku
-    
     model = drv.version(data)
+    dc_id = ku.gen_id(model)
     log.debug('dive computer version {}'.format(model))
 
-    dout = ku.create()
-
-    # store dive computer information
-    xp_owner = ku.XPath('//uddf:diver/uddf:owner')
-    dc = ku.create_dc_data(xp_owner(dout)[0], dc_model=model)
-    dc_id = dc.get('id')
-
-    # store raw data
-    ddn = ku.create_dump_data(dout, dc_id=dc_id, datetime=time, data=data)
-    dump = ku.dump_data(ddn)
-
     # convert raw data into dive data and store in output file
-    dnodes = drv.dives(dump)
-    _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
-            parent=dout)
-    for n in dnodes:
-        *_, l = ku.create_node('uddf:informationafterdive' \
-                '/uddf:equipmentused/uddf:link', parent=n)
-        l.set('ref', dc_id)
-        rg.append(n)
+    bdata = kd.BinaryData(datetime=time, data=data)
     
-    ku.reorder(dout)
-    ku.save(dout, fout)
+    eq = ku.create_dc_data(dc_id, model)
+    dump = ku.create_dump_data(dc_id=dc_id, datetime=time, data=data)
+    dives = kt.pipe(drv.dives(bdata),
+            kd.sort_dives,
+            kd.uniq_dives,
+            partial(ku.create_dives, equipment=(dc_id,)))
+    ku.save_uddf(ku.create_uddf(equipment=eq, dives=dives, dump=dump), fout)
 
 
 # vim: sw=4:et:ai

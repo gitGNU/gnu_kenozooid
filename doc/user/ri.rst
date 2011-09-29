@@ -26,6 +26,9 @@ platform (Windows, Mac OS X).
 | lxml            |   2.3    | Python      | Fedora 15, Mac OS X,     | XML parsing and searching  |
 |                 |          | module      | PLD Linux, Windows       |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
+| dirty           |  1.0.2   | Python      | Mac OS X, PLD Linux,     | XML data generation        |
+|                 |          | module      | Windows                  |                            |
++-----------------+----------+-------------+--------------------------+----------------------------+
 |                                           **Optional**                                           |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | pyserial        |    2.5   | Python      | PLD Linux, Windows       | required by OSTC driver    |

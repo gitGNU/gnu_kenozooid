@@ -55,8 +55,26 @@ class _Formatter(string.Formatter):
             return super(_Formatter, self).format_field(value, fs)
 
 
-_fmt = _Formatter()
-nformat = _fmt.format
+nformat = _Formatter().format
 
+
+def pipe(data, *gens):
+    """
+    Pipe data through list of geneators.
+    
+    :Parameters:
+     data
+        Data to pipe through the generators.
+     gens
+        List of generators to process the data.
+    """
+    for g in gens:
+        data = g(data)
+    return data
+
+
+# Return empty iterator if ``it`` is None, otherwise return ``it``
+# itself.
+nit = lambda it: () if it is None else it
 
 # vim: sw=4:et:ai

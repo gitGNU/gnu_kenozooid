@@ -23,14 +23,50 @@ Tests for Kenozooid utility functions.
 
 import unittest
 
-from kenozooid.util import nformat
+from kenozooid.util import nformat, pipe, nit
 
-class FormatTestCase(unittest.TestCase):
+class PipeDataTestCase(unittest.TestCase):
     """
-    Formatting tests.
+    Data piping tests.
     """
+    def test_pipe(self):
+        """
+        Test data piping
+        """
+        f1 = lambda it: (i + 1 for i in it)
+        f2 = lambda it: (i * 2 for i in it)
+        self.assertEquals([2, 4, 6, 8], list(pipe(range(4), f1, f2)))
+
+
+    def test_pipe_order(self):
+        """
+        Test order of data piping
+        """
+        f1 = lambda it: (i + 1 for i in it)
+        f2 = lambda it: (i * 2 for i in it)
+        self.assertEquals([2, 4, 6, 8], list(pipe(range(4), f1, f2)))
+        self.assertEquals([1, 3, 5, 7], list(pipe(range(4), f2, f1)))
+
+
+class UtilsTestCase(unittest.TestCase):
+    """
+    Tests for various utils.
+    """
+    def test_nit(self):
+        """
+        Test nit
+        """
+        it = (1, 2, 3, 4)
+        self.assertEquals(it, nit(it))
+
+        v = nit(None)
+        self.assertEquals(list(), list(v))
+
+
     def test_format(self):
-        """Test None value formatting"""
+        """
+        Test None value formatting
+        """
         self.assertEquals('test ', nformat('{0} {1}', 'test', None))
         self.assertEquals('', nformat('{0}', None))
 
