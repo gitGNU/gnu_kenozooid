@@ -948,6 +948,8 @@ def create_dives(dives, equipment=None):
     """
     for d in dives:
         eq = itertools.chain(kt.nit(d.equipment), kt.nit(equipment))
+        log.debug('convert dive {0.datetime}/{0.depth:.1f}/{0.duration} into XML'
+                .format(d))
         yield xml.dive(
             xml.informationbeforedive(xml.datetime(FMT_DT(d.datetime))),
             xml.samples(create_dive_samples(d.profile)),
