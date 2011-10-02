@@ -218,7 +218,7 @@ class OSTCDataParser(object):
 
             yield Sample(depth=sample.depth,
                     time=(i * header.sampling),
-                    alarm='deco' if deco_alarm else None,
+                    alarm=('deco',) if deco_alarm else None,
                     temp=temp,
                     deco_time=deco_time,
                     deco_depth=deco_depth)

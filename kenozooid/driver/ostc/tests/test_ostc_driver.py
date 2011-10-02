@@ -74,20 +74,13 @@ class UDDFTestCase(unittest.TestCase):
 
         # 193 samples for first dive
         dive = self.dives[0]
-        data = list(ku.xp(dive, 'uddf:samples/uddf:waypoint'))
-        self.assertEquals(195, len(data))
+        samples = list(dive.profile)
+        self.assertEquals(195, len(samples))
 
-        t = ku.xp_first(dive, 'uddf:informationbeforedive/uddf:datetime/text()')
-        self.assertEquals('2009-01-31T23:08:41', t)
-
-        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:greatestdepth/text()')
-        self.assertEquals('75.0', d)
-
-        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:diveduration/text()')
-        self.assertEquals('1939', d)
-
-        t = ku.xp_first(dive, 'uddf:informationafterdive/uddf:lowesttemperature/text()')
-        self.assertEquals('300.6', t) # 27.45C
+        self.assertEquals(datetime(2009, 1, 31, 23, 8, 41), dive.datetime)
+        self.assertEquals(75.0, dive.depth)
+        self.assertEquals(1939, dive.duration)
+        self.assertEquals(300.65, dive.temp) # 27.45C
 
 
     def test_deco_alarm(self):
@@ -95,24 +88,24 @@ class UDDFTestCase(unittest.TestCase):
         Test OSTC deco alarm data to UDDF conversion
         """
         dive = self.dives[3] # dive no 3 contains deco alarms
-        wps = list(ku.xp(dive, 'uddf:samples/uddf:waypoint'))
-        d1 = wps[587:594]
-        d2 = wps[743:749]
-        d3 = wps[972:976]
-        d4 = wps[1320:1343]
+        samples = list(dive.profile)
+        d1 = samples[587:594]
+        d2 = samples[743:749]
+        d3 = samples[972:976]
+        d4 = samples[1320:1343]
 
         # check if all deco waypoints have appropriate alarms
-        def alarms(wps):
-            return (ku.xp_first(w, 'uddf:alarm/text()') == 'deco' for w in wps)
+        def alarms(samples):
+            return (s.alarm == ('deco',) for s in samples)
 
         t1 = list(alarms(d1))
         t2 = list(alarms(d2))
         t3 = list(alarms(d3))
         t4 = list(alarms(d4))
-        self.assertTrue(all(t1), '{0}\n{1}'.format(t1, et.tostring(dive)))
-        self.assertTrue(all(t2), '{0}\n{1}'.format(t2, et.tostring(dive)))
-        self.assertTrue(all(t3), '{0}\n{1}'.format(t3, et.tostring(dive)))
-        self.assertTrue(all(t4), '{0}\n{1}'.format(t4, et.tostring(dive)))
+        self.assertTrue(all(t1), '{0}\n{1}'.format(t1, d1))
+        self.assertTrue(all(t2), '{0}\n{1}'.format(t2, d2))
+        self.assertTrue(all(t3), '{0}\n{1}'.format(t3, d3))
+        self.assertTrue(all(t4), '{0}\n{1}'.format(t4, d4))
 
 
     def test_deco(self):
@@ -120,9 +113,7 @@ class UDDFTestCase(unittest.TestCase):
         Test OSTC deco data to UDDF conversion
         """
         dive = self.dives[0]
-        sd = et.tostring(dive)
-
-        wps = list(ku.xp(dive, 'uddf:samples/uddf:waypoint'))[24:181:6]
+        samples = list(dive.profile)[24:181:6]
 
         # depth, time
         deco = ((3, 60), (12, 60), (9, 60), (12, 60), (12, 60), (3, 60), (6, 60),
@@ -131,12 +122,7 @@ class UDDFTestCase(unittest.TestCase):
                 (6, 120), (6, 60), (3, 300), (3, 180), (3, 120), (3, 60),)
 
         self.assertEquals(deco,
-            tuple((float(ku.xp_first(n, 'uddf:decostop/@decodepth')),
-                   float(ku.xp_first(n, 'uddf:decostop/@duration'))) for n in wps),
-            sd)
-
-        m = [ku.xp_first(n, 'uddf:decostop/@kind') == 'mandatory' for n in wps]
-        self.assertTrue(all(m), m)
+            tuple((float(s.deco_depth), float(s.deco_time)) for s in samples))
 
 
 
