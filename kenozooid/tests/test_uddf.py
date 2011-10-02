@@ -714,7 +714,7 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test UDDF dive profile sample creation with deco alarm
         """
-        s = kd.Sample(depth=3.1, time=19, temp=20, alarm='deco'),
+        s = kd.Sample(depth=3.1, time=19, temp=20, alarm=('deco',)),
         samples = ku.create_dive_samples(s)
         n, sd = xml2et(xml.dive(samples))
         self.assertEquals('deco', ku.xp_first(n, '//alarm/text()'), sd)

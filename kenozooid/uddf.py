@@ -960,6 +960,7 @@ def create_dive_samples(samples):
     """
     for s in samples:
         yield xml.waypoint(
+            None if s.alarm is None else (xml.alarm(a) for a in s.alarm),
             None if s.deco_time is None else
                 xml.decostop(
                     duration=FMT_I(s.deco_time),
