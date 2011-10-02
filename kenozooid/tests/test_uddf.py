@@ -25,9 +25,11 @@ from lxml import etree as et
 from io import BytesIO
 from datetime import datetime
 from functools import partial
+from dirty.xml import xml
 import unittest
 
 import kenozooid.uddf as ku
+import kenozooid.data as kd
 
 
 UDDF_PROFILE = b"""\
@@ -198,6 +200,11 @@ UDDF_SITE = b"""\
 </uddf>
 """
 
+def xml2et(data):
+    doc = et.XML(''.join(l for l in data))
+    sd = et.tostring(doc, pretty_print=True)
+    return doc, sd
+
 
 class FindDataTestCase(unittest.TestCase):
     """
@@ -353,8 +360,8 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('3.0.0', doc.get('version'))
 
         q = '//uddf:generator/uddf:datetime/text()'
-        dt = doc.xpath(q, namespaces=ku._NSMAP)
-        self.assertEquals(now.strftime(ku.FMT_DATETIME), dt[0])
+        dt = ku.xp_first(doc, q)
+        self.assertEquals(ku.FMT_DT(now), dt)
 
 
     def test_save(self):
@@ -681,74 +688,36 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test creating dive computer information data in UDDF file
         """
-        doc = ku.create()
-        xpath = partial(doc.xpath, namespaces=ku._NSMAP)
-        owner = xpath('//uddf:owner')[0]
+        n = ku.create_dc_data('tid', model='Test 1')
+        doc, sd = xml2et(ku.create_uddf(equipment=n))
 
-        ku.create_dc_data(owner, dc_model='Test 1')
-        sd = et.tostring(doc, pretty_print=True)
+        r = ku.xp_first(doc, '//uddf:owner//uddf:divecomputer/@id')
+        self.assertEquals(r, 'tid', sd)
 
-        id_q = '//uddf:owner//uddf:divecomputer/@id'
-        ids = xpath(id_q)
-        self.assertEquals(1, len(ids), sd)
-        self.assertEquals('id-206a9b642b3e16c89a61696ab28f3d5c', ids[0], sd)
-
-        model_q = '//uddf:owner//uddf:divecomputer/uddf:model/text()'
-        models = xpath(model_q)
-        self.assertEquals('Test 1', models[0], sd)
-
-        # update again with the same model
-        ku.create_dc_data(owner, dc_model='Test 1')
-        sd = et.tostring(doc, pretty_print=True)
-        ids = xpath(id_q)
-        self.assertEquals(1, len(ids), sd)
-
-        # add different model
-        ku.create_dc_data(owner, dc_model='Test 2')
-        sd = et.tostring(doc, pretty_print=True)
-
-        eqs = xpath('//uddf:equipment')
-        self.assertEquals(1, len(eqs), sd)
-
-        ids = xpath(id_q)
-        self.assertEquals(2, len(ids), sd)
-        expected = ['id-206a9b642b3e16c89a61696ab28f3d5c',
-                'id-605e79544a68819ce664c088aba92658']
-        self.assertEquals(expected, ids, sd)
-
-        models = xpath(model_q)
-        expected = ['Test 1', 'Test 2']
-        self.assertEquals(expected, models, sd)
+        r = ku.xp_first(doc, '//uddf:owner//uddf:divecomputer/uddf:model/text()')
+        self.assertEquals(r, 'Test 1', sd)
 
 
-    def test_create_dive_profile_sample_default(self):
+    def test_create_dive_samples(self):
         """
-        Test UDDF dive profile default sample creation
+        Test UDDF dive profile sample creation
         """
-        w = ku.create_dive_profile_sample(None, depth=3.1, time=19, temp=20)
-        s = et.tostring(w)
-        self.assertEquals('19', ku.xp_first(w, 'uddf:divetime/text()'), s)
-        self.assertEquals('3.1', ku.xp_first(w, 'uddf:depth/text()'), s)
-        self.assertEquals('20.0', ku.xp_first(w, 'uddf:temperature/text()'), s)
+        s = kd.Sample(depth=3.1, time=19, temp=20),
+        samples = ku.create_dive_samples(s)
+        n, sd = xml2et(xml.dive(samples))
+        self.assertEquals('19', ku.xp_first(n, '//divetime/text()'), sd)
+        self.assertEquals('3.1', ku.xp_first(n, '//depth/text()'), sd)
+        self.assertEquals('20.0', ku.xp_first(n, '//temperature/text()'), sd)
 
 
-    def test_create_dive_profile_sample_custom(self):
+    def test_create_dive_samples(self):
         """
-        Test UDDF dive profile custom sample creation
+        Test UDDF dive profile sample creation with deco alarm
         """
-        Q = {
-            'depth': 'uddf:depth',
-            'time': 'uddf:divetime',
-            'temp': 'uddf:temperature',
-            'alarm': 'uddf:alarm',
-        }
-        w = ku.create_dive_profile_sample(None, queries=Q,
-                depth=3.1, time=19, temp=20, alarm='deco')
-        s = et.tostring(w)
-        self.assertEquals('19', ku.xp_first(w, 'uddf:divetime/text()'), s)
-        self.assertEquals('3.1', ku.xp_first(w, 'uddf:depth/text()'), s)
-        self.assertEquals('20.0', ku.xp_first(w, 'uddf:temperature/text()'), s)
-        self.assertEquals('deco', ku.xp_first(w, 'uddf:alarm/text()'), s)
+        s = kd.Sample(depth=3.1, time=19, temp=20, alarm='deco'),
+        samples = ku.create_dive_samples(s)
+        n, sd = xml2et(xml.dive(samples))
+        self.assertEquals('deco', ku.xp_first(n, '//alarm/text()'), sd)
         
 
     def test_dump_data_encode(self):

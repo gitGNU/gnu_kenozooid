@@ -799,19 +799,6 @@ def create_dive_data(node=None, queries=None, formatters=None, **data):
     return dn
 
 
-def create_dive_profile_sample(node, queries=None, formatters=None, **data):
-    if queries == None:
-        f = ('depth', 'time', 'temp')
-        q = ('uddf:depth', 'uddf:divetime', 'uddf:temperature')
-        queries = OrderedDict(zip(f, q))
-    if formatters == None:
-        formatters = DEFAULT_FMT_DIVE_PROFILE
-
-    _, wn = create_node('uddf:samples/uddf:waypoint', parent=node)
-    set_data(wn, queries, formatters, **data)
-    return wn
-
-
 def create_buddy_data(node, queries=None, formatters=None, **data):
     """
     Create buddy data.
