@@ -4,6 +4,8 @@ Changelog
 Kenozooid 0.3.0
 ---------------
 
+- significant speed improvement of UDDF XML data generation while parsing
+  dive computer data
 - dive adding user interface simplified
 
 Kenozooid 0.2.0
