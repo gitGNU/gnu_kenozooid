@@ -667,52 +667,41 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         # 43 dives
         self.assertEquals(43, len(dives))
 
-        # 18 samples for first dive
         dive = dives[-1] # su stores data from last to first
-        wps = list(ku.xp(dive, './/uddf:samples/uddf:waypoint'))
-        self.assertEquals(18, len(wps))
+        self.assertEquals(datetime(2009, 9, 19, 13, 14, 40), dive.datetime)
 
-        dt = ku.xp_first(dive, 'uddf:informationbeforedive/uddf:datetime/text()')
-        self.assertEquals('2009-09-19T13:14:40', dt, et.tostring(dive))
+        self.assertEquals(12.0, dive.depth)
+        self.assertEquals(170, dive.duration)
+        self.assertEquals(288.6, dive.temp)
 
-        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:greatestdepth/text()')
-        md = max(float(f) for f in ku.xp(dive, './/uddf:depth/text()'))
-        self.assertEquals('12.0', d)
-        self.assertEquals(12.0, md)
+        # 18 samples for first dive
+        samples = list(dive.profile)
+        self.assertEquals(18, len(samples))
 
-        d = ku.xp_first(dive, 'uddf:informationafterdive/uddf:diveduration/text()')
-        self.assertEquals('170', d)
-
-        t = ku.xp_first(dive, 'uddf:informationafterdive/uddf:lowesttemperature/text()')
-        mt = min(float(f) for f in ku.xp(dive, './/uddf:temperature/text()'))
-        self.assertEquals('288.6', t)
-        self.assertEquals(288.6, mt)
+        # su driver calculates the max depth and min temperature
+        self.assertEquals(12.0, round(max(s.depth for s in samples), 1))
+        self.assertEquals(288.6, min(s.temp for s in samples
+            if s.temp is not None))
 
         # check first sample, UDDF obligatory one
-        t = ku.xp_first(wps[0], './/uddf:divetime/text()')
-        self.assertEquals('0', t)
-        t = ku.xp_first(wps[0], './/uddf:depth/text()')
-        self.assertEquals('0.0', t)
+        self.assertEquals(0, samples[0].time)
+        self.assertEquals(0.0, samples[0].depth)
 
         # check if second sample does not start with 0 time
-        t = ku.xp_first(wps[1], './/uddf:divetime/text()')
-        self.assertEquals(SU_DATA_INTERVAL, int(t))
+        self.assertEquals(SU_DATA_INTERVAL, samples[1].time)
 
         # check last UDDF required sample
-        t = ku.xp_first(wps[-1], './/uddf:divetime/text()')
-        self.assertEquals('170', t) # duration above should equal to this
-                                    # value, too
-        t = ku.xp_first(wps[-1], './/uddf:depth/text()')
-        self.assertEquals('0.0', t)
+        self.assertEquals(170, samples[-1].time) # dive.duration above should
+                                                 # equal to this value, too
+        self.assertEquals(0.0, samples[-1].depth)
 
         # check time of the one sample before last
-        t = ku.xp_first(wps[-2], './/uddf:divetime/text()')
-        self.assertEquals('160', t)
+        self.assertEquals(160, samples[-2].time)
 
         # check the one before last and last samples times
-        t1 = ku.xp_first(wps[-2], './/uddf:divetime/text()')
-        t2 = ku.xp_first(wps[-1], './/uddf:divetime/text()')
-        self.assertEquals(SU_DATA_INTERVAL, int(t2) - int(t1)) 
+        t1 = samples[-2].time
+        t2 = samples[-1].time
+        self.assertEquals(SU_DATA_INTERVAL, t2 - t1) 
 
 
 

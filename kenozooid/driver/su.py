@@ -385,10 +385,10 @@ class SensusUltraDataParser(object):
         if st == SampleType.time:
             sdata['time'] = sample.time
         elif st == SampleType.temperature:
-            sdata['temp'] = C2K(sample.temperature)
+            sdata['temp'] = round(C2K(sample.temperature), 1)
         elif st == SampleType.depth:
             # Sensus Ultra might return negative values near 0, so use max
-            sdata['depth'] = max(sample.depth, 0)
+            sdata['depth'] = round(max(sample.depth, 0), 1)
 
             s = kd.Sample(**sdata)
             log.debug('got sample {}'.format(sdata))
