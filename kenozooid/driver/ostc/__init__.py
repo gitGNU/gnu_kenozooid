@@ -194,20 +194,24 @@ class OSTCDataParser(object):
                     seconds=header.dive_time_s + header.sampling)
             st -= duration
 
-            yield Dive(datetime=st,
-                depth=header.max_depth / 100.0,
-                duration=duration.seconds,
-                temp=C2K(header.min_temp / 10.0),
-                profile=self._get_profile(header, dive_data))
+            try:
+                profile = list(self._get_profile(header, dive_data))
+                yield Dive(datetime=st,
+                    depth=header.max_depth / 100.0,
+                    duration=duration.seconds,
+                    temp=C2K(header.min_temp / 10.0),
+                    profile=profile)
+            except ValueError as ex:
+                log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
+                    ' {0.hour:>02d}:{0.minute:>02d}' \
+                    ' max depth={0.max_depth}'.format(header))
 
 
     def _get_profile(self, header, dive_data):
         """
         Parse OSTC dive samples.
         """
-        ### try:
         # ostc starts dive below at a depth, so add (0, 0) sample
-
         yield Sample(depth=0.0, time=0, gas=self._get_gas(header, header.gas))
 
         for i, sample in enumerate(dive_data, 1):
@@ -233,11 +237,6 @@ class OSTCDataParser(object):
                     gas=gas)
 
         yield Sample(depth=0.0, time=(i + 1) * header.sampling)
-
-        ### except ValueError as ex:
-        ###     log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
-        ###         ' {0.hour:>02d}:{0.minute:>02d}' \
-        ###         ' max depth={0.max_depth}'.format(header))
 
 
     def _get_gas(self, header, gas_no):
