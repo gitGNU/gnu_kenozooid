@@ -27,6 +27,7 @@ import lxml.etree as et
 import unittest
 
 import kenozooid.uddf as ku
+import kenozooid.data as kd
 import kenozooid.driver.ostc.parser as ostc_parser
 from kenozooid.driver.ostc import pressure, OSTCDataParser
 
@@ -46,28 +47,25 @@ class ConversionTestCase(unittest.TestCase):
 
 
 
-class UDDFTestCase(unittest.TestCase):
+class DataModelTestCase(unittest.TestCase):
     """
-    OSTC data to UDDF format conversion tests.
+    OSTC data to data model format conversion tests.
 
     :Attributes:
      dives
         List of dives parsed from DATA_OSTC.
     """
     def setUp(self):
-        super(UDDFTestCase, self).setUp()
-        DCDump = namedtuple('DCDump', 'datetime data')
+        super(DataModelTestCase, self).setUp()
 
-        data = ku._dump_decode(od.DATA_OSTC)
-        dump = DCDump(datetime.now(), data)
-
+        dump = kd.BinaryData(datetime=datetime.now(), data=od.RAW_DATA_OSTC)
         dc = OSTCDataParser()
         self.dives = list(dc.dives(dump))
 
 
     def test_conversion(self):
         """
-        Test basic OSTC data to UDDF conversion
+        Test basic OSTC data to data model conversion
         """
         # five dives
         self.assertEquals(5, len(self.dives))
@@ -83,9 +81,41 @@ class UDDFTestCase(unittest.TestCase):
         self.assertEquals(300.65, dive.temp) # 27.45C
 
 
+    def test_gas(self):
+        """
+        Test OSTC gas data to data model conversion
+        """
+        dump = kd.BinaryData(datetime=datetime.now(),
+                data=od.RAW_DATA_OSTC_MK2_196)
+        dc = OSTCDataParser()
+        dive = list(dc.dives(dump))[7]
+        samples = list(dive.profile)
+        self.assertEquals(kd.Gas(o2=16, he=33), samples[0].gas)
+        self.assertEquals(kd.Gas(o2=16, he=33), samples[1360].gas)
+        self.assertEquals(kd.Gas(o2=100, he=0), samples[1372].gas)
+        self.assertEquals(kd.Gas(o2=47, he=0), samples[1491].gas)
+
+
+    def test_gas_info(self):
+        """
+        Test OSTC gas fetching from header
+        """
+        dives = ostc_parser.profiles(od.RAW_DATA_OSTC_MK2_194)
+        header, profile = list(dives)[7]
+        header = ostc_parser.header(header)
+        dc = OSTCDataParser()
+
+        self.assertEquals(kd.Gas(o2=21, he=0), dc._get_gas(header, 1))
+        self.assertEquals(kd.Gas(o2=47, he=0), dc._get_gas(header, 2))
+        self.assertEquals(kd.Gas(o2=100, he=0), dc._get_gas(header, 3))
+        self.assertEquals(kd.Gas(o2=13, he=40), dc._get_gas(header, 4))
+        self.assertEquals(kd.Gas(o2=17, he=37), dc._get_gas(header, 5))
+        self.assertEquals(kd.Gas(o2=10, he=50), dc._get_gas(header, 6))
+
+
     def test_deco_alarm(self):
         """
-        Test OSTC deco alarm data to UDDF conversion
+        Test OSTC deco alarm data to data model conversion
         """
         dive = self.dives[3] # dive no 3 contains deco alarms
         samples = list(dive.profile)
@@ -110,7 +140,7 @@ class UDDFTestCase(unittest.TestCase):
 
     def test_deco(self):
         """
-        Test OSTC deco data to UDDF conversion
+        Test OSTC deco data to data model conversion
         """
         dive = self.dives[0]
         samples = list(dive.profile)[24:181:6]

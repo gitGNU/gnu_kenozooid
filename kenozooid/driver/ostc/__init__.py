@@ -27,11 +27,11 @@ protocol can be found at address
 
 """
 
-from collections import OrderedDict
 from datetime import datetime, timedelta
 from serial import Serial, SerialException
 from binascii import hexlify
 from functools import partial
+from operator import attrgetter
 import logging
 
 log = logging.getLogger('kenozooid.driver.ostc')
@@ -43,6 +43,9 @@ from kenozooid.units import C2K
 from . import parser as ostc_parser
 from kenozooid.data import Dive, Sample, Gas
 
+GAS_GETTERS = dict(
+    zip(range(1, 7), (attrgetter('gas{}_o2'.format(i), 'gas{}_he'.format(i))
+        for i in range(1, 7))))
 
 def pressure(depth):
     """
@@ -171,8 +174,6 @@ class OSTCDataParser(object):
             'uddf:decostop/@duration', 'uddf:decostop/@decodepth', 'uddf:decostop/@kind', \
             'uddf:depth', 'uddf:divetime', 'uddf:temperature',
                 
-        UDDF_SAMPLE = OrderedDict(zip(_f, _q))
-
         ostc_data = ostc_parser.get_data(dump.data)
 
         for h, p in ostc_parser.profiles(ostc_data.profiles):
@@ -206,10 +207,14 @@ class OSTCDataParser(object):
         """
         ### try:
         # ostc starts dive below at a depth, so add (0, 0) sample
-        yield Sample(depth=0.0, time=0)
+
+        yield Sample(depth=0.0, time=0, gas=self._get_gas(header, header.gas))
 
         for i, sample in enumerate(dive_data, 1):
             temp = C2K(sample.temp) if sample.temp else None
+
+            gas = None if sample.current_gas is None \
+                    else self._get_gas(header, sample.current_gas)
 
             # deco info
             deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
@@ -221,7 +226,8 @@ class OSTCDataParser(object):
                     alarm=('deco',) if deco_alarm else None,
                     temp=temp,
                     deco_time=deco_time,
-                    deco_depth=deco_depth)
+                    deco_depth=deco_depth,
+                    gas=gas)
 
         yield Sample(depth=0.0, time=(i + 1) * header.sampling)
 
@@ -229,6 +235,20 @@ class OSTCDataParser(object):
         ###     log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
         ###         ' {0.hour:>02d}:{0.minute:>02d}' \
         ###         ' max depth={0.max_depth}'.format(header))
+
+
+    def _get_gas(self, header, gas_no):
+        """
+        Get gas information from OSTC dive header.
+
+        :Parameters:
+         header
+            Dive header information.
+         gas_no
+            Gas number to get (1-6).
+        """
+        o2, he = GAS_GETTERS[gas_no](header)
+        return Gas(o2=o2, he=he)
 
 
     def version(self, data):

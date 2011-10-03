@@ -48,11 +48,13 @@ RE_PROFILES = re.compile(b'(\xfa\xfa' \
 # dive profile header
 DiveHeader = namedtuple('DiveHeader', """\
 version month day year hour minute max_depth dive_time_m dive_time_s
-min_temp surface_pressure desaturation gas1 gas2 gas3 gas4 gas5 gas6 gas
+min_temp surface_pressure desaturation
+gas1_o2 gas1_he gas2_o2 gas2_he gas3_o2 gas3_he gas4_o2 gas4_he gas5_o2 gas5_he
+gas6_o2 gas6_he gas
 ver1 ver2 voltage sampling div_temp div_deco div_gf div_ppo2
 div_deco_debug div_cns salnity max_cns
 """)
-FMT_DIVE_HEADER = '<6BHHB' 'HHH6HB' 'BBHB4B' 'BBBB'
+FMT_DIVE_HEADER = '<6BHHB' 'HHH' '10B' 'BBB' 'BBHB4B' 'BBBB'
 
 DiveHeader_191 = namedtuple('DiveHeader_191',
         DiveHeader._fields + ('avg_depth', 'dive_time_total_s',
