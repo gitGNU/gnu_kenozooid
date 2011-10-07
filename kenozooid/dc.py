@@ -150,7 +150,7 @@ def _save_dives(drv, time, data, fout):
             # store gas and dives in two separate files,
             # then merge the data into one UDDF file
             save = kf.sink(partial(ku.save_uddf, fout=fout))
-            m = kf.concat(2, cat_gd, save)
+            m = kf.concat(2, partial(cat_gd, equipment=eq, dump=dump), save)
             kf.send(
                 kf.pipe(drv.dives(bdata),
                     kd.sort_dives,
@@ -197,7 +197,7 @@ def uniq_gases(tc):
             n = ku.create_gas(gas)
             tc.send(n)
 
-def cat_gd(fg, fd):
+def cat_gd(fg, fd, equipment=None, dump=None):
     xfg = xfd = None
     fg.seek(0)
     fd.seek(0)
@@ -207,7 +207,7 @@ def cat_gd(fg, fd):
         xfd = ku.xml_file_copy(fd)
     fg.seek(0)
     fd.seek(0)
-    return ku.create_uddf(equipment=eq,
+    return ku.create_uddf(equipment=equipment,
             dump=dump,
             gases=xfg,
             dives=xfd)
