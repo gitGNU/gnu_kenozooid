@@ -186,7 +186,7 @@ class SensusUltraDriver(object):
 
 
 
-@kc.inject(DataParser, id='su')
+@kc.inject(DataParser, id='su', data=())
 class SensusUltraDataParser(object):
     """
     Reefnet Sensus Ultra dive logger data parser.

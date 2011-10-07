@@ -26,9 +26,10 @@ from functools import partial
 import lxml.etree as et
 import logging
 
-import kenozooid.uddf as ku
+import kenozooid.component as kc
 import kenozooid.data as kd
-import kenozooid.util as kt
+import kenozooid.flow as kf
+import kenozooid.uddf as ku
 
 log = logging.getLogger('kenozooid.dc')
 
@@ -140,11 +141,75 @@ def _save_dives(drv, time, data, fout):
     
     eq = ku.create_dc_data(dc_id, model)
     dump = ku.create_dump_data(dc_id=dc_id, datetime=time, data=data)
-    dives = kt.pipe(drv.dives(bdata),
-            kd.sort_dives,
-            kd.uniq_dives,
-            partial(ku.create_dives, equipment=(dc_id,)))
-    ku.save_uddf(ku.create_uddf(equipment=eq, dives=dives, dump=dump), fout)
 
+    p = kc.params(drv.__class__)
+    if 'gas' in p['data']:
+        log.debug('gas data pipeline')
+        with kf.buffer_open(2) as (f_g, f_d):
+
+            # store gas and dives in two separate files,
+            # then merge the data into one UDDF file
+            save = kf.sink(partial(ku.save_uddf, fout=fout))
+            m = kf.concat(2, cat_gd, save)
+            kf.send(
+                kf.pipe(drv.dives(bdata),
+                    kd.sort_dives,
+                    kd.uniq_dives),
+                kf.split(
+                    extract_gases(uniq_gases(kf.buffer(f_g, m))),
+                    create_dives(kf.buffer(f_d, m))
+                )
+            )
+
+    else:
+        log.debug('simple data pipeline')
+        dives = kf.pipe(drv.dives(bdata),
+                kd.sort_dives,
+                kd.uniq_dives,
+                partial(ku.create_dives, equipment=(dc_id,)))
+        ku.save_uddf(ku.create_uddf(equipment=eq, dives=dives, dump=dump), fout)
+
+#
+# fixme: put the functions/coroutines below into proper modules
+#
+@kf.coroutine
+def create_dives(tg):
+    while True:
+        dive = yield
+        n = ku.create_dive(dive)
+        tg.send(n)
+
+@kf.coroutine
+def extract_gases(tc):
+    while True:
+        dive = yield
+        for s in dive.profile:
+            if s.gas is not None:
+                tc.send(s.gas)
+
+@kf.coroutine
+def uniq_gases(tc):
+    gases = set()
+    while True:
+        gas = yield
+        if gas not in gases:
+            gases.add(gas)
+            n = ku.create_gas(gas)
+            tc.send(n)
+
+def cat_gd(fg, fd):
+    xfg = xfd = None
+    fg.seek(0)
+    fd.seek(0)
+    if len(fg.read(1)) > 0:
+        xfg = ku.xml_file_copy(fg)
+    if len(fd.read(1)) > 0:
+        xfd = ku.xml_file_copy(fd)
+    fg.seek(0)
+    fd.seek(0)
+    return ku.create_uddf(equipment=eq,
+            dump=dump,
+            gases=xfg,
+            dives=xfd)
 
 # vim: sw=4:et:ai

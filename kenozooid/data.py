@@ -41,8 +41,26 @@ def ntuple(name, fields):
 
 Dive = ntuple('Dive', 'datetime depth duration temp profile equipment')
 Sample = ntuple('Sample', 'depth time temp deco_time deco_depth alarm gas')
-Gas = ntuple('Gas', 'o2 he')
+Gas = ntuple('Gas', 'id name o2 he')
 BinaryData = ntuple('BinaryData', 'datetime data')
+
+
+def gas(o2, he):
+    """
+    Convert Oxygen and Helium values into Gas data record with id and name.
+    """
+    id = 'air'
+    name = 'Air'
+    if o2 == 100:
+        id = 'o2'
+        name = 'O2'
+    elif o2 > 21 and he == 0:
+        id = 'ean{:02d}'.format(o2)
+        name = 'EAN{:02d}'.format(o2)
+    elif he > 0:
+        id = 'tx{:02d}{:02d}'.format(o2, he)
+        name = 'TX {:02d}/{:02d}'.format(o2, he)
+    return Gas(id=id, name=name, o2=o2, he=he)
 
 
 def sort_dives(dives):

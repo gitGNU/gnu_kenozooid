@@ -50,6 +50,7 @@ from operator import itemgetter
 from uuid import uuid4 as uuid
 from copy import deepcopy
 from dirty.xml import xml
+from dirty import RawString
 import base64
 import bz2
 import itertools
@@ -880,7 +881,7 @@ def _dump_encode(data):
     return base64.b64encode(s)
 
 
-def create_uddf(datetime=datetime.now(), equipment=None, dives=None,
+def create_uddf(datetime=datetime.now(), equipment=None, gases=None, dives=None,
         dump=None):
     """
     Create UDDF XML data.
@@ -890,12 +891,13 @@ def create_uddf(datetime=datetime.now(), equipment=None, dives=None,
         Timestamp of UDDF creation.
      equipment
         Diver's (owner) equipment XML data (see create_dc_data).
+     gases
+        List of gases used by the dives.
      dives
         Dives XML data (see create_dives).
      dump
         Dive computer dump XML data (see create_dump_data).
     """
-
     doc = xml.uddf(
         xml.generator(
             xml.name('kenozooid'),
@@ -914,6 +916,7 @@ def create_uddf(datetime=datetime.now(), equipment=None, dives=None,
                 id='owner')),
 
         xml.divecomputercontrol(dump) if dump else None,
+        xml.gasdefinitions(gases) if gases else None,
         xml.profiledata(xml.repetitiongroup(dives, id=gen_id()))
             if dives else None,
 
@@ -933,21 +936,36 @@ def create_dives(dives, equipment=None):
      equipment
         List of used equipment references.
     """
-    for d in dives:
-        eq = itertools.chain(kt.nit(d.equipment), kt.nit(equipment))
+    for dive in dives:
         log.debug('convert dive {0.datetime}/{0.depth:.1f}/{0.duration} into XML'
-                .format(d))
-        yield xml.dive(
-            xml.informationbeforedive(xml.datetime(FMT_DT(d.datetime))),
-            xml.samples(create_dive_samples(d.profile)),
-            xml.informationafterdive(
-                xml.greatestdepth(FMT_F(d.depth)),
-                xml.diveduration(FMT_I(d.duration)),
-                None if d.temp is None else xml.lowesttemperature(FMT_F(d.temp)),
-                xml.equipmentused((xml.link(ref=v) for v in eq)),
-            ),
-            id=gen_id(),
-        )
+                .format(dive))
+        yield create_dive(dive, equipment)
+
+
+def create_dive(dive, equipment=None):
+    """
+    Create dive UDDF XML data.
+
+    :Parameters:
+     dive
+        Dive to render as XML.
+     equipment
+        List of used equipment references.
+    """
+    eq = itertools.chain(kt.nit(dive.equipment), kt.nit(equipment))
+    log.debug('convert dive {0.datetime}/{0.depth:.1f}/{0.duration} into XML'
+            .format(dive))
+    return xml.dive(
+        xml.informationbeforedive(xml.datetime(FMT_DT(dive.datetime))),
+        xml.samples(create_dive_samples(dive.profile)),
+        xml.informationafterdive(
+            xml.greatestdepth(FMT_F(dive.depth)),
+            xml.diveduration(FMT_I(dive.duration)),
+            None if dive.temp is None else xml.lowesttemperature(FMT_F(dive.temp)),
+            xml.equipmentused((xml.link(ref=v) for v in eq)),
+        ),
+        id=gen_id(),
+    )
 
 
 def create_dive_samples(samples):
@@ -969,8 +987,25 @@ def create_dive_samples(samples):
                 ),
             xml.depth(FMT_F(s.depth)),
             xml.divetime(FMT_I(s.time)),
+            None if s.gas is None else xml.switchmix(ref=str(s.gas.id)),
             None if s.temp is None else xml.temperature(FMT_F(s.temp)),
         )
+
+
+def create_gas(gas):
+    """
+    Create gas UDDF XML data.
+
+    :Parameters:
+     gas
+        Gas information to render as XML.
+    """
+    return xml.mix(
+        xml.name(gas.name),
+        xml.o2(str(gas.o2)),
+        xml.he(str(gas.he)),
+        id=gas.id,
+    )
 
 
 def create_dc_data(dc_id, model):
@@ -1020,18 +1055,15 @@ def save_uddf(doc, fout, validate=True):
     log.debug('saving uddf file')
     with open(fout, 'w') as f:
         f.writelines(doc)
+
     if validate:
         log.debug('validating uddf file')
         fs = pkg_resources.resource_stream('kenozooid', 'uddf_3.0.1.xsd')
         if hasattr(fs, 'name'):
             log.debug('uddf xsd found: {}'.format(fs.name))
         schema = et.XMLSchema(et.parse(fs))
-        try:
-            schema.assertValid(et.parse(fout))
-            log.debug('uddf file is valid')
-        except et.DocumentInvalid as ex:
-            log.info(et.tostring(doc, pretty_print=True))
-            raise ex
+        schema.assertValid(et.parse(fout))
+        log.debug('uddf file is valid')
 
 
 #
@@ -1184,6 +1216,21 @@ def gen_id(value=None):
     else:
         vid = hashlib.md5(str(value).encode()).hexdigest()
     return 'id-{}'.format(vid)
+
+
+def xml_file_copy(f):
+    """
+    Iterator of raw XML data from a file to data into ``dirty.xml`` nodes.
+
+    :Parameters:
+     f
+        File containing XML data.
+    """
+    while True:
+        l = f.read(4096)
+        if not l:
+            break
+        yield RawString(l)
 
 
 # vim: sw=4:et:ai

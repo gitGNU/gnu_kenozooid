@@ -41,7 +41,7 @@ import kenozooid.component as kc
 from kenozooid.driver import DeviceDriver, Simulator, DataParser, DeviceError
 from kenozooid.units import C2K
 from . import parser as ostc_parser
-from kenozooid.data import Dive, Sample, Gas
+import kenozooid.data as kd
 
 GAS_GETTERS = dict(
     zip(range(1, 7), (attrgetter('gas{}_o2'.format(i), 'gas{}_he'.format(i))
@@ -146,7 +146,7 @@ class OSTCSimulator(object):
 
 
 
-@kc.inject(DataParser, id='ostc')
+@kc.inject(DataParser, id='ostc', data=('gas',))
 class OSTCDataParser(object):
     """
     OSTC dive computer data parser.
@@ -196,7 +196,7 @@ class OSTCDataParser(object):
 
             try:
                 profile = list(self._get_profile(header, dive_data))
-                yield Dive(datetime=st,
+                yield kd.Dive(datetime=st,
                     depth=header.max_depth / 100.0,
                     duration=duration.seconds,
                     temp=C2K(header.min_temp / 10.0),
@@ -212,7 +212,7 @@ class OSTCDataParser(object):
         Parse OSTC dive samples.
         """
         # ostc starts dive below at a depth, so add (0, 0) sample
-        yield Sample(depth=0.0, time=0, gas=self._get_gas(header, header.gas))
+        yield kd.Sample(depth=0.0, time=0, gas=self._get_gas(header, header.gas))
 
         for i, sample in enumerate(dive_data, 1):
             temp = C2K(sample.temp) if sample.temp else None
@@ -221,14 +221,14 @@ class OSTCDataParser(object):
             if sample.current_gas is not None:
                 gas = self._get_gas(header, sample.current_gas)
             elif sample.gas_set_o2 is not None:
-                gas = Gas(o2=sample.gas_set_o2, he=sample.gas_set_he)
+                gas = kd.gas(sample.gas_set_o2, sample.gas_set_he)
 
             # deco info
             deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
             deco_depth = sample.deco_depth if sample.deco_depth else None
             deco_alarm = sample.alarm in (2, 3)
 
-            yield Sample(depth=sample.depth,
+            yield kd.Sample(depth=sample.depth,
                     time=(i * header.sampling),
                     alarm=('deco',) if deco_alarm else None,
                     temp=temp,
@@ -236,7 +236,7 @@ class OSTCDataParser(object):
                     deco_depth=deco_depth,
                     gas=gas)
 
-        yield Sample(depth=0.0, time=(i + 1) * header.sampling)
+        yield kd.Sample(depth=0.0, time=(i + 1) * header.sampling)
 
 
     def _get_gas(self, header, gas_no):
@@ -250,7 +250,7 @@ class OSTCDataParser(object):
             Gas number to get (1-6).
         """
         o2, he = GAS_GETTERS[gas_no](header)
-        return Gas(o2=o2, he=he)
+        return kd.gas(o2=o2, he=he)
 
 
     def version(self, data):

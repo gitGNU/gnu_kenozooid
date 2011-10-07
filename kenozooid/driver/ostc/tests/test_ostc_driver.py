@@ -90,10 +90,10 @@ class DataModelTestCase(unittest.TestCase):
         dc = OSTCDataParser()
         dive = list(dc.dives(dump))[7]
         samples = list(dive.profile)
-        self.assertEquals(kd.Gas(o2=16, he=33), samples[0].gas)
-        self.assertEquals(kd.Gas(o2=16, he=33), samples[1360].gas)
-        self.assertEquals(kd.Gas(o2=100, he=0), samples[1372].gas)
-        self.assertEquals(kd.Gas(o2=47, he=0), samples[1491].gas)
+        self.assertEquals('tx1633', samples[0].gas.id)
+        self.assertEquals('tx1633', samples[1360].gas.id)
+        self.assertEquals('o2', samples[1372].gas.id)
+        self.assertEquals('ean47', samples[1491].gas.id)
 
 
     def test_gas_info(self):
@@ -105,12 +105,12 @@ class DataModelTestCase(unittest.TestCase):
         header = ostc_parser.header(header)
         dc = OSTCDataParser()
 
-        self.assertEquals(kd.Gas(o2=21, he=0), dc._get_gas(header, 1))
-        self.assertEquals(kd.Gas(o2=47, he=0), dc._get_gas(header, 2))
-        self.assertEquals(kd.Gas(o2=100, he=0), dc._get_gas(header, 3))
-        self.assertEquals(kd.Gas(o2=13, he=40), dc._get_gas(header, 4))
-        self.assertEquals(kd.Gas(o2=17, he=37), dc._get_gas(header, 5))
-        self.assertEquals(kd.Gas(o2=10, he=50), dc._get_gas(header, 6))
+        self.assertEquals('air', dc._get_gas(header, 1).id)
+        self.assertEquals('ean47', dc._get_gas(header, 2).id)
+        self.assertEquals('o2', dc._get_gas(header, 3).id)
+        self.assertEquals('tx1340', dc._get_gas(header, 4).id)
+        self.assertEquals('tx1737', dc._get_gas(header, 5).id)
+        self.assertEquals('tx1050', dc._get_gas(header, 6).id)
 
 
     def test_deco_alarm(self):
