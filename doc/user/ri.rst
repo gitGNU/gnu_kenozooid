@@ -20,13 +20,13 @@ platform (Windows, Mac OS X).
 |                 |          |             | PLD Linux, Ubuntu Natty, |                            |
 |                 |          |             | Windows                  |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| dateutil        |   2.0    | Python      | Mac OS X, PLD Linux,     | date and time parsing      |
-|                 |          | module      | Windows                  |                            |
-+-----------------+----------+-------------+--------------------------+----------------------------+
 | lxml            |   2.3    | Python      | Fedora 15, Mac OS X,     | XML parsing and searching  |
 |                 |          | module      | PLD Linux, Windows       |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | dirty           |  1.0.2   | Python      | Mac OS X, PLD Linux,     | XML data generation        |
+|                 |          | module      | Windows                  |                            |
++-----------------+----------+-------------+--------------------------+----------------------------+
+| dateutil        |   2.0    | Python      | Mac OS X, PLD Linux,     | date and time parsing      |
 |                 |          | module      | Windows                  |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 |                                           **Optional**                                           |
@@ -103,6 +103,7 @@ Example, fully successful output of dependency check, can be as follows::
     Checking Kenozooid dependencies
     Checking Python version >= 3.2... ok
     Checking core Python module lxml... ok
+    Checking core Python module dirty >= 1.0.2... ok
     Checking core Python module dateutil... ok
     Checking optional Python module rpy2... ok
     Checking optional Python module serial... ok
@@ -117,6 +118,7 @@ dependencies, might look in the following way::
     Checking Kenozooid dependencies
     Checking Python version >= 3.2... ok
     Checking core Python module lxml... ok
+    Checking core Python module dirty >= 1.0.2... ok
     Checking core Python module dateutil... ok
     Checking optional Python module rpy2... ok
     Checking optional Python module serial... not found
