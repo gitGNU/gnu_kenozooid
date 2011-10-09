@@ -4,6 +4,7 @@ Changelog
 Kenozooid 0.3.0
 ---------------
 
+- gas data parsing and plotting implemented
 - significant speed improvement of UDDF XML data generation while parsing
   dive computer data
 - dive adding user interface simplified
