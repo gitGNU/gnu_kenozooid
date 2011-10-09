@@ -274,10 +274,10 @@ class FindDataTestCase(unittest.TestCase):
         profile = list(ku.dive_profile(node))
         self.assertEquals(4, len(profile))
 
-        self.assertEquals((0, 2.61, 296.73, None, None, None), profile[0])
-        self.assertEquals((10, 4.18, None, None, None, None), profile[1])
-        self.assertEquals((20, 6.25, None, None, None, None), profile[2])
-        self.assertEquals((30, 8.32, 297.26, None, None, None), profile[3])
+        self.assertEquals(kd.Sample(depth=2.61, time=0, temp=296.73), profile[0])
+        self.assertEquals(kd.Sample(depth=4.18, time=10), profile[1])
+        self.assertEquals(kd.Sample(depth=6.25, time=20), profile[2])
+        self.assertEquals(kd.Sample(depth=8.32, time=30, temp=297.26), profile[3])
 
 
     def test_dump_data(self):
