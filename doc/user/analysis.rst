@@ -125,15 +125,21 @@ The data frame containig dive profile information has the following columns
 
 ``dive``
     Dive number to reference dive - row number in ``kz.dives`` data frame.
-``time``
-    Dive time in seconds.
 ``depth``
     Depth during the dive.
+``time``
+    Dive time in seconds.
 ``temp``
     Temperature during the dive.
 ``deco_time``
     Time of deepest deco stop at given time of dive (deco ceiling length).
 ``deco_depth``
     Depth of deco stop at give time of dive (deco ceiling).
+``gas_name``
+    Name of gas mix switched at given depth.
+``gas_o2``
+    O2 percentage of switched gas mix.
+``gas_he``
+    Helium percentage of switched gas mix.
 
 .. vim: sw=4:et:ai
