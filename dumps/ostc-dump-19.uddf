@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
   <generator>
     <name>kenozooid</name>
@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.1.0</version>
-    <datetime>2011-09-06T19:21:17</datetime>
+    <version>0.3.0</version>
+    <datetime>2011-10-09T14:41:22</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -31,9 +31,16 @@
       <dcdump>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</dcdump>
     </divecomputerdump>
   </divecomputercontrol>
+  <gasdefinitions>
+    <mix id="air">
+      <name>Air</name>
+      <o2>21</o2>
+      <he>0</he>
+    </mix>
+  </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-84db6b89dab34a068ba6a1249c67bca6">
-      <dive id="id-db815c2451d649a28237ea70261ec3cb">
+    <repetitiongroup id="id-2fbe0f4e047e4f678ebdf13da55ff7ec">
+      <dive id="id-9e5021d5799a421c818424704d51321f">
         <informationbeforedive>
           <datetime>2011-02-27T12:18:07</datetime>
         </informationbeforedive>
@@ -41,6 +48,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>2.6</depth>
@@ -308,7 +316,7 @@
             <divetime>650</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>18.0</depth>
             <divetime>660</divetime>
           </waypoint>
@@ -1167,19 +1175,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2770</divetime>
+            <divetime>2760</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>30.9</greatestdepth>
           <diveduration>2753</diveduration>
           <lowesttemperature>278.3</lowesttemperature>
-          <equipmentused>
-            <link ref="id-813faee92e51f0dae4a64c0894a09c1c"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-18c03cd6622a4d1e9ccc4dede0d64fc4">
+      <dive id="id-3d5313d7381c4983bf4ecfe66feda72b">
         <informationbeforedive>
           <datetime>2011-02-27T15:44:10</datetime>
         </informationbeforedive>
@@ -1187,6 +1193,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.0</depth>
@@ -2410,16 +2417,14 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3010</divetime>
+            <divetime>3000</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>37.8</greatestdepth>
           <diveduration>2990</diveduration>
           <lowesttemperature>278.2</lowesttemperature>
-          <equipmentused>
-            <link ref="id-813faee92e51f0dae4a64c0894a09c1c"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
     </repetitiongroup>

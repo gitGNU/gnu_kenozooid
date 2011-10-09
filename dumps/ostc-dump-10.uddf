@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
   <generator>
     <name>kenozooid</name>
@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.1.0</version>
-    <datetime>2011-09-06T19:20:14</datetime>
+    <version>0.3.0</version>
+    <datetime>2011-10-09T14:40:47</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -31,9 +31,16 @@
       <dcdump>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</dcdump>
     </divecomputerdump>
   </divecomputercontrol>
+  <gasdefinitions>
+    <mix id="air">
+      <name>Air</name>
+      <o2>21</o2>
+      <he>0</he>
+    </mix>
+  </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-31e3b1921a7a492cbace72139dc3d844">
-      <dive id="id-9ab6777d7f6b4c46b2313fbd49e6ec22">
+    <repetitiongroup id="id-3a9a0fcb70f6499eb4af26da7d69a3d0">
+      <dive id="id-bc759db797bc4ef684374f3884bbec78">
         <informationbeforedive>
           <datetime>2009-10-31T12:15:27</datetime>
         </informationbeforedive>
@@ -41,6 +48,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.5</depth>
@@ -1036,19 +1044,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2450</divetime>
+            <divetime>2440</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>15.8</greatestdepth>
           <diveduration>2433</diveduration>
           <lowesttemperature>302.2</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-7ec748ea8f1548ac84b57bf9e9805db4">
+      <dive id="id-b592ddc76f5d45a8ba3ea122f8668d9a">
         <informationbeforedive>
           <datetime>2009-10-31T16:24:06</datetime>
         </informationbeforedive>
@@ -1056,6 +1062,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>2.6</depth>
@@ -2206,19 +2213,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2830</divetime>
+            <divetime>2820</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>14.9</greatestdepth>
           <diveduration>2814</diveduration>
           <lowesttemperature>302.5</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-788652bea50545cc9ed1be1bf2ec3c51">
+      <dive id="id-3d72594cf51d414687962b3dfded2db5">
         <informationbeforedive>
           <datetime>2009-11-01T07:20:40</datetime>
         </informationbeforedive>
@@ -2226,6 +2231,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>2.0</depth>
@@ -3609,19 +3615,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3400</divetime>
+            <divetime>3390</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>19.3</greatestdepth>
           <diveduration>3380</diveduration>
           <lowesttemperature>302.9</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-95eca6fb2140483ea373dc8348615036">
+      <dive id="id-cddb3d660652450d9e1491872b029f48">
         <informationbeforedive>
           <datetime>2009-11-01T11:43:22</datetime>
         </informationbeforedive>
@@ -3629,6 +3633,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>4.6</depth>
@@ -4190,7 +4195,7 @@
             <divetime>1370</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>15.0</depth>
             <divetime>1380</divetime>
           </waypoint>
@@ -4215,7 +4220,7 @@
             <divetime>1430</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>13.9</depth>
             <divetime>1440</divetime>
             <temperature>303.6</temperature>
@@ -4241,7 +4246,7 @@
             <divetime>1490</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>12.2</depth>
             <divetime>1500</divetime>
           </waypoint>
@@ -4774,19 +4779,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2810</divetime>
+            <divetime>2800</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>29.8</greatestdepth>
           <diveduration>2798</diveduration>
           <lowesttemperature>303.4</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-abfaf8c3bb0b4f01abcf8f95b2c99d2e">
+      <dive id="id-ec79d0fd6afa48ea8346a014cd3ba6ef">
         <informationbeforedive>
           <datetime>2009-11-01T15:37:40</datetime>
         </informationbeforedive>
@@ -4794,6 +4797,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>2.8</depth>
@@ -5956,19 +5960,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2860</divetime>
+            <divetime>2850</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>17.8</greatestdepth>
           <diveduration>2840</diveduration>
           <lowesttemperature>303.6</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-5bcdd84f346547ebaa6f2360ca624fe1">
+      <dive id="id-35299ebb92454e2d9a5ac4554579e8db">
         <informationbeforedive>
           <datetime>2009-11-01T19:22:57</datetime>
         </informationbeforedive>
@@ -5976,6 +5978,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>6.4</depth>
@@ -6934,19 +6937,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2360</divetime>
+            <divetime>2350</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>17.8</greatestdepth>
           <diveduration>2343</diveduration>
           <lowesttemperature>303.9</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-5399807302304b758bc16565a7176f2d">
+      <dive id="id-337cabf56edd4daabfc47c160e86e471">
         <informationbeforedive>
           <datetime>2009-11-02T07:37:09</datetime>
         </informationbeforedive>
@@ -6954,6 +6955,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>2.9</depth>
@@ -7490,7 +7492,7 @@
             <divetime>1310</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>15.4</depth>
             <divetime>1320</divetime>
             <temperature>303.8</temperature>
@@ -7614,7 +7616,7 @@
             <divetime>1610</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>15.3</depth>
             <divetime>1620</divetime>
           </waypoint>
@@ -8057,19 +8059,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2710</divetime>
+            <divetime>2700</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>28.1</greatestdepth>
           <diveduration>2691</diveduration>
           <lowesttemperature>303.0</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-955a5f0fda3c4dbd8636d75aa968ba61">
+      <dive id="id-389e5f6121334316b1119dda44ade5e2">
         <informationbeforedive>
           <datetime>2009-11-02T11:53:24</datetime>
         </informationbeforedive>
@@ -8077,6 +8077,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.1</depth>
@@ -8687,7 +8688,7 @@
             <divetime>1490</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>16.3</depth>
             <divetime>1500</divetime>
           </waypoint>
@@ -8975,19 +8976,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2210</divetime>
+            <divetime>2200</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>39.3</greatestdepth>
           <diveduration>2196</diveduration>
           <lowesttemperature>303.2</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-e966e659d1ed47288356b2d7f2fd1eeb">
+      <dive id="id-a0fa2e3566f34e709ddf20c6f10d2ffa">
         <informationbeforedive>
           <datetime>2009-11-02T16:32:39</datetime>
         </informationbeforedive>
@@ -8995,6 +8994,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>2.0</depth>
@@ -10035,19 +10035,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2560</divetime>
+            <divetime>2550</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>36.4</greatestdepth>
           <diveduration>2541</diveduration>
           <lowesttemperature>302.5</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-24e359e80bcf43e6a7309b405a56b9c1">
+      <dive id="id-c5c8cdedf2dd4cd4b5fd187fbe214353">
         <informationbeforedive>
           <datetime>2009-11-02T20:08:07</datetime>
         </informationbeforedive>
@@ -10055,6 +10053,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>4.9</depth>
@@ -11229,19 +11228,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2890</divetime>
+            <divetime>2880</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>19.8</greatestdepth>
           <diveduration>2873</diveduration>
           <lowesttemperature>302.0</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-77d16c72b5374abbac8c824f374deee7">
+      <dive id="id-7d573c51133f4f19b3b8f801b880c841">
         <informationbeforedive>
           <datetime>2009-11-03T07:28:33</datetime>
         </informationbeforedive>
@@ -11249,6 +11246,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.0</depth>
@@ -12289,19 +12287,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2560</divetime>
+            <divetime>2550</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>28.8</greatestdepth>
           <diveduration>2547</diveduration>
           <lowesttemperature>302.2</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-3996ae8cca6c46bc94e3b70a00adb542">
+      <dive id="id-2c6739171c2f4376a305fdb2d4700674">
         <informationbeforedive>
           <datetime>2009-11-03T11:59:27</datetime>
         </informationbeforedive>
@@ -12309,6 +12305,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.7</depth>
@@ -13598,19 +13595,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3170</divetime>
+            <divetime>3160</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>20.3</greatestdepth>
           <diveduration>3153</diveduration>
           <lowesttemperature>302.5</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-e2500e0c8e0d4fdc921a22f28a6af929">
+      <dive id="id-bfd058ad2acf49c0914030a37ef5e637">
         <informationbeforedive>
           <datetime>2009-11-03T16:01:20</datetime>
         </informationbeforedive>
@@ -13618,6 +13613,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.4</depth>
@@ -14862,19 +14858,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3060</divetime>
+            <divetime>3050</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>19.3</greatestdepth>
           <diveduration>3040</diveduration>
           <lowesttemperature>302.2</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-c60e1f3ae0cd4567bbaf771350f6da02">
+      <dive id="id-2aeab4b8f85441c697c301a46617a779">
         <informationbeforedive>
           <datetime>2009-11-03T19:24:31</datetime>
         </informationbeforedive>
@@ -14882,6 +14876,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.3</depth>
@@ -15138,19 +15133,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>640</divetime>
+            <divetime>630</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>21.5</greatestdepth>
           <diveduration>629</diveduration>
           <lowesttemperature>300.1</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-df32cd7b649e415f8635faf7b365dd95">
+      <dive id="id-90ab8d662a8440b7bdb820a6c8e4d838">
         <informationbeforedive>
           <datetime>2009-11-04T08:29:43</datetime>
         </informationbeforedive>
@@ -15158,6 +15151,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.0</depth>
@@ -15596,7 +15590,7 @@
             <divetime>1070</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>17.9</depth>
             <divetime>1080</divetime>
             <temperature>302.8</temperature>
@@ -16170,19 +16164,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2490</divetime>
+            <divetime>2480</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>31.7</greatestdepth>
           <diveduration>2477</diveduration>
           <lowesttemperature>302.8</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-a9892ae33cd74a22b4ee16f89f326d6e">
+      <dive id="id-12cfdc9993064e2297b1644b97eebe89">
         <informationbeforedive>
           <datetime>2009-11-04T12:21:14</datetime>
         </informationbeforedive>
@@ -16190,6 +16182,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.0</depth>
@@ -17458,19 +17451,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3120</divetime>
+            <divetime>3110</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>20.9</greatestdepth>
           <diveduration>3106</diveduration>
           <lowesttemperature>302.5</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-375b2ac3938546fdb7e6db6455e9bef0">
+      <dive id="id-1058c6cc1bb64fe6b1d678999422f4be">
         <informationbeforedive>
           <datetime>2009-11-04T15:42:35</datetime>
         </informationbeforedive>
@@ -17478,6 +17469,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.5</depth>
@@ -18959,19 +18951,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>3640</divetime>
+            <divetime>3630</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>16.0</greatestdepth>
           <diveduration>3625</diveduration>
           <lowesttemperature>301.1</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-49301ebd64c14b15a63490446523de30">
+      <dive id="id-e8aa046dafc64024a59d1e4461136066">
         <informationbeforedive>
           <datetime>2009-11-04T18:31:21</datetime>
         </informationbeforedive>
@@ -18979,6 +18969,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>5.0</depth>
@@ -20047,19 +20038,17 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2630</divetime>
+            <divetime>2620</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>16.6</greatestdepth>
           <diveduration>2619</diveduration>
           <lowesttemperature>301.2</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
-      <dive id="id-2bd8a08aa22f4db595cd1a83364e44a5">
+      <dive id="id-6c89a96a6ed54847816ec2582d8a5767">
         <informationbeforedive>
           <datetime>2009-11-05T10:39:16</datetime>
         </informationbeforedive>
@@ -20067,6 +20056,7 @@
           <waypoint>
             <depth>0.0</depth>
             <divetime>0</divetime>
+            <switchmix ref="air"/>
           </waypoint>
           <waypoint>
             <depth>3.9</depth>
@@ -20554,7 +20544,7 @@
             <divetime>1190</divetime>
           </waypoint>
           <waypoint>
-            <decostop duration="60.0" decodepth="6" kind="mandatory"/>
+            <decostop duration="60" kind="mandatory" decodepth="6"/>
             <depth>16.5</depth>
             <divetime>1200</divetime>
             <temperature>302.5</temperature>
@@ -20969,16 +20959,14 @@
           </waypoint>
           <waypoint>
             <depth>0.0</depth>
-            <divetime>2220</divetime>
+            <divetime>2210</divetime>
           </waypoint>
         </samples>
         <informationafterdive>
           <greatestdepth>24.0</greatestdepth>
           <diveduration>2204</diveduration>
           <lowesttemperature>302.4</lowesttemperature>
-          <equipmentused>
-            <link ref="id-7ddbfaf5ed5396166cef7a0836cdbd9a"/>
-          </equipmentused>
+          <equipmentused/>
         </informationafterdive>
       </dive>
     </repetitiongroup>
