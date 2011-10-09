@@ -141,7 +141,9 @@ class DiveDataInjectTestCase(unittest.TestCase):
         self.assertEquals(11, d.nrow)
         self.assertEquals(10, d.ncol)
         self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(d[0]))
-        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23, 25), tuple(d[1]))
+        self.assertEquals((10.0, 20.0, 10.0, 10.0, 20.0, 10.0, 10.0, 20.0,
+            12.0, 11.0, 10.0), tuple(d[1]))
+        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23, 25), tuple(d[2]))
 
 
     def test_dive_data_injection(self):
@@ -186,7 +188,10 @@ class DiveDataInjectTestCase(unittest.TestCase):
         self.assertEquals(11, p_df.nrow)
         self.assertEquals(10, p_df.ncol)
         self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(p_df[0]))
-        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23, 25), tuple(p_df[1]))
+        self.assertEquals((10.0, 20.0, 10.0, 10.0, 20.0, 10.0, 10.0, 20.0,
+            12.0, 11.0, 10.0), tuple(p_df[1]))
+        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23, 25),
+                tuple(p_df[2]))
 
 
 # vim: sw=4:et:ai
