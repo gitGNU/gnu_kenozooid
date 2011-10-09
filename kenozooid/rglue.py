@@ -72,10 +72,10 @@ def dive_profiles_df(data):
     """
     Create R data frame for dive profiles using rpy interface.
     """
-    cols = ('dive', 'time', 'depth', 'temp', 'deco_time', 'deco_depth',
+    cols = ('dive', 'depth', 'time', 'temp', 'deco_time', 'deco_depth',
         'deco_alarm', 'gas_name', 'gas_o2', 'gas_he')
     vf = (int_vec,) + (float_vec, ) * 5 + (bool_vec, str_vec, int_vec, int_vec)
-    p = ((k, s.time, s.depth, s.temp, s.deco_time, s.deco_depth, s.alarm,
+    p = ((k, s.depth, s.time, s.temp, s.deco_time, s.deco_depth, s.alarm,
           None if s.gas is None else s.gas.name,
           None if s.gas is None else s.gas.o2,
           None if s.gas is None else s.gas.he,

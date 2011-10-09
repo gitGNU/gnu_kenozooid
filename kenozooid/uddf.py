@@ -91,8 +91,8 @@ XP_DEFAULT_DIVE_DATA = (
 
 # XPath queries for default dive profile sample data
 XP_DEFAULT_PROFILE_DATA =  (
-    XPath('uddf:divetime/text()'),
     XPath('uddf:depth/text()'),
+    XPath('uddf:divetime/text()'),
     XPath('uddf:temperature/text()'),
     XPath('uddf:decostop/@duration'),
     XPath('uddf:decostop/@decodepth'),
@@ -366,7 +366,7 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('time', 'depth', 'temp', 'deco_time', 'deco_depth',
+        fields = ('depth', 'time', 'temp', 'deco_time', 'deco_depth',
                 'alarm', 'gas')
         queries = XP_DEFAULT_PROFILE_DATA
         gases = dict(((gas.id, gas) for gas in gas_data(node)))
