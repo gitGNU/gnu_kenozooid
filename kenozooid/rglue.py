@@ -22,7 +22,6 @@ rpy integration functions.
 
 from functools import partial
 from collections import OrderedDict
-import itertools
 
 import rpy2.robjects as ro
 R = ro.r
@@ -44,7 +43,7 @@ def _vec(c, na, data):
     return c([na if v is None else v for v in data])
 
 
-def df(cols, vf, data, *mc):
+def df(cols, vf, data):
     """
     Create R data frame using rpy interface.
 
@@ -56,8 +55,7 @@ def df(cols, vf, data, *mc):
      data
         Iterable of data frame rows (not columns).
     """
-    d = ((n, f(d)) for n, f, d in zip(cols, vf, zip(*data)))
-    od = OrderedDict(itertools.chain(mc, d))
+    od = OrderedDict((n, f(d)) for n, f, d in zip(cols, vf, zip(*data)))
     return ro.DataFrame(od)
 
 
@@ -66,7 +64,7 @@ def dives_df(data):
     Create R data frame for dives using rpy interface.
     """
     cols = 'datetime', 'depth', 'duration', 'temp'
-    vf = ro.StrVector, float_vec, float_vec, float_vec
+    vf = str_vec, float_vec, float_vec, float_vec
     return df(cols, vf, data)
 
 
@@ -74,12 +72,15 @@ def dive_profiles_df(data):
     """
     Create R data frame for dive profiles using rpy interface.
     """
-    cols = 'time', 'depth', 'temp', 'deco_time', 'deco_depth', 'deco_alarm'
-    vf = (float_vec, ) * 5 + (bool_vec, )
-    d = ro.DataFrame({})
-    iv_f = lambda i: ro.IntVector([i])
-    return d.rbind(*(df(cols, vf, p, ('dive', iv_f(i))) \
-        for i, p in enumerate(data, 1)))
+    cols = ('dive', 'time', 'depth', 'temp', 'deco_time', 'deco_depth',
+        'deco_alarm', 'gas_name', 'gas_o2', 'gas_he')
+    vf = (int_vec,) + (float_vec, ) * 5 + (bool_vec, str_vec, int_vec, int_vec)
+    p = ((k, s.time, s.depth, s.temp, s.deco_time, s.deco_depth, s.alarm,
+          None if s.gas is None else s.gas.name,
+          None if s.gas is None else s.gas.o2,
+          None if s.gas is None else s.gas.he,
+         ) for k, dive in enumerate(data, 1) for s in dive)
+    return df(cols, vf, p)
 
 
 def inject_dive_data(dives):
@@ -106,7 +107,9 @@ def inject_dive_data(dives):
     R('kz.dives$datetime = as.POSIXct(kz.dives$datetime)')
 
 
-float_vec = partial(_vec, ro.FloatVector, ro.NA_Real)
 bool_vec = partial(_vec, ro.BoolVector, ro.NA_Logical)
+float_vec = partial(_vec, ro.FloatVector, ro.NA_Real)
+int_vec = partial(_vec, ro.IntVector, ro.NA_Integer)
+str_vec = partial(_vec, ro.StrVector, ro.NA_Character)
 
 # vim: sw=4:et:ai

@@ -83,45 +83,64 @@ FMT_DT = lambda dt: format(dt, '%Y-%m-%dT%H:%M:%S%z')
 XPath = partial(et.XPath, namespaces=_NSMAP)
 
 # XPath queries for default dive data
-XP_DEFAULT_DIVE_DATA = (XPath('uddf:informationbeforedive/uddf:datetime/text()'),
+XP_DEFAULT_DIVE_DATA = (
+    XPath('uddf:informationbeforedive/uddf:datetime/text()'),
     XPath('uddf:informationafterdive/uddf:greatestdepth/text()'),
     XPath('uddf:informationafterdive/uddf:diveduration/text()'),
     XPath('uddf:informationafterdive/uddf:lowesttemperature/text()'))
 
 # XPath queries for default dive profile sample data
-XP_DEFAULT_PROFILE_DATA =  (XPath('uddf:divetime/text()'),
-        XPath('uddf:depth/text()'),
-        XPath('uddf:temperature/text()'),
-        XPath('uddf:decostop/@duration'),
-        XPath('uddf:decostop/@decodepth'),
-        XPath('uddf:alarm/text()'))
+XP_DEFAULT_PROFILE_DATA =  (
+    XPath('uddf:divetime/text()'),
+    XPath('uddf:depth/text()'),
+    XPath('uddf:temperature/text()'),
+    XPath('uddf:decostop/@duration'),
+    XPath('uddf:decostop/@decodepth'),
+    XPath('uddf:alarm/text()'),
+    XPath('uddf:switchmix/@ref'),
+)
+
+XP_DEFAULT_GAS_DATA =  (
+    XPath('@id'),
+    XPath('uddf:name/text()'),
+    XPath('uddf:o2/text()'),
+    XPath('uddf:he/text()'),
+)
 
 # XPath query to locate dive profile sample
 XP_WAYPOINT = XPath('.//uddf:waypoint')
+# XPath query to locate gas mix
+XP_MIX = XPath('/uddf:uddf/uddf:gasdefinitions/uddf:mix')
 
 # XPath queries for default dive computer dump data
-XP_DEFAULT_DUMP_DATA = (XPath('uddf:link/@ref'),
-        # //uddf:divecomputerdump[position()] gives current()
-        XPath('../../uddf:diver/uddf:owner//uddf:divecomputer[' \
-                '@id = //uddf:divecomputerdump[position()]/uddf:link/@ref' \
-            ']/uddf:model/text()'),
-        XPath('uddf:datetime/text()'),
-        XPath('uddf:dcdump/text()'))
+XP_DEFAULT_DUMP_DATA = (
+    XPath('uddf:link/@ref'),
+    # //uddf:divecomputerdump[position()] gives current()
+    XPath('../../uddf:diver/uddf:owner//uddf:divecomputer[' \
+            '@id = //uddf:divecomputerdump[position()]/uddf:link/@ref' \
+        ']/uddf:model/text()'),
+    XPath('uddf:datetime/text()'),
+    XPath('uddf:dcdump/text()'),
+)
 
 # XPath queries for default buddy data
-XP_DEFAULT_BUDDY_DATA = (XPath('@id'),
-        XPath('uddf:personal/uddf:firstname/text()'),
-        XPath('uddf:personal/uddf:middlename/text()'),
-        XPath('uddf:personal/uddf:lastname/text()'),
-        XPath('uddf:personal/uddf:membership/@organisation'),
-        XPath('uddf:personal/uddf:membership/@memberid'))
+XP_DEFAULT_BUDDY_DATA = (
+    XPath('@id'),
+    XPath('uddf:personal/uddf:firstname/text()'),
+    XPath('uddf:personal/uddf:middlename/text()'),
+    XPath('uddf:personal/uddf:lastname/text()'),
+    XPath('uddf:personal/uddf:membership/@organisation'),
+    XPath('uddf:personal/uddf:membership/@memberid'),
+)
 
 # XPath queries for default dive site data
-XP_DEFAULT_SITE_DATA = (XPath('@id'),
-        XPath('uddf:name/text()'),
-        XPath('uddf:geography/uddf:location/text()'),
-        XPath('uddf:geography/uddf:longitude/text()'),
-        XPath('uddf:geography/uddf:latitude/text()'))
+XP_DEFAULT_SITE_DATA = (
+    XPath('@id'),
+    XPath('uddf:name/text()'),
+    XPath('uddf:geography/uddf:location/text()'),
+    XPath('uddf:geography/uddf:longitude/text()'),
+    XPath('uddf:geography/uddf:latitude/text()'),
+)
 
 # XPath query to find a buddy
 XP_FIND_BUDDY = XPath('/uddf:uddf/uddf:diver/uddf:buddy[' \
@@ -347,12 +366,24 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('time', 'depth', 'temp', 'deco_time', 'deco_depth', 'alarm')
+        fields = ('time', 'depth', 'temp', 'deco_time', 'deco_depth',
+                'alarm', 'gas')
         queries = XP_DEFAULT_PROFILE_DATA
-        parsers = (float, ) * 5 + (str, )
+        gases = dict(((gas.id, gas) for gas in gas_data(node)))
+        parsers = (float, ) * 5 + (str, gases.get)
 
     return find_data('Sample', node, fields, queries, parsers,
             nquery=XP_WAYPOINT)
+
+
+def gas_data(node, fields=None, queries=None, parsers=None):
+    if fields is None:
+        fields = ('id', 'name', 'o2', 'he')
+        queries = XP_DEFAULT_GAS_DATA
+        parsers = (str, str, int, int)
+
+    return find_data('Gas', node, fields, queries, parsers,
+            nquery=XP_MIX)
 
 
 def dump_data(node, fields=None, queries=None, parsers=None):

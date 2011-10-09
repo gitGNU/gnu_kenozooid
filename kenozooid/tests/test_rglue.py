@@ -20,13 +20,15 @@
 rpy integration functions tests.
 """
 
-from kenozooid.rglue import _vec, bool_vec, float_vec, df, \
-    dives_df, dive_profiles_df, inject_dive_data
 from datetime import datetime
 import unittest
 
 import rpy2.robjects as ro
 R = ro.r
+
+from kenozooid.rglue import _vec, bool_vec, float_vec, str_vec, int_vec, df, \
+    dives_df, dive_profiles_df, inject_dive_data
+import kenozooid.data as kd
 
 class FloatVectorTestCase(unittest.TestCase):
     """
@@ -34,7 +36,7 @@ class FloatVectorTestCase(unittest.TestCase):
     """
     def test_vec(self):
         """
-        Test creation of float vector.
+        Test creation of float vector
         """
         t = (1.0, 2.0, 3.0)
         v = float_vec(t)
@@ -58,7 +60,7 @@ class BoolVectorTestCase(unittest.TestCase):
     """
     def test_vec(self):
         """
-        Test creation of bool vector.
+        Test creation of bool vector
         """
         t = (True, True, False)
         v = bool_vec(t)
@@ -91,6 +93,7 @@ class DataFrameTestCase(unittest.TestCase):
         self.assertEquals((True, False, ro.NA_Logical), tuple(d[1]))
 
 
+
 class DiveDataInjectTestCase(unittest.TestCase):
     """
     Dive data inject tests.
@@ -118,26 +121,27 @@ class DiveDataInjectTestCase(unittest.TestCase):
         Test dive profiles data frame creation
         """
         p1 = (
-            (0, 10.0, 15.0, None, None, False),
-            (10, 20.0, 14.0, None, None, False),
-            (20, 10.0, 13.0, None, None, False),
+            kd.Sample(time=0, depth=10.0, temp=15.0, alarm=False),
+            kd.Sample(time=10, depth=20.0, temp=14.0, alarm=False),
+            kd.Sample(time=20, depth=10.0, temp=13.0, alarm=False),
         )
         p2 = (
-            (1, 10.0, 15.0, None, None, False),
-            (11, 20.0, 14.0, 4, 9, False),
-            (21, 10.0, 13.0, None, None, False),
+            kd.Sample(time=1, depth=10.0, temp=15.0, alarm=False),
+            kd.Sample(time=11, depth=20.0, temp=14.0, deco_time=4, deco_depth=9, alarm=False),
+            kd.Sample(time=21, depth=10.0, temp=13.0, alarm=False),
         )
         p3 = (
-            (2, 10.0, 15.0, None, None, False),
-            (12, 20.0, 14.0, 1, 6, True),
-            (22, 12.0, 11.0, None, None, False),
-            (23, 11.0, 12.0, None, None, False),
+            kd.Sample(time=2, depth=10.0, temp=15.0, alarm=False),
+            kd.Sample(time=12, depth=20.0, temp=14.0, deco_time=1, deco_depth=6, alarm=True),
+            kd.Sample(time=22, depth=12.0, temp=11.0, alarm=False),
+            kd.Sample(time=23, depth=11.0, temp=12.0, alarm=False),
+            kd.Sample(time=25, depth=10.0, temp=11.0, alarm=False),
         )
         d = dive_profiles_df((p1, p2, p3))
-        self.assertEquals(10, d.nrow)
-        self.assertEquals(7, d.ncol)
-        self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3), tuple(d[0]))
-        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23), tuple(d[1]))
+        self.assertEquals(11, d.nrow)
+        self.assertEquals(10, d.ncol)
+        self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(d[0]))
+        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23, 25), tuple(d[1]))
 
 
     def test_dive_data_injection(self):
@@ -150,20 +154,21 @@ class DiveDataInjectTestCase(unittest.TestCase):
             (datetime(2011, 10, 13), 33.0, 2030, None),
         )
         p1 = (
-            (0, 10.0, 15.0, None, None, False),
-            (10, 20.0, 14.0, None, None, False),
-            (20, 10.0, 13.0, None, None, False),
+            kd.Sample(time=0, depth=10.0, temp=15.0, alarm=False),
+            kd.Sample(time=10, depth=20.0, temp=14.0, alarm=False),
+            kd.Sample(time=20, depth=10.0, temp=13.0, alarm=False),
         )
         p2 = (
-            (1, 10.0, 15.0, None, None, False),
-            (11, 20.0, 14.0, 4, 9, False),
-            (21, 10.0, 13.0, None, None, False),
+            kd.Sample(time=1, depth=10.0, temp=15.0, alarm=False),
+            kd.Sample(time=11, depth=20.0, temp=14.0, deco_time=4, deco_depth=9, alarm=False),
+            kd.Sample(time=21, depth=10.0, temp=13.0, alarm=False),
         )
         p3 = (
-            (2, 10.0, 15.0, None, None, False),
-            (12, 20.0, 14.0, 1, 6, True),
-            (22, 12.0, 11.0, None, None, False),
-            (23, 11.0, 12.0, None, None, False),
+            kd.Sample(time=2, depth=10.0, temp=15.0, alarm=False),
+            kd.Sample(time=12, depth=20.0, temp=14.0, deco_time=1, deco_depth=6, alarm=True),
+            kd.Sample(time=22, depth=12.0, temp=11.0, alarm=False),
+            kd.Sample(time=23, depth=11.0, temp=12.0, alarm=False),
+            kd.Sample(time=25, depth=10.0, temp=11.0, alarm=False),
         )
 
         inject_dive_data(zip((d1, d2, d3), (p1, p2, p3)))
@@ -178,10 +183,10 @@ class DiveDataInjectTestCase(unittest.TestCase):
 
         p_df = ro.globalenv['kz.profiles']
 
-        self.assertEquals(10, p_df.nrow)
-        self.assertEquals(7, p_df.ncol)
-        self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3), tuple(p_df[0]))
-        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23), tuple(p_df[1]))
+        self.assertEquals(11, p_df.nrow)
+        self.assertEquals(10, p_df.ncol)
+        self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(p_df[0]))
+        self.assertEquals((0, 10, 20, 1, 11, 21, 2, 12, 22, 23, 25), tuple(p_df[1]))
 
 
 # vim: sw=4:et:ai
