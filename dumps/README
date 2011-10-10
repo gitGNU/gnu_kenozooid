@@ -10,6 +10,7 @@ solodiver:
 - ostc-dump-22.uddf
 - ostc-dump-23.uddf
 - ostc-dump-27.uddf
+- ostc-dump-29.uddf
 
 mk:
 - ostc-dump-25.uddf
