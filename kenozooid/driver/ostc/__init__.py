@@ -263,7 +263,7 @@ class OSTCDataParser(object):
             model = 'OSTC N2'
         elif status.eeprom.serial > 300:
             model = 'OSTC Mk.2'
-        return '{} {}.{}'.format(model, status.ver1, status.ver2)
+        return '{} {}.{:02}'.format(model, status.ver1, status.ver2)
 
 
 # vim: sw=4:et:ai
