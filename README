@@ -1,10 +1,1 @@
-Kenozooid - software stack to support different capabilities of dive
-computers.
-
-Documentation provided in `doc` directory contains installation info,
-features list, user and developer manual.
-
-This software is copyrighted by Artur Wroblewski and others (see AUTHORS
-file). It is distributed under terms of GPL license, version 3, see COPYING
-file for details.
-
+See doc/index.rst.
