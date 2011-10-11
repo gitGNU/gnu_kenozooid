@@ -69,7 +69,7 @@ for (i in 1:nrow(kz.dives)) {
         points(dive_time[i_gas], dp$depth[i_gas], pch=21, cex=0.5,
             col='blue', bg='white')
         text(dive_time[i_gas], dp$depth[i_gas], dp$gas_name[i_gas],
-            pos=p_gas, cex=0.7, offset=0.3)
+            pos=p_gas, cex=0.7)
     }
 
     if (!is.na(dive.title))
