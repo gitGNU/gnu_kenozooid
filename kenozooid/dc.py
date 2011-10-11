@@ -157,7 +157,7 @@ def _save_dives(drv, time, data, fout):
                     kd.uniq_dives),
                 kf.split(
                     extract_gases(uniq_gases(kf.buffer(f_g, m))),
-                    create_dives(kf.buffer(f_d, m))
+                    create_dives(kf.buffer(f_d, m), equipment=(dc_id,))
                 )
             )
 
@@ -173,10 +173,10 @@ def _save_dives(drv, time, data, fout):
 # fixme: put the functions/coroutines below into proper modules
 #
 @kf.coroutine
-def create_dives(tg):
+def create_dives(tg, equipment=None):
     while True:
         dive = yield
-        n = ku.create_dive(dive)
+        n = ku.create_dive(dive, equipment=equipment)
         tg.send(n)
 
 @kf.coroutine
