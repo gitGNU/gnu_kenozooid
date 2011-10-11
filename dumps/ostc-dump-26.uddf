@@ -9,7 +9,7 @@
       </contact>
     </manufacturer>
     <version>0.3.0</version>
-    <datetime>2011-10-09T14:41:45</datetime>
+    <datetime>2011-10-11T19:45:58</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -39,8 +39,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-4f633f2909494b4b817edd8bbc6eaf2a">
-      <dive id="id-0e55b4d9fb4343259d70c0a2365dfa03">
+    <repetitiongroup id="id-2f1b46fcdbf34c1d9996a96a34b6c748">
+      <dive id="id-fd4df0942a9c4c5a9d9abec46c39fa33">
         <informationbeforedive>
           <datetime>2011-09-03T12:39:53</datetime>
         </informationbeforedive>
@@ -794,7 +794,9 @@
           <greatestdepth>16.0</greatestdepth>
           <diveduration>1807</diveduration>
           <lowesttemperature>287.8</lowesttemperature>
-          <equipmentused/>
+          <equipmentused>
+            <link ref="id-813faee92e51f0dae4a64c0894a09c1c"/>
+          </equipmentused>
         </informationafterdive>
       </dive>
     </repetitiongroup>
