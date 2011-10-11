@@ -43,7 +43,7 @@ backup-ostc-20110729.uddf)::
    :align: center
    :target: dive-2011-06-26.pdf
 
-   Dive profile plot of 4th dive from backup-ostc-20110728.uddf backup file
+   Dive profile plot of 4th dive from ``backup-ostc-20110728.uddf`` backup file
 
 
 Comparing Dives
