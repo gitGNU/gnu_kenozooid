@@ -31,11 +31,11 @@ List the dives from backup file (see also :ref:`user-logbook`)::
 
 Plot dive profiles (see :ref:`user-plot`)::
 
-   kz plot --info --title backup-ostc-20110728.uddf dives.pdf
+   kz plot --info backup-ostc-20110728.uddf dives.pdf
 
 Plot dive profiles of dives 2, 3, 4 and 5::
 
-   kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
+   kz plot --info 2-5 backup-ostc-20110728.uddf dives.pdf
 
 .. figure:: /user/dive-2011-06-26.*
    :align: center
