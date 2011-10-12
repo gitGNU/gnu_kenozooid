@@ -62,6 +62,16 @@ for (i in 1:nrow(kz.dives)) {
     # and finally plot the dive profile
     lines(dive_time, dp$depth, col='blue')
 
+    i_s_ppo2 = which(!is.na(dp$set_ppo2))
+    if (length(i_s_ppo2) > 0) {
+        p_s_ppo2 = c(4, rep(c(3, 1), 5)) # right, bottom, top, bottom, top...
+        points(dive_time[i_s_ppo2], dp$depth[i_s_ppo2], pch=25, cex=0.5,
+            col='blue', bg='white')
+        t_ppo2 = sprintf('ppO2 %.2f', dp$set_ppo2[i_s_ppo2])
+        text(dive_time[i_s_ppo2], dp$depth[i_s_ppo2], t_ppo2,
+            pos=p_s_ppo2, cex=0.7)
+    }
+
     # gas switch
     i_gas = which(!is.na(dp$gas_name))
     if (length(i_gas) > 0) {
