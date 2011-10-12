@@ -217,16 +217,18 @@ class OSTCDataParser(object):
         for i, sample in enumerate(dive_data, 1):
             temp = C2K(sample.temp) if sample.temp else None
 
+            # deco info
+            deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
+            deco_depth = sample.deco_depth if sample.deco_depth else None
+            deco_alarm = False
+            if sample.alarm is not None:
+                deco_alarm = sample.alarm & 12 > 0
+
             gas = None
             if sample.current_gas is not None:
                 gas = self._get_gas(header, sample.current_gas)
             elif sample.gas_set_o2 is not None:
                 gas = kd.gas(sample.gas_set_o2, sample.gas_set_he)
-
-            # deco info
-            deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
-            deco_depth = sample.deco_depth if sample.deco_depth else None
-            deco_alarm = sample.alarm in (2, 3)
 
             yield kd.Sample(depth=sample.depth,
                     time=(i * header.sampling),
