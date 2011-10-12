@@ -19,19 +19,22 @@
 
 import unittest
 
-from kenozooid.units import C2K
+from kenozooid.units import C2K, K2C
 
 class TemperatureTestCase(unittest.TestCase):
     def test_c2k(self):
-        """Test Celsius to Kelvin conversion
+        """
+        Test Celsius to Kelvin conversion
         """
         self.assertAlmostEquals(294.15, C2K(21), 3)
         self.assertAlmostEquals(282.05, C2K(8.9), 3)
 
 
     def test_k2c(self):
-        """Test Kelvin to Celsius conversion
         """
-        self.assertAlmostEquals(C2K(21), 294.15, 3)
-        self.assertAlmostEquals(C2K(8.9), 282.05, 3)
+        Test Kelvin to Celsius conversion
+        """
+        self.assertAlmostEquals(K2C(294.15), 21, 3)
+        self.assertAlmostEquals(K2C(282.05), 8.9, 3)
 
+# vim: sw=4:et:ai
