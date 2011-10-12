@@ -72,6 +72,7 @@ _NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.0/'}
 FORMAT_ID = 'id-{}'
 
 FMT_F = partial(str.format, '{0:.1f}')
+FMT_F2 = partial(str.format, '{0:.2f}')
 FMT_I = lambda v: '{}'.format(int(round(v)))
 FMT_DT = lambda dt: format(dt, '%Y-%m-%dT%H:%M:%S%z')
 
@@ -1019,7 +1020,7 @@ def create_dive_samples(samples):
                 ),
             xml.depth(FMT_F(s.depth)),
             xml.divetime(FMT_I(s.time)),
-            None if s.set_ppo2 is None else xml.setpo2(FMT_F(s.set_ppo2)),
+            None if s.set_ppo2 is None else xml.setpo2(FMT_F2(s.set_ppo2)),
             None if s.gas is None else xml.switchmix(ref=str(s.gas.id)),
             None if s.temp is None else xml.temperature(FMT_F(s.temp)),
         )
