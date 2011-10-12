@@ -39,7 +39,7 @@ log = logging.getLogger('kenozooid.driver.ostc')
 import kenozooid.uddf as ku
 import kenozooid.component as kc
 from kenozooid.driver import DeviceDriver, Simulator, DataParser, DeviceError
-from kenozooid.units import C2K
+from kenozooid.units import C2K, B2Pa
 from . import parser as ostc_parser
 import kenozooid.data as kd
 
@@ -217,6 +217,8 @@ class OSTCDataParser(object):
         for i, sample in enumerate(dive_data, 1):
             temp = C2K(sample.temp) if sample.temp else None
 
+            set_ppo2 = sample.setpoint / 100.0 if sample.setpoint else None
+
             # deco info
             deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
             deco_depth = sample.deco_depth if sample.deco_depth else None
@@ -234,6 +236,7 @@ class OSTCDataParser(object):
                     time=(i * header.sampling),
                     alarm=('deco',) if deco_alarm else None,
                     temp=temp,
+                    set_ppo2=set_ppo2,
                     deco_time=deco_time,
                     deco_depth=deco_depth,
                     gas=gas)

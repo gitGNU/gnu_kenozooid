@@ -33,3 +33,13 @@ def K2C(t):
     Convert temperature from Kelvin to Celsius.
     """
     return t - 273.15
+
+
+def B2Pa(p):
+    """
+    Convert pressure from Bar to Pascal.
+    """
+    return p * 100000
+
+
+# vim: sw=4:et:ai

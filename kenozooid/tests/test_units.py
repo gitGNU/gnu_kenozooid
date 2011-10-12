@@ -19,7 +19,7 @@
 
 import unittest
 
-from kenozooid.units import C2K, K2C
+from kenozooid.units import C2K, K2C, B2Pa
 
 class TemperatureTestCase(unittest.TestCase):
     def test_c2k(self):
@@ -34,7 +34,18 @@ class TemperatureTestCase(unittest.TestCase):
         """
         Test Kelvin to Celsius conversion
         """
-        self.assertAlmostEquals(K2C(294.15), 21, 3)
-        self.assertAlmostEquals(K2C(282.05), 8.9, 3)
+        self.assertAlmostEquals(21, K2C(294.15), 3)
+        self.assertAlmostEquals(8.9, K2C(282.05), 3)
+
+
+
+class PressureTestCase(unittest.TestCase):
+    def test_b2pa(self):
+        """
+        Test Bar to Pascal conversion
+        """
+        self.assertAlmostEquals(100000, B2Pa(1), 3)
+        self.assertAlmostEquals(140000, B2Pa(1.4), 3)
+
 
 # vim: sw=4:et:ai

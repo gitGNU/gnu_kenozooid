@@ -217,7 +217,7 @@ def dive_data(header, data):
             setpoint = data[i]
             i += 1
             setpoint_change = 1
-            log.debug('ppo2 {}'.format(setpoint))
+            log.debug('set ppo2 {}'.format(setpoint))
             
         if size != event + gas_set + gas_change + setpoint_change + div_bytes:
             log.debug('invalid dive data, sample = {}, depth = {:.2f},' \

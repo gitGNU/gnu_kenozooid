@@ -710,7 +710,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('20.0', ku.xp_first(n, '//temperature/text()'), sd)
 
 
-    def test_create_dive_samples(self):
+    def test_create_dive_samples_deco_alarm(self):
         """
         Test UDDF dive profile sample creation with deco alarm
         """
@@ -718,6 +718,16 @@ class CreateDataTestCase(unittest.TestCase):
         samples = ku.create_dive_samples(s)
         n, sd = xml2et(xml.dive(samples))
         self.assertEquals('deco', ku.xp_first(n, '//alarm/text()'), sd)
+
+
+    def test_create_dive_samples_set_ppo2(self):
+        """
+        Test UDDF dive profile sample creation with ppo2 setting
+        """
+        s = kd.Sample(depth=3.1, time=19, temp=20, set_ppo2=1.1),
+        samples = ku.create_dive_samples(s)
+        n, sd = xml2et(xml.dive(samples))
+        self.assertEquals('1.1', ku.xp_first(n, '//setpo2/text()'), sd)
         
 
     def test_dump_data_encode(self):

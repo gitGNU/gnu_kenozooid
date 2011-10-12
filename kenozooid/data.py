@@ -40,7 +40,8 @@ def ntuple(name, fields):
 
 
 Dive = ntuple('Dive', 'datetime depth duration temp profile equipment')
-Sample = ntuple('Sample', 'depth time temp deco_time deco_depth alarm gas')
+Sample = ntuple('Sample', 'depth time temp set_ppo2' \
+        ' deco_time deco_depth alarm gas')
 Gas = ntuple('Gas', 'id name o2 he')
 BinaryData = ntuple('BinaryData', 'datetime data')
 

@@ -113,6 +113,20 @@ class DataModelTestCase(unittest.TestCase):
         self.assertEquals('tx1050', dc._get_gas(header, 6).id)
 
 
+    def test_ppo2_set(self):
+        """
+        Test OSTC ppO2 change
+        """
+        dump = kd.BinaryData(datetime=datetime.now(),
+                data=od.RAW_DATA_OSTC_MK2_196)
+        dc = OSTCDataParser()
+        dive = list(dc.dives(dump))[7]
+        samples = list(dive.profile)
+        self.assertEquals(1.04, samples[1].set_ppo2)
+        self.assertEquals(1.37, samples[166].set_ppo2)
+        self.assertEquals(1.27, samples[1385].set_ppo2)
+
+
     def test_deco_alarm(self):
         """
         Test OSTC deco alarm data to data model conversion
