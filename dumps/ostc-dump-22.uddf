@@ -9,7 +9,7 @@
       </contact>
     </manufacturer>
     <version>0.3.0</version>
-    <datetime>2011-10-11T19:45:44</datetime>
+    <datetime>2011-10-12T20:42:19</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -64,8 +64,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-ca5bdf61d3334749af799297b3045c97">
-      <dive id="id-aba5f9978bc643a9b1a08048744e4c52">
+    <repetitiongroup id="id-48d89c99740443ec907fb3840fa54049">
+      <dive id="id-9867daf161034a69bce42c80d8ad7f05">
         <informationbeforedive>
           <datetime>2011-06-12T21:45:10</datetime>
         </informationbeforedive>
@@ -3713,7 +3713,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-72a91a9393104fb68ab7d6bc3b97ce35">
+      <dive id="id-fe4d4f1b2f3f426ca1b858f8e301cf66">
         <informationbeforedive>
           <datetime>2011-06-19T12:26:19</datetime>
         </informationbeforedive>
@@ -6739,7 +6739,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-6fb09689fb4c42dd8ea04b2e23790a67">
+      <dive id="id-56f0c5e2c126454cb866841bc13a8582">
         <informationbeforedive>
           <datetime>2011-06-24T13:18:39</datetime>
         </informationbeforedive>
@@ -6750,7 +6750,6 @@
             <switchmix ref="tx1341"/>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>2.3</depth>
             <divetime>4</divetime>
           </waypoint>
@@ -12185,6 +12184,7 @@
           <waypoint>
             <depth>2.9</depth>
             <divetime>5272</divetime>
+            <setpo2>1.00</setpo2>
             <switchmix ref="tx1341"/>
           </waypoint>
           <waypoint>
@@ -13404,7 +13404,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-68213796f1ca4bb399331ec7c6d0cb5d">
+      <dive id="id-ccd3c282501e47cda3e3d51cb523c1b4">
         <informationbeforedive>
           <datetime>2011-06-26T12:56:18</datetime>
         </informationbeforedive>
@@ -19901,7 +19901,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-4e9b0119e16c404abcb5988efa5d9e40">
+      <dive id="id-b555dc51f73e41fca5b46ae9e5d92f78">
         <informationbeforedive>
           <datetime>2011-06-29T21:30:31</datetime>
         </informationbeforedive>
@@ -23461,7 +23461,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-6d94e4e4eb18423fa2b8fe8f23c16eec">
+      <dive id="id-bd0547478f12422d905bad5707011192">
         <informationbeforedive>
           <datetime>2011-07-07T21:44:21</datetime>
         </informationbeforedive>
@@ -23472,9 +23472,9 @@
             <switchmix ref="tx1340"/>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>1.5</depth>
             <divetime>4</divetime>
+            <setpo2>1.11</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.5</depth>
@@ -27182,7 +27182,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-07b9f01a52ee42fbb0a434304cdeaea4">
+      <dive id="id-328115d504544a438645ee7b36102212">
         <informationbeforedive>
           <datetime>2011-07-20T21:50:18</datetime>
         </informationbeforedive>
@@ -27193,9 +27193,9 @@
             <switchmix ref="tx1340"/>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>1.5</depth>
             <divetime>4</divetime>
+            <setpo2>1.11</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.5</depth>
@@ -31244,7 +31244,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-0cc8d6f6933d4702b3110b2451b52500">
+      <dive id="id-70cd355d964a42718d138eaed3f4582e">
         <informationbeforedive>
           <datetime>2011-07-28T21:26:52</datetime>
         </informationbeforedive>
@@ -31257,6 +31257,7 @@
           <waypoint>
             <depth>2.0</depth>
             <divetime>4</divetime>
+            <setpo2>1.17</setpo2>
           </waypoint>
           <waypoint>
             <depth>2.0</depth>
