@@ -122,9 +122,9 @@ class DataModelTestCase(unittest.TestCase):
         dc = OSTCDataParser()
         dive = list(dc.dives(dump))[7]
         samples = list(dive.profile)
-        self.assertEquals(1.04, samples[1].set_ppo2)
-        self.assertEquals(1.37, samples[166].set_ppo2)
-        self.assertEquals(1.27, samples[1385].set_ppo2)
+        self.assertEquals(104000, samples[1].setpoint)
+        self.assertEquals(137000, samples[166].setpoint)
+        self.assertEquals(127000, samples[1385].setpoint)
 
 
     def test_deco_alarm(self):

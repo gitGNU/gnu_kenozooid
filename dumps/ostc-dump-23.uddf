@@ -9,7 +9,7 @@
       </contact>
     </manufacturer>
     <version>0.3.0</version>
-    <datetime>2011-10-12T20:42:23</datetime>
+    <datetime>2011-10-13T19:21:08</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -59,8 +59,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-709d124dc67a4915a154bb053df547d7">
-      <dive id="id-5995953768694300a2896b4fe5b01a66">
+    <repetitiongroup id="id-bbe35f5f124d405faa1d8d4ca5a23249">
+      <dive id="id-0bc7c7f90d194403b4844beaf3fc1834">
         <informationbeforedive>
           <datetime>2011-08-03T13:21:16</datetime>
         </informationbeforedive>
@@ -73,7 +73,7 @@
           <waypoint>
             <depth>0.8</depth>
             <divetime>4</divetime>
-            <setpo2>0.99</setpo2>
+            <setpo2>99000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.4</depth>
@@ -3606,7 +3606,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-4ffc5f7a04fc4e76a7209ca33b51447e">
+      <dive id="id-59971302e41045e98f4b63aa0ab7483a">
         <informationbeforedive>
           <datetime>2011-08-03T16:20:37</datetime>
         </informationbeforedive>
@@ -3619,7 +3619,7 @@
           <waypoint>
             <depth>3.3</depth>
             <divetime>4</divetime>
-            <setpo2>1.23</setpo2>
+            <setpo2>123000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>3.5</depth>
@@ -7296,7 +7296,7 @@
           <waypoint>
             <depth>8.2</depth>
             <divetime>3620</divetime>
-            <setpo2>1.30</setpo2>
+            <setpo2>130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>8.2</depth>
@@ -7321,7 +7321,7 @@
           <waypoint>
             <depth>8.0</depth>
             <divetime>3644</divetime>
-            <setpo2>1.00</setpo2>
+            <setpo2>100000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>7.9</depth>
@@ -7351,7 +7351,7 @@
           <waypoint>
             <depth>8.0</depth>
             <divetime>3672</divetime>
-            <setpo2>1.30</setpo2>
+            <setpo2>130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>7.6</depth>
@@ -7680,7 +7680,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-5a9e9096a1ef4aebbec7f17df804bbc7">
+      <dive id="id-5c8857bb4c1741a9a77616da524ed877">
         <informationbeforedive>
           <datetime>2011-08-04T11:10:02</datetime>
         </informationbeforedive>
@@ -7693,7 +7693,7 @@
           <waypoint>
             <depth>2.7</depth>
             <divetime>4</divetime>
-            <setpo2>1.18</setpo2>
+            <setpo2>118000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>2.8</depth>
@@ -11238,7 +11238,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-306c1d59faf341dd84bb4dcb59a37756">
+      <dive id="id-46da0b3efd8e41cdb73cefa829bb2e15">
         <informationbeforedive>
           <datetime>2011-08-04T13:37:32</datetime>
         </informationbeforedive>
@@ -11251,7 +11251,7 @@
           <waypoint>
             <depth>2.5</depth>
             <divetime>4</divetime>
-            <setpo2>1.16</setpo2>
+            <setpo2>116000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>2.8</depth>
@@ -14158,7 +14158,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-3ef0826640324743a01309d00093f5ab">
+      <dive id="id-978e2090df7345b6bb31566b65094152">
         <informationbeforedive>
           <datetime>2011-08-04T22:15:35</datetime>
         </informationbeforedive>
@@ -14171,7 +14171,7 @@
           <waypoint>
             <depth>1.0</depth>
             <divetime>4</divetime>
-            <setpo2>1.00</setpo2>
+            <setpo2>100000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.2</depth>
@@ -19880,7 +19880,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-9e1cdd47d32548b8ad5dba74cac31913">
+      <dive id="id-4970c1ef1a0f464aba19fbbaffa990e6">
         <informationbeforedive>
           <datetime>2011-08-05T11:36:57</datetime>
         </informationbeforedive>
@@ -19893,7 +19893,7 @@
           <waypoint>
             <depth>1.1</depth>
             <divetime>4</divetime>
-            <setpo2>1.01</setpo2>
+            <setpo2>101000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.4</depth>
@@ -20800,7 +20800,7 @@
           <waypoint>
             <depth>8.1</depth>
             <divetime>896</divetime>
-            <setpo2>0.70</setpo2>
+            <setpo2>70000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>8.1</depth>
@@ -23688,7 +23688,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-87a7be72239f4fc4ad168fc7ead99bc8">
+      <dive id="id-916e3463e4d8403183a6df139ac61d15">
         <informationbeforedive>
           <datetime>2011-08-05T14:38:04</datetime>
         </informationbeforedive>
@@ -23701,7 +23701,7 @@
           <waypoint>
             <depth>1.1</depth>
             <divetime>4</divetime>
-            <setpo2>0.99</setpo2>
+            <setpo2>99000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.4</depth>
@@ -26697,7 +26697,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-23fb25809b9a4bab8a8d57698f32c877">
+      <dive id="id-4150c7e844ed4f3fa2436cb7dc81af5b">
         <informationbeforedive>
           <datetime>2011-08-07T13:42:03</datetime>
         </informationbeforedive>
@@ -26710,7 +26710,7 @@
           <waypoint>
             <depth>0.9</depth>
             <divetime>4</divetime>
-            <setpo2>1.04</setpo2>
+            <setpo2>104000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.0</depth>
@@ -27383,7 +27383,7 @@
           <waypoint>
             <depth>76.5</depth>
             <divetime>664</divetime>
-            <setpo2>1.37</setpo2>
+            <setpo2>137000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>77.1</depth>
@@ -32424,7 +32424,7 @@
           <waypoint>
             <depth>3.1</depth>
             <divetime>5540</divetime>
-            <setpo2>1.27</setpo2>
+            <setpo2>127000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>3.1</depth>

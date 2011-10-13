@@ -368,7 +368,7 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('depth', 'time', 'temp', 'set_ppo2',
+        fields = ('depth', 'time', 'temp', 'setpoint',
                 'deco_time', 'deco_depth', 'alarm', 'gas')
         queries = XP_DEFAULT_PROFILE_DATA
         gases = dict(((gas.id, gas) for gas in gas_data(node)))
@@ -1020,7 +1020,7 @@ def create_dive_samples(samples):
                 ),
             xml.depth(FMT_F(s.depth)),
             xml.divetime(FMT_I(s.time)),
-            None if s.set_ppo2 is None else xml.setpo2(FMT_F2(s.set_ppo2)),
+            None if s.setpoint is None else xml.setpo2(FMT_F2(s.setpoint)),
             None if s.gas is None else xml.switchmix(ref=str(s.gas.id)),
             None if s.temp is None else xml.temperature(FMT_F(s.temp)),
         )

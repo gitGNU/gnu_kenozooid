@@ -139,7 +139,7 @@ class DiveDataInjectTestCase(unittest.TestCase):
         )
         d = dive_profiles_df((p1, p2, p3))
         self.assertEquals(11, d.nrow)
-        self.assertEquals(10, d.ncol)
+        self.assertEquals(11, d.ncol)
         self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(d[0]))
         self.assertEquals((10.0, 20.0, 10.0, 10.0, 20.0, 10.0, 10.0, 20.0,
             12.0, 11.0, 10.0), tuple(d[1]))
@@ -186,7 +186,7 @@ class DiveDataInjectTestCase(unittest.TestCase):
         p_df = ro.globalenv['kz.profiles']
 
         self.assertEquals(11, p_df.nrow)
-        self.assertEquals(10, p_df.ncol)
+        self.assertEquals(11, p_df.ncol)
         self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(p_df[0]))
         self.assertEquals((10.0, 20.0, 10.0, 10.0, 20.0, 10.0, 10.0, 20.0,
             12.0, 11.0, 10.0), tuple(p_df[1]))

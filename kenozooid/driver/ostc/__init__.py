@@ -217,7 +217,7 @@ class OSTCDataParser(object):
         for i, sample in enumerate(dive_data, 1):
             temp = C2K(sample.temp) if sample.temp else None
 
-            set_ppo2 = sample.setpoint / 100.0 if sample.setpoint else None
+            setpoint = B2Pa(sample.setpoint / 100.0) if sample.setpoint else None
 
             # deco info
             deco_time = sample.deco_time * 60.0 if sample.deco_depth else None
@@ -236,7 +236,7 @@ class OSTCDataParser(object):
                     time=(i * header.sampling),
                     alarm=('deco',) if deco_alarm else None,
                     temp=temp,
-                    set_ppo2=set_ppo2,
+                    setpoint=setpoint,
                     deco_time=deco_time,
                     deco_depth=deco_depth,
                     gas=gas)

@@ -720,11 +720,11 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('deco', ku.xp_first(n, '//alarm/text()'), sd)
 
 
-    def test_create_dive_samples_set_ppo2(self):
+    def test_create_dive_samples_setpoint(self):
         """
-        Test UDDF dive profile sample creation with ppo2 setting
+        Test UDDF dive profile sample creation with setpoint
         """
-        s = kd.Sample(depth=3.1, time=19, temp=20, set_ppo2=1.17),
+        s = kd.Sample(depth=3.1, time=19, temp=20, setpoint=1.17),
         samples = ku.create_dive_samples(s)
         n, sd = xml2et(xml.dive(samples))
         self.assertEquals('1.17', ku.xp_first(n, '//setpo2/text()'), sd)
