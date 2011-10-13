@@ -64,21 +64,20 @@ for (i in 1:nrow(kz.dives)) {
 
     i_sp = which(!is.na(dp$setpoint))
     if (length(i_sp) > 0) {
-        p_sp = c(4, rep(c(3, 1), 5)) # right, bottom, top, bottom, top...
+        p_sp =  # right, bottom, top, bottom, top...
         points(dive_time[i_sp], dp$depth[i_sp], pch=25, cex=0.5,
             col='blue', bg='white')
         t_ppo2 = sprintf('SP %.2f', dp$setpoint[i_sp] / 100000.0)
-        text(dive_time[i_sp], dp$depth[i_sp], t_ppo2, pos=p_sp, cex=0.7)
+        text(dive_time[i_sp], dp$depth[i_sp], t_ppo2, pos=4, cex=0.7)
     }
 
     # gas switch
     i_gas = which(!is.na(dp$gas_name))
     if (length(i_gas) > 0) {
-        p_gas = c(4, rep(c(3, 1), 5)) # right, bottom, top, bottom, top...
         points(dive_time[i_gas], dp$depth[i_gas], pch=21, cex=0.5,
             col='blue', bg='white')
         text(dive_time[i_gas], dp$depth[i_gas], dp$gas_name[i_gas],
-            pos=p_gas, cex=0.7)
+            pos=4, cex=0.7)
     }
 
     if (!is.na(dive.title))
