@@ -1,9 +1,39 @@
-#
+
 # plot dive profiles
 #
 
 library(Hmisc)
 library(grid)
+
+annotate <- function(x, y, labels, cex=par('cex'), font=par('font')) {
+    offset.x = strwidth('m') * 0.3 * cex
+    offset.y = strheight('x') * 0.2 * cex
+    labels.w = strwidth(labels, cex=cex, font=font) + 2 * offset.x
+    labels.h = strheight(labels, cex=cex, font=font) + 2 * offset.y
+
+    x = x + offset.x # add off parameter?
+    y = y - offset.y - labels.h # add adj parameter?
+
+    if (length(labels) > 1) {
+        for (i in 2:length(labels)) {
+            k = i - 1
+            if (x[i] <= x[k] + labels.w[k] # sorted x -> this check is enough
+                    && (y[k] + labels.h[k] <= y[i] && y[i] <= y[k]
+                    || y[k] + labels.h[k] <= y[i] + labels.h[i] && y[i] + labels.h[i] <= y[k])) {
+                x[i] = x[k] + offset.x
+                y[i] = y[k] - labels.h[k] - offset.y
+            }
+        }
+    }
+
+    xs = x + labels.w
+    ys = y + labels.h
+    labels.x = x + offset.x
+    labels.y = y + offset.y
+
+    rect(x, y, xs, ys, col=rgb(1, 1, 1, 0.7), bg='white', border=NA)
+    text(labels.x, labels.y, labels, adj=c(0, 0), cex=cex, font=font)
+}
 
 if (length(kz.args) != 3) {
     stop('Arguments required: output file, signature flag, output file format')
@@ -62,22 +92,37 @@ for (i in 1:nrow(kz.dives)) {
     # and finally plot the dive profile
     lines(dive_time, dp$depth, col='blue')
 
+    # annotations
+    labels = data.frame(depth=c(), time=c(), label=c(), pch=c())
+
+    # setpoint change
     i_sp = which(!is.na(dp$setpoint))
-    if (length(i_sp) > 0) {
-        p_sp =  # right, bottom, top, bottom, top...
-        points(dive_time[i_sp], dp$depth[i_sp], pch=25, cex=0.5,
-            col='blue', bg='white')
-        t_ppo2 = sprintf('SP %.2f', dp$setpoint[i_sp] / 100000.0)
-        text(dive_time[i_sp], dp$depth[i_sp], t_ppo2, pos=4, cex=0.7)
-    }
+    if (length(i_sp) > 0)
+        labels = rbind(labels,
+            data.frame(depth=dp$depth[i_sp],
+                time=dive_time[i_sp],
+                label=sprintf('SP %.2f', dp$setpoint[i_sp] / 100000.0),
+                pch=c(25)
+            )
+        )
 
     # gas switch
     i_gas = which(!is.na(dp$gas_name))
-    if (length(i_gas) > 0) {
-        points(dive_time[i_gas], dp$depth[i_gas], pch=21, cex=0.5,
+    if (length(i_gas) > 0)
+        labels = rbind(labels,
+            data.frame(depth=dp$depth[i_gas],
+                time=dive_time[i_gas],
+                label=dp$gas_name[i_gas],
+                pch=c(21)
+            )
+        )
+
+    if (nrow(labels)) {
+        labels = labels[order(labels$time), ]
+        points(labels$time, labels$depth, pch=labels$pch, cex=0.5,
             col='blue', bg='white')
-        text(dive_time[i_gas], dp$depth[i_gas], dp$gas_name[i_gas],
-            pos=4, cex=0.7)
+        annotate(labels$time, labels$depth, labels$label,
+            font=2, cex=0.5)
     }
 
     if (!is.na(dive.title))
