@@ -63,8 +63,8 @@ def _inject_dives_ui(dives, title, info, temp, sig, legend, labels):
     # dive title formatter
     tfmt = lambda d: d.datetime.strftime(FMT_DIVETIME)
     # dive info formatter
-    _ifmt = 't = {}\n\u21a7 = {:.1f}m\nT = {:.1f}\u00b0C'.format
-    ifmt = lambda d: _ifmt(min2str(d.duration / 60.0), d.depth, K2C(d.temp))
+    _ifmt = '{:.1f}m \u00b7 {}min \u00b7 {:.1f}\u00b0C'.format
+    ifmt = lambda d: _ifmt(d.depth, min2str(d.duration / 60.0), K2C(d.temp))
     # create optional columns like title and info
     cols = []
     t_cols = []
