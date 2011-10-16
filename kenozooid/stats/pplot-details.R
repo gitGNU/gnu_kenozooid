@@ -50,8 +50,8 @@ if (kz.args.fmt == 'pdf') {
     cairo_pdf(kz.args.fout, width=kz.args.width, height=kz.args.height, onefile=TRUE)
 } else if (kz.args.fmt == 'png') {
     fimg = png
-    kz.args.width = 800
-    kz.args.height = 400
+    kz.args.width = 900
+    kz.args.height = 450
     png(kz.args.fout, width=kz.args.width, height=kz.args.height)
 } else if (kz.args.fmt == 'svg') {
     svg(kz.args.fout, width=kz.args.width, height=kz.args.height)
