@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Kenozooid 0.4.0
+---------------
+- setpoint data parsing and plotting implemented
+- dive profile annotation with gas and setpoint events improvements
+- improved dive info presentation on dive profile plot
+
 Kenozooid 0.3.0
 ---------------
 
