@@ -5,6 +5,8 @@
 library(Hmisc)
 library(grid)
 
+# annotate points with labels without overlapping
+# assumption: x is sorted
 annotate <- function(x, y, labels, cex=par('cex'), font=par('font')) {
     offset.x = strwidth('m') * 0.3 * cex
     offset.y = strheight('x') * 0.2 * cex
@@ -15,14 +17,21 @@ annotate <- function(x, y, labels, cex=par('cex'), font=par('font')) {
     y = y - offset.y - labels.h # add adj parameter?
 
     if (length(labels) > 1) {
+        last = c(x[1], y[1], x[1] + labels.w[1], y[1] + labels.h[1]) # last obstacle
         for (i in 2:length(labels)) {
             k = i - 1
-            if (x[i] <= x[k] + labels.w[k] # sorted x -> this check is enough
-                    && (y[k] + labels.h[k] <= y[i] && y[i] <= y[k]
-                    || y[k] + labels.h[k] <= y[i] + labels.h[i] && y[i] + labels.h[i] <= y[k])) {
+            if (x[i] <= last[3] # sorted x -> this check is enough
+                    && (last[4] <= y[i] && y[i] <= last[2]
+                    || last[4] <= y[i] + labels.h[i] && y[i] + labels.h[i] <= last[2])) {
                 x[i] = x[k] + offset.x
                 y[i] = y[k] - labels.h[k] - offset.y
-            }
+                # expand last obstacle in case of 3 and more overlapping labels
+                last = c(min(x[i], last[1]), max(y[i], last[2]),
+                    max(x[i] + labels.w[i], last[3]),
+                    min(y[i] + labels.h[i], last[4]))
+            } else
+                # no overlapping label, just move on to next one
+                last = c(x[i], y[i], x[i] + labels.w[i], y[i] + labels.h[i])
         }
     }
 
