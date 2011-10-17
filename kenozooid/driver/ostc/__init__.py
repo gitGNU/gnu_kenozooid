@@ -224,7 +224,7 @@ class OSTCDataParser(object):
             deco_depth = sample.deco_depth if sample.deco_depth else None
             deco_alarm = False
             if sample.alarm is not None:
-                deco_alarm = sample.alarm & 12 > 0
+                deco_alarm = sample.alarm in (2, 3)
 
             gas = None
             if sample.current_gas is not None:

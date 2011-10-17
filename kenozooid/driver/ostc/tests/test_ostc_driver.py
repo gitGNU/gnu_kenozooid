@@ -133,22 +133,24 @@ class DataModelTestCase(unittest.TestCase):
         """
         dive = self.dives[3] # dive no 3 contains deco alarms
         samples = list(dive.profile)
-        d1 = samples[53:204]
 
-        #d1 = samples[587:594]
-        #d2 = samples[743:749]
-        #d3 = samples[972:976]
-        #d4 = samples[1320:1343]
+        d1 = samples[587:594]
+        d2 = samples[743:749]
+        d3 = samples[972:976]
+        d4 = samples[1320:1343]
 
         # check if all deco waypoints have appropriate alarms
         def alarms(samples):
             return (s.alarm == ('deco',) for s in samples)
 
         t1 = list(alarms(d1))
+        t2 = list(alarms(d2))
+        t3 = list(alarms(d3))
+        t4 = list(alarms(d4))
         self.assertTrue(all(t1), '{0}\n{1}'.format(t1, d1))
-        #self.assertTrue(all(t2), '{0}\n{1}'.format(t2, d2))
-        #self.assertTrue(all(t3), '{0}\n{1}'.format(t3, d3))
-        #self.assertTrue(all(t4), '{0}\n{1}'.format(t4, d4))
+        self.assertTrue(all(t2), '{0}\n{1}'.format(t2, d2))
+        self.assertTrue(all(t3), '{0}\n{1}'.format(t3, d3))
+        self.assertTrue(all(t4), '{0}\n{1}'.format(t4, d4))
 
 
     def test_deco(self):
