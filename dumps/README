@@ -2,13 +2,12 @@ Data contributions.
 
 w:
 - su-dump-01.uddf
-- ostc-dump-{01-21}.uddf
+- ostc-dump-{01-20}.uddf
 - ostc-dump-24.uddf
 - ostc-dump-28.uddf
 
 solodiver:
-- ostc-dump-22.uddf
-- ostc-dump-23.uddf
+- ostc-dump-2{1,2,3}.uddf
 - ostc-dump-27.uddf
 - ostc-dump-29.uddf
 
