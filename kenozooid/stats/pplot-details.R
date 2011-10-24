@@ -65,7 +65,7 @@ if (kz.args.fmt == 'pdf') {
     fimg = png
     kz.args.width = 900
     kz.args.height = 450
-    png(kz.args.fout, width=kz.args.width, height=kz.args.height)
+    png(kz.args.fout, width=kz.args.width, height=kz.args.height, res=96)
 } else if (kz.args.fmt == 'svg') {
     svg(kz.args.fout, width=kz.args.width, height=kz.args.height)
 }
