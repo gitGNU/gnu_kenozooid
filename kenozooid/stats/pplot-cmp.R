@@ -6,8 +6,8 @@ library(Hmisc)
 library(grid)
 library(colorspace)
 
-if (length(kz.args) != 3) {
-    stop('Arguments required: output file, signature flag, output file format')
+if (length(kz.args) < 2) {
+    stop('Arguments required: output file, output file format')
 }
 
 kz.args.fout = kz.args[1]
