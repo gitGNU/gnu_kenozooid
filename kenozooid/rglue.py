@@ -27,6 +27,7 @@ import rpy2.robjects as ro
 R = ro.r
 
 import kenozooid
+import kenozooid.calc as kcc
 
 def _vec(c, na, data):
     """
@@ -74,12 +75,15 @@ def dive_profiles_df(data):
     """
     cols = ('dive', 'depth', 'time', 'temp', 'setpoint', 
         'deco_time', 'deco_depth', 'deco_alarm',
-        'gas_name', 'gas_o2', 'gas_he')
-    vf = (int_vec,) + (float_vec, ) * 6 + (bool_vec, str_vec, int_vec, int_vec)
+        'gas_name', 'gas_o2', 'gas_he', 'mod_low', 'mod_high')
+    vf = (int_vec,) + (float_vec, ) * 6 + (bool_vec, str_vec, int_vec,
+            int_vec, float_vec, float_vec)
     p = ((k, s.depth, s.time, s.temp, s.setpoint, s.deco_time, s.deco_depth, s.alarm,
           None if s.gas is None else s.gas.name,
           None if s.gas is None else s.gas.o2,
           None if s.gas is None else s.gas.he,
+          None if s.gas is None else kcc.mod(s.gas.o2, 1.4),
+          None if s.gas is None else kcc.mod(s.gas.o2, 1.6),
          ) for k, dive in enumerate(data, 1) for s in dive)
     return df(cols, vf, p)
 

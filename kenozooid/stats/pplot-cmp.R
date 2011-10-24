@@ -11,8 +11,8 @@ if (length(kz.args) != 3) {
 }
 
 kz.args.fout = kz.args[1]
-kz.args.sig = kz.args[2] == 'True'
-kz.args.fmt = kz.args[3]
+kz.args.fmt = kz.args[2]
+kz.args.sig = '--sig' %in% kz.args
 
 kz.args.width = 10
 kz.args.height = 5

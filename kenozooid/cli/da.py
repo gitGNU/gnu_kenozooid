@@ -58,6 +58,11 @@ class PlotProfiles(object):
                 dest='plot_info',
                 default=False,
                 help='display dive information (depth, time, temperature)')
+        parser.add_argument('--mod',
+                action='store_true',
+                dest='plot_mod',
+                default=False,
+                help='plot MOD of current gas (for 1.4 and 1.6 ppO2)')
         parser.add_argument('--temp',
                 action='store_true',
                 dest='plot_temp',
@@ -110,6 +115,7 @@ class PlotProfiles(object):
             title=args.plot_title,
             info=args.plot_info,
             temp=args.plot_temp,
+            mod=args.plot_mod,
             sig=args.plot_sig,
             legend=args.plot_legend,
             labels=args.plot_labels)

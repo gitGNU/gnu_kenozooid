@@ -41,7 +41,7 @@ import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.plot')
 
-def _inject_dives_ui(dives, title, info, temp, sig, legend, labels):
+def _inject_dives_ui(dives, title, info, temp, mod, sig, legend, labels):
     """
     Inject ``kz.dives.ui`` data frame in R space.
 
@@ -100,8 +100,8 @@ def _inject_dives_ui(dives, title, info, temp, sig, legend, labels):
     ro.globalenv['kz.dives.ui'] = ui_df
 
 
-def plot(fout, ptype, dives, title=False, info=False, temp=False, sig=True,
-        legend=False, labels=None, format='pdf'):
+def plot(fout, ptype, dives, title=False, info=False, temp=False,
+        mod=False, sig=True, legend=False, labels=None, format='pdf'):
     """
     Plot graphs of dive profiles.
     
@@ -118,6 +118,8 @@ def plot(fout, ptype, dives, title=False, info=False, temp=False, sig=True,
         Display dive information (time, depth, temperature).
      temp
         Plot temperature graph.
+     mod
+        Plot MOD of current gas.
      sig
         Display Kenozooid signature.
      legend
@@ -129,10 +131,11 @@ def plot(fout, ptype, dives, title=False, info=False, temp=False, sig=True,
     """
     dives, dt = itertools.tee(dives, 2)
 
-    _inject_dives_ui(dt, title=title, info=info, temp=temp, sig=sig,
-            legend=legend, labels=labels)
+    _inject_dives_ui(dt, title=title, info=info, temp=temp, mod=mod,
+            sig=sig, legend=legend, labels=labels)
 
-    args = (fout, sig, format)
+    v = lambda s, t: '--{}'.format(s) if t else '--no-{}'
+    args = (fout, format, v('sig', sig), v('mod', mod))
     ka.analyze('pplot-{}.R'.format(ptype), dives, args)
 
 
