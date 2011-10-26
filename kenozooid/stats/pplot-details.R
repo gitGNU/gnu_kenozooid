@@ -89,7 +89,7 @@ for (i in 1:nrow(kz.dives)) {
     # deco info
     if (any(!is.na(dp$deco_time))) {
         deco_depth = approxfun(dp$time, dp$deco_depth,
-            method='constant', f=1)(dp$time)
+            method='constant', f=0)(dp$time)
 
         n = length(dp$time)
         dc = rep(rgb(0.90, 0.90, 1.0), n - 1)
