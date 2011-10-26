@@ -7,6 +7,7 @@ Kenozooid 0.4.0
 - dive profile annotation with gas and setpoint events improvements
 - improved dive info presentation on dive profile plot
 - improved quality of dive profile plots in PNG format
+- fixed deco ceiling on dive profile details plot to be more accurate
 
 Kenozooid 0.3.0
 ---------------
