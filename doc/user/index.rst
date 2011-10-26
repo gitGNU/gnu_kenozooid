@@ -18,6 +18,7 @@ User Manual
    calc    
    ri
    links
+   ack
    changelog
 
 * :ref:`genindex`
