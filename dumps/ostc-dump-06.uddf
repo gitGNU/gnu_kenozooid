@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.3.0</version>
-    <datetime>2011-10-13T19:20:05</datetime>
+    <version>0.4.0</version>
+    <datetime>2011-10-26T18:16:37</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -54,8 +54,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-0a9a398ff7ac4a7ebc10641bc9de487c">
-      <dive id="id-d4e4495b0d4f4766bfa6df51a8fd0365">
+    <repetitiongroup id="id-58e5bca6c0c443c7974f41db59d53d05">
+      <dive id="id-7f2349d36df7468196765680205d0449">
         <informationbeforedive>
           <datetime>2009-06-10T15:07:39</datetime>
         </informationbeforedive>
@@ -1237,7 +1237,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-452a3149658d44be9aee2b9818eed04d">
+      <dive id="id-6ef346ba7af04e129651084811babb60">
         <informationbeforedive>
           <datetime>2009-06-11T10:11:28</datetime>
         </informationbeforedive>
@@ -2330,7 +2330,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-7ee40e85d0e145699983a2ea3fe82d93">
+      <dive id="id-7aff7b36f808436495fd17b5be02ad5c">
         <informationbeforedive>
           <datetime>2009-06-11T14:12:31</datetime>
         </informationbeforedive>
@@ -3487,7 +3487,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-5390207580e44756a57fbccca0d0f459">
+      <dive id="id-c2a9b1b467ff4e71ba0ad40dd2aafa42">
         <informationbeforedive>
           <datetime>2009-06-12T09:47:32</datetime>
         </informationbeforedive>
@@ -4433,7 +4433,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-04ee1b5a76dd48fab4804a7223f3726c">
+      <dive id="id-5c9c9ea55b6c4f3dbd6027424fa5fc78">
         <informationbeforedive>
           <datetime>2009-06-12T13:24:54</datetime>
         </informationbeforedive>
@@ -5432,7 +5432,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-950f07126585401d846901d771507cc9">
+      <dive id="id-95171b93f6dd474d8fab57d783ef44d8">
         <informationbeforedive>
           <datetime>2009-08-02T12:44:00</datetime>
         </informationbeforedive>
@@ -5443,6 +5443,7 @@
             <switchmix ref="air"/>
           </waypoint>
           <waypoint>
+            <alarm>deco</alarm>
             <depth>3.2</depth>
             <divetime>10</divetime>
           </waypoint>
@@ -6132,7 +6133,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-25f442395dba4c3c90e7eee2a960cf22">
+      <dive id="id-5edfee305ee14904848381ad86190aac">
         <informationbeforedive>
           <datetime>2009-08-02T17:54:12</datetime>
         </informationbeforedive>
@@ -7273,7 +7274,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-e936ac5e07aa43008fa1a3ed48f955d1">
+      <dive id="id-b9767a4f4d4d408b8d01080bb4833e44">
         <informationbeforedive>
           <datetime>2009-08-08T13:39:51</datetime>
         </informationbeforedive>
@@ -8097,7 +8098,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-4037b42fa1d94a158da79bca04649243">
+      <dive id="id-479d0b6879ae4ec5a4b975948851b50a">
         <informationbeforedive>
           <datetime>2009-08-09T11:08:43</datetime>
         </informationbeforedive>

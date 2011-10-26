@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.3.0</version>
-    <datetime>2011-10-13T19:20:54</datetime>
+    <version>0.4.0</version>
+    <datetime>2011-10-26T18:17:23</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -39,8 +39,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-abebf0236ad840ccae4391b8f0b9e4cf">
-      <dive id="id-9837ef30381d474794bc0344afc9e5d7">
+    <repetitiongroup id="id-a378c094cfa14e32befd5cbebe5207e8">
+      <dive id="id-79faeed5a3574587b3fcdc5702c7f785">
         <informationbeforedive>
           <datetime>2011-02-27T12:18:07</datetime>
         </informationbeforedive>
@@ -725,7 +725,6 @@
             <divetime>1650</divetime>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>13.5</depth>
             <divetime>1660</divetime>
           </waypoint>
@@ -1188,7 +1187,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-acb61991344b4bfba1c152f860511bbf">
+      <dive id="id-76f7b41189af470fac8d1f6b26a01a08">
         <informationbeforedive>
           <datetime>2011-02-27T15:44:10</datetime>
         </informationbeforedive>

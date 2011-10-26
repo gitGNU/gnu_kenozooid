@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.3.0</version>
-    <datetime>2011-10-13T19:20:37</datetime>
+    <version>0.4.0</version>
+    <datetime>2011-10-26T18:17:08</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -49,8 +49,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-1f8b9d0a792f472daf8bc988638dcdd0">
-      <dive id="id-b56114502c8b4b3ca09f75498cceef62">
+    <repetitiongroup id="id-df37bd96708d47fc9e3fc7571006390b">
+      <dive id="id-72c11808b30a4fd996471245a38e1da5">
         <informationbeforedive>
           <datetime>2010-09-12T12:51:14</datetime>
         </informationbeforedive>
@@ -849,7 +849,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-e8d7f791b5e9460b973a44d0baa7fef7">
+      <dive id="id-8044641a9e0449b5bc2284b20da3a95c">
         <informationbeforedive>
           <datetime>2010-09-18T09:29:41</datetime>
         </informationbeforedive>
@@ -1879,7 +1879,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-b7a7488fb71746f49ca43419ea9c8af0">
+      <dive id="id-b371727442044fc4afc596c3da84df0c">
         <informationbeforedive>
           <datetime>2010-09-18T15:37:21</datetime>
         </informationbeforedive>
@@ -3191,7 +3191,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-508c66597cd340699edcf2bac800430f">
+      <dive id="id-cd0ba7d508304fa2aa665eebcc2e8a46">
         <informationbeforedive>
           <datetime>2010-09-19T10:11:22</datetime>
         </informationbeforedive>
@@ -4403,7 +4403,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-abb12392c7d147778dae4ef520b562b8">
+      <dive id="id-75eef471819e4a50b46b88ce38aa9944">
         <informationbeforedive>
           <datetime>2010-09-19T15:25:19</datetime>
         </informationbeforedive>

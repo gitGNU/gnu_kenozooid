@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.3.0</version>
-    <datetime>2011-10-13T19:20:49</datetime>
+    <version>0.4.0</version>
+    <datetime>2011-10-26T18:17:19</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -54,8 +54,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-212a2d2af4b34dddaaea6acb00fad547">
-      <dive id="id-1e084987aa70430d801d05d1e58b77b3">
+    <repetitiongroup id="id-13530393b0d64e27b4116fc9b360a256">
+      <dive id="id-72068d215145468480f8f300ec196acf">
         <informationbeforedive>
           <datetime>2010-10-26T11:36:23</datetime>
         </informationbeforedive>
@@ -1340,7 +1340,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-8aa9516766a349a393ca2ccf0e388514">
+      <dive id="id-bd0bcb78e5034eea8c6170cc8180c364">
         <informationbeforedive>
           <datetime>2010-10-26T15:25:41</datetime>
         </informationbeforedive>
@@ -2813,7 +2813,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-f7125592d8fd43889dde794cb8ae99cc">
+      <dive id="id-db382ef126da42c1a3c42fcf0e7e4078">
         <informationbeforedive>
           <datetime>2010-10-26T18:10:38</datetime>
         </informationbeforedive>
@@ -3996,7 +3996,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-e14231e6e7c4432082a5ec5373354e1b">
+      <dive id="id-dfb72dbd50024f24b04a91dd13bad99e">
         <informationbeforedive>
           <datetime>2010-10-27T07:14:56</datetime>
         </informationbeforedive>
@@ -5514,7 +5514,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-13149b1263864d59a4f19a8aa29afbb2">
+      <dive id="id-33a1e1af26f9404b97c794579b365249">
         <informationbeforedive>
           <datetime>2010-10-27T11:25:26</datetime>
         </informationbeforedive>
@@ -7093,7 +7093,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-88fea32d5d4a490084b0b639ff745f3f">
+      <dive id="id-ccaf8f446dd449baafcc32d693aabdb8">
         <informationbeforedive>
           <datetime>2010-10-27T15:08:10</datetime>
         </informationbeforedive>
@@ -8656,7 +8656,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-c184f69dc94146a1be7ff1216b513bcc">
+      <dive id="id-a0ca670871d44b2db67a9793adc0975a">
         <informationbeforedive>
           <datetime>2010-10-27T17:40:22</datetime>
         </informationbeforedive>
@@ -9941,7 +9941,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-ea874683b9b647ef9695081b8136f226">
+      <dive id="id-766562ba897347c9855a027b53f803c0">
         <informationbeforedive>
           <datetime>2010-10-28T06:45:26</datetime>
         </informationbeforedive>
@@ -11324,7 +11324,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-89bb1e1b5c7a45d3b11c6b603b55141e">
+      <dive id="id-7fa3d7abc9834ada8c9dcf570c8cb031">
         <informationbeforedive>
           <datetime>2010-10-28T10:59:49</datetime>
         </informationbeforedive>
@@ -13042,7 +13042,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-8ed77c2980f247a2b1b90fb66b685992">
+      <dive id="id-4861fa87cf734f8fafccade958c5fffb">
         <informationbeforedive>
           <datetime>2010-10-28T15:06:48</datetime>
         </informationbeforedive>
@@ -14149,7 +14149,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-d472b18cf66144ceaecef8c3551234c9">
+      <dive id="id-dfbe1245b3e04217a07c02e09f29b218">
         <informationbeforedive>
           <datetime>2010-10-28T17:58:42</datetime>
         </informationbeforedive>
@@ -15549,7 +15549,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-80108583a15e4014bf7dce7d1fb2ffde">
+      <dive id="id-1c6c624616ae45abad6252eecf8b8352">
         <informationbeforedive>
           <datetime>2010-10-29T06:02:30</datetime>
         </informationbeforedive>
@@ -17079,7 +17079,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-41dd199f692b4b9ebf68c418400fe14a">
+      <dive id="id-07694ca9f18f4d919e61886268da22af">
         <informationbeforedive>
           <datetime>2010-10-29T10:09:54</datetime>
         </informationbeforedive>
@@ -18597,7 +18597,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-cdedd9ac4eb242f0a7234b3845706256">
+      <dive id="id-87e9bb23ac514ca3aabf446bdcc29af6">
         <informationbeforedive>
           <datetime>2010-10-29T14:08:47</datetime>
         </informationbeforedive>
@@ -20144,7 +20144,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-9ffd0e2ec9524c3aac40acabcfcca580">
+      <dive id="id-736e9645084e4a01972daea15d406e00">
         <informationbeforedive>
           <datetime>2010-10-29T17:55:22</datetime>
         </informationbeforedive>
@@ -20866,7 +20866,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-23a72fdf71ba4d39a3d9212369074c62">
+      <dive id="id-fa389c1197e34dfcaf7df2e4a7388a02">
         <informationbeforedive>
           <datetime>2010-10-30T07:06:07</datetime>
         </informationbeforedive>
@@ -22429,7 +22429,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-2766b74d2b134734ad6ee4db220eb3ef">
+      <dive id="id-6fd0d831cb0a4fff8da2ac5615b58bb5">
         <informationbeforedive>
           <datetime>2010-10-30T11:12:25</datetime>
         </informationbeforedive>
@@ -24106,7 +24106,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-d0f763753bda4ea0bcb15291ca0da5f5">
+      <dive id="id-c4b88391b4b7476d826f9eb5d393563c">
         <informationbeforedive>
           <datetime>2010-10-30T14:28:12</datetime>
         </informationbeforedive>
@@ -25665,7 +25665,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-1f2afbf69505487f8f30593fba9fa727">
+      <dive id="id-d44fa1bc28ef4a97a2a1869367f99b34">
         <informationbeforedive>
           <datetime>2010-11-20T12:34:37</datetime>
         </informationbeforedive>
@@ -26579,7 +26579,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-bbbb32f407f04f6192b0cf38088f6f03">
+      <dive id="id-35fee9142bd64dc695e875433ac12411">
         <informationbeforedive>
           <datetime>2011-01-16T13:41:21</datetime>
         </informationbeforedive>
@@ -27546,7 +27546,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-623e0b166f2b49a98f6632822f18a8d1">
+      <dive id="id-a4fc6af5ae1542a6abec650be79ccf53">
         <informationbeforedive>
           <datetime>2011-01-16T16:31:56</datetime>
         </informationbeforedive>
@@ -28207,7 +28207,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-cdd6a3ffacf64b7489cb0bb8a48edc77">
+      <dive id="id-30674ccba5e04f639f8fcbfb0b89d0fc">
         <informationbeforedive>
           <datetime>2011-01-30T15:21:15</datetime>
         </informationbeforedive>
@@ -29080,7 +29080,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-1bd0194d1ab94068bf5a4386040de68b">
+      <dive id="id-82c07c5b57f849f2a7ab5fb6d336a729">
         <informationbeforedive>
           <datetime>2011-01-30T17:43:37</datetime>
         </informationbeforedive>
@@ -29631,7 +29631,6 @@
             <temperature>277.6</temperature>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>18.2</depth>
             <divetime>1330</divetime>
           </waypoint>
@@ -29644,12 +29643,10 @@
             <divetime>1350</divetime>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>17.2</depth>
             <divetime>1360</divetime>
           </waypoint>
           <waypoint>
-            <alarm>deco</alarm>
             <depth>17.3</depth>
             <divetime>1370</divetime>
           </waypoint>
@@ -30169,7 +30166,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-a2ca6b5da01d48aeb924e84459ec74a4">
+      <dive id="id-5a3e9d9c9a0f4bc4b6b484c1fb4397f2">
         <informationbeforedive>
           <datetime>2011-02-12T14:59:27</datetime>
         </informationbeforedive>
@@ -30915,7 +30912,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-a3815329c530421584e68493494e5894">
+      <dive id="id-755f30f312c1435091b373c3dc2a6546">
         <informationbeforedive>
           <datetime>2011-02-12T17:02:41</datetime>
         </informationbeforedive>
@@ -31974,7 +31971,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-7f8efe00d70047b586c811d4e2676ed6">
+      <dive id="id-7aca6e1f6c6644a394da136e5f036b15">
         <informationbeforedive>
           <datetime>2011-02-13T14:20:08</datetime>
         </informationbeforedive>
@@ -32189,7 +32186,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-f348d1355f584a91a0d97194d96444c6">
+      <dive id="id-a337def1510d463f923894c7b72937dc">
         <informationbeforedive>
           <datetime>2011-02-13T14:35:09</datetime>
         </informationbeforedive>
@@ -33102,7 +33099,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-7c1801988ed4416388844abbed1a4c61">
+      <dive id="id-a2238afc08aa4bae871cdd6d1a72e8ef">
         <informationbeforedive>
           <datetime>2011-02-13T16:55:47</datetime>
         </informationbeforedive>

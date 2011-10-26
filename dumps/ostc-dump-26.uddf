@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.3.0</version>
-    <datetime>2011-10-13T19:21:19</datetime>
+    <version>0.4.0</version>
+    <datetime>2011-10-26T18:17:49</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -39,8 +39,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-5f0fcae2c1e54a9ab6341d1a09a857fe">
-      <dive id="id-2260e6edfc27439b8b8d30b90f2a7481">
+    <repetitiongroup id="id-253429b4f2fc4160894d7d13871e5ff8">
+      <dive id="id-31400f46ffe148dcb1be209005fec7e0">
         <informationbeforedive>
           <datetime>2011-09-03T12:39:53</datetime>
         </informationbeforedive>
