@@ -55,13 +55,20 @@ Installation
 
 Kenozooid Installation
 ^^^^^^^^^^^^^^^^^^^^^^
-At the moment Kenozooid is not released yet. In the future it will be possible
-to install Kenozooid from `PyPI <http://pypi.python.org/pypi>`_, but at the
-moment it can be used only by fetching source code from
-`source control server <http://git.savannah.gnu.org/cgit/kenozooid.git>`_, see
-:ref:`use-kz-git` subsection.
+Kenozooid can be downloaded from `PyPI <http://pypi.python.org/pypi>`_
 
-.. _use-kz-git:
+    http://pypi.python.org/pypi/kenozooid
+
+Unpack the downloaded archive and use the following command to install
+Kenozooid::
+
+    $ python3 setup.py install
+
+The :ref:`user-kz-deps` section describes how to check additional Kenozooid
+dependencies like `R <http://www.r-project.org/>`_ and R packages needed for
+plotting and data analysis.
+
+.. _user-kz-git:
 
 At the Bleeging Edge of Kenozooid Development
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -84,6 +91,8 @@ simply invoke Kenozooid command line interface, for example::
     export PYTHONPATH=.:$PYTHONPATH
     export PATH=./bin:$PATH
     kz --help
+
+.. _user-kz-deps:
 
 Checking Dependencies
 ^^^^^^^^^^^^^^^^^^^^^
