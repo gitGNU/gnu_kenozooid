@@ -18,6 +18,8 @@ doc: .homepage-stamp .epydoc-stamp .sphinx-stamp
 
 .sphinx-stamp:
 	sphinx-build doc build/homepage/doc
+	sphinx-build -b epub doc doc-tmp-epub
+	cp doc-tmp-epub/*.epub build/homepage/doc
 	cp doc/user/*.pdf build/homepage/doc/user/
 
 upload-doc:

@@ -16,6 +16,9 @@ version = kenozooid.__version__
 release = kenozooid.__version__
 copyright = 'Kenozooid team'
 
+epub_basename = 'Kenozooid - {}'.format(version)
+epub_author = 'Kenozooid team'
+
 
 # see https://bitbucket.org/birkenfeld/sphinx/issue/635/no-attribute-next
 import sphinx.jinja2glue
