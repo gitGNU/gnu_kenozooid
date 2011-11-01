@@ -83,6 +83,11 @@ for (i in 1:nrow(kz.dives)) {
     dive_time = dp$time / 60.0
     xlim = range(dive_time)
     ylim = rev(range(dp$depth))
+
+    # set ylim to include mod of gas
+    if (kz.args.mod)
+        ylim = rev(range(ylim, dp$mod_high, na.rm=TRUE))
+
     plot(NA, xlim=xlim, ylim=ylim,
         xlab='Time [min]', ylab='Depth [m]')
 
