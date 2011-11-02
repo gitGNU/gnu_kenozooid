@@ -23,10 +23,8 @@ OSTC driver tests.
 
 from collections import namedtuple
 from datetime import datetime
-import lxml.etree as et
 import unittest
 
-import kenozooid.uddf as ku
 import kenozooid.data as kd
 import kenozooid.driver.ostc.parser as ostc_parser
 from kenozooid.driver.ostc import pressure, OSTCDataParser
