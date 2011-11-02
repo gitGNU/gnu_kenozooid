@@ -160,6 +160,10 @@ def dive_data(header, data):
             gas_change = v & 0x20
             setpoint_change = v & 0x40
 
+            log.debug('alarm = {}, gas_set = {}, gas_change = {},' \
+                ' setpoint_change = {}'.format(alarm, gas_set, gas_change,
+                    setpoint_change))
+
             if gas_set:
                 gas_set_o2 = data[i]
                 gas_set_he = data[i + 1]
