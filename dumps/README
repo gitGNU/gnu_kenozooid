@@ -4,6 +4,7 @@ w:
 - su-dump-01.uddf
 - ostc-dump-{01-20}.uddf
 - ostc-dump-24.uddf
+- ostc-dump-26.uddf
 - ostc-dump-28.uddf
 - ostc-dump-32.uddf
 
@@ -12,6 +13,7 @@ solodiver:
 - ostc-dump-27.uddf
 - ostc-dump-29.uddf
 - ostc-dump-30.uddf
+- ostc-dump-33.uddf
 
 mk:
 - ostc-dump-25.uddf
