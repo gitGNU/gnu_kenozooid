@@ -1,6 +1,9 @@
 Changelog
 =========
 
+Kenozooid 0.5.0
+---------------
+
 Kenozooid 0.4.0
 ---------------
 - setpoint data parsing and plotting implemented
