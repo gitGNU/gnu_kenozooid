@@ -3,12 +3,12 @@
 User Stories
 ============
 
-.. _dc:
+.. _us-dc:
 
 Dive Computer
 -------------
 
-.. _backup:
+.. _us-backup:
 
 Backup
 ^^^^^^
@@ -16,9 +16,9 @@ The diver backups dive computer data - configuration and dive profiles.
 
 Dive computer data in its original (highly probably binary) structure is
 saved, then processed to Kenozooid data structures and saved. See also
-rbackup_.
+:ref:`us-rbackup`.
 
-.. _rbackup:
+.. _us-rbackup:
 
 Backup Reprocess
 ^^^^^^^^^^^^^^^^
@@ -52,6 +52,31 @@ Dive Replay
 ^^^^^^^^^^^
 The diver starts dive simulation on a dive computer from a personal
 computer to replay a dive profile stored in dive logbook.
+
+.. _us-plotting:
+
+Data Plotting
+-------------
+
+.. _us-plot-dive-details:
+
+Dive Profile Details
+^^^^^^^^^^^^^^^^^^^^
+
+.. _us-analysis:
+
+Data Analysis
+-------------
+The analyst runs script to analyze dive and dive profile data. The script can
+have arguments.
+
+.. _us-planning:
+
+Planning
+--------
+
+Simple Calculation
+^^^^^^^^^^^^^^^^^^
 
 .. _us-logbook:
 
@@ -145,20 +170,5 @@ The diver lists buddy data stored in logbook file.
 Remove Buddy
 ^^^^^^^^^^^^
 The diver removes buddy data from logbook file.
-
-.. _hk-us-analysis:
-
-Data Analysis
--------------
-The analyst runs script to analyze dive and dive profile data. The script can
-have arguments.
-
-.. _planning:
-
-Planning
---------
-
-Simple Calculation
-^^^^^^^^^^^^^^^^^^
 
 .. vim: sw=4:et:ai

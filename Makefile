@@ -17,8 +17,8 @@ doc: .homepage-stamp .epydoc-stamp .sphinx-stamp
 	epydoc --config=doc/epydoc.conf --no-private --simple-term --verbose
 
 .sphinx-stamp:
-	sphinx-build doc build/homepage/doc
-	sphinx-build -b epub doc doc-tmp-epub
+	sphinx-build-3 doc build/homepage/doc
+	sphinx-build-3 -b epub doc doc-tmp-epub
 	cp doc-tmp-epub/*.epub build/homepage/doc
 	cp doc/user/*.pdf build/homepage/doc/user/
 
