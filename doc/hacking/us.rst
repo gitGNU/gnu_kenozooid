@@ -1,14 +1,14 @@
-.. _us:
+.. _hk-us:
 
 User Stories
 ============
 
-.. _us-dc:
+.. _hk-us-dc:
 
 Dive Computer
 -------------
 
-.. _us-backup:
+.. _hk-us-backup:
 
 Backup
 ^^^^^^
@@ -16,9 +16,9 @@ The diver backups dive computer data - configuration and dive profiles.
 
 Dive computer data in its original (highly probably binary) structure is
 saved, then processed to Kenozooid data structures and saved. See also
-:ref:`us-rbackup`.
+:ref:`hk-us-rbackup`.
 
-.. _us-rbackup:
+.. _hk-us-rbackup:
 
 Backup Reprocess
 ^^^^^^^^^^^^^^^^
@@ -35,7 +35,7 @@ save.
 The resulting file should be similar or the same as in case of backuping
 data directly from a dive computer.
 
-.. _us-sim-plan:
+.. _hk-us-sim-plan:
 
 Dive Plan Simulation
 ^^^^^^^^^^^^^^^^^^^^
@@ -46,31 +46,31 @@ by using both techniques.
 The diver starts simulation on a dive computer from a personal computer
 to simulate a dive plan.
 
-.. _us-sim-replay:
+.. _hk-us-sim-replay:
 
 Dive Replay
 ^^^^^^^^^^^
 The diver starts dive simulation on a dive computer from a personal
 computer to replay a dive profile stored in dive logbook.
 
-.. _us-plotting:
+.. _hk-us-plotting:
 
 Data Plotting
 -------------
 
-.. _us-plot-dive-details:
+.. _hk-us-plot-dive-details:
 
 Dive Profile Details
 ^^^^^^^^^^^^^^^^^^^^
 
-.. _us-analysis:
+.. _hk-us-analysis:
 
 Data Analysis
 -------------
 The analyst runs script to analyze dive and dive profile data. The script can
 have arguments.
 
-.. _us-planning:
+.. _hk-us-planning:
 
 Planning
 --------
@@ -78,12 +78,12 @@ Planning
 Simple Calculation
 ^^^^^^^^^^^^^^^^^^
 
-.. _us-logbook:
+.. _hk-us-logbook:
 
 Logbook
 -------
 
-.. _us-adddive:
+.. _hk-us-adddive:
 
 Add Dive
 ^^^^^^^^
@@ -101,7 +101,7 @@ Optionally, diver can specify
 - buddy
 - dive site
 
-.. _us-copydive:
+.. _hk-us-copydive:
 
 Copy Dive Data
 ^^^^^^^^^^^^^^
@@ -109,7 +109,7 @@ The diver adds a dive by copying dive computer data to dive logbook.
 
 The dive data is extracted from dive computer data (i.e. dive duration,
 maximum depth, temperature, profile data) and some is provided by diver
-(i.e. buddy). See :ref:`us-adddive` for list of dive data.
+(i.e. buddy). See :ref:`hk-us-adddive` for list of dive data.
 
 List Dives
 ^^^^^^^^^^
