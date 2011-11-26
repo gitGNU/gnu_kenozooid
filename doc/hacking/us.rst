@@ -73,9 +73,11 @@ Each plot contains the following information
 - dive profile graph (time vs. depth)
 - title (optional)
 - dive information (optional)
+
   - duration
   - maximum depth
   - temperature
+
 - deco ceiling graph
 - gas change
 - setpoint change
