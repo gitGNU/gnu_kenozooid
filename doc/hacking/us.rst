@@ -60,8 +60,27 @@ Data Plotting
 
 .. _hk-us-plot-dive-details:
 
-Dive Profile Details
-^^^^^^^^^^^^^^^^^^^^
+Plot Dive Profile Details
+^^^^^^^^^^^^^^^^^^^^^^^^^
+The diver creates plots of multiple dive profiles.
+
+Each dive profile plot is in separate file (or on separate page, i.e. in
+case of PDF file). The supported file output formats shall be: PDF, SVG and
+PNG.
+
+Each plot contains the following information
+
+- dive profile graph (time vs. depth)
+- title (optional)
+- dive information (optional)
+  - duration
+  - maximum depth
+  - temperature
+- deco ceiling graph
+- gas change
+- setpoint change
+- 1.4 and 1.6 ppO2 depth limit graph (optional)
+- maximum ascent and descent events (optional)
 
 .. _hk-us-analysis:
 
