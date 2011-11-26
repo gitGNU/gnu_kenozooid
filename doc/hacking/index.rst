@@ -14,6 +14,7 @@ Design
    :maxdepth: 3
 
    us
+   actors
    uc
 
 ************
