@@ -81,6 +81,8 @@ for (i in 1:nrow(kz.dives)) {
     dp = kz.profiles[kz.profiles$dive == i, ]
 
     dive_time = dp$time / 60.0
+    dp$speed = c(0, diff(dp$depth) / diff(dive_time))
+
     xlim = range(dive_time)
     ylim = rev(range(dp$depth))
 
@@ -137,10 +139,11 @@ for (i in 1:nrow(kz.dives)) {
     i_sp = which(!is.na(dp$setpoint))
     if (length(i_sp) > 0)
         labels = rbind(labels,
-            data.frame(depth=dp$depth[i_sp],
+            data.frame(
+                depth=dp$depth[i_sp],
                 time=dive_time[i_sp],
                 label=sprintf('SP %.2f', dp$setpoint[i_sp] / 100000.0),
-                pch=c(25)
+                pch=21
             )
         )
 
@@ -148,10 +151,22 @@ for (i in 1:nrow(kz.dives)) {
     i_gas = which(!is.na(dp$gas_name))
     if (length(i_gas) > 0)
         labels = rbind(labels,
-            data.frame(depth=dp$depth[i_gas],
+            data.frame(
+                depth=dp$depth[i_gas],
                 time=dive_time[i_gas],
                 label=dp$gas_name[i_gas],
-                pch=c(21)
+                pch=23
+            )
+        )
+
+    i_speed = which(dp$speed %in% range(dp$speed))
+    if (length(i_speed) > 0)
+        labels = rbind(labels,
+            data.frame(
+                depth=dp$depth[i_speed],
+                time=dive_time[i_speed],
+                label=sprintf('%dm/min', round(abs(dp$speed[i_speed]))),
+                pch=ifelse(dp$speed[i_speed] > 0, 25, 24)
             )
         )
 
