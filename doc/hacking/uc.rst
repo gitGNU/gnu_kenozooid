@@ -168,4 +168,19 @@ It is up to the R script to present results of data analysis.
 |                   |              | Start R script execution.     |                      |
 +-------------------+--------------+-------------------------------+----------------------+
 
+Plot Dive Data
+--------------
+**User Story**: :ref:`hk-us-plot-dive-details`, :ref:`hk-us-plot-dive-cmp`
+
+**Pre**: files with dive data exist and dives to plot exist
+
+**Input**: names of files with dive data, dives to analyze
+
+**Output**: output file name
+
+The use case reuses :ref:`hk-uc-analysis` use case. Appropriate R script
+is used for different types of plots described by user stories.
+
+The extension of output file name defines the format of the output file.
+
 .. vim: sw=4:et:ai

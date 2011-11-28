@@ -84,6 +84,17 @@ Each plot contains the following information
 - 1.4 and 1.6 ppO2 depth limit graph (optional)
 - maximum ascent and descent events (optional)
 
+.. _hk-us-plot-dive-cmp:
+
+Compare Dive Profiles
+^^^^^^^^^^^^^^^^^^^^^
+The diver creates plot to compare two or more dive profiles.
+
+The plot contains the following information
+
+- graph of dive profiles (each profile with different color)
+- title (optional)
+
 .. _hk-us-analysis:
 
 Data Analysis
