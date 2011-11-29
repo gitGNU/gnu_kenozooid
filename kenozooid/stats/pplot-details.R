@@ -81,7 +81,12 @@ for (i in 1:nrow(kz.dives)) {
     dp = kz.profiles[kz.profiles$dive == i, ]
 
     dive_time = dp$time / 60.0
-    dp$speed = c(0, diff(dp$depth) / diff(dive_time))
+    dp$speed = c(0, round(diff(dp$depth) / diff(dive_time)))
+    # skip speed for first and last samples as first and last samples are
+    # usually injected due to dive computers not starting and not ending
+    # dives at 0m
+    dp$speed[2] = 0
+    dp$speed[length(dp$speed)] = 0
 
     xlim = range(dive_time)
     ylim = rev(range(dp$depth))
@@ -165,7 +170,7 @@ for (i in 1:nrow(kz.dives)) {
             data.frame(
                 depth=dp$depth[i_speed],
                 time=dive_time[i_speed],
-                label=sprintf('%dm/min', round(abs(dp$speed[i_speed]))),
+                label=sprintf('%dm/min', abs(dp$speed[i_speed])),
                 pch=ifelse(dp$speed[i_speed] > 0, 25, 24)
             )
         )
