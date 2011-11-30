@@ -91,8 +91,10 @@ for (i in 1:nrow(kz.dives)) {
     xlim = range(dive_time)
     ylim = rev(range(dp$depth))
 
-    # set ylim to include mod of gas
-    if (kz.args.mod)
+    # set ylim to include mod of each gas, but skip mod of a gas which is
+    # deeper more than 3m comparing to the maximum depth of the dive
+    if (kz.args.mod
+            && max(dp$mod_low, na.rm=TRUE) - 3 < ylim[1])
         ylim = rev(range(ylim, dp$mod_high, na.rm=TRUE))
 
     plot(NA, xlim=xlim, ylim=ylim,
