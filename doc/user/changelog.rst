@@ -3,7 +3,8 @@ Changelog
 
 Kenozooid 0.5.0
 ---------------
-- maximum descent and ascent speeds plotting implemented
+- maximum descent and ascent rate speeds plotting implemented
+- improved gas MOD plotting
 
 Kenozooid 0.4.0
 ---------------
