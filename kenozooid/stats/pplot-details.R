@@ -117,16 +117,16 @@ for (i in 1:nrow(kz.dives)) {
         i_mod = which(!is.na(dp$mod_low))
         if (length(i_mod) > 0) {
             k = length(i_mod)
-                dt = c(dive_time[i_mod], dive_time[length(dive_time)])
-                mod_low = dp$mod_low[i_mod]
-                mod_high = dp$mod_high[i_mod]
-                x1 = c(dt[1], dt[2:k])
-                x2 = c(dt[2:k], dt[k + 1])
-                y1 = c(mod_low[1:k - 1], mod_low[k])
-                y2 = c(mod_high[1], mod_high[2:k])
-                rect(x1, y1, x2, y2, col=rgb(1, 0, 0, 0.1), border=NA)
-                segments(x1, y1, x2, y1, col=rgb(1, 0, 0, 0.5))
-                segments(x1, y2, x2, y2, col=rgb(1, 0, 0, 0.5))
+            dt = c(dive_time[i_mod], dive_time[length(dive_time)])
+            mod_low = dp$mod_low[i_mod]
+            mod_high = dp$mod_high[i_mod]
+            x1 = c(dt[1], dt[2:k])
+            x2 = c(dt[2:k], dt[k + 1])
+            y1 = c(mod_low[1:k - 1], mod_low[k])
+            y2 = c(mod_high[1], mod_high[2:k])
+            rect(x1, y1, x2, y2, col=rgb(1, 0, 0, 0.1), border=NA)
+            segments(x1, y1, x2, y1, col=rgb(1, 0, 0, 0.5))
+            segments(x1, y2, x2, y2, col=rgb(1, 0, 0, 0.5))
         }
     }
 
