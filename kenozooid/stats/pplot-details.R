@@ -166,13 +166,18 @@ for (i in 1:nrow(kz.dives)) {
             )
         )
 
-    i_speed = which(dp$speed %in% range(dp$speed))
+    max_descent = max(dp$speed)
+    max_ascent = min(dp$speed)
+    # find firt maximum descent rate speed (> 20m/min)
+    # and last maximum ascent rate speed (> 10m/min)
+    i_speed = c(head(which(dp$speed > 20 & dp$speed == max_descent), 1),
+        tail(which(dp$speed < -10 & dp$speed == max_ascent), 1))
     if (length(i_speed) > 0)
         labels = rbind(labels,
             data.frame(
                 depth=dp$depth[i_speed],
                 time=dive_time[i_speed],
-                label=sprintf('%dm/min', abs(dp$speed[i_speed])),
+                label=sprintf('%+dm/min', dp$speed[i_speed]),
                 pch=ifelse(dp$speed[i_speed] > 0, 25, 24)
             )
         )
