@@ -107,8 +107,18 @@ have arguments.
 Planning
 --------
 
+.. _hk-us-calc:
+
 Simple Calculation
 ^^^^^^^^^^^^^^^^^^
+The diver calculates
+
+- O2 partial pressure (ppO2) for depth and gas mix
+- Nitrogen parital pressure (ppN2) for depth and gas mix
+- equivalent air depth (EAD) for depth and gas mix
+- maximum operating depth (MOD) for ppO2 and gas mix
+- respiratory minute volume (RMV) for tank size, pressure in tank, maximum
+  depth and dive duration
 
 .. _hk-us-logbook:
 

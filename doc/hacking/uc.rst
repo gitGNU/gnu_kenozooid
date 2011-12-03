@@ -1,52 +1,6 @@
 Use Cases
 =========
 
-Add Dive
---------
-**Input:** dive data (date, maximum depth, duration) or dive profile in
-profile file, logbook file; optional dive data (time of dive, minimum
-temperature, buddy, dive site)
-
-The use case is about storing dive information in dive logbook - while dive data
-like duration or maximum depth is extracted (or calculated) from some dive
-profile (i.e. contained in dive computer backup file), then the types of data
-being copied is strictly limited below. Data copying functionality could be
-provided by other use case (if ever).
-
-Data, which can be extracted (calculated) from dive profile
-
-- date and time of dive
-- maximum depth
-- duration
-- minimum temperature
-- information about dive computer used to obtain dive profile
-
-Data, which *cannot* be extracted from dive profile
-
-- buddy
-- dive site
-
-+-----------+--------------+----------------------------------------------------+
-| Diver     | UI           | Logbook                                            |
-+===========+==============+====================================================+
-| Add dive. | Verify input | Open logbook file (create if necessary).           |
-|           | parameters.  |                                                    |
-|           |              | If dive profile provided, then extract appropriate |
-|           |              | dive data from dive profile.                       |
-|           |              |                                                    |
-|           |              | Insert dive data into logbook file.                |
-|           |              |                                                    |
-|           |              | If dive profile provided, then insert into logbook |
-|           |              | file.                                              |
-|           |              |                                                    |
-|           |              | - dive profile data                                |
-|           |              | - used dive computer information if available      |
-|           |              |                                                    |
-|           |              | Reorder dives.                                     |
-|           |              |                                                    |
-|           |              | Save logbook file.                                 |
-+-----------+--------------+----------------------------------------------------+
-
 Dive Computer Backup
 --------------------
 **Pre:** dive computer is correctly connected
@@ -182,5 +136,91 @@ The use case reuses :ref:`hk-uc-analysis` use case. Appropriate R script
 is used for different types of plots described by user stories.
 
 The extension of output file name defines the format of the output file.
+
+Calculate
+---------
+**User Story**: :ref:`hk-us-calc`
+
+**Input**: calculator name, calculator parameters
+
+**Output**: calculator's output
+
+The diver uses a calculator for dive planning. There are several
+calculators
+
+- ppO2
+- ppN2
+- ead
+- mod
+- rmv
+
+Each calculator has parameters (for example depth or gas mix), which has to
+be provided by the diver.
+
++--------------------+------------------+------------+
+| Diver              | UI               | Planning   |
++====================+==================+============+
+| Start calculation. | Verify input     | Calculate. |
+|                    | parameters.      |            |
+|                    |                  |            |
+|                    | Find calculator  |            |
+|                    | function.        |            |
+|                    |                  |            |
+|                    |                  |            |
+|                    |                  |            |
+|                    |                  |            |
+|                    |                  |            |
+|                    |                  |            |
++--------------------+------------------+------------+
+|                    | Output result of |            |
+|                    | the calculation. |            |
++--------------------+------------------+------------+
+
+
+Add Dive
+--------
+**Input:** dive data (date, maximum depth, duration) or dive profile in
+profile file, logbook file; optional dive data (time of dive, minimum
+temperature, buddy, dive site)
+
+The use case is about storing dive information in dive logbook - while dive data
+like duration or maximum depth is extracted (or calculated) from some dive
+profile (i.e. contained in dive computer backup file), then the types of data
+being copied is strictly limited below. Data copying functionality could be
+provided by other use case (if ever).
+
+Data, which can be extracted (calculated) from dive profile
+
+- date and time of dive
+- maximum depth
+- duration
+- minimum temperature
+- information about dive computer used to obtain dive profile
+
+Data, which *cannot* be extracted from dive profile
+
+- buddy
+- dive site
+
++-----------+--------------+----------------------------------------------------+
+| Diver     | UI           | Logbook                                            |
++===========+==============+====================================================+
+| Add dive. | Verify input | Open logbook file (create if necessary).           |
+|           | parameters.  |                                                    |
+|           |              | If dive profile provided, then extract appropriate |
+|           |              | dive data from dive profile.                       |
+|           |              |                                                    |
+|           |              | Insert dive data into logbook file.                |
+|           |              |                                                    |
+|           |              | If dive profile provided, then insert into logbook |
+|           |              | file.                                              |
+|           |              |                                                    |
+|           |              | - dive profile data                                |
+|           |              | - used dive computer information if available      |
+|           |              |                                                    |
+|           |              | Reorder dives.                                     |
+|           |              |                                                    |
+|           |              | Save logbook file.                                 |
++-----------+--------------+----------------------------------------------------+
 
 .. vim: sw=4:et:ai
