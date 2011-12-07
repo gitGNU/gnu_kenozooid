@@ -1,14 +1,17 @@
 Use Cases
 =========
 
+Manage Dive Computer Data
+-------------------------
+
 Dive Computer Backup
---------------------
+^^^^^^^^^^^^^^^^^^^^
 **Pre:** dive computer is correctly connected
 
 **Input:** dive computer, backup file name
 
 +---------------+--------------+-------------------------------+---------------------+----------------+
-| Diver         | UI           | Logbook                       | Driver              | Dive Computer  |
+| Diver         | UI           | Logbook                       | Drivers             | Dive Computer  |
 +===============+==============+===============================+=====================+================+
 | Start backup. | Verify input | Identify dive computer and    | Request raw data.   | Send raw data. |
 |               | parameters.  | find appropriate driver.      |                     |                |
@@ -28,13 +31,13 @@ Dive Computer Backup
 +---------------+--------------+-------------------------------+---------------------+----------------+
 
 Dive Computer Backup Reprocess
-------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **Pre:** backup file exists
 
 **Input:** new backup file name
 
 +--------------+--------------+-------------------------------+---------------------+
-| Diver        | UI           | Logbook                       | Driver              |
+| Diver        | UI           | Logbook                       | Drivers             |
 +==============+==============+===============================+=====================+
 | Start backup | Verify input | Lookup dive computer original |                     |
 | reprocess.   | parameters.  | data.                         |                     |
@@ -58,13 +61,13 @@ Dive Computer Backup Reprocess
 
 
 Convert Raw Dive Computer Data
-------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 **Pre:** file with raw dive computer data exists
 
 **Input:** driver name, raw dive computer data, new backup file name
 
 +-------------------+--------------+-------------------------------+---------------------+
-| Diver             | UI           | Logbook                       | Driver              |
+| Diver             | UI           | Logbook                       | Drivers             |
 +===================+==============+===============================+=====================+
 | Start conversion. | Verify input | Read raw data.                |                     |
 |                   | parameters.  | data.                         |                     |
@@ -137,8 +140,11 @@ is used for different types of plots described by user stories.
 
 The extension of output file name defines the format of the output file.
 
-Calculate
+Plan Dive
 ---------
+
+Calculate
+^^^^^^^^^
 **User Story**: :ref:`hk-us-calc`
 
 **Input**: calculator name, calculator parameters
@@ -176,9 +182,11 @@ be provided by the diver.
 |                    | the calculation. |            |
 +--------------------+------------------+------------+
 
+Manage Logbook
+--------------
 
 Add Dive
---------
+^^^^^^^^
 **Input:** dive data (date, maximum depth, duration) or dive profile in
 profile file, logbook file; optional dive data (time of dive, minimum
 temperature, buddy, dive site)
