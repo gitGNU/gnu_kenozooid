@@ -1267,4 +1267,19 @@ def xml_file_copy(f):
         yield RawString(l)
 
 
+def get_version(f):
+    """
+    Get major version of UDDF file.
+
+    Tuple (major, minor) is returned, i.e. (3, 0), (3, 1), etc.
+
+    :Parameters:
+     f
+        File to check.
+    """
+    n = et.parse(f).getroot()
+    v1, v2, *_ = n.get('version').split('.')
+    return int(v1), int(v2)
+
+
 # vim: sw=4:et:ai

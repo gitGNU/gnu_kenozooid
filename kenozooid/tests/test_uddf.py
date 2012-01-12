@@ -345,6 +345,22 @@ class FindDataTestCase(unittest.TestCase):
         self._qt(UDDF_SITE, ku.XP_FIND_SITE, 'markgraf', site='Scapa Flow')
 
 
+    def test_version(self):
+        """
+        Test getting UDDF version
+        """
+        s1 = b"""\
+<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+</uddf>
+"""
+        s2 = b"""\
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+</uddf>
+"""
+        self.assertEquals((3, 0), ku.get_version(BytesIO(s1)))
+        self.assertEquals((3, 1), ku.get_version(BytesIO(s2)))
+
+
 
 class CreateDataTestCase(unittest.TestCase):
     """
