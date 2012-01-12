@@ -671,7 +671,7 @@ def save(doc, f, validate=True):
 
     if validate:
         log.debug('validating uddf file')
-        fs = pkg_resources.resource_stream('kenozooid', 'uddf_3.0.1.xsd')
+        fs = pkg_resources.resource_stream('kenozooid', 'uddf_3.1.0.xsd')
         if hasattr(fs, 'name'):
             log.debug('uddf xsd found: {}'.format(fs.name))
         schema = et.XMLSchema(et.parse(fs))
@@ -1279,6 +1279,7 @@ def get_version(f):
     """
     n = et.parse(f).getroot()
     v1, v2, *_ = n.get('version').split('.')
+    f.seek(0, 0)
     return int(v1), int(v2)
 
 

@@ -26,6 +26,7 @@ Dive, dive site and buddy data display and management is implemented.
 import lxml.etree as et
 import os.path
 import logging
+import pkg_resources
 
 import kenozooid.uddf as ku
 from kenozooid.util import min2str, FMT_DIVETIME
@@ -167,5 +168,33 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
     ku.reorder(doc)
     ku.save(doc, lfile)
 
+
+def upgrade_file(fin):
+    """
+    Upgrade UDDF file to newer version.
+
+    :Parameters:
+     fin
+        File object with UDDF data to upgrade.
+    """
+    current = (3, 1)
+    versions = ((3, 0), )
+    xslt = ('uddf-3.0.0-3.1.0.xslt',)
+
+    ver = ku.get_version(fin)
+    if ver == current:
+        raise ValueError('File is at UDDF {}.{} version already' \
+            .format(*current))
+    try:
+        k = versions.index(ver)
+    except ValueError:
+        raise ValueError('Cannot upgrade UDDF file version {}.{}'.format(*ver))
+
+    doc = et.parse(fin)
+    for i in range(k, len(versions)):
+        fs = pkg_resources.resource_stream('kenozooid', xslt[i])
+        transform = et.XSLT(et.parse(fs))
+        doc = transform(doc)
+    return doc
 
 # vim: sw=4:et:ai

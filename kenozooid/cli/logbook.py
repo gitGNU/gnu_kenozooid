@@ -468,6 +468,44 @@ class DelBuddy(object):
             raise ex
 
 
+@inject(CLIModule, name='upgrade')
+class DelBuddy(object):
+    """
+    Upgrade a file to newer version of UDDF.
+    """
+    description = 'upgrade UDDF file to newer version'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for UDDF file format upgrade.
+        """
+        parser.add_argument('input',
+                nargs='+',
+                help='input UDDF file')
+
+
+    def __call__(self, args):
+        """
+        Execute command UDDF file upgrade.
+        """
+        import kenozooid.uddf as ku
+        import kenozooid.logbook as kl
+
+        for fin in args.input:
+            fbk = '{}.bak'.format(fin)
+
+            os.rename(fin, fbk)
+            try:
+                print(fin)
+                doc = kl.upgrade_file(open(fbk))
+                ku.save(doc.getroot(), fin)
+            except Exception as ex:
+                os.rename(fbk, fin)
+                print('Cannot upgrade file {}'.format(fin), file=sys.stderr)
+                print('Error: {}'.format(ex))
+
+
 
 def _name_parse(name):
     """
