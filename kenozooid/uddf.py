@@ -66,7 +66,7 @@ log = logging.getLogger('kenozooid.uddf')
 #
 # Default UDDF namespace mapping.
 #
-_NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.0/'}
+_NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.1/'}
 
 # Node id formatter
 FORMAT_ID = 'id-{}'
@@ -606,7 +606,7 @@ DEFAULT_FMT_DIVE_PROFILE = {
 # basic data for an UDDF file
 # fixme: obsolete
 UDDF_BASIC = """\
-<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
 <generator>
     <name>kenozooid</name>
     <manufacturer id='kenozooid'>
@@ -954,7 +954,7 @@ def create_uddf(datetime=datetime.now(), equipment=None, gases=None, dives=None,
             if dives else None,
 
         xmlns=_NSMAP['uddf'],
-        version='3.0.0',
+        version='3.1.0',
     )
     return doc
 
