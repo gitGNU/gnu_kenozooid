@@ -1606,8 +1606,8 @@ Ende auskommentiert von Kai -->
 	<xs:element name="divecomputercontrol">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="setdcdata" type="setdcdataType"/>
-				<xs:element name="getdcdata" type="getdcdataType"/>
+				<xs:element name="setdcdata" type="setdcdataType" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="getdcdata" type="getdcdataType" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="divecomputerdump" minOccurs="0" maxOccurs="unbounded" type="divecomputerdumpType">
 				</xs:element>
 			</xs:sequence>
