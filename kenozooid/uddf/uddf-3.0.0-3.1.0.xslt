@@ -49,4 +49,12 @@
     </xsl:if>
 </xsl:template>
 
+<!-- inject kenozooid specific information -->
+<xsl:template match="uddf30:generator">
+    <xsl:element name="{local-name()}">
+        <xsl:comment>Upgraded by Kenozooid 0.6.0.</xsl:comment>
+        <xsl:apply-templates/>
+    </xsl:element>
+</xsl:template>
+
 </xsl:stylesheet> 
