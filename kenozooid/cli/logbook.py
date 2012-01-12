@@ -497,7 +497,7 @@ class DelBuddy(object):
 
             os.rename(fin, fbk)
             try:
-                print(fin)
+                log.info('Upgraded {}'.format(fin))
                 doc = kl.upgrade_file(open(fbk))
                 ku.save(doc.getroot(), fin)
             except Exception as ex:

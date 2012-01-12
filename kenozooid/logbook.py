@@ -192,7 +192,7 @@ def upgrade_file(fin):
 
     doc = et.parse(fin)
     for i in range(k, len(versions)):
-        fs = pkg_resources.resource_stream('kenozooid', xslt[i])
+        fs = pkg_resources.resource_stream('kenozooid', 'uddf/{}'.format(xslt[i]))
         transform = et.XSLT(et.parse(fs))
         doc = transform(doc)
     return doc
