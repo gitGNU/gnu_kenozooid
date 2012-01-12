@@ -231,4 +231,38 @@ Data, which *cannot* be extracted from dive profile
 |           |              | Save logbook file.                                 |
 +-----------+--------------+----------------------------------------------------+
 
+Upgrade File Format Version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Pre:** input file exists and is valid file for previous version of file
+format
+
+**Output:** output file is valid file for new version of file format
+
+**Input:** input file with dive data
+
+**Output:** output file with dive data
+
+The use case is about upgrading UDDF files to new version of the standard.
+
+Upgrade path is determined as follows
+
+- determine current version of input file
+- find all next versions from current version till new version of file
+  format
+
+This way, multiple file format versions updating can be supported.
+
++--------------------+------------------+----------------------------+
+| Diver              | UI               | Logbook                    |
++====================+==================+============================+
+| Start upgrading.   | Verify input     | Find upgrade path.         |
+|                    | parameters.      |                            |
+|                    |                  | Upgrade file.              |
+|                    |                  |                            |
+|                    |                  | Save backup of input file. |
+|                    |                  |                            |
+|                    |                  | Save file.                 |
++--------------------+------------------+----------------------------+
+
 .. vim: sw=4:et:ai

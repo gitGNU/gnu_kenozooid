@@ -213,4 +213,9 @@ Remove Buddy
 ^^^^^^^^^^^^
 The diver removes buddy data from logbook file.
 
+Upgrade Files
+^^^^^^^^^^^^^
+The file format standard used by Kenozooid changes with time. The diver
+wants to upgrade his files to newer version of the file format. 
+
 .. vim: sw=4:et:ai
