@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
-  <generator>
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+  <generator><!--Upgraded by Kenozooid 0.6.0.-->
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -18,7 +18,7 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-eb8c1d26960ca8466b16dcb0272fe578">
+        <divecomputer id="id-eb8c1d26960ca8466b16dcb0272fe578"><name>OSTC Mk.2 2.03</name>
           <model>OSTC Mk.2 2.03</model>
         </divecomputer>
       </equipment>
@@ -68,7 +68,7 @@
           <waypoint>
             <depth>2.3</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>2.8</depth>
@@ -5936,7 +5936,7 @@
           <waypoint>
             <depth>3.9</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>4.5</depth>
@@ -11194,7 +11194,7 @@
           <waypoint>
             <depth>1.9</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>2.3</depth>
@@ -16688,7 +16688,7 @@
           <waypoint>
             <depth>3.8</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>4.6</depth>
@@ -22512,7 +22512,7 @@
           <waypoint>
             <depth>2.8</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>3.1</depth>
@@ -28393,7 +28393,7 @@
           <waypoint>
             <depth>1.6</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.8</depth>
@@ -34425,7 +34425,7 @@
             <alarm>deco</alarm>
             <depth>1.4</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>1.4</depth>
@@ -41021,7 +41021,7 @@
           <waypoint>
             <depth>2.6</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>3.3</depth>
@@ -45664,7 +45664,7 @@
           <waypoint>
             <depth>3.5</depth>
             <divetime>3378</divetime>
-            <setpo2>70000.00</setpo2>
+            <setpo2 setby="user">70000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>3.6</depth>
@@ -46368,7 +46368,7 @@
           <waypoint>
             <depth>3.5</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>4.1</depth>
@@ -52254,7 +52254,7 @@
           <waypoint>
             <depth>2.5</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>2.8</depth>
@@ -57679,7 +57679,7 @@
           <waypoint>
             <depth>4.8</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>5.4</depth>
@@ -62761,7 +62761,7 @@
           <waypoint>
             <depth>2.8</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>3.4</depth>
@@ -67194,7 +67194,7 @@
           <waypoint>
             <depth>3.9</depth>
             <divetime>3</divetime>
-            <setpo2>130000.00</setpo2>
+            <setpo2 setby="user">130000.00</setpo2>
           </waypoint>
           <waypoint>
             <depth>4.3</depth>

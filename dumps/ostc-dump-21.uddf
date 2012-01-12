@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
-  <generator>
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+  <generator><!--Upgraded by Kenozooid 0.6.0.-->
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -18,7 +18,7 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-6b873f0ed1b7c956d9ede48d4337e2e3">
+        <divecomputer id="id-6b873f0ed1b7c956d9ede48d4337e2e3"><name>OSTC Mk.2 1.90</name>
           <model>OSTC Mk.2 1.90</model>
         </divecomputer>
       </equipment>
@@ -17573,7 +17573,7 @@
           <waypoint>
             <depth>6.3</depth>
             <divetime>3496</divetime>
-            <setpo2>120000.00</setpo2>
+            <setpo2 setby="user">120000.00</setpo2>
             <switchmix ref="tx1344"/>
           </waypoint>
           <waypoint>

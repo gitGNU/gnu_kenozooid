@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.0/" version="3.0.0">
-  <generator>
+<?xml version='1.0' encoding='utf-8'?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+  <generator><!--Upgraded by Kenozooid 0.6.0.-->
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -18,7 +18,7 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-c55bb8c0ce588f4e39b81dfa33a9c86a">
+        <divecomputer id="id-c55bb8c0ce588f4e39b81dfa33a9c86a"><name>OSTC 1.51</name>
           <model>OSTC 1.51</model>
         </divecomputer>
       </equipment>
