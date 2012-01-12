@@ -253,16 +253,14 @@ Upgrade path is determined as follows
 
 This way, multiple file format versions updating can be supported.
 
-+--------------------+------------------+----------------------------+
-| Diver              | UI               | Logbook                    |
-+====================+==================+============================+
-| Start upgrading.   | Verify input     | Find upgrade path.         |
-|                    | parameters.      |                            |
-|                    |                  | Upgrade file.              |
-|                    |                  |                            |
-|                    |                  | Save backup of input file. |
-|                    |                  |                            |
-|                    |                  | Save file.                 |
-+--------------------+------------------+----------------------------+
++--------------------+----------------------+----------------------------+
+| Diver              | UI                   | Logbook                    |
++====================+======================+============================+
+| Start upgrading.   | Verify input         | Find upgrade path.         |
+|                    | parameters.          |                            |
+|                    |                      | Upgrade file.              |
+|                    | Rename input file as |                            |
+|                    | backup file.         | Save file.                 |
++--------------------+----------------------+----------------------------+
 
 .. vim: sw=4:et:ai
