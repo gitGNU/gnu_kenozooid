@@ -27,10 +27,6 @@
     <xsl:attribute name="version">3.1.0</xsl:attribute>
 </xsl:template>
 
-<xsl:template match="uddf30:uddf/@version">
-    <xsl:attribute name="version">3.1.0</xsl:attribute>
-</xsl:template>
-
 <!-- copy dive computer name from dive computer model if name not specified -->
 <xsl:template match="uddf30:divecomputer">
     <xsl:if test="not(name)">
