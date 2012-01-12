@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Kenozooid 0.6.0
+---------------
+- support UDDF 3.1
+- added support for upgrading UDDF XML files to newer version of UDDF
+  specification
+
 Kenozooid 0.5.0
 ---------------
 - maximum descent and ascent rate speeds plotting implemented
