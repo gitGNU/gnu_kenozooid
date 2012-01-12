@@ -713,6 +713,10 @@ class CreateDataTestCase(unittest.TestCase):
         r = ku.xp_first(doc, '//uddf:owner//uddf:divecomputer/uddf:model/text()')
         self.assertEquals(r, 'Test 1', sd)
 
+        # name is the same as model
+        r = ku.xp_first(doc, '//uddf:owner//uddf:divecomputer/uddf:name/text()')
+        self.assertEquals(r, 'Test 1', sd)
+
 
     def test_create_dive_samples(self):
         """
@@ -740,10 +744,12 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test UDDF dive profile sample creation with setpoint
         """
-        s = kd.Sample(depth=3.1, time=19, temp=20, setpoint=1.17),
+        s = kd.Sample(depth=3.1, time=19, temp=20, setpoint=1.17,
+                setpointby='user'),
         samples = ku.create_dive_samples(s)
         n, sd = xml2et(xml.dive(samples))
         self.assertEquals('1.17', ku.xp_first(n, '//setpo2/text()'), sd)
+        self.assertEquals('user', ku.xp_first(n, '//setpo2/@setby'), sd)
         
 
     def test_dump_data_encode(self):

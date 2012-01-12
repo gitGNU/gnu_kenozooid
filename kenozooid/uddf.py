@@ -96,6 +96,7 @@ XP_DEFAULT_PROFILE_DATA =  (
     XPath('uddf:divetime/text()'),
     XPath('uddf:temperature/text()'),
     XPath('uddf:setpo2/text()'),
+    XPath('uddf:setpo2/@setby'),
     XPath('uddf:decostop/@duration'),
     XPath('uddf:decostop/@decodepth'),
     XPath('uddf:alarm/text()'),
@@ -368,11 +369,11 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('depth', 'time', 'temp', 'setpoint',
+        fields = ('depth', 'time', 'temp', 'setpoint', 'setpointby',
                 'deco_time', 'deco_depth', 'alarm', 'gas')
         queries = XP_DEFAULT_PROFILE_DATA
         gases = dict(((gas.id, gas) for gas in gas_data(node)))
-        parsers = (float, ) * 6 + (str, gases.get)
+        parsers = (float, ) * 4 + (str, float, float, str, gases.get)
 
     return find_data('Sample', node, fields, queries, parsers,
             nquery=XP_WAYPOINT)
@@ -1020,7 +1021,8 @@ def create_dive_samples(samples):
                 ),
             xml.depth(FMT_F(s.depth)),
             xml.divetime(FMT_I(s.time)),
-            None if s.setpoint is None else xml.setpo2(FMT_F2(s.setpoint)),
+            None if s.setpoint is None else xml.setpo2(FMT_F2(s.setpoint),
+                setby=s.setpointby),
             None if s.gas is None else xml.switchmix(ref=str(s.gas.id)),
             None if s.temp is None else xml.temperature(FMT_F(s.temp)),
         )
@@ -1052,7 +1054,7 @@ def create_dc_data(dc_id, model):
      model
         Dive computer model.
     """
-    yield xml.divecomputer(xml.model(model), id=dc_id)
+    yield xml.divecomputer(xml.name(model), xml.model(model), id=dc_id)
 
 
 def create_dump_data(dc_id, datetime, data):

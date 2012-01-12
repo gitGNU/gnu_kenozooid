@@ -237,6 +237,7 @@ class OSTCDataParser(object):
                     alarm=('deco',) if deco_alarm else None,
                     temp=temp,
                     setpoint=setpoint,
+                    setpointby='user' if setpoint else None,
                     deco_time=deco_time,
                     deco_depth=deco_depth,
                     gas=gas)
