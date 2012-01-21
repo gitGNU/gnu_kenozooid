@@ -198,11 +198,11 @@ class DataParserTestCase(unittest.TestCase):
 
     def test_version_ostc_n2(self):
         """
-        Test OSTC N2 model and version parsing from raw data
+        Test OSTC 2N model and version parsing from raw data
         """
         dc = OSTCDataParser()
         ver = dc.version(od.RAW_DATA_OSTC_N2_191_HW)
-        self.assertEquals('OSTC N2 1.91', ver)
+        self.assertEquals('OSTC 2N 1.91', ver)
 
 
     def test_version_191(self):

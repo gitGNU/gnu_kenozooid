@@ -20,13 +20,13 @@ Dive planning software
 
 Hardware
 --------
-HeinrichsWeikamp OSTC N2
+HeinrichsWeikamp OSTC 2N
 ^^^^^^^^^^^^^^^^^^^^^^^^
-OSTC N2 (formerly OSTC and OSTC Mk.2) is open source dive computer created
+OSTC 2N (formerly OSTC and OSTC Mk.2) is open source dive computer created
 by HeinrichsWeikamp GbR.  Hardware schematic, source code of firmware and
 communication protocol documentation are provided.
 
-OSTC N2 web page can be found at
+OSTC 2N web page can be found at
 
     http://www.heinrichsweikamp.net/
 
