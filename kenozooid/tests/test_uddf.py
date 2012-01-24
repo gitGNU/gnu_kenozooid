@@ -85,6 +85,7 @@ UDDF_PROFILE = b"""\
             <diveduration>20</diveduration>
             <greatestdepth>30.2</greatestdepth>
             <lowesttemperature>251.4</lowesttemperature>
+            <averagedepth>10.1</averagedepth>
         </informationafterdive>
       </dive>
       <dive id='d02'>
@@ -263,6 +264,7 @@ class FindDataTestCase(unittest.TestCase):
         self.assertEquals(20, dive.duration)
         self.assertEquals(30.2, dive.depth)
         self.assertEquals(251.4, dive.temp)
+        self.assertEquals(10.1, dive.avg_depth)
 
 
     def test_profile_data(self):

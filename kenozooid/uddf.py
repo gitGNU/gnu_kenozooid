@@ -88,7 +88,8 @@ XP_DEFAULT_DIVE_DATA = (
     XPath('uddf:informationbeforedive/uddf:datetime/text()'),
     XPath('uddf:informationafterdive/uddf:greatestdepth/text()'),
     XPath('uddf:informationafterdive/uddf:diveduration/text()'),
-    XPath('uddf:informationafterdive/uddf:lowesttemperature/text()'))
+    XPath('uddf:informationafterdive/uddf:lowesttemperature/text()'),
+    XPath('uddf:informationafterdive/uddf:averagedepth/text()'))
 
 # XPath queries for default dive profile sample data
 XP_DEFAULT_PROFILE_DATA =  (
@@ -332,9 +333,9 @@ def dive_data(node, fields=None, queries=None, parsers=None):
         find_data
     """
     if fields is None:
-        fields = ('datetime', 'depth', 'duration', 'temp')
+        fields = ('datetime', 'depth', 'duration', 'temp', 'avg_depth')
         queries = XP_DEFAULT_DIVE_DATA
-        parsers = (dparse, float, float, float)
+        parsers = (dparse, float, float, float, float)
 
     return find_data('Dive', node, fields, queries, parsers)
 
