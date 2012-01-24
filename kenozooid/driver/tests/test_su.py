@@ -673,6 +673,7 @@ class SensusUltraUDDFTestCase(unittest.TestCase):
         self.assertEquals(12.0, dive.depth)
         self.assertEquals(170, dive.duration)
         self.assertEquals(288.6, dive.temp)
+        self.assertTrue(dive.avg_depth is None)
 
         # 18 samples for first dive
         samples = list(dive.profile)
