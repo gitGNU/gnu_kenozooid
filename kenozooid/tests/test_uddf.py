@@ -392,7 +392,7 @@ class CreateDataTestCase(unittest.TestCase):
         f.close() # check if file closing is possible
 
         preamble = b"""\
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">\
 """
         self.assertTrue(s.startswith(preamble), s)
