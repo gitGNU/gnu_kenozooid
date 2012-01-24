@@ -39,7 +39,8 @@ def ntuple(name, fields):
     return dt._replace
 
 
-Dive = ntuple('Dive', 'datetime depth duration temp profile equipment')
+Dive = ntuple('Dive', 'datetime depth duration temp avg_depth profile' \
+        ' equipment')
 Sample = ntuple('Sample', 'depth time temp setpoint setpointby' \
         ' deco_time deco_depth alarm gas')
 Gas = ntuple('Gas', 'id name o2 he')

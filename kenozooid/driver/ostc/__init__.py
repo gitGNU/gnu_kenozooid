@@ -168,12 +168,6 @@ class OSTCDataParser(object):
         """
         Convert dive data into UDDF format.
         """
-        # uddf dive profile sample
-        _f = 'alarm', 'deco_time', 'deco_depth', 'deco_kind', 'depth', 'time', 'temp'
-        _q = 'uddf:alarm', \
-            'uddf:decostop/@duration', 'uddf:decostop/@decodepth', 'uddf:decostop/@kind', \
-            'uddf:depth', 'uddf:divetime', 'uddf:temperature',
-                
         ostc_data = ostc_parser.get_data(dump.data)
 
         for h, p in ostc_parser.profiles(ostc_data.profiles):
@@ -194,12 +188,17 @@ class OSTCDataParser(object):
                     seconds=header.dive_time_s + header.sampling)
             st -= duration
 
+            # firmware ver < 1.91 has no average depth information
+            avg_depth = header.avg_depth / 100.0 \
+                    if hasattr(header, 'avg_depth') else None
+
             try:
                 profile = list(self._get_profile(header, dive_data))
                 yield kd.Dive(datetime=st,
                     depth=header.max_depth / 100.0,
                     duration=duration.seconds,
                     temp=C2K(header.min_temp / 10.0),
+                    avg_depth=avg_depth,
                     profile=profile)
             except ValueError as ex:
                 log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \

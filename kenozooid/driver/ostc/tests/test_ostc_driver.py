@@ -168,6 +168,33 @@ class DataModelTestCase(unittest.TestCase):
             tuple((float(s.deco_depth), float(s.deco_time)) for s in samples))
 
 
+    def test_no_avg_depth(self):
+        """
+        Test OSTC1 no average depth parsing
+        """
+        dive = self.dives[0]
+        self.assertTrue(dive.avg_depth is None)
+
+
+    def test_avg_depth_191(self):
+        """
+        Test OSTC 1.91 average depth parsing
+        """
+        dc = OSTCDataParser()
+
+        dump = kd.BinaryData(datetime=datetime.now(),
+                data=od.RAW_DATA_OSTC_MK2_196)
+        dive = next(dc.dives(dump))
+        self.assertEquals(7.3, dive.avg_depth)
+
+        # do not use 1st and 2nd dives as they were generated with firmware
+        # ver < 1.91
+        dump = kd.BinaryData(datetime=datetime.now(),
+                data=od.RAW_DATA_OSTC_MK2_194)
+        dive = list(dc.dives(dump))[2]
+        self.assertEquals(26.05, dive.avg_depth)
+
+
 
 class DataParserTestCase(unittest.TestCase):
     """
