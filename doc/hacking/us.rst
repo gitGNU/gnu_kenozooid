@@ -84,6 +84,16 @@ Each plot contains the following information
 - 1.4 and 1.6 ppO2 depth limit graph (optional)
 - maximum ascent and descent events (optional)
 
+Ascent speed values
+
+- are prefixed with "+"
+- visible when greater than 10m/min
+
+Descent speed values
+
+- are prefixed with "-"
+- visible when greater than 20m/min
+
 .. _hk-us-plot-dive-cmp:
 
 Compare Dive Profiles

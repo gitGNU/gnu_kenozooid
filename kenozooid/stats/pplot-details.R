@@ -81,7 +81,8 @@ for (i in 1:nrow(kz.dives)) {
     dp = kz.profiles[kz.profiles$dive == i, ]
 
     dive_time = dp$time / 60.0
-    dp$speed = c(0, round(diff(dp$depth) / diff(dive_time)))
+    # minus for decent, plus for ascent
+    dp$speed = c(0, -round(diff(dp$depth) / diff(dive_time)))
     # skip speed for first and last samples as first and last samples are
     # usually injected due to dive computers not starting and not ending
     # dives at 0m
@@ -166,19 +167,19 @@ for (i in 1:nrow(kz.dives)) {
             )
         )
 
-    max_descent = max(dp$speed)
-    max_ascent = min(dp$speed)
+    max_descent = min(dp$speed)
+    max_ascent = max(dp$speed)
     # find firt maximum descent rate speed (> 20m/min)
     # and last maximum ascent rate speed (> 10m/min)
-    i_speed = c(head(which(dp$speed > 20 & dp$speed == max_descent), 1),
-        tail(which(dp$speed < -10 & dp$speed == max_ascent), 1))
+    i_speed = c(head(which(dp$speed < -20 & dp$speed == max_descent), 1),
+        tail(which(dp$speed > 10 & dp$speed == max_ascent), 1))
     if (length(i_speed) > 0)
         labels = rbind(labels,
             data.frame(
                 depth=dp$depth[i_speed],
                 time=dive_time[i_speed],
                 label=sprintf('%+dm/min', dp$speed[i_speed]),
-                pch=ifelse(dp$speed[i_speed] > 0, 25, 24)
+                pch=ifelse(dp$speed[i_speed] > 0, 24, 25)
             )
         )
 
