@@ -107,7 +107,7 @@ def header(data):
     else:
         raise ValueError('Unknown length of profile header: {}'.format(len(data)))
 
-    log.debug('parsed dive header {0.year:>02d}/{0.month:>02d}/{0.day:>02d}' \
+    log.debug('parsed dive header {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \
         ' {0.hour:>02d}:{0.minute:>02d}' \
         ' max depth={0.max_depth}'.format(header))
     return header
