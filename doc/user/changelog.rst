@@ -1,6 +1,11 @@
 Changelog
 =========
 
+Kenozooid 0.7.0
+---------------
+- annotate ascent speeds with "+" and descent speeds with "-" on dive
+  profile details plots
+
 Kenozooid 0.6.0
 ---------------
 - support UDDF 3.1
