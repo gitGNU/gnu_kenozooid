@@ -58,6 +58,11 @@ class PlotProfiles(object):
                 dest='plot_info',
                 default=False,
                 help='display dive information (depth, time, temperature)')
+        parser.add_argument('--avg-depth',
+                action='store_true',
+                dest='plot_avg_depth',
+                default=False,
+                help='display dive average depth')
         parser.add_argument('--mod',
                 action='store_true',
                 dest='plot_mod',
@@ -115,6 +120,7 @@ class PlotProfiles(object):
             title=args.plot_title,
             info=args.plot_info,
             temp=args.plot_temp,
+            avg_depth=args.plot_avg_depth,
             mod=args.plot_mod,
             sig=args.plot_sig,
             legend=args.plot_legend,

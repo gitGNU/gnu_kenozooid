@@ -64,8 +64,8 @@ def dives_df(data):
     """
     Create R data frame for dives using rpy interface.
     """
-    cols = 'datetime', 'depth', 'duration', 'temp'
-    vf = str_vec, float_vec, float_vec, float_vec
+    cols = 'datetime', 'depth', 'duration', 'temp', 'avg_depth'
+    vf = str_vec, float_vec, float_vec, float_vec, float_vec
     return df(cols, vf, data)
 
 

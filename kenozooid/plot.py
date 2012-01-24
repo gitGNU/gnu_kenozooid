@@ -41,7 +41,8 @@ import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.plot')
 
-def _inject_dives_ui(dives, title, info, temp, mod, sig, legend, labels):
+def _inject_dives_ui(dives, title, info, temp, avg_depth, mod, sig,
+        legend, labels):
     """
     Inject ``kz.dives.ui`` data frame in R space.
 
@@ -55,6 +56,8 @@ def _inject_dives_ui(dives, title, info, temp, mod, sig, legend, labels):
         Dive title.
     label
         Dive label put on legend.
+    avg_depth
+        Dive average depth label.
 
     See ``plot`` for parameters description.
     """
@@ -77,6 +80,11 @@ def _inject_dives_ui(dives, title, info, temp, mod, sig, legend, labels):
         cols.append('info')
         t_cols.append(ro.StrVector)
         f_cols.append(ifmt)
+    if avg_depth:
+        cols.append('avg_depth')
+        t_cols.append(ro.StrVector)
+        f_cols.append(lambda d: None if d.avg_depth is None \
+                else '{:.1f}m'.format(d.avg_depth))
 
     # format optional dive data (i.e. title, info) from dive data;
     # dive per row
@@ -101,7 +109,8 @@ def _inject_dives_ui(dives, title, info, temp, mod, sig, legend, labels):
 
 
 def plot(fout, ptype, dives, title=False, info=False, temp=False,
-        mod=False, sig=True, legend=False, labels=None, format='pdf'):
+        avg_depth=False, mod=False, sig=True, legend=False, labels=None,
+        format='pdf'):
     """
     Plot graphs of dive profiles.
     
@@ -118,6 +127,8 @@ def plot(fout, ptype, dives, title=False, info=False, temp=False,
         Display dive information (time, depth, temperature).
      temp
         Plot temperature graph.
+     avg_depth
+        Plot dive average depth.
      mod
         Plot MOD of current gas.
      sig
@@ -131,8 +142,8 @@ def plot(fout, ptype, dives, title=False, info=False, temp=False,
     """
     dives, dt = itertools.tee(dives, 2)
 
-    _inject_dives_ui(dt, title=title, info=info, temp=temp, mod=mod,
-            sig=sig, legend=legend, labels=labels)
+    _inject_dives_ui(dt, title=title, info=info, temp=temp, avg_depth=avg_depth,
+            mod=mod, sig=sig, legend=legend, labels=labels)
 
     v = lambda s, t: '--{}'.format(s) if t else '--no-{}'
     args = (fout, format, v('sig', sig), v('mod', mod))

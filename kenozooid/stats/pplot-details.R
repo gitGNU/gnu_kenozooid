@@ -77,6 +77,7 @@ for (i in 1:nrow(kz.dives)) {
     dive = kz.dives[i,]
     dive.title = if (is.null(kz.dives.ui$title)) NA else kz.dives.ui[i, 'title']
     dive.info = if (is.null(kz.dives.ui$info)) NA else kz.dives.ui[i, 'info']
+    dive.info_avg_depth = if (is.null(kz.dives.ui$avg_depth)) NA else kz.dives.ui[i, 'avg_depth']
 
     dp = kz.profiles[kz.profiles$dive == i, ]
 
@@ -136,6 +137,15 @@ for (i in 1:nrow(kz.dives)) {
     # then the grid
     minor.tick(nx=5, ny=2)
     grid()
+
+    # plot dive average depth line
+    if (!is.na(dive.info_avg_depth)) {
+        duration = dive$duration / 60.0
+        lines(c(0, duration), c(dive$avg_depth, dive$avg_depth),
+                col='green')
+        text(duration, dive$avg_depth, dive.info_avg_depth, cex=0.6,
+            font=2, pos=4, offset=0.1)
+    }
 
     # and finally plot the dive profile
     lines(dive_time, dp$depth, col='blue')
