@@ -997,6 +997,7 @@ def create_dive(dive, equipment=None):
             xml.diveduration(FMT_I(dive.duration)),
             None if dive.temp is None else xml.lowesttemperature(FMT_F(dive.temp)),
             xml.equipmentused((xml.link(ref=v) for v in eq)),
+            None if dive.avg_depth is None else xml.averagedepth(FMT_F(dive.avg_depth)),
         ),
         id=gen_id(),
     )
