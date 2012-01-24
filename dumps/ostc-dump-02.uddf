@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
-  <generator><!--Upgraded by Kenozooid 0.6.0.-->
+  <generator>
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.4.0</version>
-    <datetime>2011-10-26T18:16:28</datetime>
+    <version>0.7.0</version>
+    <datetime>2012-01-24T21:10:03</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -18,7 +18,8 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-33db83e0e3ef5f332f1b151ec709c301"><name>OSTC 1.29</name>
+        <divecomputer id="id-33db83e0e3ef5f332f1b151ec709c301">
+          <name>OSTC 1.29</name>
           <model>OSTC 1.29</model>
         </divecomputer>
       </equipment>
@@ -44,8 +45,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-e3b00a3c3fb24a4887a5c639fcf458e1">
-      <dive id="id-4d4eadb18dde4c5ca9801b5cccafc1af">
+    <repetitiongroup id="id-dcb60e52ab6341b6bfacfed6db543a1d">
+      <dive id="id-d1aa7b48815c439b833800751b428827">
         <informationbeforedive>
           <datetime>2009-02-01T22:46:37</datetime>
         </informationbeforedive>
@@ -1789,7 +1790,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-0741c9a730834f059a534ca7095a7c50">
+      <dive id="id-6d5b6a77c9204328b48c90b4b27ddfc4">
         <informationbeforedive>
           <datetime>2009-02-27T19:54:36</datetime>
         </informationbeforedive>

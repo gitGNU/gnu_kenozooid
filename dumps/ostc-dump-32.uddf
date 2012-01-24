@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
-  <generator><!--Upgraded by Kenozooid 0.6.0.-->
+  <generator>
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.4.0</version>
-    <datetime>2011-11-01T23:00:47</datetime>
+    <version>0.7.0</version>
+    <datetime>2012-01-24T21:11:15</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -18,7 +18,8 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-6917e910fb4c12d267d855235741517d"><name>OSTC 2N 2.00</name>
+        <divecomputer id="id-bfd8712c6560e94f149847762b04b404">
+          <name>OSTC 2N 2.00</name>
           <model>OSTC 2N 2.00</model>
         </divecomputer>
       </equipment>
@@ -26,7 +27,7 @@
   </diver>
   <divecomputercontrol>
     <divecomputerdump>
-      <link ref="id-6917e910fb4c12d267d855235741517d"/>
+      <link ref="id-bfd8712c6560e94f149847762b04b404"/>
       <datetime>2011-11-01T23:01:04</datetime>
       <dcdump>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</dcdump>
     </divecomputerdump>
@@ -49,8 +50,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-902459fe50484932975feb19f4c0c087">
-      <dive id="id-3c385429cf4c49daa3907474b989f411">
+    <repetitiongroup id="id-3b5067e87d6e4ee98cf760f4ad5a4452">
+      <dive id="id-583d3ce3735049bbb01ee308d9e06f3f">
         <informationbeforedive>
           <datetime>2011-09-10T13:47:43</datetime>
         </informationbeforedive>
@@ -931,11 +932,12 @@
           <diveduration>2117</diveduration>
           <lowesttemperature>287.1</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>13.4</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-10e110e9c0764ac2a6c793b91bdd7f1f">
+      <dive id="id-6187f1de8d2d4b9d9f82717e983adf6f">
         <informationbeforedive>
           <datetime>2011-09-11T14:25:40</datetime>
         </informationbeforedive>
@@ -1943,11 +1945,12 @@
           <diveduration>2420</diveduration>
           <lowesttemperature>286.8</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>11.4</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-d55d60ddd76b4cc9a0478438349be651">
+      <dive id="id-21ad3ccb869343fca66e9b3a36dc72d0">
         <informationbeforedive>
           <datetime>2011-09-25T12:04:56</datetime>
         </informationbeforedive>
@@ -2530,11 +2533,12 @@
           <diveduration>1384</diveduration>
           <lowesttemperature>287.9</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>7.7</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-86fff2bed5d04ac1a987eb9c45e1a0be">
+      <dive id="id-2ad46b5d640a402aa01ba02e979e92fd">
         <informationbeforedive>
           <datetime>2011-10-02T11:37:40</datetime>
         </informationbeforedive>
@@ -3272,11 +3276,12 @@
           <diveduration>1760</diveduration>
           <lowesttemperature>285.6</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>14.3</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-66f31c456ac245408a595bdb36393c80">
+      <dive id="id-9278ce18e2c34adbb47459767a0f4302">
         <informationbeforedive>
           <datetime>2011-10-02T13:51:18</datetime>
         </informationbeforedive>
@@ -4431,11 +4436,12 @@
           <diveduration>2742</diveduration>
           <lowesttemperature>281.5</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>18.1</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-8d540eb08768490084125379cfb2e836">
+      <dive id="id-1a43a57258ac44d09c363a9bf2b17e7a">
         <informationbeforedive>
           <datetime>2011-10-29T12:10:18</datetime>
         </informationbeforedive>
@@ -5451,11 +5457,12 @@
           <diveduration>2442</diveduration>
           <lowesttemperature>285.2</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>12.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-a496fae9eb714c14b5200e83477a7f7f">
+      <dive id="id-a22e6313e4d04ebf8d258e71269bf8f1">
         <informationbeforedive>
           <datetime>2011-10-29T17:20:20</datetime>
         </informationbeforedive>
@@ -6495,11 +6502,12 @@
           <diveduration>2500</diveduration>
           <lowesttemperature>285.1</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>14.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-b801e62da69942ba8024999b229d6a88">
+      <dive id="id-7f09d76fdd5b4e8ebc625e7f435736ef">
         <informationbeforedive>
           <datetime>2011-10-30T13:34:37</datetime>
         </informationbeforedive>
@@ -7997,11 +8005,12 @@
           <diveduration>3623</diveduration>
           <lowesttemperature>284.8</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>17.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-a1a5bdce3703417bba220fcb17df5a4a">
+      <dive id="id-2de03c6015aa48eabba98e4ce4fefafe">
         <informationbeforedive>
           <datetime>2011-10-31T10:54:58</datetime>
         </informationbeforedive>
@@ -9025,8 +9034,9 @@
           <diveduration>2462</diveduration>
           <lowesttemperature>285.3</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>16.1</averagedepth>
         </informationafterdive>
       </dive>
     </repetitiongroup>

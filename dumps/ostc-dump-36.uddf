@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
-  <generator><!--Upgraded by Kenozooid 0.6.0.-->
+  <generator>
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.5.0</version>
-    <datetime>2012-01-06T18:21:04</datetime>
+    <version>0.7.0</version>
+    <datetime>2012-01-24T21:11:28</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -18,7 +18,8 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-02115a678c75a079a6a63e306c3b060b"><name>OSTC Mk.2 2.09</name>
+        <divecomputer id="id-02115a678c75a079a6a63e306c3b060b">
+          <name>OSTC Mk.2 2.09</name>
           <model>OSTC Mk.2 2.09</model>
         </divecomputer>
       </equipment>
@@ -59,8 +60,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-3b8a0a37f8ed4b13888ca54c30e3ec5d">
-      <dive id="id-4f4dafc2a41841dd8c2190b0232737b7">
+    <repetitiongroup id="id-1594c2490b7c40b6866e25d8a1be96a8">
+      <dive id="id-df2c02ecf2904235b385e85985ed7c2f">
         <informationbeforedive>
           <datetime>2011-05-09T21:01:18</datetime>
         </informationbeforedive>
@@ -6559,9 +6560,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>24.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-659338d7559344ffbd005f706993d2b6">
+      <dive id="id-902ee226dab347ac8c73de4a34eca5e3">
         <informationbeforedive>
           <datetime>2011-05-13T11:57:08</datetime>
         </informationbeforedive>
@@ -12416,9 +12418,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>23.4</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-bacc5f91d00c4ad59ed3dfe12500e89a">
+      <dive id="id-5a06a253a3f947efb4e475aededa7732">
         <informationbeforedive>
           <datetime>2011-11-19T10:43:31</datetime>
         </informationbeforedive>
@@ -22458,9 +22461,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>26.3</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-1881034bc0e94586ac596df415e4f237">
+      <dive id="id-509b377b93fa4331a6580a1eedd44c4f">
         <informationbeforedive>
           <datetime>2011-11-24T19:55:53</datetime>
         </informationbeforedive>
@@ -28333,9 +28337,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>24.1</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-32f84a15a85b4c97bca2574a2a0024e0">
+      <dive id="id-8e2bfcf4268b4a65a5ac8e1b2b40ef0e">
         <informationbeforedive>
           <datetime>2011-11-27T13:22:00</datetime>
         </informationbeforedive>
@@ -35446,9 +35451,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>25.9</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-a4a27402a5f14ef386d2674681ffa343">
+      <dive id="id-4a32ea11187f46c39c2f28540ec1c16d">
         <informationbeforedive>
           <datetime>2011-12-01T19:47:22</datetime>
         </informationbeforedive>
@@ -40867,9 +40873,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>23.3</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-aeaf95d48f22458fafe08c73902f8031">
+      <dive id="id-3e8014978413441586e0f30a8ffcf201">
         <informationbeforedive>
           <datetime>2011-12-08T19:47:38</datetime>
         </informationbeforedive>
@@ -45943,9 +45950,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>24.8</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-b4c39e0fff9340ddb8a848b677afe78b">
+      <dive id="id-d5dc7b3e6c424324b4824d0132fa4024">
         <informationbeforedive>
           <datetime>2011-12-11T13:00:25</datetime>
         </informationbeforedive>
@@ -53125,9 +53133,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>26.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-839d3a19562d403cbb032c570ecd98ec">
+      <dive id="id-72fe1cd8f2924a5d8a132799b99acfb7">
         <informationbeforedive>
           <datetime>2011-12-29T14:21:32</datetime>
         </informationbeforedive>
@@ -57459,9 +57468,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>23.0</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-741c993c2f9040079199306201397e55">
+      <dive id="id-614a6c99bc8b4eddb570fc20320b1ecf">
         <informationbeforedive>
           <datetime>2012-01-01T14:42:18</datetime>
         </informationbeforedive>
@@ -64234,9 +64244,10 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>24.9</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-bda6ab8f4a374481bd340385a058300c">
+      <dive id="id-7fe9655f5b9543d39403ab310fe6d618">
         <informationbeforedive>
           <datetime>2012-01-06T10:30:56</datetime>
         </informationbeforedive>
@@ -70111,6 +70122,7 @@
           <equipmentused>
             <link ref="id-02115a678c75a079a6a63e306c3b060b"/>
           </equipmentused>
+          <averagedepth>23.1</averagedepth>
         </informationafterdive>
       </dive>
     </repetitiongroup>

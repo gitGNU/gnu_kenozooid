@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0"?>
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
-  <generator><!--Upgraded by Kenozooid 0.6.0.-->
+  <generator>
     <name>kenozooid</name>
     <manufacturer id="kenozooid">
       <name>Kenozooid Team</name>
@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.4.0</version>
-    <datetime>2011-10-26T18:17:56</datetime>
+    <version>0.7.0</version>
+    <datetime>2012-01-24T21:11:02</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -18,7 +18,8 @@
         <lastname>Guest</lastname>
       </personal>
       <equipment>
-        <divecomputer id="id-6917e910fb4c12d267d855235741517d"><name>OSTC 2N 2.00</name>
+        <divecomputer id="id-bfd8712c6560e94f149847762b04b404">
+          <name>OSTC 2N 2.00</name>
           <model>OSTC 2N 2.00</model>
         </divecomputer>
       </equipment>
@@ -26,7 +27,7 @@
   </diver>
   <divecomputercontrol>
     <divecomputerdump>
-      <link ref="id-6917e910fb4c12d267d855235741517d"/>
+      <link ref="id-bfd8712c6560e94f149847762b04b404"/>
       <datetime>2011-09-11T22:42:07</datetime>
       <dcdump>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</dcdump>
     </divecomputerdump>
@@ -39,8 +40,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-cbc6c86d2a6941eebc2244e05ab4fbab">
-      <dive id="id-8d35fe8b39b6490a95c456bcbb513dd1">
+    <repetitiongroup id="id-a129df6daab449aa952ba7193d9e13fa">
+      <dive id="id-420fc0ff737f4078a214c6d482feec11">
         <informationbeforedive>
           <datetime>2011-09-10T13:47:43</datetime>
         </informationbeforedive>
@@ -921,11 +922,12 @@
           <diveduration>2117</diveduration>
           <lowesttemperature>287.1</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>13.4</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-915c0682ea954b7cb7ee04fe668f6127">
+      <dive id="id-f15e29fd849d401e9d571439999bd3cc">
         <informationbeforedive>
           <datetime>2011-09-11T14:25:40</datetime>
         </informationbeforedive>
@@ -1933,8 +1935,9 @@
           <diveduration>2420</diveduration>
           <lowesttemperature>286.8</lowesttemperature>
           <equipmentused>
-            <link ref="id-6917e910fb4c12d267d855235741517d"/>
+            <link ref="id-bfd8712c6560e94f149847762b04b404"/>
           </equipmentused>
+          <averagedepth>11.4</averagedepth>
         </informationafterdive>
       </dive>
     </repetitiongroup>
