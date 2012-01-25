@@ -44,6 +44,7 @@ def list_dives(fin):
 
     - date and time of dive, i.e. 2011-03-19 14:56
     - maximum depth, i.e. 6.0m
+    - dive average depth, i.e. 2.0m
     - duration of dive, i.e. 33:42
     - temperature, i.e. 8.2°C
 
@@ -60,11 +61,11 @@ def list_dives(fin):
             temp = ''
             if dive.temp is not None:
                 temp = '{:.1f}\u00b0C'.format(K2C(dive.temp))
-            avg_depth = ''
+            avg_depth = ' --- '
             if dive.avg_depth is not None:
                 avg_depth = '{:.1f}m'.format(dive.avg_depth)
-            yield (format(dive.datetime, FMT_DIVETIME), depth, duration,
-                    temp, avg_depth)
+            yield (format(dive.datetime, FMT_DIVETIME), depth, avg_depth,
+                    duration, temp)
         except TypeError as ex:
             log.debug(ex)
             log.warn('invalid dive data, skipping dive')
