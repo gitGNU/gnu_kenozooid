@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# create kenozooid screenshots
+
+./bin/kz plot --mod --info --avg-depth 11 dumps/ostc-dump-30.uddf rebreather-dive.png
+./bin/kz plot --mod --title --info --avg-depth 17 dumps/ostc-dump-35.uddf mod-violation.png
+./bin/kz plot --mod --title --info --avg-depth 1 dumps/ostc-dump-24.uddf guidme-ii.png
+
