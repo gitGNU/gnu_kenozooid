@@ -19,6 +19,7 @@ Dive list consists of the following columns
 - number of a dive from a file
 - date and time
 - maximum depth
+- average depth
 - duration in minutes
 - minimum temperature
 
@@ -26,8 +27,8 @@ To list the dives from a logbook file or from a dive computer backup file::
 
     $ kz dive list logbook.uddf
     logbook.uddf:
-        1: 2009-10-22 15:32     30.3m     64:16    29.0°C
-        2: 2010-10-29 06:02     29.4m     61:30    26.7°C
+        1: 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
+        2: 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
 
 Buddies Listing 
 ^^^^^^^^^^^^^^^
@@ -159,9 +160,9 @@ To add a dive with basic data use ``dive add`` command::
     kz dive add '2011-10-12 13:14' 32.5 51 logbook.uddf                              
     kz dive list logbook.uddf
     logbook.uddf:
-        1: 2009-10-22 15:32     30.3m     64:16    29.0°C
-        2: 2010-10-29 06:02     29.4m     61:30    26.7°C
-        3: 2011-10-12 13:14     32.5m     51:00 
+        1: 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
+        2: 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
+        3: 2011-10-12 13:14     32.5m ( --- )     51:00 
 
 
 To copy dive from another file use ``dive copy`` command. For example, to
@@ -171,9 +172,9 @@ add 4th dive from dive computer backup file to logbook file::
 
     $ kz dive list logbook.uddf
     logbook.uddf:
-        1: 2009-10-22 15:32     30.3m     64:16    29.0°C
-        2: 2010-10-29 06:02     29.4m     61:30    26.7°C
-        3: 2011-06-26 12:56     85.0m    104:42     5.5°C
+        1: 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
+        2: 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
+        3: 2011-06-26 12:56     85.0m (24.4m)    104:42     5.5°C
 
 Copying a dive and adding dive site and buddy data at the same time is also
 supported. For example, to copy a dive with ``Ireland's Eye`` dive site and
