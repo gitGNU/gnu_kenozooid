@@ -78,6 +78,7 @@ Each plot contains the following information
   - maximum depth
   - temperature
 
+- average depth line (optional)
 - deco ceiling graph
 - gas change
 - setpoint change
