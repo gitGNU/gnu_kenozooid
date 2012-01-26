@@ -82,7 +82,8 @@ class ListDives(object):
         for fin in files:
             print('{}:'.format(fin))
             for i, d in enumerate(kl.list_dives(fin), 1):
-                print('{:5}: {:>9} {:>9} ({:>5}) {:>9} {:>9}'.format(i, *d))
+                print('{:5}: {:>9} {:>9} ({:>5}) {:>9} {:>9}'.format(i,
+                    d[0], d[1], d[2] or ' --- ', d[3], d[4]))
 
 
 

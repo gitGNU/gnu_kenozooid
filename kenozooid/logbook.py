@@ -61,7 +61,7 @@ def list_dives(fin):
             temp = ''
             if dive.temp is not None:
                 temp = '{:.1f}\u00b0C'.format(K2C(dive.temp))
-            avg_depth = ' --- '
+            avg_depth = ''
             if dive.avg_depth is not None:
                 avg_depth = '{:.1f}m'.format(dive.avg_depth)
             yield (format(dive.datetime, FMT_DIVETIME), depth, avg_depth,
