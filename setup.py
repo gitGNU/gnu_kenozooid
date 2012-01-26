@@ -10,9 +10,9 @@ from distutils.cmd import Command
 VERSION = __import__('kenozooid').__version__
 
 MODS = ['lxml >= 2.3', 'dirty >= 1.0.2', 'python-dateutil >= 2.0',
-    'rpy2 >= 2.2.1', 'pyserial_py3k >= 2.5']
+    'rpy2 >= 2.2.1', 'pyserial_py3k >= 2.6']
 MODS_DEPS = ['lxml >= 2.3', 'dirty >= 1.0.2', 'python-dateutil >= 2.0',
-    'rpy2 >= 2.2.1', 'pyserial >= 2.5', 'distribute', 'setuptools-git']
+    'rpy2 >= 2.2.1', 'pyserial_py3k >= 2.6', 'distribute', 'setuptools-git']
 
 def _py_inst(mods, names, py_miss):
     """

@@ -6,6 +6,7 @@ Kenozooid 0.7.0
 - added support for dive average depth
 - annotate ascent speeds with "+" and descent speeds with "-" on dive
   profile details plots
+- pyserial 2.6 is required, now
 
 Kenozooid 0.6.0
 ---------------

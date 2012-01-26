@@ -31,7 +31,7 @@ platform (Windows, Mac OS X).
 +-----------------+----------+-------------+--------------------------+----------------------------+
 |                                           **Optional**                                           |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| pyserial        |    2.5   | Python      | PLD Linux, Windows       | required by OSTC driver    |
+| pyserial        |    2.6   | Python      | PLD Linux, Windows       | required by OSTC driver    |
 |                 |          | module      |                          |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | libdivecomputer |          | library     |                          | required by Sensus Ultra   |
