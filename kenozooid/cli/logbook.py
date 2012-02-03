@@ -274,7 +274,7 @@ class ListDiveSites(object):
         files = args.input
 
         for fin in files:
-            nodes = ku.parse(fin, query, site=args.site)
+            nodes = ku.find(fin, query, site=args.site)
             print('{}:'.format(fin))
             for i, n in enumerate(nodes):
                 n = ku.site_data(n)
@@ -420,7 +420,7 @@ class ListBuddies(object):
         files = args.input
 
         for fin in files:
-            nodes = ku.parse(fin, query, buddy=args.buddy)
+            nodes = ku.find(fin, query, buddy=args.buddy)
             print('{}:'.format(fin))
             for i, n in enumerate(nodes):
                 b = ku.buddy_data(n)

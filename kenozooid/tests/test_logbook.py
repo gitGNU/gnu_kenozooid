@@ -53,7 +53,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         """
         f = '{}/dive_add.uddf'.format(self.tdir)
         kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59)
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
         self.assertTrue(next(nodes, None) is None)
@@ -78,7 +78,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
 
         kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59, qsite='s1')
 
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
         self.assertTrue('s1', ku.xp_first(dn, './/uddf:link/@ref'))
 
@@ -96,7 +96,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59,
                 qbuddies=['b1'])
 
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
         self.assertTrue('b1', ku.xp_first(dn, './/uddf:link/@ref'))
 
@@ -115,7 +115,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59,
                 qbuddies=['b1'])
 
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
         self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
 
@@ -132,7 +132,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
 
         f = '{}/dive_add.uddf'.format(self.tdir)
         kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
         self.assertTrue(next(nodes, None) is None)
@@ -162,7 +162,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         ku.save(doc, f)
 
         kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
         self.assertTrue('s1', ku.xp_first(dn, './/uddf:link/@ref'))
@@ -185,7 +185,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         ku.save(doc, f)
 
         kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
         self.assertTrue('b1', ku.xp_first(dn, './/uddf:link/@ref'))
@@ -209,7 +209,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         ku.save(doc, f)
 
         kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.parse(f, '//uddf:dive')
+        nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
         self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))

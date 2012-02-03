@@ -52,7 +52,7 @@ def list_dives(fin):
      fin
         Logbook file in UDDF format.
     """
-    dives = (ku.dive_data(n) for n in ku.parse(fin, '//uddf:dive'))
+    dives = (ku.dive_data(n) for n in ku.find(fin, '//uddf:dive'))
 
     for dive in dives:
         try:
@@ -114,7 +114,7 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
 
     site_id = None
     if qsite:
-        nodes = ku.parse(lfile, ku.XP_FIND_SITE, site=qsite)
+        nodes = ku.find(lfile, ku.XP_FIND_SITE, site=qsite)
         n = next(nodes, None)
         if n is None:
             raise ValueError('Cannot find dive site in logbook file')
@@ -127,7 +127,7 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
     log.debug('looking for buddies {}'.format(qbuddies))
     for qb in qbuddies:
         log.debug('looking for buddy {}'.format(qb))
-        nodes = ku.parse(lfile, ku.XP_FIND_BUDDY, buddy=qb)
+        nodes = ku.find(lfile, ku.XP_FIND_BUDDY, buddy=qb)
         n = next(nodes, None)
         if n is None:
             raise ValueError('Cannot find buddy {} in logbook file'.format(qb))
@@ -139,7 +139,7 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
     if dive_no is not None and pfile is not None:
         log.debug('creating dive with profile')
         q = ku.XPath('//uddf:dive[position() = $no]')
-        dives = ku.parse(pfile, q, no=dive_no)
+        dives = ku.find(pfile, q, no=dive_no)
         dive = next(dives, None)
         if dive is None:
             raise ValueError('Cannot find dive in dive profile data')

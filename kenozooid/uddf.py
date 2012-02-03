@@ -173,7 +173,7 @@ class RangeError(ValueError):
     pass
 
 
-def parse(f, query, **params):
+def find(f, query, **params):
     """
     Find XML nodes in UDDF file using XPath query.
 

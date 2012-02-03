@@ -246,7 +246,7 @@ class FindDataTestCase(unittest.TestCase):
         Test basic XML parsing routine
         """
         f = BytesIO(UDDF_PROFILE)
-        depths = list(ku.parse(f, '//uddf:waypoint//uddf:depth/text()'))
+        depths = list(ku.find(f, '//uddf:waypoint//uddf:depth/text()'))
         self.assertEqual(7, len(depths))
 
         expected = ['1.48', '2.43', '3.58', '2.61', '4.18', '6.25', '8.32']
@@ -258,7 +258,7 @@ class FindDataTestCase(unittest.TestCase):
         Test parsing UDDF default dive data
         """
         f = BytesIO(UDDF_PROFILE)
-        node = next(ku.parse(f, '//uddf:dive[1]'))
+        node = next(ku.find(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
         self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.datetime)
         self.assertEquals(20, dive.duration)
@@ -272,7 +272,7 @@ class FindDataTestCase(unittest.TestCase):
         Test parsing UDDF default dive profile data
         """
         f = BytesIO(UDDF_PROFILE)
-        node = next(ku.parse(f, '//uddf:dive[2]'))
+        node = next(ku.find(f, '//uddf:dive[2]'))
         profile = list(ku.dive_profile(node))
         self.assertEquals(4, len(profile))
 
@@ -287,7 +287,7 @@ class FindDataTestCase(unittest.TestCase):
         Test parsing UDDF dive computer dump data
         """
         f = BytesIO(UDDF_DUMP)
-        node = next(ku.parse(f, '//uddf:divecomputerdump'))
+        node = next(ku.find(f, '//uddf:divecomputerdump'))
         dump = ku.dump_data(node)
 
         expected = ('ostc',
@@ -311,7 +311,7 @@ class FindDataTestCase(unittest.TestCase):
         Test dive site data parsing
         """
         f = BytesIO(UDDF_SITE)
-        node = next(ku.parse(f, '//uddf:site[1]'))
+        node = next(ku.find(f, '//uddf:site[1]'))
         site = ku.site_data(node)
         expected = ('markgraf', 'SMS Markgraf', 'Scapa Flow', None, None)
         self.assertEquals(expected, site)
@@ -1059,7 +1059,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1095,7 +1095,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1133,7 +1133,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1172,7 +1172,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1210,7 +1210,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1253,7 +1253,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1301,7 +1301,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
@@ -1343,7 +1343,7 @@ class NodeCopyTestCase(unittest.TestCase):
 </uddf>
 """
         s = BytesIO(SOURCE)
-        a, *_ = ku.parse(s, '//uddf:a1')
+        a, *_ = ku.find(s, '//uddf:a1')
 
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
