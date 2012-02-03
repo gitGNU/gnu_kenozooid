@@ -173,6 +173,26 @@ class RangeError(ValueError):
     pass
 
 
+def parse(f):
+    """
+    Parse XML file and return document object.
+
+    File to parse can be anything supported by ``lxml`` library.
+
+    If file to parse is file name and ends with '.bz2', then it is treated
+    as file compressed with bzip2.
+
+    :Parameters:
+     f
+        File to parse.
+    """
+    if isinstance(f, str) and f.endswith('.bz2'):
+        log.debug('detected compressed file')
+        f = bz2.BZ2File(f)
+    doc = et.parse(f)
+    return doc
+
+
 def find(f, query, **params):
     """
     Find XML nodes in UDDF file using XPath query.
@@ -193,12 +213,11 @@ def find(f, query, **params):
 
     .. seealso::
         XPath
+        parse
     """
     log.debug('parsing and searching with query: {}; parameters {}' \
             .format(query, params))
-    if isinstance(f, str) and f.endswith('.bz2'):
-        f = bz2.BZ2File(f)
-    doc = et.parse(f)
+    doc = parse(f)
     if isinstance(query, str):
         return xp(doc, query)
     else:
@@ -655,45 +674,6 @@ def create(datetime=datetime.now()):
     return root
 
 
-def save(doc, f, validate=True):
-    """
-    fixme: obsolete
-
-    Save UDDF data to a file.
-
-    A file can be a file name, file like object or anything supported by
-    `lxml` for writing.
-
-    :Parameters:
-     doc
-        UDDF document to save.
-     f
-        UDDF output file.
-     validate
-        Validate UDDF file before saving if set to True.
-    """
-    log.debug('cleaning uddf file')
-    #et.deannotate(doc)
-    et.cleanup_namespaces(doc)
-
-    if validate:
-        log.debug('validating uddf file')
-        fs = pkg_resources.resource_stream('kenozooid', 'uddf/uddf_3.1.0.xsd')
-        if hasattr(fs, 'name'):
-            log.debug('uddf xsd found: {}'.format(fs.name))
-        schema = et.XMLSchema(et.parse(fs))
-        try:
-            schema.assertValid(doc)
-        except et.DocumentInvalid as ex:
-            log.info(et.tostring(doc, pretty_print=True))
-            raise ex
-
-    et.ElementTree(doc).write(f,
-            encoding='utf-8',
-            xml_declaration=True,
-            pretty_print=True)
-
-
 def set_data(node, queries, formatters=None, **data):
     """
     Set data of nodes or attributes using XPath queries relative to
@@ -1104,7 +1084,13 @@ def save_uddf(doc, fout, validate=True):
         openf = bz2.BZ2File
         log.debug('uddf file will be compressed')
     with openf(fout, 'w') as f:
-        f.writelines(l.encode('utf-8') for l in doc)
+        if et.iselement(doc):
+            et.ElementTree(doc).write(f,
+                    encoding='utf-8',
+                    xml_declaration=True,
+                    pretty_print=True)
+        else:
+            f.writelines(l.encode('utf-8') for l in doc)
 
     if validate:
         log.debug('validating uddf file')

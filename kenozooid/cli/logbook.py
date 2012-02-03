@@ -229,12 +229,12 @@ class AddDiveSite(object):
         fout = args.output[0]
 
         if os.path.exists(fout):
-            doc = et.parse(fout).getroot()
+            doc = ku.parse(fout).getroot()
         else:
             doc = ku.create()
 
         ku.create_site_data(doc, id=id, location=location, name=name, x=x, y=y)
-        ku.save(doc, fout)
+        ku.save_uddf(doc, fout)
 
 
 
@@ -318,11 +318,11 @@ class DelDiveSite(object):
         fin = args.input[0]
         fbk = '{}.bak'.format(fin)
 
-        doc = et.parse(fin)
+        doc = ku.parse(fin)
         ku.remove_nodes(doc, query, site=args.site[0])
         os.rename(fin, fbk)
         try:
-            ku.save(doc.getroot(), fin)
+            ku.save_uddf(doc.getroot(), fin)
         except Exception as ex:
             os.rename(fbk, fin)
             raise ex
@@ -373,14 +373,14 @@ class AddBuddy(object):
         fout = args.output[0]
 
         if os.path.exists(fout):
-            doc = et.parse(fout).getroot()
+            doc = ku.parse(fout).getroot()
         else:
             doc = ku.create()
 
         ku.create_buddy_data(doc, id=id, fname=fn, mname=mn,
                 lname=ln, org=org, number=number)
 
-        ku.save(doc, fout)
+        ku.save_uddf(doc, fout)
 
 
 @inject(CLIModule, name='buddy list')
@@ -458,11 +458,11 @@ class DelBuddy(object):
         fin = args.input[0]
         fbk = '{}.bak'.format(fin)
 
-        doc = et.parse(fin)
+        doc = ku.parse(fin)
         ku.remove_nodes(doc, query, buddy=args.buddy[0])
         os.rename(fin, fbk)
         try:
-            ku.save(doc.getroot(), fin)
+            ku.save_uddf(doc.getroot(), fin)
         except Exception as ex:
             os.rename(fbk, fin)
             raise ex
@@ -499,7 +499,7 @@ class DelBuddy(object):
             try:
                 log.info('Upgraded {}'.format(fin))
                 doc = kl.upgrade_file(open(fbk))
-                ku.save(doc.getroot(), fin)
+                ku.save_uddf(doc.getroot(), fin)
             except Exception as ex:
                 os.rename(fbk, fin)
                 print('Cannot upgrade file {}'.format(fin), file=sys.stderr)
