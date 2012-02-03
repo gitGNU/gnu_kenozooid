@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Kenozooid 0.8.0
+---------------
+- added support for uddf files compressed with bzip2 algorithm
+
 Kenozooid 0.7.0
 ---------------
 - added support for dive average depth
