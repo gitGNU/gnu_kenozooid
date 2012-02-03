@@ -1085,6 +1085,7 @@ def save_uddf(doc, fout, validate=True):
     if fout.endswith('.bz2'):
         openf = bz2.BZ2File
         log.debug('uddf file will be compressed')
+
     with openf(fout, 'w') as f:
         if et.iselement(doc):
             et.ElementTree(doc).write(f,
