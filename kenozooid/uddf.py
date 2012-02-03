@@ -1070,6 +1070,8 @@ def save_uddf(doc, fout, validate=True):
     If output file is file name ending with '.bz2', then it is compressed
     with bzip2.
 
+    The UDDF XML data can be ElementTree XML object or iterable of strings.
+
     :Parameters:
      doc
         UDDF XML data.
