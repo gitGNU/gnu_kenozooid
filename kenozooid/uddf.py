@@ -180,6 +180,9 @@ def parse(f, query, **params):
     UDDF file can be a file name, file object, URL and basically everything
     what is supported by `lxml` library.
 
+    File to parse can be a file name ending with '.bz2'. It is treated as
+    file compressed with bzip2.
+
     :Parameters:
      f
         UDDF file to parse.
@@ -193,6 +196,8 @@ def parse(f, query, **params):
     """
     log.debug('parsing and searching with query: {}; parameters {}' \
             .format(query, params))
+    if isinstance(f, str) and f.endswith('.bz2'):
+        f = bz2.BZ2File(f)
     doc = et.parse(f)
     if isinstance(query, str):
         return xp(doc, query)
@@ -1082,6 +1087,9 @@ def save_uddf(doc, fout, validate=True):
     """
     Save UDDF XML data into a file.
 
+    If output file is file name ending with '.bz2', then it is compressed
+    with bzip2.
+
     :Parameters:
      doc
         UDDF XML data.
@@ -1091,8 +1099,12 @@ def save_uddf(doc, fout, validate=True):
         Validate UDDF file after saving if True.
     """
     log.debug('saving uddf file')
-    with open(fout, 'w') as f:
-        f.writelines(doc)
+    openf = open
+    if fout.endswith('.bz2'):
+        openf = bz2.BZ2File
+        log.debug('uddf file will be compressed')
+    with openf(fout, 'w') as f:
+        f.writelines(l.encode('utf-8') for l in doc)
 
     if validate:
         log.debug('validating uddf file')
@@ -1100,7 +1112,7 @@ def save_uddf(doc, fout, validate=True):
         if hasattr(fs, 'name'):
             log.debug('uddf xsd found: {}'.format(fs.name))
         schema = et.XMLSchema(et.parse(fs))
-        schema.assertValid(et.parse(fout))
+        schema.assertValid(et.parse(openf(fout)))
         log.debug('uddf file is valid')
 
 

@@ -10,10 +10,15 @@ Connect dive computer to a personal computer and backup its data (see also
    kz backup ostc /dev/ttyUSB0 backup-ostc-20110728.uddf
    kz backup su /dev/ttyUSB0 backup-su-20110728.uddf
 
-Above, data from OSTC dive computer and Sensus Ultra dive data logger are
-saved to ``backup-ostc-20110728.uddf`` and ``backup-su-20110728.uddf``
+Above commands save data from OSTC dive computer and Sensus Ultra dive data
+logger to ``backup-ostc-20110728.uddf`` and ``backup-su-20110728.uddf``
 files.
 
+File compression is supported. Simply add ``.bz2`` extension to a file
+name, for example::
+
+   kz backup ostc /dev/ttyUSB0 backup-ostc-20110728.uddf.bz2
+   kz backup su /dev/ttyUSB0 backup-su-20110728.uddf.bz2
 
 List the dives from backup file (see also :ref:`user-logbook`)::
 
