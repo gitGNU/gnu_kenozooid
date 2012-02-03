@@ -139,7 +139,7 @@ def add_master_command(name, title, desc):
 
 
 def _dive_data(args):
-    from kenozooid.uddf import parse, dive_data, dive_profile
+    from kenozooid.uddf import find, dive_data, dive_profile
     i = 0
     while i < len(args):
         q = '//uddf:dive'
@@ -153,7 +153,7 @@ def _dive_data(args):
                 raise ArgumentError('File does not exist: {0}'.format(f))
 
         # return generator of dive data and its profile data tuples
-        nodes = parse(f, q)
+        nodes = find(f, q)
         yield ((dive_data(n), dive_profile(n)) for n in nodes)
         i += 1
 
