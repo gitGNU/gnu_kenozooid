@@ -1282,7 +1282,7 @@ def get_version(f):
      f
         File to check.
     """
-    n = et.parse(f).getroot()
+    n = parse(f).getroot()
     v1, v2, *_ = n.get('version').split('.')
     f.seek(0, 0)
     return int(v1), int(v2)

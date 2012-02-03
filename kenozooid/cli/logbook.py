@@ -498,7 +498,7 @@ class DelBuddy(object):
             os.rename(fin, fbk)
             try:
                 log.info('Upgraded {}'.format(fin))
-                doc = kl.upgrade_file(open(fbk))
+                doc = kl.upgrade_file(fbk)
                 ku.save_uddf(doc.getroot(), fin)
             except Exception as ex:
                 os.rename(fbk, fin)

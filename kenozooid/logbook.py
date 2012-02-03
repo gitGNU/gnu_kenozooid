@@ -180,7 +180,7 @@ def upgrade_file(fin):
 
     :Parameters:
      fin
-        File object with UDDF data to upgrade.
+        File with UDDF data to upgrade.
     """
     current = (3, 1)
     versions = ((3, 0), )
