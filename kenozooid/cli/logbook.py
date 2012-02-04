@@ -233,7 +233,7 @@ class AddDiveSite(object):
             doc = ku.create()
 
         ku.create_site_data(doc, id=id, location=location, name=name, x=x, y=y)
-        ku.save_uddf(doc, fout)
+        ku.save(doc, fout)
 
 
 
@@ -318,7 +318,7 @@ class DelDiveSite(object):
 
         doc = ku.parse(fin)
         ku.remove_nodes(doc, query, site=args.site[0])
-        ku.save_uddf(doc.getroot(), fin)
+        ku.save(doc.getroot(), fin)
 
 
 
@@ -373,7 +373,7 @@ class AddBuddy(object):
         ku.create_buddy_data(doc, id=id, fname=fn, mname=mn,
                 lname=ln, org=org, number=number)
 
-        ku.save_uddf(doc, fout)
+        ku.save(doc, fout)
 
 
 @inject(CLIModule, name='buddy list')
@@ -452,7 +452,7 @@ class DelBuddy(object):
 
         doc = ku.parse(fin)
         ku.remove_nodes(doc, query, buddy=args.buddy[0])
-        ku.save_uddf(doc.getroot(), fin)
+        ku.save(doc.getroot(), fin)
 
 
 @inject(CLIModule, name='upgrade')
@@ -483,7 +483,7 @@ class DelBuddy(object):
             try:
                 log.info('Upgraded {}'.format(fin))
                 doc = kl.upgrade_file(fin)
-                ku.save_uddf(doc.getroot(), fin)
+                ku.save(doc.getroot(), fin)
             except Exception as ex:
                 print('Cannot upgrade file {}'.format(fin), file=sys.stderr)
                 print('Error: {}'.format(ex))

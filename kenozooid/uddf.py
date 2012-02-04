@@ -1065,7 +1065,7 @@ def create_dump_data(dc_id, datetime, data):
     )
 
 
-def save_uddf(doc, fout, validate=True):
+def save(doc, fout, validate=True):
     """
     Save UDDF XML data into a file.
 

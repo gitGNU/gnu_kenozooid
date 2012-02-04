@@ -149,7 +149,7 @@ def _save_dives(drv, time, data, fout):
 
             # store gas and dives in two separate files,
             # then merge the data into one UDDF file
-            save = kf.sink(partial(ku.save_uddf, fout=fout))
+            save = kf.sink(partial(ku.save, fout=fout))
             m = kf.concat(2, partial(cat_gd, equipment=eq, dump=dump), save)
             kf.send(
                 kf.pipe(drv.dives(bdata),
@@ -167,7 +167,7 @@ def _save_dives(drv, time, data, fout):
                 kd.sort_dives,
                 kd.uniq_dives,
                 partial(ku.create_dives, equipment=(dc_id,)))
-        ku.save_uddf(ku.create_uddf(equipment=eq, dives=dives, dump=dump), fout)
+        ku.save(ku.create_uddf(equipment=eq, dives=dives, dump=dump), fout)
 
 #
 # fixme: put the functions/coroutines below into proper modules
