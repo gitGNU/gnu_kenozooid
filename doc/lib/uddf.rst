@@ -3,9 +3,10 @@ UDDF
 
 .. automodule:: kenozooid.uddf
 
-XML Nodes Pasrsing, Searching and Manipulation
+XML Nodes Parsing, Searching and Manipulation
 ----------------------------------------------
 
+.. autofunction:: kenozooid.uddf.find
 .. autofunction:: kenozooid.uddf.parse
 .. autofunction:: kenozooid.uddf.xp
 .. autofunction:: kenozooid.uddf.xp_first
