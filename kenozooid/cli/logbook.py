@@ -23,7 +23,6 @@ Kenozooid's logbook command line user interface.
 
 import sys
 import itertools
-import os
 import os.path
 from functools import partial
 from lxml import etree as et
@@ -316,16 +315,10 @@ class DelDiveSite(object):
 
         query = ku.XP_FIND_SITE
         fin = args.input[0]
-        fbk = '{}.bak'.format(fin)
 
         doc = ku.parse(fin)
         ku.remove_nodes(doc, query, site=args.site[0])
-        os.rename(fin, fbk)
-        try:
-            ku.save_uddf(doc.getroot(), fin)
-        except Exception as ex:
-            os.rename(fbk, fin)
-            raise ex
+        ku.save_uddf(doc.getroot(), fin)
 
 
 
@@ -456,16 +449,10 @@ class DelBuddy(object):
 
         query = ku.XP_FIND_BUDDY
         fin = args.input[0]
-        fbk = '{}.bak'.format(fin)
 
         doc = ku.parse(fin)
         ku.remove_nodes(doc, query, buddy=args.buddy[0])
-        os.rename(fin, fbk)
-        try:
-            ku.save_uddf(doc.getroot(), fin)
-        except Exception as ex:
-            os.rename(fbk, fin)
-            raise ex
+        ku.save_uddf(doc.getroot(), fin)
 
 
 @inject(CLIModule, name='upgrade')
@@ -493,15 +480,11 @@ class DelBuddy(object):
         import kenozooid.logbook as kl
 
         for fin in args.input:
-            fbk = '{}.bak'.format(fin)
-
-            os.rename(fin, fbk)
             try:
                 log.info('Upgraded {}'.format(fin))
-                doc = kl.upgrade_file(fbk)
+                doc = kl.upgrade_file(fin)
                 ku.save_uddf(doc.getroot(), fin)
             except Exception as ex:
-                os.rename(fbk, fin)
                 print('Cannot upgrade file {}'.format(fin), file=sys.stderr)
                 print('Error: {}'.format(ex))
 

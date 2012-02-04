@@ -56,6 +56,8 @@ import bz2
 import itertools
 import hashlib
 import logging
+import os
+import os.path
 import pkg_resources
 
 import kenozooid
@@ -1072,6 +1074,9 @@ def save_uddf(doc, fout, validate=True):
 
     The UDDF XML data can be ElementTree XML object or iterable of strings.
 
+    If output file exists then backup file with ``.bak`` extension is
+    created.
+
     :Parameters:
      doc
         UDDF XML data.
@@ -1086,23 +1091,31 @@ def save_uddf(doc, fout, validate=True):
         openf = bz2.BZ2File
         log.debug('uddf file will be compressed')
 
-    with openf(fout, 'w') as f:
-        if et.iselement(doc):
-            et.ElementTree(doc).write(f,
-                    encoding='utf-8',
-                    xml_declaration=True,
-                    pretty_print=True)
-        else:
-            f.writelines(l.encode('utf-8') for l in doc)
+    fbk = '{}.bak'.format(fout)
+    if os.path.exists(fout):
+        os.rename(fout, fbk)
+    try:
+        with openf(fout, 'w') as f:
+            if et.iselement(doc):
+                et.ElementTree(doc).write(f,
+                        encoding='utf-8',
+                        xml_declaration=True,
+                        pretty_print=True)
+            else:
+                f.writelines(l.encode('utf-8') for l in doc)
 
-    if validate:
-        log.debug('validating uddf file')
-        fs = pkg_resources.resource_stream('kenozooid', 'uddf/uddf_3.1.0.xsd')
-        if hasattr(fs, 'name'):
-            log.debug('uddf xsd found: {}'.format(fs.name))
-        schema = et.XMLSchema(et.parse(fs))
-        schema.assertValid(et.parse(openf(fout)))
-        log.debug('uddf file is valid')
+        if validate:
+            log.debug('validating uddf file')
+            fs = pkg_resources.resource_stream('kenozooid', 'uddf/uddf_3.1.0.xsd')
+            if hasattr(fs, 'name'):
+                log.debug('uddf xsd found: {}'.format(fs.name))
+            schema = et.XMLSchema(et.parse(fs))
+            schema.assertValid(et.parse(openf(fout)))
+            log.debug('uddf file is valid')
+    except Exception as ex:
+        if os.path.exists(fbk):
+            os.rename(fbk, fout)
+        raise ex
 
 
 #
