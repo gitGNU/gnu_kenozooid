@@ -1094,6 +1094,7 @@ def save(doc, fout, validate=True):
     fbk = '{}.bak'.format(fout)
     if os.path.exists(fout):
         os.rename(fout, fbk)
+        log.debug('backup file created')
     try:
         with openf(fout, 'w') as f:
             if et.iselement(doc):
@@ -1115,6 +1116,7 @@ def save(doc, fout, validate=True):
     except Exception as ex:
         if os.path.exists(fbk):
             os.rename(fbk, fout)
+            log.debug('backup file restored')
         raise ex
 
 
