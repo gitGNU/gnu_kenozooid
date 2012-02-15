@@ -189,7 +189,7 @@ def parse(f):
      f
         File to parse.
     """
-    if isinstance(f, str) and f.endswith('.bz2'):
+    if isinstance(f, str) and (f.endswith('.bz2') or f.endswith('.bz2.bak')):
         log.debug('detected compressed file')
         f = bz2.BZ2File(f)
     doc = et.parse(f)
