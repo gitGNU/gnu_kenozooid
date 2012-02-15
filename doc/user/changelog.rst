@@ -3,7 +3,8 @@ Changelog
 
 Kenozooid 0.8.0
 ---------------
-- added support for uddf files compressed with bzip2 algorithm
+- added support for UDDF XML files compressed with bzip2 algorithm
+- all commands changing UDDF XML files create backup of files first
 
 Kenozooid 0.7.0
 ---------------
