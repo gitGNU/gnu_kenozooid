@@ -481,7 +481,7 @@ class DelBuddy(object):
 
         for fin in args.input:
             try:
-                log.info('Upgraded {}'.format(fin))
+                print('Upgrading {}'.format(fin))
                 doc = kl.upgrade_file(fin)
                 ku.save(doc.getroot(), fin)
             except Exception as ex:

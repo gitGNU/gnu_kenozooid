@@ -46,6 +46,7 @@ from lxml import etree as et
 from functools import partial
 from datetime import datetime
 from dateutil.parser import parse as dparse
+from io import FileIO
 from operator import itemgetter
 from uuid import uuid4 as uuid
 from copy import deepcopy
@@ -1299,7 +1300,9 @@ def get_version(f):
     """
     n = parse(f).getroot()
     v1, v2, *_ = n.get('version').split('.')
-    f.seek(0, 0)
+    if isinstance(f, FileIO):
+        f.seek(0, 0)
+    log.debug('detected version {}.{}'.format(v1, v2))
     return int(v1), int(v2)
 
 
