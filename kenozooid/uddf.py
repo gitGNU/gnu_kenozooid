@@ -219,9 +219,7 @@ def find(f, query, **params):
      params
         XPath query parameters.
 
-    .. seealso::
-        XPath
-        parse
+    .. seealso:: :py:func:`XPath`, :py:func:`parse`
     """
     log.debug('parsing and searching with query: {}; parameters {}' \
             .format(query, params))
