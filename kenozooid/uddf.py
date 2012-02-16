@@ -193,6 +193,11 @@ def parse(f):
         log.debug('detected compressed file')
         f = bz2.BZ2File(f)
     doc = et.parse(f)
+    v1, v2, *_ = doc.getroot().get('version').split('.')
+    if (v1, v2) != ('3', '1'):
+        raise ValueError('UDDF file version {}.{} is not supported.' \
+                ' Please upgrade file with "kz upgrade" command.' \
+                .format(v1, v2))
     return doc
 
 
