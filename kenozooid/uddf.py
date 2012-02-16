@@ -83,8 +83,16 @@ FMT_DT = lambda dt: format(dt, '%Y-%m-%dT%H:%M:%S%z')
 # Parsing and searching.
 #
 
-# XPath query constructor for UDDF data.
 XPath = partial(et.XPath, namespaces=_NSMAP)
+XPath.__doc__ = """
+    XPath query constructor for UDDF data.
+
+    Use `uddf` prefix to create a query, i.e.::
+
+        XPath('uddf:informationbeforedive/uddf:datetime/text()')
+
+    .. seealso: lxml.etree.XPath
+"""
 
 # XPath queries for default dive data
 XP_DEFAULT_DIVE_DATA = (
@@ -326,9 +334,7 @@ def find_data(name, node, fields, queries, parsers, nquery=None):
         XPath expression object to relocate from node to more appropriate
         position in XML document for record data retrieval.
 
-    .. seealso::
-        dive_data
-        dive_profile
+    .. seealso:: :py:func:`dive_data`, :py:func:`dive_profile`
     """
     T = namedtuple(name, ' '.join(fields))._make
     if nquery:
@@ -359,8 +365,7 @@ def dive_data(node, fields=None, queries=None, parsers=None):
      parsers
         Parsers field values to be created in a record.
 
-    .. seealso::
-        find_data
+    .. seealso:: :py:func:`find_data`
     """
     if fields is None:
         fields = ('datetime', 'depth', 'duration', 'temp', 'avg_depth')
@@ -396,8 +401,7 @@ def dive_profile(node, fields=None, queries=None, parsers=None):
      parsers
         Parsers of field values to be created in a record.
 
-    .. seealso::
-        find_data
+    .. seealso:: :py:func:`find_data`
     """
     if fields is None:
         fields = ('depth', 'time', 'temp', 'setpoint', 'setpointby',
@@ -445,8 +449,7 @@ def dump_data(node, fields=None, queries=None, parsers=None):
      parsers
         Parsers of field values to be created in a record.
 
-    .. seealso::
-        find_data
+    .. seealso:: :py:func:`find_data`
     """
     if fields is None:
         fields = ('dc_id', 'dc_model', 'datetime', 'data')
@@ -484,8 +487,7 @@ def buddy_data(node, fields=None, queries=None, parsers=None):
      parsers
         Parsers of field values to be created in a record.
 
-    .. seealso::
-        find_data
+    .. seealso:: :py:func:`find_data`
     """
     if fields is None:
         fields = ('id', 'fname', 'mname', 'lname', 'org', 'number')
@@ -521,8 +523,7 @@ def site_data(node, fields=None, queries=None, parsers=None):
      parsers
         Parsers of field values to be created in a record.
 
-    .. seealso::
-        find_data
+    .. seealso:: :py:func:`find_data`
     """
     if fields is None:
         fields = ('id', 'name', 'location', 'x', 'y')

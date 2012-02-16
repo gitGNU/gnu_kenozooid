@@ -6,6 +6,7 @@ UDDF
 XML Nodes Parsing, Searching and Manipulation
 ----------------------------------------------
 
+.. autofunction:: kenozooid.uddf.XPath
 .. autofunction:: kenozooid.uddf.find
 .. autofunction:: kenozooid.uddf.parse
 .. autofunction:: kenozooid.uddf.xp
