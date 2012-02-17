@@ -184,7 +184,7 @@ class RangeError(ValueError):
     pass
 
 
-def parse(f):
+def parse(f, ver_check=True):
     """
     Parse XML file and return document object.
 
@@ -196,16 +196,19 @@ def parse(f):
     :Parameters:
      f
         File to parse.
+     ver_check
+        Check version of UDDF file.
     """
     if isinstance(f, str) and (f.endswith('.bz2') or f.endswith('.bz2.bak')):
         log.debug('detected compressed file')
         f = bz2.BZ2File(f)
     doc = et.parse(f)
-    v1, v2, *_ = doc.getroot().get('version').split('.')
-    if (v1, v2) != ('3', '1'):
-        raise ValueError('UDDF file version {}.{} is not supported.' \
-                ' Please upgrade file with "kz upgrade" command.' \
-                .format(v1, v2))
+    if ver_check:
+        v1, v2, *_ = doc.getroot().get('version').split('.')
+        if (v1, v2) != ('3', '1'):
+            raise ValueError('UDDF file version {}.{} is not supported.' \
+                    ' Please upgrade file with "kz upgrade" command.' \
+                    .format(v1, v2))
     return doc
 
 
@@ -1091,24 +1094,26 @@ def save(doc, fout, validate=True):
         Validate UDDF file after saving if True.
     """
     log.debug('saving uddf file')
+    is_fn = isinstance(fout, str)
     openf = open
-    if fout.endswith('.bz2'):
+    if is_fn and fout.endswith('.bz2'):
         openf = bz2.BZ2File
         log.debug('uddf file will be compressed')
 
     fbk = '{}.bak'.format(fout)
-    if os.path.exists(fout):
+    if is_fn and os.path.exists(fout):
         os.rename(fout, fbk)
         log.debug('backup file created')
     try:
-        with openf(fout, 'w') as f:
-            if et.iselement(doc):
-                et.ElementTree(doc).write(f,
-                        encoding='utf-8',
-                        xml_declaration=True,
-                        pretty_print=True)
-            else:
-                f.writelines(l.encode('utf-8') for l in doc)
+        f = openf(fout, 'w') if is_fn else fout
+
+        if et.iselement(doc):
+            et.ElementTree(doc).write(f,
+                    encoding='utf-8',
+                    xml_declaration=True,
+                    pretty_print=True)
+        else:
+            f.writelines(l.encode('utf-8') for l in doc)
 
         if validate:
             log.debug('validating uddf file')
@@ -1116,7 +1121,11 @@ def save(doc, fout, validate=True):
             if hasattr(fs, 'name'):
                 log.debug('uddf xsd found: {}'.format(fs.name))
             schema = et.XMLSchema(et.parse(fs))
-            schema.assertValid(et.parse(openf(fout)))
+            if is_fn:
+                f = openf(fout)
+            else:
+                f.seek(0)
+            schema.assertValid(et.parse(f))
             log.debug('uddf file is valid')
     except Exception as ex:
         if os.path.exists(fbk):
@@ -1302,7 +1311,7 @@ def get_version(f):
      f
         File to check.
     """
-    n = parse(f).getroot()
+    n = parse(f, ver_check=False).getroot()
     v1, v2, *_ = n.get('version').split('.')
     if isinstance(f, FileIO):
         f.seek(0, 0)

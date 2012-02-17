@@ -195,7 +195,7 @@ def upgrade_file(fin):
     except ValueError:
         raise ValueError('Cannot upgrade UDDF file version {}.{}'.format(*ver))
 
-    doc = ku.parse(fin)
+    doc = ku.parse(fin, ver_check=False)
     for i in range(k, len(versions)):
         fs = pkg_resources.resource_stream('kenozooid', 'uddf/{}'.format(xslt[i]))
         transform = et.XSLT(et.parse(fs))
