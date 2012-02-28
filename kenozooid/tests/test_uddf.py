@@ -69,10 +69,10 @@ UDDF_PROFILE = b"""\
         </informationbeforedive>
         <samples>
           <waypoint>
-            <divemode type='opencircuit'/>
             <depth>1.48</depth>
             <divetime>0</divetime>
             <temperature>289.02</temperature>
+            <divemode type='opencircuit'/>
           </waypoint>
           <waypoint>
             <depth>2.43</depth>
@@ -97,10 +97,10 @@ UDDF_PROFILE = b"""\
         </informationbeforedive>
         <samples>
           <waypoint>
-            <divemode type='closedcircuit'/>
             <depth>2.61</depth>
             <divetime>0</divetime>
             <temperature>296.73</temperature>
+            <divemode type='closedcircuit'/>
           </waypoint>
           <waypoint>
             <depth>4.18</depth>

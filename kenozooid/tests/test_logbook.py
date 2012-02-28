@@ -122,7 +122,7 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
 
     def test_dive_with_profile(self):
         """
-        Test adding dive with dive profile.
+        Test adding dive with dive profile
         """
         import kenozooid.tests.test_uddf as ktu
         pf = '{}/dive_add_profile.uddf'.format(self.tdir)
