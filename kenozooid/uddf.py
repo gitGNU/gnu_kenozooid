@@ -1011,7 +1011,7 @@ def create_dive_samples(samples, mode=None):
      mode
         Dive mode, i.e. opencircuit, closedcircuit.
     """
-    for s in samples:
+    for i, s in enumerate(samples):
         yield xml.waypoint(
             None if s.alarm is None else (xml.alarm(a) for a in s.alarm),
             None if s.deco_time is None else
@@ -1026,7 +1026,7 @@ def create_dive_samples(samples, mode=None):
                 setby=s.setpointby),
             None if s.gas is None else xml.switchmix(ref=str(s.gas.id)),
             None if s.temp is None else xml.temperature(FMT_F(s.temp)),
-            None if mode is None else xml.divemode(type=mode),
+            None if mode is None or i > 0 else xml.divemode(type=mode),
         )
 
 

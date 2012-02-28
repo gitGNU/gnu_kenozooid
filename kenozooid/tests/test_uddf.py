@@ -763,15 +763,19 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test UDDF dive profile sample creation with dive mode
         """
-        s = (kd.Sample(depth=3.1, time=19, temp=20),)
+        s = (kd.Sample(depth=3.1, time=19, temp=20),
+                kd.Sample(depth=3.3, time=29, temp=20),)
         samples = ku.create_dive_samples(s, 'opencircuit')
         n, sd = xml2et(xml.dive(samples))
-        self.assertEquals('opencircuit', ku.xp_first(n, '//divemode/@type'))
+        modes = list(ku.xp(n, '//divemode/@type'))
+        self.assertEquals(['opencircuit'], modes)
 
-        s = (kd.Sample(depth=3.1, time=19, temp=20),)
+        s = (kd.Sample(depth=3.1, time=19, temp=20),
+                kd.Sample(depth=3.3, time=29, temp=20),)
         samples = ku.create_dive_samples(s, 'closedcircuit')
         n, sd = xml2et(xml.dive(samples))
-        self.assertEquals('closedcircuit', ku.xp_first(n, '//divemode/@type'))
+        modes = list(ku.xp(n, '//divemode/@type'))
+        self.assertEquals(['closedcircuit'], modes)
         
 
     def test_dump_data_encode(self):
