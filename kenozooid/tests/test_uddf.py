@@ -26,6 +26,8 @@ from io import BytesIO
 from datetime import datetime
 from functools import partial
 from dirty.xml import xml
+import tempfile
+import shutil
 import unittest
 
 import kenozooid.uddf as ku
@@ -383,24 +385,6 @@ class CreateDataTestCase(unittest.TestCase):
         q = '//uddf:generator/uddf:datetime/text()'
         dt = ku.xp_first(doc, q)
         self.assertEquals(ku.FMT_DT(now), dt)
-
-
-    def test_save(self):
-        """
-        Test UDDF data saving
-        """
-        doc = ku.create()
-        f = BytesIO()
-        ku.save(doc, f)
-        s = f.getvalue()
-        self.assertFalse(b'uddf:' in s)
-        f.close() # check if file closing is possible
-
-        preamble = b"""\
-<?xml version='1.0' encoding='UTF-8'?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">\
-"""
-        self.assertTrue(s.startswith(preamble), s)
 
 
     def test_set_data(self):
@@ -1369,6 +1353,67 @@ class NodeCopyTestCase(unittest.TestCase):
 
         self.assertRaises(ValueError, ku.copy, a, c)
         self.assertTrue(ku.xp_first(t, '//uddf:c') is not None)
+
+
+
+class UDDFSaveTestCase(unittest.TestCase):
+    def setUp(self):
+        """
+        Create temporary directory to store test files.
+        """
+        self.tdir = tempfile.mkdtemp()
+
+
+    def tearDown(self):
+        """
+        Destroy temporary directory with test files.
+        """
+        shutil.rmtree(self.tdir)
+
+
+    def test_save_bytes_io(self):
+        """
+        Test UDDF data saving to BytesIO object
+        """
+        doc = ku.create()
+        f = BytesIO()
+        ku.save(doc, f)
+        s = f.getvalue()
+        self.assertFalse(b'uddf:' in s)
+        f.close() # check if file closing is possible
+
+        preamble = b"""\
+<?xml version='1.0' encoding='UTF-8'?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">\
+"""
+        self.assertTrue(s.startswith(preamble), s)
+
+
+    def test_save_filename(self):
+        """
+        Test saving to an UDDF file
+        """
+        f = '{}/save_test.uddf'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_site_data(doc, id='s1', location='L1', name='N1')
+        ku.save(doc, f)
+        data = open(f, 'r').read(10)
+        self.assertEquals('<?xml vers', data)
+
+
+    def test_save_bz2_filename(self):
+        """
+        Test saving to an UDDF file compressed with bzip2
+        """
+        f = '{}/save_test.uddf.bz2'.format(self.tdir)
+
+        doc = ku.create()
+        ku.create_site_data(doc, id='s1', location='L1', name='N1')
+        ku.save(doc, f)
+
+        data = open(f, 'rb').read(3)
+        self.assertEquals(b'BZh', data)
 
 
 # vim: sw=4:et:ai

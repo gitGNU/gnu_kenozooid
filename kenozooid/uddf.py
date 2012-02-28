@@ -1110,7 +1110,7 @@ def save(doc, fout, validate=True):
         os.rename(fout, fbk)
         log.debug('backup file created')
     try:
-        f = openf(fout, 'w') if is_fn else fout
+        f = openf(fout, 'wb') if is_fn else fout
 
         if et.iselement(doc):
             et.ElementTree(doc).write(f,
