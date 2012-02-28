@@ -192,6 +192,16 @@ class OSTCDataParser(object):
             avg_depth = header.avg_depth / 100.0 \
                     if hasattr(header, 'avg_depth') else None
 
+            # firmware ver < 1.91 has no deco type information
+            dive_mode = None
+            if hasattr(header, 'deco_type'):
+                if header.deco_type in (0, 4):
+                    dive_mode = 'opencircuit'
+                elif header.deco_type in (2, 5):
+                    dive_mode = 'closedcircuit'
+                elif header.doc_type == 3:
+                    dive_mode = 'apnoe'
+
             try:
                 profile = list(self._get_profile(header, dive_data))
                 yield kd.Dive(datetime=st,
@@ -199,6 +209,7 @@ class OSTCDataParser(object):
                     duration=duration.seconds,
                     temp=C2K(header.min_temp / 10.0),
                     avg_depth=avg_depth,
+                    mode=dive_mode,
                     profile=profile)
             except ValueError as ex:
                 log.error('invalid dive {0.year:>02d}-{0.month:>02d}-{0.day:>02d}' \

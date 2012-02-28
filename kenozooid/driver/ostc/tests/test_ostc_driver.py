@@ -77,6 +77,24 @@ class DataModelTestCase(unittest.TestCase):
         self.assertEquals(75.0, dive.depth)
         self.assertEquals(1939, dive.duration)
         self.assertEquals(300.65, dive.temp) # 27.45C
+        self.assertTrue(dive.mode is None)
+
+
+    def test_dive_mode(self):
+        """
+        Test OSTC dive mode parsing
+        """
+        dump = kd.BinaryData(datetime=datetime.now(),
+                data=od.RAW_DATA_OSTC_MK2_196)
+        dc = OSTCDataParser()
+        modes = [d.mode for d in dc.dives(dump)]
+        self.assertEquals(['closedcircuit'] * 8, modes)
+
+        dump = kd.BinaryData(datetime=datetime.now(),
+                data=od.RAW_DATA_OSTC_N2_191_HW)
+        dc = OSTCDataParser()
+        modes = [d.mode for d in dc.dives(dump)]
+        self.assertEquals([None, None, 'opencircuit', 'opencircuit'], modes)
 
 
     def test_gas(self):
