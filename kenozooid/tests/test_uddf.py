@@ -707,6 +707,23 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals(r, 'Test 1', sd)
 
 
+    def test_create_dive(self):
+        """
+        Test UDDF dive creation
+        """
+        samples = (kd.Sample(depth=3.1, time=19, temp=20),)
+        d = kd.Dive(datetime=datetime(2012, 2, 25), depth=32.5,
+                duration=45, profile=samples)
+        dive = ku.create_dive(d)
+
+        n, sd = xml2et(xml.dive(dive))
+
+        self.assertEquals('19', ku.xp_first(n, '//divetime/text()'), sd)
+        self.assertEquals('3.1', ku.xp_first(n, '//depth/text()'), sd)
+        self.assertEquals('20.0', ku.xp_first(n, '//temperature/text()'), sd)
+        self.assertEquals(None, ku.xp_first(n, '//divemode/@type'), sd)
+
+
     def test_create_dive_samples(self):
         """
         Test UDDF dive profile sample creation

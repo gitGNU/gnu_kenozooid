@@ -989,7 +989,7 @@ def create_dive(dive, equipment=None):
             .format(dive))
     return xml.dive(
         xml.informationbeforedive(xml.datetime(FMT_DT(dive.datetime))),
-        xml.samples(create_dive_samples(dive, dive.mode)),
+        xml.samples(create_dive_samples(dive.profile, dive.mode)),
         xml.informationafterdive(
             xml.greatestdepth(FMT_F(dive.depth)),
             xml.diveduration(FMT_I(dive.duration)),
