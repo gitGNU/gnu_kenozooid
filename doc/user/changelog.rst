@@ -1,5 +1,8 @@
 Changelog
 =========
+Kenozooid 0.9.0
+---------------
+- added support for dive mode, i.e. open circuit, CCR, etc.
 
 Kenozooid 0.8.0
 ---------------
