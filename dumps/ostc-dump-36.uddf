@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.7.0</version>
-    <datetime>2012-01-24T21:11:28</datetime>
+    <version>0.9.0</version>
+    <datetime>2012-02-28T23:02:57</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -60,8 +60,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-1594c2490b7c40b6866e25d8a1be96a8">
-      <dive id="id-df2c02ecf2904235b385e85985ed7c2f">
+    <repetitiongroup id="id-0bf155ac79df491c8363836105b2fc01">
+      <dive id="id-e8227d1a54b642cb8a34940e4de0fb4f">
         <informationbeforedive>
           <datetime>2011-05-09T21:01:18</datetime>
         </informationbeforedive>
@@ -70,6 +70,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>0.9</depth>
@@ -6563,7 +6564,7 @@
           <averagedepth>24.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-902ee226dab347ac8c73de4a34eca5e3">
+      <dive id="id-17feb67cfdb44abc9ff11d260222e538">
         <informationbeforedive>
           <datetime>2011-05-13T11:57:08</datetime>
         </informationbeforedive>
@@ -6572,6 +6573,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1154"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>2.5</depth>
@@ -12421,7 +12423,7 @@
           <averagedepth>23.4</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-5a06a253a3f947efb4e475aededa7732">
+      <dive id="id-b28c3aac6eca4b50917eb252df96dacd">
         <informationbeforedive>
           <datetime>2011-11-19T10:43:31</datetime>
         </informationbeforedive>
@@ -12430,6 +12432,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>1.1</depth>
@@ -22464,7 +22467,7 @@
           <averagedepth>26.3</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-509b377b93fa4331a6580a1eedd44c4f">
+      <dive id="id-a34f77df7d6d4140a1f2e4749dc32c7a">
         <informationbeforedive>
           <datetime>2011-11-24T19:55:53</datetime>
         </informationbeforedive>
@@ -22473,6 +22476,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>0.8</depth>
@@ -28340,7 +28344,7 @@
           <averagedepth>24.1</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-8e2bfcf4268b4a65a5ac8e1b2b40ef0e">
+      <dive id="id-ec6e69e53f8c4afba0f866bab1969f17">
         <informationbeforedive>
           <datetime>2011-11-27T13:22:00</datetime>
         </informationbeforedive>
@@ -28349,6 +28353,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>3.2</depth>
@@ -35454,7 +35459,7 @@
           <averagedepth>25.9</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-4a32ea11187f46c39c2f28540ec1c16d">
+      <dive id="id-8fd1112cf68f4c098e2ee00d2a0c310d">
         <informationbeforedive>
           <datetime>2011-12-01T19:47:22</datetime>
         </informationbeforedive>
@@ -35463,6 +35468,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>3.7</depth>
@@ -40876,7 +40882,7 @@
           <averagedepth>23.3</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-3e8014978413441586e0f30a8ffcf201">
+      <dive id="id-bce982515a2c4e01b92b57b028858ef9">
         <informationbeforedive>
           <datetime>2011-12-08T19:47:38</datetime>
         </informationbeforedive>
@@ -40885,6 +40891,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>1.1</depth>
@@ -45953,7 +45960,7 @@
           <averagedepth>24.8</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-d5dc7b3e6c424324b4824d0132fa4024">
+      <dive id="id-ccb064d851c7474c847029def91ab3f9">
         <informationbeforedive>
           <datetime>2011-12-11T13:00:25</datetime>
         </informationbeforedive>
@@ -45962,6 +45969,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1148"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>1.4</depth>
@@ -53136,7 +53144,7 @@
           <averagedepth>26.2</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-72fe1cd8f2924a5d8a132799b99acfb7">
+      <dive id="id-4ae6f01a75624d868677a7b11f701208">
         <informationbeforedive>
           <datetime>2011-12-29T14:21:32</datetime>
         </informationbeforedive>
@@ -53145,6 +53153,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1154"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>3.9</depth>
@@ -57471,7 +57480,7 @@
           <averagedepth>23.0</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-614a6c99bc8b4eddb570fc20320b1ecf">
+      <dive id="id-bb818315dbc547938b20b5a31b9e1be0">
         <informationbeforedive>
           <datetime>2012-01-01T14:42:18</datetime>
         </informationbeforedive>
@@ -57480,6 +57489,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1154"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>0.8</depth>
@@ -64247,7 +64257,7 @@
           <averagedepth>24.9</averagedepth>
         </informationafterdive>
       </dive>
-      <dive id="id-7fe9655f5b9543d39403ab310fe6d618">
+      <dive id="id-117b36466d1c430b8e5394584216c36b">
         <informationbeforedive>
           <datetime>2012-01-06T10:30:56</datetime>
         </informationbeforedive>
@@ -64256,6 +64266,7 @@
             <depth>0.0</depth>
             <divetime>0</divetime>
             <switchmix ref="tx1151"/>
+            <divemode type="closedcircuit"/>
           </waypoint>
           <waypoint>
             <depth>2.2</depth>

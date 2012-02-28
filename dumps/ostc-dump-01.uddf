@@ -8,8 +8,8 @@
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <version>0.7.0</version>
-    <datetime>2012-01-24T21:10:01</datetime>
+    <version>0.9.0</version>
+    <datetime>2012-02-28T23:01:31</datetime>
   </generator>
   <diver>
     <owner id="owner">
@@ -55,8 +55,8 @@
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup id="id-489f57ea3e3b4fef92afd29fbab73861">
-      <dive id="id-cc8e1d683e02457fa9fe6b1f213f15aa">
+    <repetitiongroup id="id-bbba1d4dc4d3454c8d692d09f148f896">
+      <dive id="id-92f3386a3fdd4149be13c003fdf246ba">
         <informationbeforedive>
           <datetime>2009-01-31T23:08:41</datetime>
         </informationbeforedive>
@@ -919,7 +919,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-1b6a36b0007343c09fb16aa5650ebb4b">
+      <dive id="id-8cb4480c6b2245be93fa868876e9d010">
         <informationbeforedive>
           <datetime>2009-01-31T23:46:12</datetime>
         </informationbeforedive>
@@ -2750,7 +2750,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-73a38c7c99444ea18c609da9a0781519">
+      <dive id="id-b7dd195828d345c9821e7afecec8c0d8">
         <informationbeforedive>
           <datetime>2009-02-01T01:02:13</datetime>
         </informationbeforedive>
@@ -4848,7 +4848,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-90fdcd0e426e48628e46109856d75b1d">
+      <dive id="id-ca40099c0bd0402faf9597864a7dffba">
         <informationbeforedive>
           <datetime>2009-02-01T16:53:14</datetime>
         </informationbeforedive>
@@ -13862,7 +13862,7 @@
           </equipmentused>
         </informationafterdive>
       </dive>
-      <dive id="id-7071a04dadbd44bfad5783374373f768">
+      <dive id="id-90df6678ab134feab6fc438bf0580c81">
         <informationbeforedive>
           <datetime>2009-02-01T22:46:37</datetime>
         </informationbeforedive>
