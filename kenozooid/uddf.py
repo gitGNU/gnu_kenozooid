@@ -989,7 +989,7 @@ def create_dive(dive, equipment=None):
             .format(dive))
     return xml.dive(
         xml.informationbeforedive(xml.datetime(FMT_DT(dive.datetime))),
-        xml.samples(create_dive_samples(dive.profile)),
+        xml.samples(create_dive_samples(dive, dive.mode)),
         xml.informationafterdive(
             xml.greatestdepth(FMT_F(dive.depth)),
             xml.diveduration(FMT_I(dive.duration)),
@@ -1001,13 +1001,15 @@ def create_dive(dive, equipment=None):
     )
 
 
-def create_dive_samples(samples):
+def create_dive_samples(samples, mode=None):
     """
     Create dive samples UDDF XML data.
 
     :Parameters:
      samples
         Iterable of tuples of dive samples.
+     mode
+        Dive mode, i.e. opencircuit, closedcircuit.
     """
     for s in samples:
         yield xml.waypoint(
@@ -1024,6 +1026,7 @@ def create_dive_samples(samples):
                 setby=s.setpointby),
             None if s.gas is None else xml.switchmix(ref=str(s.gas.id)),
             None if s.temp is None else xml.temperature(FMT_F(s.temp)),
+            None if mode is None else xml.divemode(type=mode),
         )
 
 

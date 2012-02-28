@@ -733,6 +733,7 @@ class CreateDataTestCase(unittest.TestCase):
         self.assertEquals('19', ku.xp_first(n, '//divetime/text()'), sd)
         self.assertEquals('3.1', ku.xp_first(n, '//depth/text()'), sd)
         self.assertEquals('20.0', ku.xp_first(n, '//temperature/text()'), sd)
+        self.assertEquals(None, ku.xp_first(n, '//divemode/@type'), sd)
 
 
     def test_create_dive_samples_deco_alarm(self):
@@ -749,12 +750,27 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test UDDF dive profile sample creation with setpoint
         """
-        s = kd.Sample(depth=3.1, time=19, temp=20, setpoint=1.17,
-                setpointby='user'),
+        s = (kd.Sample(depth=3.1, time=19, temp=20, setpoint=1.17,
+                setpointby='user'),)
         samples = ku.create_dive_samples(s)
         n, sd = xml2et(xml.dive(samples))
         self.assertEquals('1.17', ku.xp_first(n, '//setpo2/text()'), sd)
         self.assertEquals('user', ku.xp_first(n, '//setpo2/@setby'), sd)
+
+
+    def test_create_dive_samples_dive_mode(self):
+        """
+        Test UDDF dive profile sample creation with dive mode
+        """
+        s = (kd.Sample(depth=3.1, time=19, temp=20),)
+        samples = ku.create_dive_samples(s, 'opencircuit')
+        n, sd = xml2et(xml.dive(samples))
+        self.assertEquals('opencircuit', ku.xp_first(n, '//divemode/@type'))
+
+        s = (kd.Sample(depth=3.1, time=19, temp=20),)
+        samples = ku.create_dive_samples(s, 'closedcircuit')
+        n, sd = xml2et(xml.dive(samples))
+        self.assertEquals('closedcircuit', ku.xp_first(n, '//divemode/@type'))
         
 
     def test_dump_data_encode(self):
