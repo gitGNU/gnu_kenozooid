@@ -67,6 +67,7 @@ UDDF_PROFILE = b"""\
         </informationbeforedive>
         <samples>
           <waypoint>
+            <divemode type='opencircuit'/>
             <depth>1.48</depth>
             <divetime>0</divetime>
             <temperature>289.02</temperature>
@@ -94,6 +95,7 @@ UDDF_PROFILE = b"""\
         </informationbeforedive>
         <samples>
           <waypoint>
+            <divemode type='closedcircuit'/>
             <depth>2.61</depth>
             <divetime>0</divetime>
             <temperature>296.73</temperature>
@@ -265,6 +267,7 @@ class FindDataTestCase(unittest.TestCase):
         self.assertEquals(30.2, dive.depth)
         self.assertEquals(251.4, dive.temp)
         self.assertEquals(10.1, dive.avg_depth)
+        self.assertEquals('opencircuit', dive.mode)
 
 
     def test_profile_data(self):
