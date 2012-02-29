@@ -11,11 +11,12 @@ Several data anlysis scripts are provided by Kenozooid (see
 
     $ kz analyze rmv.R -a examples/rmv.csv 15 -- 19 dumps/ostc-dump-18.uddf
 
-      time depth rmv avg_rmv
-    1    4   5.5  48      48
-    2    9   6.6  36      42
-    3   17   6.5  23      36
-    4   24   6.6  13      30
+      time avg_depth avg_rmv
+    1    4       5.5    48.4
+    2    9       6.1    41.4
+    3   17       6.3    32.5
+    4   24       6.4    26.7
+
 
 .. _user-analysis-scripts:
 
@@ -42,12 +43,10 @@ The output of the script is a table with columns
 
 time
     Dive run time in minutes.
-depth
-    Dive depth.
-rmv
-    RMV at given dive time and depth.
-avg_rvm
-    Average RMV at given dive time and depth.
+avg_depth
+    Average dive depth.
+avg_rmv
+    Average RMV for running time and average depth.
 
 For example, create ``dive-19-rmv.csv`` file::
 
@@ -62,11 +61,11 @@ Then execute ``rmv.R`` script for 15l tank::
 
     $ kz analyze rmv.R -a dive-19-rmv.csv 15 -- 19 dumps/ostc-dump-18.uddf
 
-      time depth rmv avg_rmv
-    1    4   5.5  48      48
-    2    9   6.6  36      42
-    3   17   6.5  23      36
-    4   24   6.6  13      30
+      time avg_depth avg_rmv
+    1    4       5.5    48.4
+    2    9       6.1    41.4
+    3   17       6.3    32.5
+    4   24       6.4    26.7
 
 Custom Data Analysis Scripts
 ----------------------------
