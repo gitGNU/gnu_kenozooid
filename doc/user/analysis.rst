@@ -140,5 +140,9 @@ The data frame containig dive profile information has the following columns
     O2 percentage of switched gas mix.
 ``gas_he``
     Helium percentage of switched gas mix.
+``mod_low``
+    Maximum operating depth (MOD) for gas mix at 1.4 PPO2.
+``mod_high``
+    Maximum operating depth (MOD) for gas mix at 1.6 PPO2.
 
 .. vim: sw=4:et:ai
