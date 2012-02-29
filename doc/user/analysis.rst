@@ -33,7 +33,7 @@ Use ``rmv.R`` script to calculate respiratory minute volume (RMV).
 The script accepts two parameters
 
 csv file
-    CSV file with two columns - ``time and ``pressure``. Time is dive run
+    CSV file with two columns - ``time`` and ``pressure``. Time is dive run
     time in minutes and pressure is tank pressure in bars.
 tank
     Size of tank in liters.
