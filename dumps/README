@@ -27,5 +27,6 @@ mk:
 ola:
 - ostc-dump-31.uddf
 - ostc-dump-34.uddf
+- ostc-dump-41.uddf
 
 # vim: sw=4:et:ai
