@@ -137,14 +137,22 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
         buddy_ids.append(n.get('id'))
 
     if dive_no is not None and pfile is not None:
-        log.debug('creating dive with profile')
-        q = ku.XPath('//uddf:dive[position() = $no]')
+        log.debug('copying dive from a file')
+        q = ku.XPath('//uddf:dive[position()=$no]')
         dives = ku.find(pfile, q, no=dive_no)
         dive = next(dives, None)
         if dive is None:
-            raise ValueError('Cannot find dive in dive profile data')
+            raise ValueError('Cannot find dive in file {}'.format(pfile))
 
         assert next(dives, None) is None, 'only one dive expected'
+
+        q = ku.XPath('//uddf:gasdefinitions/uddf:mix[@id=//uddf:dive[position()=$no]//uddf:switchmix/@ref]')
+        mixes = ku.find(pfile, q, no=dive_no)
+        gn = ku.xp_first(doc, '//uddf:gasdefinitions')
+        if gn is None:
+            *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
+        for m in mixes:
+            ku.copy(m, gn)
 
         _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
                 parent=doc)
