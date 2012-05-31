@@ -2,6 +2,10 @@ Changelog
 =========
 Kenozooid 0.9.0
 ---------------
+- copy gases information when copying dives
+
+Kenozooid 0.9.0
+---------------
 - added support for dive mode, i.e. open circuit, CCR, etc.
 - simplified RMV analysis script to contain only time, average depth and
   average RMV
