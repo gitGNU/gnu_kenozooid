@@ -147,12 +147,13 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
         assert next(dives, None) is None, 'only one dive expected'
 
         q = ku.XPath('//uddf:gasdefinitions/uddf:mix[@id=//uddf:dive[position()=$no]//uddf:switchmix/@ref]')
-        mixes = ku.find(pfile, q, no=dive_no)
-        gn = ku.xp_first(doc, '//uddf:gasdefinitions')
-        if gn is None:
-            *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
-        for m in mixes:
-            ku.copy(m, gn)
+        mixes = list(ku.find(pfile, q, no=dive_no))
+        if mixes:
+            gn = ku.xp_first(doc, '//uddf:gasdefinitions')
+            if gn is None:
+                *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
+            for m in mixes:
+                ku.copy(m, gn)
 
         _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
                 parent=doc)
