@@ -146,14 +146,7 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
 
         assert next(dives, None) is None, 'only one dive expected'
 
-        q = ku.XPath('//uddf:gasdefinitions/uddf:mix[@id=//uddf:dive[position()=$no]//uddf:switchmix/@ref]')
-        mixes = list(ku.find(pfile, q, no=dive_no))
-        if mixes:
-            gn = ku.xp_first(doc, '//uddf:gasdefinitions')
-            if gn is None:
-                *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
-            for m in mixes:
-                ku.copy(m, gn)
+        copy_gases(pfile, doc, dive_no)
 
         _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
                 parent=doc)
@@ -210,5 +203,27 @@ def upgrade_file(fin):
         transform = et.XSLT(et.parse(fs))
         doc = transform(doc)
     return doc
+
+
+def copy_gases(fin, doc, dive_no):
+    """
+    Copy gases used during a dive from input file to UDDF document.
+
+    :Parameters:
+     fin
+        Input file.
+     doc
+        Target UDDF document.
+     dive_no
+        Number of a dive within input file.
+    """
+    q = ku.XPath('//uddf:gasdefinitions/uddf:mix[@id=//uddf:dive[position()=$no]//uddf:switchmix/@ref]')
+    mixes = list(ku.find(fin, q, no=dive_no))
+    if mixes:
+        gn = ku.xp_first(doc, '//uddf:gasdefinitions')
+        if gn is None:
+            *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
+        for m in mixes:
+            ku.copy(m, gn)
 
 # vim: sw=4:et:ai
