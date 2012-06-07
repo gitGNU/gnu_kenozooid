@@ -202,11 +202,11 @@ def copy_dive(fin, dive_no, lfile):
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
             parent=doc)
     dive = ku.copy(dive, rg)
-
-    n = ku.xp_first(dive, 'uddf:informationbeforedive')
-
-    ku.reorder(doc)
-    ku.save(doc, lfile)
+    if dive is None:
+        log.debug('dive {} already exists, not copied'.format(dive_no))
+    else:
+        ku.reorder(doc)
+        ku.save(doc, lfile)
 
 
 def copy_gases(fin, dive_no, doc):

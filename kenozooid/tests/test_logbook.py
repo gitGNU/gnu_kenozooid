@@ -155,6 +155,25 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
             ku.xp_first(dn, './/uddf:diveduration/text()'))
 
 
+    def test_dive_copy_existing(self):
+        """
+        Test copying existing dive
+        """
+        import kenozooid.tests.test_uddf as ktu
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+        kl.copy_dive(fin, 1, fl)
+        kl.copy_dive(fin, 1, fl)
+        nodes = ku.find(fl, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertTrue(next(nodes, None) is None)
+
+
     def test_dive_copy_with_site(self):
         """
         Test copying dive with dive site
