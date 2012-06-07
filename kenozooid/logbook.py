@@ -71,11 +71,7 @@ def list_dives(fin):
             log.warn('invalid dive data, skipping dive')
 
 
-# split into add_dive and copy_dive
-# extract buddies adding and setting dive site functionality into separate
-# functions
-def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
-        pfile=None, qsite=None, qbuddies=()):
+def add_dive(datetime, depth, duration, lfile, qsite=None, qbuddies=()):
     """
     Add new dive to logbook file.
 
@@ -85,18 +81,14 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
     exception is thrown.
 
     :Parameters:
-     lfile
-        Logbook file.
      datetime
         Dive date and time.
      depth
         Dive maximum depth.
      duration
         Dive duration (in minutes).
-     dive_no
-        Dive number in dive profile file.
-     pfile
-        Dive profile file.
+     lfile
+        Logbook file.
      qsite
         Dive site search term.
      qbuddies
@@ -136,41 +128,10 @@ def add_dive(lfile, datetime=None, depth=None, duration=None, dive_no=None,
 
         buddy_ids.append(n.get('id'))
 
-    if dive_no is not None and pfile is not None:
-        log.debug('copying dive from a file')
-        q = ku.XPath('//uddf:dive[position()=$no]')
-        dives = ku.find(pfile, q, no=dive_no)
-        dive = next(dives, None)
-        if dive is None:
-            raise ValueError('Cannot find dive in file {}'.format(pfile))
-
-        assert next(dives, None) is None, 'only one dive expected'
-
-        copy_gases(pfile, doc, dive_no)
-
-        _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
-                parent=doc)
-        dive = ku.copy(dive, rg)
-
-        n = ku.xp_first(dive, 'uddf:informationbeforedive')
-
-        # reference buddies first
-        for b_id in buddy_ids:
-            l, *_ = ku.create_node('uddf:link', parent=n, append=False)
-            l.set('ref', b_id)
-
-        # set reference to dive site (as first link)
-        if site_id:
-            l, *_ = ku.create_node('uddf:link', parent=n, append=False)
-            l.set('ref', site_id)
-
-    elif (datetime, depth, duration) is not (None, None, None):
-        log.debug('creating dive data')
-        duration = int(duration * 60)
-        ku.create_dive_data(doc, datetime=datetime, depth=depth,
+    log.debug('creating dive data')
+    duration = int(duration * 60)
+    ku.create_dive_data(doc, datetime=datetime, depth=depth,
                 duration=duration, site=site_id, buddies=buddy_ids)
-    else:
-        raise ValueError('Dive data or dive profile needs to be provided')
 
     ku.reorder(doc)
     ku.save(doc, lfile)
@@ -205,17 +166,60 @@ def upgrade_file(fin):
     return doc
 
 
-def copy_gases(fin, doc, dive_no):
+def copy_dive(fin, dive_no, lfile):
+    """
+    Copy dives from input file to logbook file.
+
+    The logbook file is created if it does not exist.
+
+    If dive does not exist for specified dive number, then ValueError
+    exception is thrown.
+
+    :Parameters:
+     fin
+        Input file.
+     dive_no
+        Dive number in dive profile file.
+     lfile
+        Logbook file.
+    """
+    if os.path.exists(lfile):
+        doc = et.parse(lfile).getroot()
+    else:
+        doc = ku.create()
+
+    log.debug('copying dive from a file')
+    q = ku.XPath('//uddf:dive[position()=$no]')
+    dives = ku.find(fin, q, no=dive_no)
+    dive = next(dives, None)
+    if dive is None:
+        raise ValueError('Cannot find dive in file {}'.format(fin))
+
+    assert next(dives, None) is None, 'only one dive expected'
+
+    copy_gases(fin, dive_no, doc)
+
+    _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
+            parent=doc)
+    dive = ku.copy(dive, rg)
+
+    n = ku.xp_first(dive, 'uddf:informationbeforedive')
+
+    ku.reorder(doc)
+    ku.save(doc, lfile)
+
+
+def copy_gases(fin, dive_no, doc):
     """
     Copy gases used during a dive from input file to UDDF document.
 
     :Parameters:
      fin
         Input file.
-     doc
-        Target UDDF document.
      dive_no
         Number of a dive within input file.
+     doc
+        Target UDDF document.
     """
     q = ku.XPath('//uddf:gasdefinitions/uddf:mix[@id=//uddf:dive[position()=$no]//uddf:switchmix/@ref]')
     mixes = list(ku.find(fin, q, no=dive_no))

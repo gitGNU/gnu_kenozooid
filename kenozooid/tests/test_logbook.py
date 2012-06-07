@@ -29,9 +29,9 @@ import unittest
 import kenozooid.logbook as kl
 import kenozooid.uddf as ku
 
-class DiveAddingIntegrationTestCase(unittest.TestCase):
+class IntegrationTestCaseBase(unittest.TestCase):
     """
-    Dive adding integration tests.
+    Base class for file based integration tests.
     """
     def setUp(self):
         """
@@ -47,12 +47,17 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         shutil.rmtree(self.tdir)
 
 
+
+class DiveAddingIntegrationTestCase(IntegrationTestCaseBase):
+    """
+    Dive adding integration tests.
+    """
     def test_dive_add(self):
         """
         Test adding dive with time, depth and duration
         """
         f = '{}/dive_add.uddf'.format(self.tdir)
-        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59)
+        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f)
         nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
@@ -76,11 +81,11 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         ku.create_site_data(doc, id='s1', location='L1', name='N1')
         ku.save(doc, f)
 
-        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59, qsite='s1')
+        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f, qsite='s1')
 
         nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
-        self.assertTrue('s1', ku.xp_first(dn, './/uddf:link/@ref'))
+        self.assertEquals('s1', ku.xp_first(dn, './/uddf:link/@ref'))
 
 
     def test_dive_add_with_buddy(self):
@@ -93,12 +98,12 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         ku.create_buddy_data(doc, id='b1', fname='F', lname='N');
         ku.save(doc, f)
 
-        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59,
+        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f,
                 qbuddies=['b1'])
 
         nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
-        self.assertTrue('b1', ku.xp_first(dn, './/uddf:link/@ref'))
+        self.assertEquals('b1', ku.xp_first(dn, './/uddf:link/@ref'))
 
 
     def test_dive_add_with_buddies(self):
@@ -112,27 +117,32 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
         ku.create_buddy_data(doc, id='b2', fname='F', lname='N');
         ku.save(doc, f)
 
-        kl.add_dive(f, datetime(2010, 1, 2, 5, 7), 33.0, 59,
-                qbuddies=['b1'])
+        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f,
+                qbuddies=['b1', 'b2'])
 
         nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
-        self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
+        self.assertEquals(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
 
 
-    def test_dive_with_profile(self):
+
+class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
+    """
+    Dive copying integration tests.
+    """
+    def test_dive_copy(self):
         """
-        Test adding dive with dive profile
+        Test copying dive
         """
         import kenozooid.tests.test_uddf as ktu
-        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
-        f = open(pf, 'wb')
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
         f.write(ktu.UDDF_PROFILE)
         f.close()
 
-        f = '{}/dive_add.uddf'.format(self.tdir)
-        kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.find(f, '//uddf:dive')
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+        kl.copy_dive(fin, 1, fl)
+        nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
         self.assertTrue(next(nodes, None) is None)
@@ -145,75 +155,107 @@ class DiveAddingIntegrationTestCase(unittest.TestCase):
             ku.xp_first(dn, './/uddf:diveduration/text()'))
 
 
-    def test_dive_with_profile_with_site(self):
+    def test_dive_copy_with_site(self):
         """
-        Test adding dive with dive profile and dive site
+        Test copying dive with dive site
         """
         import kenozooid.tests.test_uddf as ktu
-        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
-        f = open(pf, 'wb')
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
         f.write(ktu.UDDF_PROFILE)
         f.close()
 
-        f = '{}/dive_add.uddf'.format(self.tdir)
-
-        doc = ku.create()
-        ku.create_site_data(doc, id='s1', location='L1', name='N1')
-        ku.save(doc, f)
-
-        kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.find(f, '//uddf:dive')
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+        kl.copy_dive(fin, 1, fl)
+        nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
-        self.assertTrue('s1', ku.xp_first(dn, './/uddf:link/@ref'))
+        self.assertEquals('2009-09-19T13:10:23',
+                ku.xp_first(dn, './/uddf:datetime/text()'))
+        self.assertEquals('konig', ku.xp_first(dn, './/uddf:link/@ref'))
 
 
-    def test_dive_with_profile_with_buddy(self):
+    def test_dive_copy_with_buddy(self):
         """
-        Test adding dive with dive profile and a buddy
+        Test copying a dive with a buddy
         """
         import kenozooid.tests.test_uddf as ktu
-        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
-        f = open(pf, 'wb')
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
         f.write(ktu.UDDF_PROFILE)
         f.close()
 
-        f = '{}/dive_add.uddf'.format(self.tdir)
-
-        doc = ku.create()
-        ku.create_buddy_data(doc, id='b1', fname='F', lname='N');
-        ku.save(doc, f)
-
-        kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.find(f, '//uddf:dive')
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+        kl.copy_dive(fin, 1, fl)
+        nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
-        self.assertTrue('b1', ku.xp_first(dn, './/uddf:link/@ref'))
+        self.assertEquals('2009-09-19T13:10:23',
+                ku.xp_first(dn, './/uddf:datetime/text()'))
+        self.assertEquals('b1', ku.xp_first(dn, './/uddf:link/@ref'))
 
 
-    def test_dive_with_profile_with_buddies(self):
+    def test_dive_copy_with_buddies(self):
         """
-        Test adding dive with dive profile and dive buddies
+        Test dive copying with dive buddies
         """
         import kenozooid.tests.test_uddf as ktu
-        pf = '{}/dive_add_profile.uddf'.format(self.tdir)
-        f = open(pf, 'wb')
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
         f.write(ktu.UDDF_PROFILE)
         f.close()
 
-        f = '{}/dive_add.uddf'.format(self.tdir)
-
-        doc = ku.create()
-        ku.create_buddy_data(doc, id='b1', fname='F1', lname='N1');
-        ku.create_buddy_data(doc, id='b2', fname='F2', lname='N2');
-        ku.save(doc, f)
-
-        kl.add_dive(f, dive_no=1, pfile=pf)
-        nodes = ku.find(f, '//uddf:dive')
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+        kl.copy_dive(fin, 2, fl)
+        nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
-        self.assertTrue(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
+        self.assertEquals('2010-10-30T13:24:43',
+                ku.xp_first(dn, './/uddf:datetime/text()'))
+        self.assertEquals(('b1', 'b2'), tuple(ku.xp(dn, './/uddf:link/@ref')))
 
+
+    def test_dive_copy_with_gases(self):
+        """
+        Test dive copying with gas data
+        """
+        import kenozooid.tests.test_uddf as ktu
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+
+        kl.copy_dive(fin, 1, fl)
+        nodes = ku.find(fl, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertEquals(('air', 'ean39'),
+                tuple(ku.xp(dn, './/uddf:switchmix/@ref')))
+
+
+
+class GasesCopyingIntegrationTestCase(IntegrationTestCaseBase):
+    """
+    Gases copying tests.
+    """
+    def test_copying_gases(self):
+        """
+        """
+        import kenozooid.tests.test_uddf as ktu
+        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+        doc = ku.create()
+        kl.copy_gases(fin, 1, doc)
+        ku.save(doc, fl)
+
+        self.assertEquals(('air', 'ean39'), tuple(ku.find(fl,
+            '//uddf:mix/@id')))
 
 
 # vim: sw=4:et:ai

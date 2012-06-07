@@ -60,17 +60,49 @@ UDDF_PROFILE = b"""\
         </divecomputer>
       </equipment>
     </owner>
+    <buddy id="b1"><personal>
+        <firstname>F1 AA</firstname><lastname>L1 X1</lastname>
+        <membership memberid="m1" organisation="CFT"/>
+    </personal></buddy>
+    <buddy id="b2"><personal>
+        <firstname>F2 BB</firstname><lastname>L2 Y2</lastname>
+        <membership memberid="m2" organisation="CFT"/>
+    </personal></buddy>
   </diver>
+  <divesite>
+      <site id='markgraf'><name>SMS Markgraf</name><geography><location>Scapa Flow</location></geography></site>
+      <site id='konig'><name>SMS Konig</name><geography><location>Scapa Flow</location></geography></site>
+  </divesite>
+  <gasdefinitions>
+    <mix id="air">
+      <name>Air</name>
+      <o2>21</o2>
+      <he>0</he>
+    </mix>
+    <mix id="ean39">
+      <name>EAN39</name>
+      <o2>39</o2>
+      <he>0</he>
+    </mix>
+    <mix id="tx1248">
+      <name>TX 12/48</name>
+      <o2>12</o2>
+      <he>48</he>
+    </mix>
+  </gasdefinitions>
   <profiledata>
     <repetitiongroup>
       <dive id='d01'>
         <informationbeforedive>
             <datetime>2009-09-19T13:10:23</datetime>
+            <link ref='konig'/>
+            <link ref='b1'/>
         </informationbeforedive>
         <samples>
           <waypoint>
             <depth>1.48</depth>
             <divetime>0</divetime>
+            <switchmix ref='air'/>
             <temperature>289.02</temperature>
             <divemode type='opencircuit'/>
           </waypoint>
@@ -82,6 +114,7 @@ UDDF_PROFILE = b"""\
           <waypoint>
             <depth>3.58</depth>
             <divetime>20</divetime>
+            <switchmix ref='ean39'/>
           </waypoint>
         </samples>
         <informationafterdive>
@@ -94,6 +127,8 @@ UDDF_PROFILE = b"""\
       <dive id='d02'>
         <informationbeforedive>
             <datetime>2010-10-30T13:24:43</datetime>
+            <link ref='b1'/>
+            <link ref='b2'/>
         </informationbeforedive>
         <samples>
           <waypoint>

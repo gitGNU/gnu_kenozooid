@@ -125,7 +125,7 @@ class AddDive(object):
         site = args.site
         buddy = args.buddy
 
-        kl.add_dive(lfile, datetime, depth, duration, qsite=site,
+        kl.add_dive(datetime, depth, duration, lfile, qsite=site,
                 qbuddies=buddy)
 
 
@@ -144,11 +144,6 @@ class CopyDive(object):
         """
         parser.add_argument('dive', help='dive number in input file')
         parser.add_argument('input', help='input file with dive data')
-        parser.add_argument('-s', '--site', metavar='site', help='dive site')
-        parser.add_argument('-b', '--buddy',
-                nargs='+',
-                metavar='buddy',
-                help='dive buddies')
         parser.add_argument('logbook', help='logbook file')
 
 
@@ -165,11 +160,7 @@ class CopyDive(object):
 
         dive_no = int(dive_no)
 
-        site = args.site
-        buddy = args.buddy
-
-        kl.add_dive(lfile, dive_no=dive_no, pfile=ifile, qsite=site,
-                qbuddies=buddy)
+        kl.copy_dive(ifile, dive_no, lfile)
 
 
 
