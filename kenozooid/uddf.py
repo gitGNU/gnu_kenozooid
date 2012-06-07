@@ -1217,6 +1217,7 @@ def copy(node, target):
     The copying works under following assumptions
 
     - whole node is being copied including its descendants
+    - node is not copied if it has id and id already exists in the target
     - if copied nodes reference non-descendant nodes and they do _not_
       exist in destination document, then referencing nodes are _removed_
     - if, due to node removal, its parent node becomes empty, then parent
@@ -1236,6 +1237,11 @@ def copy(node, target):
     s1 = set(xp(target, '//uddf:*/@id'))
     s2 = set(xp(cn, 'descendant-or-self::uddf:*/@id'))
     ids = s1.union(s2)
+
+    nid = cn.get('id')
+    if nid and nid in s1:
+        log.warn('id {} already exists, not copying'.format(nid))
+        return
 
     # get referencing nodes
     nodes = list(xp(cn, 'descendant-or-self::uddf:*[@ref]'))

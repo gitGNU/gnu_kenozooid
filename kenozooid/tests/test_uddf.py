@@ -1411,6 +1411,39 @@ class NodeCopyTestCase(unittest.TestCase):
         self.assertTrue(ku.xp_first(t, '//uddf:c') is not None)
 
 
+    def test_copy_no_overwrite(self):
+        """
+        Test no overwriting when copying UDDF node 
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+    <a1>
+        <a2 id = 'id-a1'/>
+        <a2 id = 'id-a2'/>
+    </a1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+    <c>
+        <a3 id = 'id-a1'/>
+    </c>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.find(s, '//uddf:a2[@id="id-a1"]')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        ku.copy(a, c)
+
+        ids = tuple(ku.xp(c, 'descendant-or-self::uddf:*/@id'))
+        self.assertEquals(('id-a1',), ids)
+
+
 
 class UDDFSaveTestCase(unittest.TestCase):
     def setUp(self):
