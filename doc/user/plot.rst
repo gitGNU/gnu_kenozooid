@@ -36,13 +36,13 @@ i.e.::
 The plot can be limited to specific dives, for example to limit plotting to
 dives 2,3, 4 and 5::
 
-   $ kz plot --info --title 2-5 backup-ostc-20110728.uddf dives.pdf
+   $ kz plot --info --title -k 2-5 backup-ostc-20110728.uddf dives.pdf
 
 Multiple input files can be also specified (plot dives 2, 3, 4 and 5 from
 backup-ostc-20110728.uddf and plot dives 6 and 8 from
 backup-ostc-20110729.uddf)::
 
-   kz plot 2-5 backup-ostc-20110728.uddf 6,8 backup-ostc-20110729.uddf dives.pdf
+   $ kz plot -k 2-5 backup-ostc-20110728.uddf -k 6,8 backup-ostc-20110729.uddf dives.pdf
 
 .. figure:: /user/dive-2011-06-26.*
    :align: center
@@ -65,7 +65,7 @@ Use ``-t cmp`` option to plot many dives on one plot (as in case of dive
 profile details plot, multiple dives from multiple files can be specified),
 for example::
 
-    $ kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -- 1,2 logbook.uddf divemode-compare.pdf
+    $ kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -- -k 1,2 logbook.uddf divemode-compare.pdf
 
 Above, Kenozooid is instructed to put a legend on a plot with appropriate
 labels (``Rebreather`` and ``Open Circuit``) for dive profiles.

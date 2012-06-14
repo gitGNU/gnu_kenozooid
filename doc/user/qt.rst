@@ -40,7 +40,7 @@ Plot dive profiles (see :ref:`user-plot`)::
 
 Plot dive profiles of dives 2, 3, 4 and 5::
 
-   kz plot --info 2-5 backup-ostc-20110728.uddf dives.pdf
+   kz plot --info -k 2-5 backup-ostc-20110728.uddf dives.pdf
 
 .. figure:: /user/dive-2011-06-26.*
    :align: center

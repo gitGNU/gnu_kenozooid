@@ -34,7 +34,7 @@ with ``sim replay`` command.
 
 To replay first dive from a backup file::
 
-    kz sim replay ostc /dev/ttyUSB0 1 backup-ostc-20090214.uddf
+    kz sim replay ostc /dev/ttyUSB0 -k 1 backup-ostc-20090214.uddf
 
 Dive Plan Simulation
 ^^^^^^^^^^^^^^^^^^^^
