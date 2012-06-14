@@ -86,15 +86,63 @@ class UDDFInputActionTestCase(unittest.TestCase):
         add_uddf_input(parser)
 
 
-    def test_simple(self):
+    def test_single(self):
         """
-        Test parsing arguments being a list of UDDF input files
+        Test parsing arguments being a list of UDDF input files (single)
         """
         self.parser.add_argument('output')
 
-        args = self.parser.parse_args(args=['f1', 'b'])
+        args = self.parser.parse_args(args=['f1', 'out'])
         self.assertEquals([('1-', 'f1')], args.input)
-        self.assertEquals('b', args.output)
+        self.assertEquals('out', args.output)
+
+
+    def test_multiple(self):
+        """
+        Test parsing arguments being a list of UDDF input files (multiple)
+        """
+        self.parser.add_argument('output')
+
+        args = self.parser.parse_args(args=['f1', 'f2', 'out'])
+        self.assertEquals([('1-', 'f1'), ('1-', 'f2')], args.input)
+        self.assertEquals('out', args.output)
+
+
+    def test_opt_only(self):
+        """
+        Test parsing arguments being a list of UDDF input files (options only)
+        """
+        self.parser.add_argument('output')
+
+        args = self.parser.parse_args(args=['-k', '2-3', 'f1', 'out'])
+        self.assertEquals([('2-3', 'f1')], args.input)
+        self.assertEquals('out', args.output)
+
+        args = self.parser.parse_args(args=['-k', '2-3', 'f1', '-k', '3-4', 'f2', 'out'])
+        self.assertEquals([('2-3', 'f1'), ('3-4', 'f2')], args.input)
+        self.assertEquals('out', args.output)
+
+
+    def test_opt_first(self):
+        """
+        Test parsing arguments being a list of UDDF input files (options first)
+        """
+        self.parser.add_argument('output')
+
+        args = self.parser.parse_args(args=['-k', '2-3', 'f1', 'f2', 'out'])
+        self.assertEquals([('2-3', 'f1'), ('1-', 'f2')], args.input)
+        self.assertEquals('out', args.output)
+
+
+    def test_opt_last(self):
+        """
+        Test parsing arguments being a list of UDDF input files (options last)
+        """
+        self.parser.add_argument('output')
+
+        args = self.parser.parse_args(args=['f2', '-k', '2-3', 'f1', 'out'])
+        self.assertEquals([('1-', 'f2'), ('2-3', 'f1')], args.input)
+        self.assertEquals('out', args.output)
 
 
 # vim: sw=4:et:ai
