@@ -21,9 +21,10 @@
 Test command line routines.
 """
 
+from io import BytesIO
 import argparse
 
-from kenozooid.cli import add_uddf_input
+from kenozooid.cli import add_uddf_input, find_dive_nodes
 from kenozooid.cli.logbook import _name_parse
 
 import unittest
@@ -143,6 +144,30 @@ class UDDFInputActionTestCase(unittest.TestCase):
         args = self.parser.parse_args(args=['f2', '-k', '2-3', 'f1', 'out'])
         self.assertEquals([('1-', 'f2'), ('2-3', 'f1')], args.input)
         self.assertEquals('out', args.output)
+
+
+
+class DiveFindingTestCase(unittest.TestCase):
+    """
+    Tests for finding dive data in files.
+    """
+    def setUp(self):
+        """
+        Create testing documents.
+        """
+        from kenozooid.tests.test_uddf import UDDF_PROFILE
+        self.f1 = BytesIO(UDDF_PROFILE)
+        self.f2 = BytesIO(UDDF_PROFILE)
+        self.f3 = BytesIO(UDDF_PROFILE)
+
+
+    def test_all_nodes_find(self):
+        """
+        Test finding all dive nodes from UDDF files
+        """
+        nodes = list(find_dive_nodes([None, self.f1], [None, self.f2], [None, self.f3]))
+        self.assertEquals(6, len(nodes))
+
 
 
 # vim: sw=4:et:ai

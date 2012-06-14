@@ -22,7 +22,6 @@ Kenozooid's logbook command line user interface.
 """
 
 import sys
-import itertools
 import os.path
 from functools import partial
 from lxml import etree as et
@@ -30,7 +29,7 @@ import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
-        _dive_data
+    add_uddf_input
 from kenozooid.component import query, params
 from kenozooid.util import nformat
 

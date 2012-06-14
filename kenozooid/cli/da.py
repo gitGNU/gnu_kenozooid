@@ -21,13 +21,12 @@
 Kenozooid's plotting and data analysis command line user interface.
 """
 
-import itertools
 import os.path
 import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
-        _dive_data
+        add_uddf_input, find_dives
 
 log = logging.getLogger('kenozooid.cli.da')
 
@@ -88,13 +87,8 @@ class PlotProfiles(object):
                 action='store',
                 dest='plot_labels',
                 help='override dives labels')
-        parser.add_argument('input',
-                nargs='+',
-                metavar='[dives] input',
-                help='dives from specified UDDF file (i.e.  1-3,6 is dive'
-                    ' 1, 2, 3, and 6 from a file, all by default)')
+        add_uddf_input(parser)
         parser.add_argument('output',
-                nargs=1,
                 help='output file: pdf, png or svg')
 
 
@@ -105,7 +99,7 @@ class PlotProfiles(object):
         import os.path
         import kenozooid.plot as kp
 
-        fout = args.output[0]
+        fout = args.output
 
         _, ext = os.path.splitext(fout)
         ext = ext.replace('.', '')
@@ -113,8 +107,7 @@ class PlotProfiles(object):
             raise ArgumentError('Unknown format of plotting output file: {0}' \
                     .format(ext))
 
-        # fetch dives and profiles from files provided on command line
-        data = itertools.chain(*_dive_data(args.input))
+        data = find_dives(*args.input)
 
         kp.plot(fout, args.plot_type, data, format=ext,
             title=args.plot_title,
@@ -140,16 +133,12 @@ class Analyze(object):
         """
         Add R script runner options.
         """
-        parser.add_argument('script', nargs=1, help='R script to execute')
+        parser.add_argument('script', help='R script to execute')
         parser.add_argument('-a',
                 nargs='*',
                 dest='args',
                 help='R script arguments')
-        parser.add_argument('input',
-                nargs='+',
-                metavar='[dives] input',
-                help='dives from specified UDDF file (i.e.  1-3,6 is dive'
-                    ' 1, 2, 3, and 6 from a file, all by default)')
+        add_uddf_input(parser)
 
 
     def __call__(self, args):
@@ -158,9 +147,8 @@ class Analyze(object):
         """
         from kenozooid.analyze import analyze
 
-        # fetch dives and profiles from files provided on command line
-        data = itertools.chain(*_dive_data(args.input))
-        analyze(args.script[0], data, args.args)
+        data = find_dives(*args.input)
+        analyze(args.script, data, args.args)
 
 
 # vim: sw=4:et:ai

@@ -21,12 +21,11 @@
 Dive computer related Kenozooid command line commands.
 """
 
-import itertools
 import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
-        _dive_data
+        add_uddf_input, find_dives
 from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, DataParser
 
@@ -160,16 +159,10 @@ class Simulate(object):
         Add dive computer dive replay arguments.
         """
         parser.add_argument('driver',
-                nargs=1,
                 help='device driver id')
         parser.add_argument('port',
-                nargs=1,
                 help='device port, i.e. /dev/ttyUSB0, COM1')
-        parser.add_argument('input',
-                nargs='+',
-                metavar='[dives] input',
-                help='dives from specified UDDF file (i.e.  1-3,6 is dive'
-                    ' 1, 2, 3, and 6 from a file, all by default)')
+        add_uddf_input(parser)
 
 
     def __call__(self, args):
@@ -179,10 +172,9 @@ class Simulate(object):
         import kenozooid.simulation as ks
         from kenozooid.driver import Simulator, find_driver
 
-        drv = args.driver[0]
-        port = args.port[0]
-        # fetch dives and profiles from files provided on command line
-        dives = itertools.chain(*_dive_data(args.input))
+        drv = args.driver
+        port = args.port
+        dives = find_drives(*args.input)
 
         sim = find_driver(Simulator, drv, port)
 
@@ -208,13 +200,10 @@ class Backup(object):
         Add arguments for dive computer data backup command.
         """
         parser.add_argument('driver',
-                nargs=1,
                 help='device driver id')
         parser.add_argument('port',
-                nargs=1,
                 help='device port, i.e. /dev/ttyUSB0, COM1')
         parser.add_argument('output',
-                nargs=1,
                 help='UDDF file to contain dive computer backup')
 
 
@@ -224,9 +213,9 @@ class Backup(object):
         """
         import kenozooid.dc as kd
 
-        drv_name = args.driver[0]
-        port = args.port[0]
-        fout = args.output[0]
+        drv_name = args.driver
+        port = args.port
+        fout = args.output
 
         kd.backup(drv_name, port, fout)
 
@@ -277,13 +266,10 @@ class Convert(object):
         Add arguments for dive computer data conversion command.
         """
         parser.add_argument('driver',
-                nargs=1,
                 help='device driver id')
         parser.add_argument('input',
-                nargs=1,
                 help='dive computer binary data')
         parser.add_argument('output',
-                nargs=1,
                 help='UDDF file to contain dive computer backup')
 
 
@@ -293,9 +279,9 @@ class Convert(object):
         """
         import kenozooid.dc as kd
 
-        drv_name = args.driver[0]
-        fin = args.input[0]
-        fout = args.output[0]
+        drv_name = args.driver
+        fin = args.input
+        fout = args.output
 
         kd.convert(drv_name, fin, fout)
 

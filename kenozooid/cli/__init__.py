@@ -23,9 +23,10 @@ Commmand line user interface.
 
 import os
 import os.path
+import itertools
 import argparse
 
-from kenozooid.uddf import node_range
+import kenozooid.uddf as ku
 from kenozooid.component import query, params, inject
 
 class CLIModule(object):
@@ -203,24 +204,53 @@ def add_uddf_input(parser):
             help=argparse.SUPPRESS)
 
 
-def _dive_data(args):
-    from kenozooid.uddf import find, dive_data, dive_profile
-    i = 0
-    while i < len(args):
-        q = '//uddf:dive'
-        if os.path.exists(args[i]):
-            f = args[i] # no range spec, just filename; take all
-        else:
-            q += '[' + node_range(args[i]) + ']'
-            i += 1 # skip range spec
-            f = args[i]
-            if not os.path.exists(f):
-                raise ArgumentError('File does not exist: {0}'.format(f))
+def find_dive_nodes(*args):
+    """
+    Find dive nodes in UDDF files using optional node ranges as search
+    parameter.
 
-        # return generator of dive data and its profile data tuples
-        nodes = find(f, q)
-        yield ((dive_data(n), dive_profile(n)) for n in nodes)
-        i += 1
+    Each argument is a two item tuple
+
+    - node range, ``None`` if all nodes to be found
+    - UDDF file name
+
+    The flattened iterator of nodes is returned.
+
+    :Parameters:
+     args
+        List of pairs of node ranges and file names.
+
+    .. seealso:: :py:func:`node_range`
+    .. seealso:: :py:func:`find_dives`
+    """
+    Q = '//uddf:dive'
+    query = lambda r: Q + '[{}]'.format(ku.node_range(r)) if r else Q
+    nodes = (ku.find(f, query(q)) for q, f in args)
+    return itertools.chain(*nodes)
+
+
+def find_dives(*args):
+    """
+    Find dive data in UDDF files using optional node ranges as search
+    parameter.
+
+    Each argument is a two item tuple
+
+    - node range, ``None`` if all nodes to be found
+    - UDDF file name
+
+    The flattened iterator of nodes is returned.
+
+    :Parameters:
+     args
+        List of pairs of node ranges and file names.
+
+    .. seealso:: :py:func:`node_range`
+    .. seealso:: :py:func:`find_dive_nodes`
+    """
+    return ((ku.dive_data(n), ku.dive_profile(n)) \
+            for n in find_dive_nodes(*args))
+        
 
 
 # vim: sw=4:et:ai
