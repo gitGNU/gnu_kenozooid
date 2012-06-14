@@ -22,6 +22,8 @@ Commmand line user interface.
 """
 
 import os
+import os.path
+import argparse
 
 from kenozooid.uddf import node_range
 from kenozooid.component import query, params, inject
@@ -59,6 +61,44 @@ class ArgumentError(BaseException):
     """
     Wrong command line module arguments.
     """
+
+
+class UDDFInputAction(argparse.Action):
+    """
+    Parse arguments being a list of UDDF input files with '-k' option per
+    input file.
+    """
+    def __call__(self, parser, namespace, values, opt=None):
+        v = getattr(namespace, self.dest)
+        if v is None:
+            v = []
+            setattr(namespace, self.dest, v)
+
+        def check(q, f):
+            if not hasattr(parser, '__no_f_check__') and not os.path.exists(f):
+                parser.error('File {} does not exists'.format(f))
+
+        if opt:
+            v.append((None, None))
+        else:
+            i = 0
+            while i < len(values):
+                if v and v[-1] == (None, None):
+                    if i + 1 >= len(values):
+                        parser.error('argument -k: expected 2 arguments')
+
+                    q, f = values[i], values[i + 1]
+                    i += 2
+                    check(q, f)
+                    v[-1] = q, f
+                elif values[i] == '-k':
+                    v.append((None, None))
+                    i += 1
+                else:
+                    q, f = '1-', values[i]
+                    i += 1
+                    check(q, f)
+                    v.append((q, f))
 
 
 def add_commands(parser, prefix=None, title=None):
@@ -136,6 +176,31 @@ def add_master_command(name, title, desc):
         def __call__(self, args):
             raise ArgumentError()
     return Command
+
+
+def add_uddf_input(parser):
+    """
+    Add list of UDDF files as input argument to a parser.
+
+    :Parameters:
+     parser
+        ``argparse`` library parser.
+    """
+    parser.add_argument('-k',
+            dest='input',
+            nargs=0,
+            action=UDDFInputAction,
+            help=argparse.SUPPRESS)
+    parser.add_argument('input',
+            nargs='+',
+            action=UDDFInputAction,
+            metavar='[-k dives] input',
+            help='dives from specified UDDF file (i.e.  1-3,6 is dive'
+                ' 1, 2, 3, and 6 from a file, all by default)')
+    parser.add_argument('input',
+            nargs=argparse.REMAINDER,
+            action=UDDFInputAction,
+            help=argparse.SUPPRESS)
 
 
 def _dive_data(args):

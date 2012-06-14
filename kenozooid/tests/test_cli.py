@@ -21,6 +21,9 @@
 Test command line routines.
 """
 
+import argparse
+
+from kenozooid.cli import add_uddf_input
 from kenozooid.cli.logbook import _name_parse
 
 import unittest
@@ -30,7 +33,9 @@ class NameParseTestCase(unittest.TestCase):
     Name parsing tests.
     """
     def test_name(self):
-        """Test parsing name"""
+        """
+        Test parsing name
+        """
         f, m, l = _name_parse('Tom Cora')
         self.assertEquals('Tom', f)
         self.assertTrue(m is None)
@@ -38,7 +43,9 @@ class NameParseTestCase(unittest.TestCase):
             
 
     def test_name_middle(self):
-        """Test parsing name with middle name"""
+        """
+        Test parsing name with middle name
+        """
         f, m, l = _name_parse('Thomas Henry Corra')
         self.assertEquals('Thomas', f)
         self.assertEquals('Henry', m)
@@ -46,7 +53,9 @@ class NameParseTestCase(unittest.TestCase):
 
 
     def test_name_last(self):
-        """Test parsing name with lastname first"""
+        """
+        Test parsing name with lastname first
+        """
         f, m, l = _name_parse('Corra, Thomas Henry')
         self.assertEquals('Thomas', f)
         self.assertEquals('Henry', m)
@@ -54,11 +63,38 @@ class NameParseTestCase(unittest.TestCase):
 
 
     def test_name_first(self):
-        """Test parsing just first name"""
+        """
+        Test parsing just first name
+        """
         f, m, l = _name_parse('Tom')
         self.assertEquals('Tom', f)
         self.assertTrue(m is None)
         self.assertTrue(l is None)
+
+
+
+class UDDFInputActionTestCase(unittest.TestCase):
+    """
+    Tests for parsing arguments being a list of UDDF input files.
+    """
+    def setUp(self):
+        """
+        Create argument parser for tests.
+        """
+        parser = self.parser = argparse.ArgumentParser()
+        parser.__no_f_check__ = True
+        add_uddf_input(parser)
+
+
+    def test_simple(self):
+        """
+        Test parsing arguments being a list of UDDF input files
+        """
+        self.parser.add_argument('output')
+
+        args = self.parser.parse_args(args=['f1', 'b'])
+        self.assertEquals([('1-', 'f1')], args.input)
+        self.assertEquals('b', args.output)
 
 
 # vim: sw=4:et:ai
