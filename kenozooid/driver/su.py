@@ -23,6 +23,8 @@ Driver for Reefnet Sensus Ultra dive logger.
 It uses libdivecomputer library from
 
     http://divesoftware.org/libdc/
+
+Tested with libdivecomputer version: 781f0db71f7a06591e819f7960dd5b504b4f16a0.
 """
 
 import ctypes as ct
@@ -115,11 +117,12 @@ class SampleValue(ct.Union):
         ('depth', ct.c_double),
         ('pressure', Pressure),
         ('temperature', ct.c_double),
-        ('event', Event),
-        ('rbt', ct.c_uint),
-        ('heartbeat', ct.c_uint),
-        ('bearing', ct.c_uint),
-        ('vendor', Vendor),
+# fixme: segv with lines below
+#        ('event', Event),
+#        ('rbt', ct.c_uint),
+#        ('heartbeat', ct.c_uint),
+#        ('bearing', ct.c_uint),
+#        ('vendor', Vendor),
     ]
 
 
