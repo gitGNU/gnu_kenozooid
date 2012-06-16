@@ -174,6 +174,7 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         self.assertTrue(next(nodes, None) is None)
 
 
+    @unittest.skip
     def test_dive_copy_with_site(self):
         """
         Test copying dive with dive site
@@ -188,6 +189,7 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         self.assertEquals('konig', ku.xp_first(dn, './/uddf:link/@ref'))
 
 
+    @unittest.skip
     def test_dive_copy_with_buddy(self):
         """
         Test copying a dive with a buddy
@@ -202,6 +204,7 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         self.assertEquals('b1', ku.xp_first(dn, './/uddf:link/@ref'))
 
 
+    @unittest.skip
     def test_dive_copy_with_buddies(self):
         """
         Test dive copying with dive buddies
