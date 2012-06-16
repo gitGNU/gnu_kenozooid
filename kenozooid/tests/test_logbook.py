@@ -130,18 +130,24 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
     """
     Dive copying integration tests.
     """
-    def test_dive_copy(self):
+    def setUp(self):
         """
-        Test copying dive
+        Prepare input file.
         """
+        super().setUp()
         import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
+        fin = self.fin = '{}/dive_copy_in.uddf'.format(self.tdir)
         f = open(fin, 'wb')
         f.write(ktu.UDDF_PROFILE)
         f.close()
 
+
+    def test_dive_copy(self):
+        """
+        Test copying dive
+        """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(fin, 1, fl)
+        kl.copy_dive(self.fin, 1, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -159,15 +165,9 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         Test copying existing dive
         """
-        import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
-        f = open(fin, 'wb')
-        f.write(ktu.UDDF_PROFILE)
-        f.close()
-
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(fin, 1, fl)
-        kl.copy_dive(fin, 1, fl)
+        kl.copy_dive(self.fin, 1, fl)
+        kl.copy_dive(self.fin, 1, fl) # try to duplicate
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -178,14 +178,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         Test copying dive with dive site
         """
-        import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
-        f = open(fin, 'wb')
-        f.write(ktu.UDDF_PROFILE)
-        f.close()
-
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(fin, 1, fl)
+        kl.copy_dive(self.fin, 1, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -198,14 +192,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         Test copying a dive with a buddy
         """
-        import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
-        f = open(fin, 'wb')
-        f.write(ktu.UDDF_PROFILE)
-        f.close()
-
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(fin, 1, fl)
+        kl.copy_dive(self.fin, 1, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -218,14 +206,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         Test dive copying with dive buddies
         """
-        import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
-        f = open(fin, 'wb')
-        f.write(ktu.UDDF_PROFILE)
-        f.close()
-
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(fin, 2, fl)
+        kl.copy_dive(self.fin, 2, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -238,15 +220,9 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         Test dive copying with gas data
         """
-        import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
-        f = open(fin, 'wb')
-        f.write(ktu.UDDF_PROFILE)
-        f.close()
-
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
 
-        kl.copy_dive(fin, 1, fl)
+        kl.copy_dive(self.fin, 1, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
