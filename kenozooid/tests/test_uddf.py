@@ -157,6 +157,37 @@ UDDF_PROFILE = b"""\
             <lowesttemperature>250.4</lowesttemperature>
         </informationafterdive>
       </dive>
+      <dive id='d03'>
+        <informationbeforedive>
+            <datetime>2011-11-11T11:11:11</datetime>
+        </informationbeforedive>
+        <samples>
+          <waypoint>
+            <depth>2.61</depth>
+            <divetime>0</divetime>
+            <temperature>296.73</temperature>
+            <divemode type='closedcircuit'/>
+          </waypoint>
+          <waypoint>
+            <depth>4.18</depth>
+            <divetime>10</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>6.25</depth>
+            <divetime>20</divetime>
+          </waypoint>
+          <waypoint>
+            <depth>8.32</depth>
+            <divetime>29</divetime>
+            <temperature>297.26</temperature>
+          </waypoint>
+        </samples>
+        <informationafterdive>
+            <diveduration>29</diveduration>
+            <greatestdepth>30.2</greatestdepth>
+            <lowesttemperature>251.4</lowesttemperature>
+        </informationafterdive>
+      </dive>
     </repetitiongroup>
   </profiledata>
 </uddf>
@@ -286,9 +317,10 @@ class FindDataTestCase(unittest.TestCase):
         """
         f = BytesIO(UDDF_PROFILE)
         depths = list(ku.find(f, '//uddf:waypoint//uddf:depth/text()'))
-        self.assertEqual(7, len(depths))
+        self.assertEqual(11, len(depths))
 
-        expected = ['1.48', '2.43', '3.58', '2.61', '4.18', '6.25', '8.32']
+        expected = ['1.48', '2.43', '3.58', '2.61', '4.18', '6.25', '8.32',
+                '2.61', '4.18', '6.25', '8.32',]
         self.assertEqual(expected, depths)
 
 
@@ -1078,6 +1110,15 @@ class NodeRangeTestCase(unittest.TestCase):
             ku.node_range('1,3,4-7'))
         self.assertEquals('1 <= position()', ku.node_range('1-'))
         self.assertEquals('position() <= 10', ku.node_range('-10'))
+
+
+    def test_all(self):
+        """
+        Test parsing numerical range for everything
+        """
+        self.assertEquals('.', ku.node_range(None))
+        self.assertEquals('.', ku.node_range(''))
+        self.assertEquals('.', ku.node_range('-'))
 
 
     def test_errors(self):

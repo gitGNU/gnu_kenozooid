@@ -554,10 +554,22 @@ def node_range(s):
     >>> node_range('20-')
     '20 <= position()'
 
+    Ranges for everything
+
+    >>> node_range('-')
+    '.'
+    >>> node_range('')
+    '.'
+    >>> node_range(None)
+    '.'
+
     :Parameters:
      s
         Textual representation of number range.
     """
+    if not s or s.strip() == '-':
+        return '.'
+
     data = []
     try:
         for r in s.split(','):
