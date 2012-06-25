@@ -165,7 +165,9 @@ class DiveFindingTestCase(unittest.TestCase):
         """
         Test finding all dive nodes from UDDF files
         """
-        nodes = list(find_dive_nodes([None, self.f1], [None, self.f2], [None, self.f3]))
+        nodes = list(find_dive_nodes(['1-2', self.f1],
+            [None, self.f2],
+            ['3', self.f3]))
         self.assertEquals(6, len(nodes))
 
 

@@ -166,20 +166,15 @@ def upgrade_file(fin):
     return doc
 
 
-def copy_dive(fin, dive_no, lfile):
+def copy_dive(nodes, lfile):
     """
-    Copy dives from input file to logbook file.
+    Copy dive nodes to logbook file.
 
     The logbook file is created if it does not exist.
 
-    If dive does not exist for specified dive number, then ValueError
-    exception is thrown.
-
     :Parameters:
-     fin
-        Input file.
-     dive_no
-        Dive number in dive profile file.
+     nodes
+        Collection of dive nodes.
      lfile
         Logbook file.
     """
@@ -188,25 +183,17 @@ def copy_dive(fin, dive_no, lfile):
     else:
         doc = ku.create()
 
-    log.debug('copying dive from a file')
-    q = ku.XPath('//uddf:dive[position()=$no]')
-    dives = ku.find(fin, q, no=dive_no)
-    dive = next(dives, None)
-    if dive is None:
-        raise ValueError('Cannot find dive in file {}'.format(fin))
-
-    assert next(dives, None) is None, 'only one dive expected'
-
-    copy_gases(fin, dive_no, doc)
-
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
             parent=doc)
-    dive = ku.copy(dive, rg)
-    if dive is None:
-        log.debug('dive {} already exists, not copied'.format(dive_no))
-    else:
-        ku.reorder(doc)
-        ku.save(doc, lfile)
+
+    for n in nodes:
+        copy_gases(fin, dive_no, doc)
+        dive = ku.copy(dive, rg)
+        if dive is None:
+            log.debug('dive {} already exists, not copied'.format(dive_no))
+
+    ku.reorder(doc)
+    ku.save(doc, lfile)
 
 
 def copy_gases(fin, dive_no, doc):

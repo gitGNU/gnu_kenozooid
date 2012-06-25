@@ -175,13 +175,22 @@ XP_FIND_SITE = XPath('/uddf:uddf/uddf:divesite/uddf:site[' \
     ' or contains(uddf:geography/uddf:location/text(), $site)' \
     ']')
 
+# XPath query to find dives
+XP_FIND_DIVES = XPath('/uddf:uddf/uddf:profiledata' \
+    '/uddf:repetitiongroup/uddf:dive[in-range(position(), $nodes)]')
+
+# XPath query to find dive gases
+XP_FIND_DIVE_GASES = XPath('/uddf:uddf/uddf:gasdefinitions' \
+    '/uddf:mix[@id=//uddf:dive[in-range(position(), $nodes)]' \
+    '//uddf:switchmix/@ref]')
+
 
 class RangeError(ValueError):
     """
     Error raised when a range cannot be parsed.
 
     .. seealso::
-        node_range
+        parse_range
     """
     pass
 
@@ -537,60 +546,75 @@ def site_data(node, fields=None, queries=None, parsers=None):
     return find_data('DiveSite', node, fields, queries, parsers)
 
 
-def node_range(s):
+def parse_range(s):
     """
-    Parse textual representation of number range into XPath expression.
+    Parse textual representation of number range into Python expression.
 
     Examples of a ranges
 
-    >>> node_range('1-3,5')
-    '1 <= position() and position() <= 3 or position() = 5'
+    >>> parse_range('1-3,5')
+    '1 <= n and n <= 3 or n == 5'
 
-    >>> node_range('-3,10')
-    'position() <= 3 or position() = 10'
+    >>> parse_range('-3,10')
+    'n <= 3 or n == 10'
 
     Example of infinite range
 
-    >>> node_range('20-')
-    '20 <= position()'
-
-    Ranges for everything
-
-    >>> node_range('-')
-    '.'
-    >>> node_range('')
-    '.'
-    >>> node_range(None)
-    '.'
+    >>> parse_range('20-')
+    '20 <= n'
 
     :Parameters:
      s
         Textual representation of number range.
     """
-    if not s or s.strip() == '-':
-        return '.'
-
     data = []
     try:
         for r in s.split(','):
             d = r.split('-')
             if len(d) == 1:
-                data.append('position() = %d' % int(d[0]))
+                data.append('n == %d' % int(d[0]))
             elif len(d) == 2:
                 p1 = d[0].strip()
                 p2 = d[1].strip()
                 if p1 and p2:
-                    data.append('%d <= position() and position() <= %d' \
-                            % (int(p1), int(p2)))
+                    data.append('{} <= n and n <= {}'.format(int(p1), int(p2)))
                 elif p1 and not p2:
-                    data.append('%d <= position()' % int(p1))
+                    data.append('{} <= n'.format(int(p1)))
                 elif not p1 and p2:
-                    data.append('position() <= %d' % int(p2))
+                    data.append('n <= {}'.format(int(p2)))
             else:
                 raise RangeError('Invalid range %s' % s)
     except ValueError as ex:
         raise RangeError('Invalid range %s' % s)
     return ' or '.join(data)
+
+
+def in_range(ctx, pos, nodes):
+    """
+    XPath expression function to restrict position of a node to be within
+    numeric range.
+
+    :Parameters:
+     ctx
+        XPath context object.
+     pos
+        Node position.
+     nodes
+        Number range, i.e. "2-3".
+
+    .. seealso:: :py:func:`parse_range`
+    """
+    if not nodes:
+        return True
+    if 'in-range' not in ctx.eval_context:
+        nr = parse_range(nodes)
+        fstr = 'ctx.eval_context["in-range"] = lambda n: {}'.format(nr)
+        exec(fstr)
+    return ctx.eval_context['in-range'](pos)
+
+# register in-range XPath function
+ns = et.FunctionNamespace(None)
+ns['in-range'] = in_range
 
 
 def _field(node, query, parser):

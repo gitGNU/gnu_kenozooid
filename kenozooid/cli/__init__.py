@@ -214,19 +214,40 @@ def find_dive_nodes(*args):
     - node range, ``None`` if all nodes to be found
     - UDDF file name
 
-    The flattened iterator of nodes is returned.
+    The collection of dive nodes is returned.
 
     :Parameters:
      args
         List of pairs of node ranges and file names.
 
-    .. seealso:: :py:func:`node_range`
+    .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dives`
     """
-    Q = '//uddf:dive'
-    query = lambda r: Q + '[{}]'.format(ku.node_range(r)) if r else Q
-    nodes = (ku.find(f, query(q)) for q, f in args)
-    return itertools.chain(*nodes)
+    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) for q, f in args)
+    return itertools.chain(*data)
+
+
+def find_dive_gas_nodes(*args):
+    """
+    Find gas nodes referenced by dives in UDDF files using optional node
+    ranges as search parameter.
+
+    Each argument is a two item tuple
+
+    - node range, ``None`` if all nodes to be found
+    - UDDF file name
+
+    The collection of gas nodes is returned.
+
+    :Parameters:
+     args
+        List of pairs of node ranges and file names.
+
+    .. seealso:: :py:func:`parse_range`
+    """
+    data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) for q, f in args)
+    nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
+    return dict(nodes_by_id).values()
 
 
 def find_dives(*args):
@@ -245,7 +266,7 @@ def find_dives(*args):
      args
         List of pairs of node ranges and file names.
 
-    .. seealso:: :py:func:`node_range`
+    .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dive_nodes`
     """
     return ((ku.dive_data(n), ku.dive_profile(n)) \
