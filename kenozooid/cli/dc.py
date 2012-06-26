@@ -174,7 +174,8 @@ class Simulate(object):
 
         drv = args.driver
         port = args.port
-        dives = find_drives(*args.input)
+
+        dives = find_dives(*args.input)
 
         sim = find_driver(Simulator, drv, port)
 
