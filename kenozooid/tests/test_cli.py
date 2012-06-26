@@ -94,7 +94,7 @@ class UDDFInputActionTestCase(unittest.TestCase):
         self.parser.add_argument('output')
 
         args = self.parser.parse_args(args=['f1', 'out'])
-        self.assertEquals([('1-', 'f1')], args.input)
+        self.assertEquals(([None], ['f1']), args.input)
         self.assertEquals('out', args.output)
 
 
@@ -105,7 +105,7 @@ class UDDFInputActionTestCase(unittest.TestCase):
         self.parser.add_argument('output')
 
         args = self.parser.parse_args(args=['f1', 'f2', 'out'])
-        self.assertEquals([('1-', 'f1'), ('1-', 'f2')], args.input)
+        self.assertEquals(([None, None], ['f1', 'f2']), args.input)
         self.assertEquals('out', args.output)
 
 
@@ -116,11 +116,11 @@ class UDDFInputActionTestCase(unittest.TestCase):
         self.parser.add_argument('output')
 
         args = self.parser.parse_args(args=['-k', '2-3', 'f1', 'out'])
-        self.assertEquals([('2-3', 'f1')], args.input)
+        self.assertEquals((['2-3'], ['f1']), args.input)
         self.assertEquals('out', args.output)
 
         args = self.parser.parse_args(args=['-k', '2-3', 'f1', '-k', '3-4', 'f2', 'out'])
-        self.assertEquals([('2-3', 'f1'), ('3-4', 'f2')], args.input)
+        self.assertEquals((['2-3', '3-4'], ['f1', 'f2']), args.input)
         self.assertEquals('out', args.output)
 
 
@@ -131,7 +131,7 @@ class UDDFInputActionTestCase(unittest.TestCase):
         self.parser.add_argument('output')
 
         args = self.parser.parse_args(args=['-k', '2-3', 'f1', 'f2', 'out'])
-        self.assertEquals([('2-3', 'f1'), ('1-', 'f2')], args.input)
+        self.assertEquals((['2-3', None], ['f1', 'f2']), args.input)
         self.assertEquals('out', args.output)
 
 
@@ -142,7 +142,7 @@ class UDDFInputActionTestCase(unittest.TestCase):
         self.parser.add_argument('output')
 
         args = self.parser.parse_args(args=['f2', '-k', '2-3', 'f1', 'out'])
-        self.assertEquals([('1-', 'f2'), ('2-3', 'f1')], args.input)
+        self.assertEquals(([None, '2-3'], ['f2', 'f1']), args.input)
         self.assertEquals('out', args.output)
 
 
@@ -165,9 +165,8 @@ class DiveFindingTestCase(unittest.TestCase):
         """
         Test finding all dive nodes from UDDF files
         """
-        nodes = list(find_dive_nodes(['1-2', self.f1],
-            [None, self.f2],
-            ['3', self.f3]))
+        nodes = list(find_dive_nodes(['1-2', None, '3'],
+            [self.f1, self.f2, self.f3]))
         self.assertEquals(6, len(nodes))
 
 

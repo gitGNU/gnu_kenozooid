@@ -70,36 +70,41 @@ class UDDFInputAction(argparse.Action):
     input file.
     """
     def __call__(self, parser, namespace, values, opt=None):
-        v = getattr(namespace, self.dest)
-        if v is None:
-            v = []
-            setattr(namespace, self.dest, v)
+        arg = getattr(namespace, self.dest)
+        if arg is None:
+            arg = [], []
+            setattr(namespace, self.dest, arg)
 
         def check(q, f):
             if not hasattr(parser, '__no_f_check__') and not os.path.exists(f):
                 parser.error('File {} does not exists'.format(f))
 
         if opt:
-            v.append((None, None))
+            arg[0].append(None)
+            arg[1].append(None)
         else:
             i = 0
             while i < len(values):
-                if v and v[-1] == (None, None):
+                if arg[0] and (arg[0][-1], arg[1][-1]) == (None, None):
                     if i + 1 >= len(values):
-                        parser.error('argument -k: expected 2 arguments')
+                        parser.error('option -k: expected 2 arguments')
 
                     q, f = values[i], values[i + 1]
                     i += 2
                     check(q, f)
-                    v[-1] = q, f
+                    arg[0][-1] = q
+                    arg[1][-1] = f
                 elif values[i] == '-k':
-                    v.append((None, None))
+                    arg[0].append(None)
+                    arg[1].append(None)
                     i += 1
                 else:
-                    q, f = '1-', values[i]
+                    q, f = None, values[i]
                     i += 1
                     check(q, f)
-                    v.append((q, f))
+                    arg[0].append(q)
+                    arg[1].append(f)
+        assert len(arg[0]) == len(arg[1])
 
 
 def add_commands(parser, prefix=None, title=None):
@@ -204,73 +209,66 @@ def add_uddf_input(parser):
             help=argparse.SUPPRESS)
 
 
-def find_dive_nodes(*args):
+def find_dive_nodes(nodes, files):
     """
-    Find dive nodes in UDDF files using optional node ranges as search
+    Find dive nodes in UDDF files using optional numeric ranges as search
     parameter.
-
-    Each argument is a two item tuple
-
-    - node range, ``None`` if all nodes to be found
-    - UDDF file name
 
     The collection of dive nodes is returned.
 
     :Parameters:
-     args
-        List of pairs of node ranges and file names.
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
+     files
+        Collection of UDDF files.
 
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dives`
     """
-    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) for q, f in args)
+    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
+        for q, f in zip(nodes, files))
     return itertools.chain(*data)
 
 
-def find_dive_gas_nodes(*args):
+def find_dive_gas_nodes(nodes, files):
     """
     Find gas nodes referenced by dives in UDDF files using optional node
     ranges as search parameter.
 
-    Each argument is a two item tuple
-
-    - node range, ``None`` if all nodes to be found
-    - UDDF file name
-
     The collection of gas nodes is returned.
 
     :Parameters:
-     args
-        List of pairs of node ranges and file names.
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
+     files
+        Collection of UDDF files.
 
     .. seealso:: :py:func:`parse_range`
     """
-    data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) for q, f in args)
+    data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) \
+        for q, f in zip(nodes, files))
     nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
     return dict(nodes_by_id).values()
 
 
-def find_dives(*args):
+def find_dives(nodes, files):
     """
     Find dive data in UDDF files using optional node ranges as search
     parameter.
 
-    Each argument is a two item tuple
-
-    - node range, ``None`` if all nodes to be found
-    - UDDF file name
-
-    The flattened iterator of nodes is returned.
+    The collection of dive nodes is returned.
 
     :Parameters:
-     args
-        List of pairs of node ranges and file names.
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
+     files
+        Collection of UDDF files.
 
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dive_nodes`
     """
     return ((ku.dive_data(n), ku.dive_profile(n)) \
-            for n in find_dive_nodes(*args))
+            for n in find_dive_nodes(nodes, files))
         
 
 

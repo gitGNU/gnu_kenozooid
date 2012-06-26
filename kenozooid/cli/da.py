@@ -147,8 +147,8 @@ class Analyze(object):
         """
         from kenozooid.analyze import analyze
 
-        data = find_dives(*args.input)
-        analyze(args.script, data, args.args)
+        dives = find_dives(*args.input)
+        analyze(args.script, dives, args.args)
 
 
 # vim: sw=4:et:ai
