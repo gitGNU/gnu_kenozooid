@@ -23,10 +23,8 @@ Commmand line user interface.
 
 import os
 import os.path
-import itertools
 import argparse
 
-import kenozooid.uddf as ku
 from kenozooid.component import query, params, inject
 
 class CLIModule(object):
@@ -207,69 +205,6 @@ def add_uddf_input(parser):
             nargs=argparse.REMAINDER,
             action=UDDFInputAction,
             help=argparse.SUPPRESS)
-
-
-def find_dive_nodes(nodes, files):
-    """
-    Find dive nodes in UDDF files using optional numeric ranges as search
-    parameter.
-
-    The collection of dive nodes is returned.
-
-    :Parameters:
-     nodes
-        Numeric ranges of nodes, `None` if all nodes.
-     files
-        Collection of UDDF files.
-
-    .. seealso:: :py:func:`parse_range`
-    .. seealso:: :py:func:`find_dives`
-    """
-    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
-        for q, f in zip(nodes, files))
-    return itertools.chain(*data)
-
-
-def find_dive_gas_nodes(nodes, files):
-    """
-    Find gas nodes referenced by dives in UDDF files using optional node
-    ranges as search parameter.
-
-    The collection of gas nodes is returned.
-
-    :Parameters:
-     nodes
-        Numeric ranges of nodes, `None` if all nodes.
-     files
-        Collection of UDDF files.
-
-    .. seealso:: :py:func:`parse_range`
-    """
-    data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) \
-        for q, f in zip(nodes, files))
-    nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
-    return dict(nodes_by_id).values()
-
-
-def find_dives(nodes, files):
-    """
-    Find dive data in UDDF files using optional node ranges as search
-    parameter.
-
-    The collection of dive nodes is returned.
-
-    :Parameters:
-     nodes
-        Numeric ranges of nodes, `None` if all nodes.
-     files
-        Collection of UDDF files.
-
-    .. seealso:: :py:func:`parse_range`
-    .. seealso:: :py:func:`find_dive_nodes`
-    """
-    return ((ku.dive_data(n), ku.dive_profile(n)) \
-            for n in find_dive_nodes(nodes, files))
-        
 
 
 # vim: sw=4:et:ai

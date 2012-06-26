@@ -26,7 +26,7 @@ import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
-        add_uddf_input, find_dives
+        add_uddf_input
 
 log = logging.getLogger('kenozooid.cli.da')
 
@@ -98,6 +98,7 @@ class PlotProfiles(object):
         """
         import os.path
         import kenozooid.plot as kp
+        import kenozooid.logbook as kl
 
         fout = args.output
 
@@ -107,7 +108,7 @@ class PlotProfiles(object):
             raise ArgumentError('Unknown format of plotting output file: {0}' \
                     .format(ext))
 
-        data = find_dives(*args.input)
+        data = kl.find_dives(*args.input)
 
         kp.plot(fout, args.plot_type, data, format=ext,
             title=args.plot_title,
@@ -146,8 +147,9 @@ class Analyze(object):
         Execute dives' analyze command.
         """
         from kenozooid.analyze import analyze
+        import kenozooid.logbook as kl
 
-        dives = find_dives(*args.input)
+        dives = kl.find_dives(*args.input)
         analyze(args.script, dives, args.args)
 
 

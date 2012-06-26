@@ -26,6 +26,7 @@ Dive, dive site and buddy data display and management is implemented.
 import lxml.etree as et
 import os.path
 import logging
+import itertools
 import pkg_resources
 
 import kenozooid.uddf as ku
@@ -33,6 +34,69 @@ from kenozooid.util import min2str, FMT_DIVETIME
 from kenozooid.units import K2C
 
 log = logging.getLogger('kenozooid.logbook')
+
+
+def find_dive_nodes(nodes, files):
+    """
+    Find dive nodes in UDDF files using optional numeric ranges as search
+    parameter.
+
+    The collection of dive nodes is returned.
+
+    :Parameters:
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
+     files
+        Collection of UDDF files.
+
+    .. seealso:: :py:func:`parse_range`
+    .. seealso:: :py:func:`find_dives`
+    """
+    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
+        for q, f in zip(nodes, files))
+    return itertools.chain(*data)
+
+
+def find_dive_gas_nodes(nodes, files):
+    """
+    Find gas nodes referenced by dives in UDDF files using optional node
+    ranges as search parameter.
+
+    The collection of gas nodes is returned.
+
+    :Parameters:
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
+     files
+        Collection of UDDF files.
+
+    .. seealso:: :py:func:`parse_range`
+    """
+    data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) \
+        for q, f in zip(nodes, files))
+    nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
+    return dict(nodes_by_id).values()
+
+
+def find_dives(nodes, files):
+    """
+    Find dive data in UDDF files using optional node ranges as search
+    parameter.
+
+    The collection of dive nodes is returned.
+
+    :Parameters:
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
+     files
+        Collection of UDDF files.
+
+    .. seealso:: :py:func:`parse_range`
+    .. seealso:: :py:func:`find_dive_nodes`
+    """
+    return ((ku.dive_data(n), ku.dive_profile(n)) \
+            for n in find_dive_nodes(nodes, files))
+        
 
 def list_dives(fin):
     """

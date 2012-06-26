@@ -25,7 +25,7 @@ import logging
 
 from kenozooid.component import inject
 from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
-        add_uddf_input, find_dives
+        add_uddf_input
 from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, DataParser
 
@@ -171,11 +171,12 @@ class Simulate(object):
         """
         import kenozooid.simulation as ks
         from kenozooid.driver import Simulator, find_driver
+        import kenozooid.logbook as kl
 
         drv = args.driver
         port = args.port
 
-        dives = find_dives(*args.input)
+        dives = kl.find_dives(*args.input)
 
         sim = find_driver(Simulator, drv, port)
 
