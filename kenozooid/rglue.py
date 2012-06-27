@@ -101,7 +101,7 @@ def inject_dive_data(dives):
 
     :Parameters:
      dives
-        Iterator of dive data: (dive, profile).
+        Collection of dive data.
     """
     d1, d2 = itertools.tee(dives, 2)
     d_df = dives_df(d1)

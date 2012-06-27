@@ -116,7 +116,7 @@ def plot(dives, ptype, fout, title=False, info=False, temp=False,
     
     :Parameters:
      dives
-        Dives and their profiles to be plotted.
+        Dives to be plotted.
      ptype
         Plot type converted to R script name ``stats/pplot-*.R``.
      fout
