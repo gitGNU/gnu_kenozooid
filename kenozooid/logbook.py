@@ -135,7 +135,7 @@ def list_dives(dives):
             log.warn('invalid dive data, skipping dive')
 
 
-def add_dive(datetime, depth, duration, lfile, qsite=None, qbuddies=()):
+def add_dive(dive, lfile, qsite=None, qbuddies=()):
     """
     Add new dive to logbook file.
 
@@ -145,12 +145,8 @@ def add_dive(datetime, depth, duration, lfile, qsite=None, qbuddies=()):
     exception is thrown.
 
     :Parameters:
-     datetime
-        Dive date and time.
-     depth
-        Dive maximum depth.
-     duration
-        Dive duration (in minutes).
+     dive
+        Dive data.
      lfile
         Logbook file.
      qsite
@@ -158,8 +154,6 @@ def add_dive(datetime, depth, duration, lfile, qsite=None, qbuddies=()):
      qbuddies
         Buddy search terms.
     """
-    dive = None # obtained from profile file
-
     if os.path.exists(lfile):
         doc = et.parse(lfile).getroot()
     else:
@@ -193,9 +187,8 @@ def add_dive(datetime, depth, duration, lfile, qsite=None, qbuddies=()):
         buddy_ids.append(n.get('id'))
 
     log.debug('creating dive data')
-    duration = int(duration * 60)
-    ku.create_dive_data(doc, datetime=datetime, depth=depth,
-                duration=duration, site=site_id, buddies=buddy_ids)
+    ku.create_dive_data(doc, datetime=dive.datetime, depth=dive.depth,
+                duration=dive.duration, site=site_id, buddies=buddy_ids)
 
     ku.reorder(doc)
     ku.save(doc, lfile)

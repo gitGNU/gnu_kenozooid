@@ -112,19 +112,20 @@ class AddDive(object):
         Execute command for adding dives into logbook file.
         """
         import kenozooid.logbook as kl
+        import kenozooid.data as kd
         from dateutil.parser import parse as dparse
 
         lfile = args.logbook
 
         datetime = dparse(args.datetime)
         depth = float(args.depth)
-        duration = float(args.duration)
+        duration = float(args.duration) * 60
 
         site = args.site
         buddy = args.buddy
 
-        kl.add_dive(datetime, depth, duration, lfile, qsite=site,
-                qbuddies=buddy)
+        dive = kd.Dive(datetime=datetime, depth=depth, duration=duration)
+        kl.add_dive(dive, lfile, qsite=site, qbuddies=buddy)
 
 
 
