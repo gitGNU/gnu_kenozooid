@@ -32,11 +32,6 @@ import kenozooid.rglue as kr
 log = logging.getLogger('kenozooid.analyze')
 R = ro.r
 
-# maximum size of R script, 1MB should be more than enough;
-# we need to pass whole script to R to support multi-line
-# statements
-MAX_SCRIPT_SIZE = 1024 ** 2
-
 def analyze(script, args, dives):
     """
     Analyze dives with specified R script.
@@ -52,13 +47,12 @@ def analyze(script, args, dives):
      dives
         Dive data.
     """
-    if os.path.exists(script):
-        log.debug('opening {} script as file'.format(script))
-        f = open(script, 'rb')
-    else:
-        log.debug('opening {} script as resource'.format(script))
-        f = pkg_resources.resource_stream('kenozooid',
+    if not os.path.exists(script):
+        log.debug('loading {} script as resource'.format(script))
+        script = pkg_resources.resource_filename('kenozooid',
                 'stats/{}'.format(script))
+    else:
+        log.debug('loading {} script as file'.format(script))
 
     kr.inject_dive_data(dives)
 
@@ -67,11 +61,7 @@ def analyze(script, args, dives):
     else:
         R('kz.args = list()')
 
-    data = f.read(MAX_SCRIPT_SIZE)
-    if f.read(1):
-        raise ValueError('The script {} is too long'.format(script))
-    R(data.decode())
-    f.close()
+    R('source("{}")'.format(script))
 
 
 # vim: sw=4:et:ai
