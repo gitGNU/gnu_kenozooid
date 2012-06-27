@@ -108,9 +108,12 @@ class PlotProfiles(object):
             raise ArgumentError('Unknown format of plotting output file: {0}' \
                     .format(ext))
 
-        dives = kl.find_dives(*args.input)
+        r, f = args.input
+        dives = kl.find_dives(f, r)
 
-        kp.plot(dives, args.plot_type, fout, format=ext,
+        kp.plot(dives, fout,
+            ptype=args.plot_type,
+            format=ext,
             title=args.plot_title,
             info=args.plot_info,
             temp=args.plot_temp,
@@ -149,7 +152,8 @@ class Analyze(object):
         from kenozooid.analyze import analyze
         import kenozooid.logbook as kl
 
-        dives = kl.find_dives(*args.input)
+        r, f = args.input
+        dives = kl.find_dives(f, r)
         analyze(args.script, args.args, dives)
 
 

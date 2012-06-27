@@ -176,7 +176,8 @@ class Simulate(object):
         drv = args.driver
         port = args.port
 
-        dives = kl.find_dives(*args.input)
+        r, f = args.input
+        dives = kl.find_dives(f, r)
 
         sim = find_driver(Simulator, drv, port)
 

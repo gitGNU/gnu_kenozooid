@@ -37,7 +37,7 @@ from kenozooid.units import K2C
 log = logging.getLogger('kenozooid.logbook')
 
 
-def find_dive_nodes(nodes, files):
+def find_dive_nodes(files, nodes=None):
     """
     Find dive nodes in UDDF files using optional numeric ranges as search
     parameter.
@@ -45,20 +45,21 @@ def find_dive_nodes(nodes, files):
     The collection of dive nodes is returned.
 
     :Parameters:
-     nodes
-        Numeric ranges of nodes, `None` if all nodes.
      files
         Collection of UDDF files.
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
 
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dives`
     """
+    nodes = [] if nodes is None else nodes
     data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
         for q, f in lzip(nodes, files))
     return itertools.chain(*data)
 
 
-def find_dive_gas_nodes(nodes, files):
+def find_dive_gas_nodes(files, nodes=None):
     """
     Find gas nodes referenced by dives in UDDF files using optional node
     ranges as search parameter.
@@ -66,20 +67,21 @@ def find_dive_gas_nodes(nodes, files):
     The collection of gas nodes is returned.
 
     :Parameters:
-     nodes
-        Numeric ranges of nodes, `None` if all nodes.
      files
         Collection of UDDF files.
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
 
     .. seealso:: :py:func:`parse_range`
     """
+    nodes = [] if nodes is None else nodes
     data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) \
         for q, f in lzip(nodes, files))
     nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
     return dict(nodes_by_id).values()
 
 
-def find_dives(nodes, files):
+def find_dives(files, nodes=None):
     """
     Find dive data in UDDF files using optional node ranges as search
     parameter.
@@ -87,15 +89,15 @@ def find_dives(nodes, files):
     The collection of dive data is returned.
 
     :Parameters:
-     nodes
-        Numeric ranges of nodes, `None` if all nodes.
      files
         Collection of UDDF files.
+     nodes
+        Numeric ranges of nodes, `None` if all nodes.
 
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dive_nodes`
     """
-    return (ku.dive_data(n) for n in find_dive_nodes(nodes, files))
+    return (ku.dive_data(n) for n in find_dive_nodes(files, nodes))
         
 
 def list_dives(dives):

@@ -108,7 +108,7 @@ def _inject_dives_ui(dives, title, info, temp, avg_depth, mod, sig,
     ro.globalenv['kz.dives.ui'] = ui_df
 
 
-def plot(dives, ptype, fout, title=False, info=False, temp=False,
+def plot(dives, fout, ptype='details', title=False, info=False, temp=False,
         avg_depth=False, mod=False, sig=True, legend=False, labels=None,
         format='pdf'):
     """
@@ -117,10 +117,10 @@ def plot(dives, ptype, fout, title=False, info=False, temp=False,
     :Parameters:
      dives
         Dives to be plotted.
-     ptype
-        Plot type converted to R script name ``stats/pplot-*.R``.
      fout
         Name of output file.
+     ptype
+        Plot type converted to R script name ``stats/pplot-*.R``.
      title
         Set plot title.
      info

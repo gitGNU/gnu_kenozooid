@@ -276,8 +276,8 @@ class DiveFindingTestCase(unittest.TestCase):
         """
         Test finding all dive nodes from UDDF files
         """
-        nodes = list(kl.find_dive_nodes(['1-2', None, '3'],
-            [self.f1, self.f2, self.f3]))
+        nodes = list(kl.find_dive_nodes([self.f1, self.f2, self.f3],
+            ['1-2', None, '3']))
         self.assertEquals(6, len(nodes))
 
 
@@ -285,8 +285,7 @@ class DiveFindingTestCase(unittest.TestCase):
         """
         Test finding dive nodes from UDDF files with incomplete collection of numeric ranges
         """
-        nodes = list(kl.find_dive_nodes(['1-2'],
-            [self.f1, self.f2, self.f3]))
+        nodes = list(kl.find_dive_nodes([self.f1, self.f2, self.f3], ['1-2']))
         self.assertEquals(8, len(nodes))
 
 
