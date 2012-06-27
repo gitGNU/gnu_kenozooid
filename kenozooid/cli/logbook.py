@@ -75,11 +75,10 @@ class ListDives(object):
         """
         import kenozooid.logbook as kl
 
-        files = args.input
-
-        for fin in files:
+        for fin in args.input:
+            dives = kl.find_dives([], [fin])
             print('{}:'.format(fin))
-            for i, d in enumerate(kl.list_dives(fin), 1):
+            for i, d in enumerate(kl.list_dives(dives), 1):
                 print('{:5}: {:>9} {:>9} ({:>5}) {:>9} {:>9}'.format(i,
                     d[0], d[1], d[2] or ' --- ', d[3], d[4]))
 

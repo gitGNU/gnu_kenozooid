@@ -137,7 +137,10 @@ class DiveDataInjectTestCase(unittest.TestCase):
             kd.Sample(time=23, depth=11.0, temp=12.0, alarm=False),
             kd.Sample(time=25, depth=10.0, temp=11.0, alarm=False),
         )
-        d = dive_profiles_df((p1, p2, p3))
+        d1 = kd.Dive(profile=p1)
+        d2 = kd.Dive(profile=p2)
+        d3 = kd.Dive(profile=p3)
+        d = dive_profiles_df((d1, d2, d3))
         self.assertEquals(11, d.nrow)
         self.assertEquals(13, d.ncol)
         self.assertEquals((1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3), tuple(d[0]))
@@ -150,11 +153,6 @@ class DiveDataInjectTestCase(unittest.TestCase):
         """
         Test dive data injection
         """
-        d1, d2, d3 = (
-            (datetime(2011, 10, 11), 31.0, 2010, 12),
-            (datetime(2011, 10, 12), 32.0, 2020, 14),
-            (datetime(2011, 10, 13), 33.0, 2030, None),
-        )
         p1 = (
             kd.Sample(time=0, depth=10.0, temp=15.0, alarm=False),
             kd.Sample(time=10, depth=20.0, temp=14.0, alarm=False),
@@ -173,12 +171,19 @@ class DiveDataInjectTestCase(unittest.TestCase):
             kd.Sample(time=25, depth=10.0, temp=11.0, alarm=False),
         )
 
-        inject_dive_data(zip((d1, d2, d3), (p1, p2, p3)))
+        d1 = kd.Dive(datetime=datetime(2011, 10, 11), depth=31.0,
+                duration=2010, temp=12, profile=p1)
+        d2 = kd.Dive(datetime=datetime(2011, 10, 12), depth=32.0,
+                duration=2020, temp=14, profile=p2)
+        d3 = kd.Dive(datetime=datetime(2011, 10, 13), depth=33.0,
+                duration=2030, temp=None, profile=p3)
+
+        inject_dive_data((d1, d2, d3))
 
         d_df = ro.globalenv['kz.dives']
 
         self.assertEquals(3, d_df.nrow)
-        self.assertEquals(4, d_df.ncol)
+        self.assertEquals(5, d_df.ncol)
         self.assertEquals((31.0, 32.0, 33.0), tuple(d_df[1]))
         self.assertEquals((2010, 2020, 2030), tuple(d_df[2]))
         self.assertEquals((12, 14, ro.NA_Real), tuple(d_df[3]))

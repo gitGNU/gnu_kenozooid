@@ -102,6 +102,7 @@ XP_DEFAULT_DIVE_DATA = (
     XPath('uddf:informationafterdive/uddf:lowesttemperature/text()'),
     XPath('uddf:informationafterdive/uddf:averagedepth/text()'),
     XPath('uddf:samples/uddf:waypoint/uddf:divemode[1]/@type'),
+    None,
 )
 
 # XPath queries for default dive profile sample data
@@ -382,9 +383,10 @@ def dive_data(node, fields=None, queries=None, parsers=None):
     .. seealso:: :py:func:`find_data`
     """
     if fields is None:
-        fields = ('datetime', 'depth', 'duration', 'temp', 'avg_depth', 'mode')
+        fields = ('datetime', 'depth', 'duration', 'temp', 'avg_depth',
+                'mode', 'profile')
         queries = XP_DEFAULT_DIVE_DATA
-        parsers = (dparse, float, float, float, float, str)
+        parsers = (dparse, float, float, float, float, str, dive_profile)
 
     return find_data('Dive', node, fields, queries, parsers)
 
@@ -633,7 +635,7 @@ def _field(node, query, parser):
      parser
         Parser to convert text value to requested type.
     """
-    data = query(node)
+    data = [node] if query is None else query(node)
     if data:
         return parser(data[0])
 
@@ -642,9 +644,12 @@ def _record(rt, node, queries, parsers):
     """
     Create record with data.
 
-    The record data is found with XPath expressions objects starting from
-    XML node.  The data is converted to their appropriate type using
-    parsers.
+    The record data is found with queries (XPath expressions objects)
+    starting from XML node.
+    
+    The data is converted to their appropriate type using parsers.
+
+    If query is `None`, then record data is node itself.
 
     :Parameters:
      rt

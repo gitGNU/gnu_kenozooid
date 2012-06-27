@@ -88,14 +88,14 @@ def _inject_dives_ui(dives, title, info, temp, avg_depth, mod, sig,
 
     # format optional dive data (i.e. title, info) from dive data;
     # dive per row
-    opt_d = (tuple(map(lambda f: f(d), f_cols)) for d, p in dt)
+    opt_d = (tuple(map(lambda f: f(d), f_cols)) for d in dt)
     ui_df = kr.df(cols, t_cols, opt_d)
 
     # provide optional dive data provided by user
     udf = OrderedDict()
     if legend:
         dives, dt = itertools.tee(dives, 2)
-        v = [l if l else tfmt(d.datetime) for (d, _), l in zip(dt, labels)]
+        v = [l if l else tfmt(d.datetime) for d, l in zip(dt, labels)]
         udf['label'] = ro.StrVector(v)
 
     # merge formatted optional dive data and data provided by user
@@ -108,19 +108,19 @@ def _inject_dives_ui(dives, title, info, temp, avg_depth, mod, sig,
     ro.globalenv['kz.dives.ui'] = ui_df
 
 
-def plot(fout, ptype, dives, title=False, info=False, temp=False,
+def plot(dives, ptype, fout, title=False, info=False, temp=False,
         avg_depth=False, mod=False, sig=True, legend=False, labels=None,
         format='pdf'):
     """
     Plot graphs of dive profiles.
     
     :Parameters:
-     fout
-        Name of output file.
-     ptype
-        Plot type converted to R script name ``stats/pplot-*.R``.
      dives
         Dives and their profiles to be plotted.
+     ptype
+        Plot type converted to R script name ``stats/pplot-*.R``.
+     fout
+        Name of output file.
      title
         Set plot title.
      info
@@ -147,7 +147,7 @@ def plot(fout, ptype, dives, title=False, info=False, temp=False,
 
     v = lambda s, t: '--{}'.format(s) if t else '--no-{}'
     args = (fout, format, v('sig', sig), v('mod', mod))
-    ka.analyze('pplot-{}.R'.format(ptype), dives, args)
+    ka.analyze('pplot-{}.R'.format(ptype), args, dives)
 
 
 # vim: sw=4:et:ai

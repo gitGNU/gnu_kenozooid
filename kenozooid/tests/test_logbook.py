@@ -281,4 +281,13 @@ class DiveFindingTestCase(unittest.TestCase):
         self.assertEquals(6, len(nodes))
 
 
+    def test_find_with_incomplete(self):
+        """
+        Test finding dive nodes from UDDF files with incomplete collection of numeric ranges
+        """
+        nodes = list(kl.find_dive_nodes(['1-2'],
+            [self.f1, self.f2, self.f3]))
+        self.assertEquals(8, len(nodes))
+
+
 # vim: sw=4:et:ai

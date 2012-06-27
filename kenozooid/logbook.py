@@ -27,6 +27,7 @@ import lxml.etree as et
 import os.path
 import logging
 import itertools
+from itertools import zip_longest as lzip
 import pkg_resources
 
 import kenozooid.uddf as ku
@@ -53,7 +54,7 @@ def find_dive_nodes(nodes, files):
     .. seealso:: :py:func:`find_dives`
     """
     data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
-        for q, f in zip(nodes, files))
+        for q, f in lzip(nodes, files))
     return itertools.chain(*data)
 
 
@@ -73,7 +74,7 @@ def find_dive_gas_nodes(nodes, files):
     .. seealso:: :py:func:`parse_range`
     """
     data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) \
-        for q, f in zip(nodes, files))
+        for q, f in lzip(nodes, files))
     nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
     return dict(nodes_by_id).values()
 
@@ -83,7 +84,7 @@ def find_dives(nodes, files):
     Find dive data in UDDF files using optional node ranges as search
     parameter.
 
-    The collection of dive nodes is returned.
+    The collection of dive data is returned.
 
     :Parameters:
      nodes
@@ -94,11 +95,10 @@ def find_dives(nodes, files):
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dive_nodes`
     """
-    return ((ku.dive_data(n), ku.dive_profile(n)) \
-            for n in find_dive_nodes(nodes, files))
+    return (ku.dive_data(n) for n in find_dive_nodes(nodes, files))
         
 
-def list_dives(fin):
+def list_dives(dives):
     """
     Get generator of preformatted dive data.
 
@@ -113,11 +113,9 @@ def list_dives(fin):
     - temperature, i.e. 8.2°C
 
     :Parameters:
-     fin
-        Logbook file in UDDF format.
+     dives
+        Collection of dive data.
     """
-    dives = (ku.dive_data(n) for n in ku.find(fin, '//uddf:dive'))
-
     for dive in dives:
         try:
             duration = min2str(dive.duration / 60.0)

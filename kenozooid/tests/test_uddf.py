@@ -337,6 +337,7 @@ class FindDataTestCase(unittest.TestCase):
         self.assertEquals(251.4, dive.temp)
         self.assertEquals(10.1, dive.avg_depth)
         self.assertEquals('opencircuit', dive.mode)
+        self.assertEquals(3, len(list(dive.profile)))
 
 
     def test_profile_data(self):

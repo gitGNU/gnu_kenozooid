@@ -22,6 +22,7 @@ rpy integration functions.
 
 from functools import partial
 from collections import OrderedDict
+import itertools
 
 import rpy2.robjects as ro
 R = ro.r
@@ -60,16 +61,16 @@ def df(cols, vf, data):
     return ro.DataFrame(od)
 
 
-def dives_df(data):
+def dives_df(dives):
     """
     Create R data frame for dives using rpy interface.
     """
     cols = 'datetime', 'depth', 'duration', 'temp', 'avg_depth'
     vf = str_vec, float_vec, float_vec, float_vec, float_vec
-    return df(cols, vf, data)
+    return df(cols, vf, dives)
 
 
-def dive_profiles_df(data):
+def dive_profiles_df(dives):
     """
     Create R data frame for dive profiles using rpy interface.
     """
@@ -84,7 +85,7 @@ def dive_profiles_df(data):
           None if s.gas is None else s.gas.he,
           None if s.gas is None else kcc.mod(s.gas.o2, 1.4),
           None if s.gas is None else kcc.mod(s.gas.o2, 1.6),
-         ) for k, dive in enumerate(data, 1) for s in dive)
+         ) for k, dive in enumerate(dives, 1) for s in dive.profile)
     return df(cols, vf, p)
 
 
@@ -102,9 +103,9 @@ def inject_dive_data(dives):
      dives
         Iterator of dive data: (dive, profile).
     """
-    d, p = zip(*dives)
-    d_df = dives_df(d)
-    p_df = dive_profiles_df(p)
+    d1, d2 = itertools.tee(dives, 2)
+    d_df = dives_df(d1)
+    p_df = dive_profiles_df(d2)
 
     ro.globalenv['kz.dives'] = d_df
     ro.globalenv['kz.profiles'] = p_df

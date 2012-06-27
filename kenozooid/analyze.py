@@ -37,7 +37,7 @@ R = ro.r
 # statements
 MAX_SCRIPT_SIZE = 1024 ** 2
 
-def analyze(script, dives, args):
+def analyze(script, args, dives):
     """
     Analyze dives with specified R script.
 
@@ -47,10 +47,10 @@ def analyze(script, dives, args):
     :Parameters:
      script
         R script to run in the context of dive data.
-     dives
-        Dive data.
      args
         R script arguments.
+     dives
+        Dive data.
     """
     if os.path.exists(script):
         log.debug('opening {} script as file'.format(script))
