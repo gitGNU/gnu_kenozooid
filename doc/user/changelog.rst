@@ -1,7 +1,7 @@
 Changelog
 =========
 Kenozooid 0.10.0
----------------
+----------------
 - copy gases information when copying dives
 
 Kenozooid 0.9.0
