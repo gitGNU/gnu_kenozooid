@@ -65,7 +65,7 @@ Use ``-t cmp`` option to plot many dives on one plot (as in case of dive
 profile details plot, multiple dives from multiple files can be specified),
 for example::
 
-    $ kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -- -k 1,2 logbook.uddf divemode-compare.pdf
+    $ kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -k 1,2 logbook.uddf divemode-compare.pdf
 
 Above, Kenozooid is instructed to put a legend on a plot with appropriate
 labels (``Rebreather`` and ``Open Circuit``) for dive profiles.
