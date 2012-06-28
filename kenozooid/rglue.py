@@ -53,7 +53,7 @@ def df(cols, vf, data):
      cols
         Column names.
      vf
-        Vector constructor function. 
+        Vector constructors.
      data
         Iterable of data frame rows (not columns).
     """

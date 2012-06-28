@@ -28,6 +28,7 @@ more convenient).
 """
 
 import itertools
+from itertools import zip_longest as lzip
 from collections import OrderedDict
 import logging
 
@@ -41,69 +42,59 @@ import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.plot')
 
-def _inject_dives_ui(dives, title, info, temp, avg_depth, mod, sig,
+def _inject_dives_ui(dives, title, info, temp, avg_depth,
         legend, labels):
-    """
-    Inject ``kz.dives.ui`` data frame in R space.
 
-    The data frame can be empty but can have any combination of the
-    following columns
+    """
+    Inject ``kz.dives.ui`` data frame into R global space.
+
+    The data frame has the following columns
 
     info
         Dive information string with dive duration, maximum depth and
         dive temperature.
     title
         Dive title.
-    label
-        Dive label put on legend.
     avg_depth
         Dive average depth label.
+    label
+        Dive label put on legend.
 
     See ``plot`` for parameters description.
     """
-    dives, dt = itertools.tee(dives, 2)
+    labels = [] if labels is None else labels
 
     # dive title formatter
-    tfmt = lambda d: d.datetime.strftime(FMT_DIVETIME)
+    tfmt = lambda d, l: '{}'.format(d.datetime)
+
     # dive info formatter
     _ifmt = '{:.1f}m \u00b7 {}min \u00b7 {:.1f}\u00b0C'.format
-    ifmt = lambda d: _ifmt(d.depth, min2str(d.duration / 60.0), K2C(d.temp))
-    # create optional columns like title and info
+    ifmt = lambda d, l: _ifmt(d.depth, min2str(d.duration / 60.0), K2C(d.temp))
+
+    # average depth formatter
+    dfmt = lambda d, l: None if d.avg_depth is None \
+                else '{:.1f}m'.format(d.avg_depth)
+
+    # label formatter
+    lfmt = lambda d, l: l if l else tfmt(d)
+
     cols = []
-    t_cols = []
-    f_cols = []
+    fmts = []
     if title:
         cols.append('title')
-        t_cols.append(ro.StrVector)
-        f_cols.append(tfmt)
+        fmts.append(tfmt)
     if info:
         cols.append('info')
-        t_cols.append(ro.StrVector)
-        f_cols.append(ifmt)
+        fmts.append(ifmt)
     if avg_depth:
         cols.append('avg_depth')
-        t_cols.append(ro.StrVector)
-        f_cols.append(lambda d: None if d.avg_depth is None \
-                else '{:.1f}m'.format(d.avg_depth))
-
-    # format optional dive data (i.e. title, info) from dive data;
-    # dive per row
-    opt_d = (tuple(map(lambda f: f(d), f_cols)) for d in dt)
-    ui_df = kr.df(cols, t_cols, opt_d)
-
-    # provide optional dive data provided by user
-    udf = OrderedDict()
+        fmts.append(dfmt)
     if legend:
-        dives, dt = itertools.tee(dives, 2)
-        v = [l if l else tfmt(d.datetime) for d, l in zip(dt, labels)]
-        udf['label'] = ro.StrVector(v)
-
-    # merge formatted optional dive data and data provided by user
-    if udf:
-        if ui_df.ncol > 0:
-            ui_df.cbind(ro.DataFrame(udf))
-        else:
-            ui_df = ro.DataFrame(udf)
+        cols.append('label')
+        fmts.append(lfmt)
+    vt = (ro.StrVector, ) * len(cols)
+    data = (tuple(f(d, l) for f in fmts) for d, l in lzip(dives, labels))
+    ui_df = kr.df(cols, vt, data)
 
     ro.globalenv['kz.dives.ui'] = ui_df
 
@@ -141,9 +132,8 @@ def plot(dives, fout, ptype='details', title=False, info=False, temp=False,
         Format of output file (i.e. pdf, png, svg).
     """
     dives, dt = itertools.tee(dives, 2)
-
-    _inject_dives_ui(dt, title=title, info=info, temp=temp, avg_depth=avg_depth,
-            mod=mod, sig=sig, legend=legend, labels=labels)
+    _inject_dives_ui(dt, title=title, info=info, temp=temp,
+            avg_depth=avg_depth, legend=legend, labels=labels)
 
     v = lambda s, t: '--{}'.format(s) if t else '--no-{}'
     args = (fout, format, v('sig', sig), v('mod', mod))
