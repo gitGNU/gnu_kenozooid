@@ -18,7 +18,7 @@
 #
 
 """
-Kenozooid data flow processing funtions and coroutines.
+Kenozooid data flow processing functions and coroutines.
 """
 
 import itertools
