@@ -32,8 +32,8 @@ def coroutine(func):
     
     Advances a coroutine to its first ``(yield)`` statement.
     """
-    def start(*args,**kwargs):
-        cr = func(*args,**kwargs)
+    def start(*args, **kwargs):
+        cr = func(*args, **kwargs)
         next(cr)
         return cr
     return start
