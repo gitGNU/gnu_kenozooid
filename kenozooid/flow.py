@@ -123,7 +123,7 @@ def sink(f):
 @coroutine
 def buffer(f, tc=None):
     """
-    Coroutine buffer received data in a file.
+    Coroutine buffer, which stores received data in a file.
 
     When coroutine is closed, then file object is sent to target coroutine.
 
