@@ -132,34 +132,27 @@ class AddDive(object):
 @inject(CLIModule, name='dive copy')
 class CopyDive(object):
     """
-    Copy dive to logbook file.
+    Copy dives to logbook file.
     """
-    description = 'copy dive to logbook file'
+    description = 'copy dives to logbook file'
 
     @classmethod
     def add_arguments(self, parser):
         """
         Add options for dive copying to logbook file.
         """
-        parser.add_argument('dive', help='dive number in input file')
-        parser.add_argument('input', help='input file with dive data')
+        add_uddf_input(parser)
         parser.add_argument('logbook', help='logbook file')
 
 
     def __call__(self, args):
         """
-        Execute command for adding dives into logbook file.
+        Execute command for copying dives into logbook file.
         """
         import kenozooid.logbook as kl
-        from dateutil.parser import parse as dparse
 
-        dive_no = args.dive
-        ifile = args.input
-        lfile = args.logbook
-
-        dive_no = int(dive_no)
-
-        kl.copy_dive(ifile, dive_no, lfile)
+        r, f = args.input
+        kl.copy_dives(f, r, args.logbook)
 
 
 

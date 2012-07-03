@@ -223,15 +223,17 @@ def upgrade_file(fin):
     return doc
 
 
-def copy_dive(nodes, lfile):
+def copy_dives(files, nodes, lfile):
     """
     Copy dive nodes to logbook file.
 
     The logbook file is created if it does not exist.
 
     :Parameters:
+     files
+        Collection of files.
      nodes
-        Collection of dive nodes.
+        Collection of dive ranges.
      lfile
         Logbook file.
     """
@@ -240,38 +242,32 @@ def copy_dive(nodes, lfile):
     else:
         doc = ku.create()
 
+    dives = find_dive_nodes(files, nodes)
+    gases = find_dive_gas_nodes(files, nodes)
+
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
             parent=doc)
+    gn = ku.xp_first(doc, 'uddf:gasdefinitions')
+    if gn is None:
+        *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
 
-    for n in nodes:
-        copy_gases(fin, dive_no, doc)
-        dive = ku.copy(dive, rg)
-        if dive is None:
-            log.debug('dive {} already exists, not copied'.format(dive_no))
+    with ku.NodeCopier(doc) as nc:
+        copied = False
+        for n in gases:
+            copied = nc.copy(n, gn) is not None or copied
+        if not copied:
+            p = gn.getparent()
+            p.remove(gn)
 
-    ku.reorder(doc)
-    ku.save(doc, lfile)
+        copied = False
+        for n in dives:
+            copied = nc.copy(n, rg) is not None or copied
 
+        if copied:
+            ku.reorder(doc)
+            ku.save(doc, lfile)
+        else:
+            log.debug('no dives copied')
 
-def copy_gases(fin, dive_no, doc):
-    """
-    Copy gases used during a dive from input file to UDDF document.
-
-    :Parameters:
-     fin
-        Input file.
-     dive_no
-        Number of a dive within input file.
-     doc
-        Target UDDF document.
-    """
-    q = ku.XPath('//uddf:gasdefinitions/uddf:mix[@id=//uddf:dive[position()=$no]//uddf:switchmix/@ref]')
-    mixes = list(ku.find(fin, q, no=dive_no))
-    if mixes:
-        gn = ku.xp_first(doc, '//uddf:gasdefinitions')
-        if gn is None:
-            *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
-        for m in mixes:
-            ku.copy(m, gn)
 
 # vim: sw=4:et:ai

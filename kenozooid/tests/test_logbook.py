@@ -148,7 +148,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         Test copying dive
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(self.fin, 1, fl)
+
+        kl.copy_dives([self.fin], ['1'], fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -167,8 +168,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         Test copying existing dive
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dive(self.fin, 1, fl)
-        kl.copy_dive(self.fin, 1, fl) # try to duplicate
+        kl.copy_dives([self.fin], ['1'], fl)
+        kl.copy_dives([self.fin], ['1'], fl) # try to duplicate
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -226,12 +227,25 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
 
-        kl.copy_dive(self.fin, 1, fl)
+        kl.copy_dives([self.fin], ['1'], fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
         self.assertEquals(('air', 'ean39'),
                 tuple(ku.xp(dn, './/uddf:switchmix/@ref')))
+
+
+    def test_dive_copy_with_no_gases(self):
+        """
+        Test copying dives having no gas data
+        """
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+
+        kl.copy_dives([self.fin], ['2'], fl)
+        nodes = ku.find(fl, '//uddf:dive')
+
+        dn = next(nodes)
+        self.assertEquals([], list(ku.xp(dn, './/uddf:switchmix/@ref')))
 
 
 
