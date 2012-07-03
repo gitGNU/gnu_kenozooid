@@ -182,8 +182,9 @@ XP_FIND_DIVES = XPath('/uddf:uddf/uddf:profiledata' \
 
 # XPath query to find dive gases
 XP_FIND_DIVE_GASES = XPath('/uddf:uddf/uddf:gasdefinitions' \
-    '/uddf:mix[@id=//uddf:dive[in-range(position(), $nodes)]' \
-    '//uddf:switchmix/@ref]')
+    '/uddf:mix[@id=/uddf:uddf/uddf:profiledata/uddf:repetitiongroup' \
+    '/uddf:dive[in-range(position(), $nodes)]' \
+    '/uddf:samples/uddf:waypoint/uddf:switchmix/@ref]')
 
 
 class RangeError(ValueError):
