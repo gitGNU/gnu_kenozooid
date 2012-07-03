@@ -29,6 +29,7 @@ import unittest
 
 import kenozooid.logbook as kl
 import kenozooid.uddf as ku
+import kenozooid.data as kd
 
 class IntegrationTestCaseBase(unittest.TestCase):
     """
@@ -58,7 +59,10 @@ class DiveAddingIntegrationTestCase(IntegrationTestCaseBase):
         Test adding dive with time, depth and duration
         """
         f = '{}/dive_add.uddf'.format(self.tdir)
-        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f)
+
+        d = kd.Dive(datetime=datetime(2010, 1, 2, 5, 7), depth=33.0,
+                duration=3540)
+        kl.add_dive(d, f)
         nodes = ku.find(f, '//uddf:dive')
 
         dn = next(nodes)
@@ -82,7 +86,9 @@ class DiveAddingIntegrationTestCase(IntegrationTestCaseBase):
         ku.create_site_data(doc, id='s1', location='L1', name='N1')
         ku.save(doc, f)
 
-        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f, qsite='s1')
+        d = kd.Dive(datetime=datetime(2010, 1, 2, 5, 7), depth=33.0,
+                duration=3102)
+        kl.add_dive(d, f, qsite='s1')
 
         nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
@@ -99,8 +105,9 @@ class DiveAddingIntegrationTestCase(IntegrationTestCaseBase):
         ku.create_buddy_data(doc, id='b1', fname='F', lname='N');
         ku.save(doc, f)
 
-        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f,
-                qbuddies=['b1'])
+        d = kd.Dive(datetime=datetime(2010, 1, 2, 5, 7), depth=33.0,
+                duration=3540)
+        kl.add_dive(d, f, qbuddies=['b1'])
 
         nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
@@ -118,8 +125,9 @@ class DiveAddingIntegrationTestCase(IntegrationTestCaseBase):
         ku.create_buddy_data(doc, id='b2', fname='F', lname='N');
         ku.save(doc, f)
 
-        kl.add_dive(datetime(2010, 1, 2, 5, 7), 33.0, 59, f,
-                qbuddies=['b1', 'b2'])
+        d = kd.Dive(datetime=datetime(2010, 1, 2, 5, 7), depth=33.0,
+                duration=5901)
+        kl.add_dive(d, f, qbuddies=['b1', 'b2'])
 
         nodes = ku.find(f, '//uddf:dive')
         dn = next(nodes)
@@ -246,29 +254,6 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
 
         dn = next(nodes)
         self.assertEquals([], list(ku.xp(dn, './/uddf:switchmix/@ref')))
-
-
-
-class GasesCopyingIntegrationTestCase(IntegrationTestCaseBase):
-    """
-    Gases copying tests.
-    """
-    def test_copying_gases(self):
-        """
-        """
-        import kenozooid.tests.test_uddf as ktu
-        fin = '{}/dive_copy_in.uddf'.format(self.tdir)
-        f = open(fin, 'wb')
-        f.write(ktu.UDDF_PROFILE)
-        f.close()
-
-        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        doc = ku.create()
-        kl.copy_gases(fin, 1, doc)
-        ku.save(doc, fl)
-
-        self.assertEquals(('air', 'ean39'), tuple(ku.find(fl,
-            '//uddf:mix/@id')))
 
 
 
