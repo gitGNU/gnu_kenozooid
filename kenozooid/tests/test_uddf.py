@@ -92,6 +92,7 @@ UDDF_PROFILE = b"""\
   </gasdefinitions>
   <profiledata>
     <repetitiongroup>
+      <!-- this dive has to have gas switching -->
       <dive id='d01'>
         <informationbeforedive>
             <datetime>2009-09-19T13:10:23</datetime>
@@ -124,6 +125,7 @@ UDDF_PROFILE = b"""\
             <averagedepth>10.1</averagedepth>
         </informationafterdive>
       </dive>
+      <!-- this dive shall have not gas switching -->
       <dive id='d02'>
         <informationbeforedive>
             <datetime>2010-10-30T13:24:43</datetime>
