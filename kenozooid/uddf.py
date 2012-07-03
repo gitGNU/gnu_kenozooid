@@ -1250,63 +1250,97 @@ def reorder(doc):
         rg.append(n)
 
 
-def copy(node, target):
+class NodeCopier(object):
     """
-    Copy node from UDDF document to target node in destination UDDF
-    document. Target node becomes parent of node to be copied.
+    UDDF dcument node copier.
 
-    The copying works under following assumptions
+    See :py:func:`NodeCopier.copy` for details.
 
-    - whole node is being copied including its descendants
-    - node is not copied if it has id and id already exists in the target
-    - if copied nodes reference non-descendant nodes and they do _not_
-      exist in destination document, then referencing nodes are _removed_
-    - if, due to node removal, its parent node becomes empty, then parent
-      is removed, too
-
-    Copy of the node is returned.
-
-    :Parameters:
-     node
-        Node to copy.
-     target
-        The future parent of the node to be copied.
+    :Attributes:
+     doc
+        The target document.
+     doc_ids
+        The cache of target document ids.
     """
-    cn = deepcopy(node)
+    def __init__(self, doc):
+        """
+        Initialize node copier.
+        """
+        self.doc = doc
+        self.doc_ids = set(xp(doc, '//uddf:*/@id'))
 
-    # get all ids
-    s1 = set(xp(target, '//uddf:*/@id'))
-    s2 = set(xp(cn, 'descendant-or-self::uddf:*/@id'))
-    ids = s1.union(s2)
 
-    nid = cn.get('id')
-    if nid and nid in s1:
-        log.warn('id {} already exists, not copying'.format(nid))
-        return
+    def __enter__(self):
+        """
+        Create UDDF node copier context manager.
+        """
+        return self
 
-    # get referencing nodes
-    nodes = list(xp(cn, 'descendant-or-self::uddf:*[@ref]'))
-    refs = set(k.get('ref') for k in nodes)
 
-    left = refs - ids
-    log.debug('references to remove: {} = {} - {}'.format(left, refs, ids))
+    def __exit__(self, *args):
+        """
+        Close UDDF node copier context manager.
+        """
+        pass
 
-    if cn.get('ref') in left:
-        raise ValueError('Node to copy references non-existing node')
 
-    # remove referencing nodes to missing data
-    to_remove = (n for n in nodes if n.get('ref') in left)
-    assert cn.getparent() is None
-    for n in to_remove:
-        p = n.getparent()
-        while p is not None and len(p) == 1:
-            n = p
+    def copy(self, node, target):
+        """
+        Copy node from UDDF document to target node in destination UDDF
+        document. Target node becomes parent of node to be copied.
+
+        The copying works under following assumptions
+
+        - whole node is being copied including its descendants
+        - node is not copied if it has id and id already exists in the target
+        - if copied nodes reference non-descendant nodes and they do _not_
+          exist in destination document, then referencing nodes are _removed_
+        - if, due to node removal, its parent node becomes empty, then parent
+          is removed, too
+
+        Copy of the node is returned.
+
+        :Parameters:
+         node
+            Node to copy.
+         target
+            The future parent of the copied node.
+        """
+        cn = deepcopy(node)
+
+        cn_id = cn.get('id')
+        if cn_id in self.doc_ids:
+            log.debug('id {} already exists, not copying'.format(cn_id))
+            return None
+
+        s_ids = set(xp(cn, 'descendant-or-self::uddf:*/@id'))
+        self.doc_ids.update(s_ids)
+
+        # get referencing nodes
+        nodes = list(xp(cn, 'descendant-or-self::uddf:*[@ref]'))
+        refs = set(k.get('ref') for k in nodes)
+
+        left = refs - self.doc_ids
+        if __debug__:
+            log.debug('references to remove: {} = {} - {}'.format(left,
+                refs, self.doc_ids))
+
+        if cn.get('ref') in left:
+            raise ValueError('Node to copy references non-existing node')
+
+        # remove nodes referencing missing data
+        to_remove = (n for n in nodes if n.get('ref') in left)
+        assert cn.getparent() is None
+        for n in to_remove:
             p = n.getparent()
-        if p is not None:
-            p.remove(n)
+            while p is not None and len(p) == 1:
+                n = p
+                p = n.getparent()
+            if p is not None:
+                p.remove(n)
 
-    target.append(cn)
-    return cn
+        target.append(cn)
+        return cn
 
 
 def _set_id(node):

@@ -1185,8 +1185,49 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        r = ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            r = nc.copy(a, c)
         self.assertEquals('{http://www.streit.cc/uddf/3.1/}a1', r.tag)
+
+        n = ku.xp_first(t, '//uddf:a1')
+        self.assertTrue(n is not None)
+        self.assertEquals(2, len(n))
+
+
+    def test_duplicate_copy(self):
+        """
+        Test duplicate UDDF node copy
+        """
+        SOURCE = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+    <a1 id = 'id_1'>
+        <a2/>
+        <a2/>
+    </a1>
+    <b1>
+        <b2/>
+    </b1>
+</uddf>
+"""
+        TARGET = b"""\
+<?xml version="1.0" encoding="utf-8"?>
+<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+    <c/>
+</uddf>
+"""
+        s = BytesIO(SOURCE)
+        a, *_ = ku.find(s, '//uddf:a1')
+
+        t = et.XML(TARGET)
+        c = ku.xp_first(t, '//uddf:c')
+
+        with ku.NodeCopier(t) as nc:
+            r = nc.copy(a, c)
+            self.assertEquals('{http://www.streit.cc/uddf/3.1/}a1', r.tag)
+
+            # copy once again the same node
+            self.assertTrue(nc.copy(a, c) is None)
 
         n = ku.xp_first(t, '//uddf:a1')
         self.assertTrue(n is not None)
@@ -1221,7 +1262,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
 
         n = ku.xp_first(t, '//uddf:a1')
         self.assertTrue(n is not None)
@@ -1259,7 +1301,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
         sd = et.tostring(t, pretty_print=True)
 
         n = ku.xp_first(t, '//uddf:a1')
@@ -1298,7 +1341,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
 
         n = ku.xp_first(t, '//uddf:a1')
         self.assertTrue(n is not None)
@@ -1336,7 +1380,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
         sd = et.tostring(t, pretty_print=True)
 
         n = ku.xp_first(t, '//uddf:a1')
@@ -1379,7 +1424,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
         sd = et.tostring(t, pretty_print=True)
 
         # a2 nodes are removed
@@ -1427,7 +1473,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
         sd = et.tostring(t, pretty_print=True)
 
         # a2 nodes are removed
@@ -1469,7 +1516,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        self.assertRaises(ValueError, ku.copy, a, c)
+        with ku.NodeCopier(t) as nc:
+            self.assertRaises(ValueError, nc.copy, a, c)
         self.assertTrue(ku.xp_first(t, '//uddf:c') is not None)
 
 
@@ -1500,7 +1548,8 @@ class NodeCopyTestCase(unittest.TestCase):
         t = et.XML(TARGET)
         c = ku.xp_first(t, '//uddf:c')
 
-        ku.copy(a, c)
+        with ku.NodeCopier(t) as nc:
+            nc.copy(a, c)
 
         ids = tuple(ku.xp(c, 'descendant-or-self::uddf:*/@id'))
         self.assertEquals(('id-a1',), ids)
