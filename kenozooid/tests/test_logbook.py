@@ -256,6 +256,25 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         self.assertEquals([], list(ku.xp(dn, './/uddf:switchmix/@ref')))
 
 
+    def test_dive_copy_gases_retain(self):
+        """
+        Test copying dives with no gas data to existing logbook
+        """
+        fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
+
+        kl.copy_dives([self.fin], ['1'], fl) # copy gases in
+        kl.copy_dives([self.fin], ['2'], fl) # copy no gases
+
+        nodes = ku.find(fl, '//uddf:dive')
+        dn = next(nodes) # 1st dive shall have gases
+        self.assertEquals(('air', 'ean39'),
+                tuple(ku.xp(dn, './/uddf:switchmix/@ref')))
+
+        # gas definition section shall be intact
+        nodes = ku.find(fl, '//uddf:gasdefinitions')
+        self.assertTrue(next(nodes) is not None)
+
+
 
 class DiveFindingTestCase(unittest.TestCase):
     """

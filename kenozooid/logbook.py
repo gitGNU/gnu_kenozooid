@@ -248,14 +248,15 @@ def copy_dives(files, nodes, lfile):
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
             parent=doc)
     gn = ku.xp_first(doc, 'uddf:gasdefinitions')
-    if gn is None:
+    existing = gn is not None
+    if not existing:
         *_, gn = ku.create_node('uddf:gasdefinitions', parent=doc)
 
     with ku.NodeCopier(doc) as nc:
         copied = False
         for n in gases:
             copied = nc.copy(n, gn) is not None or copied
-        if not copied:
+        if not existing and not copied:
             p = gn.getparent()
             p.remove(gn)
 
