@@ -142,7 +142,7 @@ for (i in 1:nrow(kz.dives)) {
     if (!is.na(dive.info_avg_depth)) {
         duration = dive$duration / 60.0
         lines(c(0, duration), c(dive$avg_depth, dive$avg_depth),
-                col='green')
+                col=rgb(0, 1, 0, 0.4))
         text(duration, dive$avg_depth, dive.info_avg_depth, cex=0.6,
             font=2, pos=4, offset=0.1)
     }
