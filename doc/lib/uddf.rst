@@ -16,8 +16,9 @@ XML Nodes Parsing, Searching and Manipulation
 .. autofunction:: create_node
 .. set_data -> create_data
 .. autofunction:: set_data
-.. autofunction:: copy
 .. autofunction:: save
+.. autoclass:: NodeCopier
+    :members:
 
 Generic Data Access and Manipulation
 ------------------------------------
