@@ -312,5 +312,21 @@ class ParserTestCase(unittest.TestCase):
         self.assertRaises(ValueError, tuple, dive_data)
 
 
+    def test_date_bug(self):
+        """
+        Test OSTC date bug
+        """
+        data = tuple(ostc_parser.profiles(ku._dump_decode(od.DATA_OSTC_DATE_BUG)))
+        d1 = data[16]
+        d2 = data[17]
+
+        # dive 17 and 18 - incorrect month information
+        header = ostc_parser.header(d1[0])
+        self.assertEquals(1, header.month)
+
+        header = ostc_parser.header(d2[0])
+        self.assertEquals(1, header.month)
+
+
 
 # vim: sw=4:et:ai
