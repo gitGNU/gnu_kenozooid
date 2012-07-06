@@ -5,6 +5,7 @@
 ./bin/kz plot --mod --info --avg-depth -k 11 dumps/ostc-dump-30.uddf rebreather-dive.png
 ./bin/kz plot --mod --info --avg-depth -k 17 dumps/ostc-dump-35.uddf mod-violation.png
 ./bin/kz plot --mod --info --avg-depth -k 1 dumps/ostc-dump-24.uddf guidme-ii.png
+./bin/kz plot --mod --info --avg-depth -k 48 dumps/ostc-dump-42.uddf argo-delos.png
 ./bin/kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -k 15 dumps/ostc-dump-09.uddf -k 16 dumps/ostc-dump-16.uddf divemode-compare.png
 
 # end
