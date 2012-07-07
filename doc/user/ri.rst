@@ -37,12 +37,12 @@ platform (Windows, Mac OS X).
 | libdivecomputer |          | library     |                          | required by Sensus Ultra   |
 |                 |          |             |                          | driver                     |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| R               |  2.13.0  | R scripts   | Arch, Debian Wheezy,     | plotting and dive data     |
+| R               |  2.15.0  | R scripts   | Arch, Debian Wheezy,     | plotting and dive data     |
 |                 |          | execution   | Fedora 15, Mac OS X,     | analysis                   |
 |                 |          | environment | PLD Linux, Ubuntu Natty, |                            |
 |                 |          |             | Windows                  |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| rpy             |  2.2.1   | Python      | PLD Linux                | used to communicate with R |
+| rpy             |  2.2.5   | Python      | PLD Linux                | used to communicate with R |
 |                 |          | module      |                          |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | Hmisc           |          | R package   |                          | used for plotting          |
