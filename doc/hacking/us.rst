@@ -158,11 +158,8 @@ Optionally, diver can specify
 
 Copy Dive Data
 ^^^^^^^^^^^^^^
-The diver adds a dive by copying dive computer data to dive logbook.
-
-The dive data is extracted from dive computer data (i.e. dive duration,
-maximum depth, temperature, profile data) and some is provided by diver
-(i.e. buddy). See :ref:`hk-us-adddive` for list of dive data.
+The diver copies dive from dive data backup or dive logbook to another
+dive logbook.
 
 List Dives
 ^^^^^^^^^^

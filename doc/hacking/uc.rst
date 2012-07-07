@@ -129,19 +129,19 @@ Plot Dive Data
 --------------
 **User Story**: :ref:`hk-us-plot-dive-details`, :ref:`hk-us-plot-dive-cmp`
 
-**Pre**: files with dive data exist and dives to plot exist
+**Pre**: input files exist
 
-**Input**: names of files with dive data, dives to analyze
+**Input**: input file names, dives to plot, output file name
 
-**Output**: output file name
+**Output**: dive data graphs
 
 The use case reuses :ref:`hk-uc-analysis` use case. Appropriate R script
 is used for different types of plots described by user stories.
 
 The extension of output file name defines the format of the output file.
 
-Plan Dive
----------
+Dive Planning
+-------------
 
 Calculate
 ^^^^^^^^^
@@ -187,49 +187,71 @@ Manage Logbook
 
 Add Dive
 ^^^^^^^^
-**Input:** dive data (date, maximum depth, duration) or dive profile in
-profile file, logbook file; optional dive data (time of dive, minimum
-temperature, buddy, dive site)
+**Input:** dive data, logbook file name, optional dive data
+**Output:** dive in logbook file
 
-The use case is about storing dive information in dive logbook - while dive data
-like duration or maximum depth is extracted (or calculated) from some dive
-profile (i.e. contained in dive computer backup file), then the types of data
-being copied is strictly limited below. Data copying functionality could be
-provided by other use case (if ever).
+Dive data is
 
-Data, which can be extracted (calculated) from dive profile
-
-- date and time of dive
+- date
 - maximum depth
 - duration
+
+Optional dive data is
+
+- time of dive
 - minimum temperature
-- information about dive computer used to obtain dive profile
-
-Data, which *cannot* be extracted from dive profile
-
 - buddy
 - dive site
 
-+-----------+--------------+----------------------------------------------------+
-| Diver     | UI           | Logbook                                            |
-+===========+==============+====================================================+
-| Add dive. | Verify input | Open logbook file (create if necessary).           |
-|           | parameters.  |                                                    |
-|           |              | If dive profile provided, then extract appropriate |
-|           |              | dive data from dive profile.                       |
-|           |              |                                                    |
-|           |              | Insert dive data into logbook file.                |
-|           |              |                                                    |
-|           |              | If dive profile provided, then insert into logbook |
-|           |              | file.                                              |
-|           |              |                                                    |
-|           |              | - dive profile data                                |
-|           |              | - used dive computer information if available      |
-|           |              |                                                    |
-|           |              | Reorder dives.                                     |
-|           |              |                                                    |
-|           |              | Save logbook file.                                 |
-+-----------+--------------+----------------------------------------------------+
++-----------+--------------+--------------------------------------------------+
+| Diver     | UI           | Logbook                                          |
++===========+==============+==================================================+
+| Add dive. | Verify input | Open logbook file (create if necessary).         |
+|           | parameters.  |                                                  |
+|           |              | Insert dive data and optional dive data into     |
+|           |              | logbook file.                                    |
+|           |              |                                                  |
+|           |              | Reorder dives.                                   |
+|           |              |                                                  |
+|           |              | Save logbook file.                               |
++-----------+--------------+--------------------------------------------------+
+
+Copy Dive
+^^^^^^^^^
+**Pre**: input files exist
+
+**Input**: input file names, dives to copy, logbook file name
+
+**Output**: dives in logbook file
+
+Dive data is copied from input files to logbook file.
+
+The dive data contains links to additional data like gas information, used
+equipment, dive buddies data or dive site information.
+
+The additional linked data, if does not exist, has to be copied into
+logbook file as well
+
+- gas information
+- (more in the future)
+
+Exceptions
+
+#. If no dives copied, then do not save logbook file.
+
++-------------+--------------+-----------------------------------------------+
+| Diver       | UI           | Logbook                                       |
++=============+==============+===============================================+
+| Copy dives. | Verify input | Open logbook file (create if necessary).      |
+|             | parameters.  |                                               |
+|             |              | Find and copy gases used by dives.            |
+|             |              |                                               |
+|             |              | Find and copy dives.                          |
+|             |              |                                               |
+|             |              | Reorder dives.                                |
+|             |              |                                               |
+|             |              | Save logbook file.                            |
++-------------+--------------+-----------------------------------------------+
 
 Upgrade File Format Version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
