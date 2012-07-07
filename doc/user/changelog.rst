@@ -2,7 +2,9 @@ Changelog
 =========
 Kenozooid 0.10.0
 ----------------
-- copy gases information when copying dives
+- enable to copy multiple dives
+- copy gas mixes information when copying dives
+- average depth line on dive details plot is less distracting
 
 Kenozooid 0.9.0
 ---------------
