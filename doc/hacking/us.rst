@@ -156,8 +156,8 @@ Optionally, diver can specify
 
 .. _hk-us-copydive:
 
-Copy Dive Data
-^^^^^^^^^^^^^^
+Copy Dives
+^^^^^^^^^^
 The diver copies dive from dive data backup or dive logbook to another
 dive logbook.
 

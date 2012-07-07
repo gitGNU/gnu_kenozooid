@@ -216,8 +216,8 @@ Optional dive data is
 |           |              | Save logbook file.                               |
 +-----------+--------------+--------------------------------------------------+
 
-Copy Dive
-^^^^^^^^^
+Copy Dives
+^^^^^^^^^^
 **Pre**: input files exist
 
 **Input**: input file names, dives to copy, logbook file name

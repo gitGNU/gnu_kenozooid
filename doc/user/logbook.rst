@@ -120,7 +120,6 @@ and ``site add`` commands.
 To add a dive site to a logbook file::
 
     $ kz site add bath Bathroom Bath logbook.uddf
-
     $ kz site list logbook.uddf      
     examples/logbook.uddf:
        1: sckg       Scapa Flow           SMS Konig           
@@ -148,39 +147,32 @@ If logbook file (``logbook.uddf`` above) does not exist, then it is created
 by Kenozooid. Before adding data to a file, Kenozooid creates backup file
 with ``.bak`` extension, i.e. ``logbook.uddf.bak``.
 
-Adding Dives
-------------
+Adding and Copying Dives
+------------------------
 Kenozooid supports two modes of adding dives into logbook file
 
 - adding basic dive data (date and time of dive, maximum depth, dive duration)
-- copying dive data from another file (i.e. dive computer backup file)
+- copying dive data from another file (i.e. from dive computer backup file)
 
-To add a dive with basic data use ``dive add`` command::
+To add a dive use ``dive add`` command::
 
-    kz dive add '2011-10-12 13:14' 32.5 51 logbook.uddf                              
-    kz dive list logbook.uddf
+    $ kz dive add '2011-10-12 13:14' 32.5 51 logbook.uddf                              
+    $ kz dive list logbook.uddf
     logbook.uddf:
         1: 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
         2: 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
         3: 2011-10-12 13:14     32.5m ( --- )     51:00 
 
 
-To copy dive from another file use ``dive copy`` command. For example, to
+To copy dives from a file use ``dive copy`` command. For example, to
 add 4th dive from dive computer backup file to logbook file::
 
-    $ kz dive copy 4 backup-ostc-20110728.uddf logbook.uddf
-
+    $ kz dive copy -k 4 backup-ostc-20110728.uddf logbook.uddf
     $ kz dive list logbook.uddf
     logbook.uddf:
         1: 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
         2: 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
         3: 2011-06-26 12:56     85.0m (24.4m)    104:42     5.5°C
-
-Copying a dive and adding dive site and buddy data at the same time is also
-supported. For example, to copy a dive with ``Ireland's Eye`` dive site and
-buddies ``Johnny Neurosis`` and ``John Koval``::
-
-    $ kz dive copy 4 backup-ostc-20110728.uddf -s hie -b jn jk -- logbook.uddf
 
 Removing Data
 -------------
@@ -190,7 +182,6 @@ commands. Identify buddy or dive site to be removed with its id.
 For example, to remove ``John Froggy`` buddy::
 
     $ kz buddy del frog logbook.uddf
-
     $ kz buddy list logbook.uddf
     logbook.uddf:
        1: tcora      Tom        Cora                 PADI  1374       
@@ -202,7 +193,6 @@ For example, to remove ``John Froggy`` buddy::
 To remove ``Bathroom`` dive site::
 
     $ kz site del bath logbook.uddf
-
     $ kz site list logbook.uddf
     logbook.uddf:
        1: sckg       Scapa Flow           SMS Konig           
