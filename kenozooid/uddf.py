@@ -126,7 +126,7 @@ XP_DEFAULT_GAS_DATA =  (
 )
 
 # XPath query to locate dive profile sample
-XP_WAYPOINT = XPath('.//uddf:waypoint')
+XP_WAYPOINT = XPath('./uddf:samples/uddf:waypoint')
 # XPath query to locate gas mix
 XP_MIX = XPath('/uddf:uddf/uddf:gasdefinitions/uddf:mix')
 
@@ -1230,8 +1230,10 @@ def reorder(doc):
         raise ValueError('No profile data to reorder')
     pd = profiles[0]
 
-    nodes = find('//uddf:dive')
-    times = find('//uddf:dive/uddf:informationbeforedive/uddf:datetime/text()')
+    q = '/uddf:uddf/uddf:profiledata/uddf:repetitiongroup/uddf:dive'
+    qt = q + '/uddf:informationbeforedive/uddf:datetime/text()'
+    nodes = find(q)
+    times = find(qt)
 
     dives = {}
     for n, t in zip(nodes, times):
