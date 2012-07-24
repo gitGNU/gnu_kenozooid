@@ -173,6 +173,17 @@ The dives output can be limited with
 - buddy
 - dive site
 
+.. _hk-us-enumdives:
+
+Enumerate Dives
+^^^^^^^^^^^^^^^
+The diver enumerates dives in dive logbook.
+
+The dives are enumerated in two ways
+
+- total dive number
+- day dive number
+
 Dive Date Query
 """""""""""""""
 Dive date query should allow to specify
