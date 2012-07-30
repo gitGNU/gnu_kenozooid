@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.11.0
+----------------
+- enable to enumerate dives
+
 Kenozooid 0.10.0
 ----------------
 - enable to copy multiple dives
