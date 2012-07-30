@@ -283,4 +283,28 @@ This way, multiple file format versions updating can be supported.
 |                    |                      | Save file.                 |
 +--------------------+----------------------+----------------------------+
 
+
+Enumerate Dives
+^^^^^^^^^^^^^^^
+**Pre**: input files exist
+
+**Input:** list of input files with dive data
+
+Dives are enumerated in the input files. The dives and files might be
+unordered, but order of dives having the same date and time has to be
+respected. 
+
++-------------+--------------+----------------------------------+
+| Diver       | UI           | Logbook                          |
++=============+==============+==================================+
+| Enumerate   | Verify input | Sort (in-place) all dives from   |
+| dives.      | parameters.  | all files and assign total and   |
+|             |              | day dive numbers.                |
+|             |              |                                  |
+|             |              | Assign total and day dive number |
+|             |              | to each dive.                    |
+|             |              |                                  |
+|             |              | Save files.                      |
++-------------+--------------+----------------------------------+
+
 .. vim: sw=4:et:ai
