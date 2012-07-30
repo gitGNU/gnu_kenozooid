@@ -66,7 +66,7 @@ class ListDives(object):
         """
         parser.add_argument('input',
                 nargs='+',
-                help='UDDF file with dive profiles')
+                help='UDDF files with dive data')
 
 
     def __call__(self, args):
@@ -238,7 +238,7 @@ class ListDiveSites(object):
                     ' site name')
         parser.add_argument('input',
                 nargs='+',
-                help='UDDF file with dive sites')
+                help='UDDF files with dive sites')
 
 
     def __call__(self, args):
@@ -470,6 +470,32 @@ class UpgradeFile(object):
             except Exception as ex:
                 print('Cannot upgrade file {}'.format(fin), file=sys.stderr)
                 print('Error: {}'.format(ex))
+
+
+
+@inject(CLIModule, name='dive enum')
+class EnumDives(object):
+    """
+    Enumerate dives.
+    """
+    description = 'enumerate dives'
+
+    @classmethod
+    def add_arguments(self, parser):
+        """
+        Add options for dive enumeration.
+        """
+        parser.add_argument('input',
+                nargs='+',
+                help='UDDF files with dive data')
+
+
+    def __call__(self, args):
+        """
+        Execute command to enumerate dives.
+        """
+        import kenozooid.uddf as ku
+        import kenozooid.logbook as kl
 
 
 
