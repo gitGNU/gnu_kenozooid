@@ -439,7 +439,7 @@ class DelBuddy(object):
 
 
 @inject(CLIModule, name='upgrade')
-class DelBuddy(object):
+class UpgradeFile(object):
     """
     Upgrade a file to newer version of UDDF.
     """

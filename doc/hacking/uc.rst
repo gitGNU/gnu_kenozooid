@@ -259,11 +259,9 @@ Upgrade File Format Version
 **Pre:** input file exists and is valid file for previous version of file
 format
 
-**Output:** output file is valid file for new version of file format
+**Post:** input file is valid file for new version of file format
 
-**Input:** input file with dive data
-
-**Output:** output file with dive data
+**Input:** list of input files with dive data
 
 The use case is about upgrading UDDF files to new version of the standard.
 
@@ -281,8 +279,8 @@ This way, multiple file format versions updating can be supported.
 | Start upgrading.   | Verify input         | Find upgrade path.         |
 |                    | parameters.          |                            |
 |                    |                      | Upgrade file.              |
-|                    | Rename input file as |                            |
-|                    | backup file.         | Save file.                 |
+|                    |                      |                            |
+|                    |                      | Save file.                 |
 +--------------------+----------------------+----------------------------+
 
 .. vim: sw=4:et:ai
