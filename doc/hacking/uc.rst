@@ -292,19 +292,19 @@ Enumerate Dives
 
 Dives are enumerated in the input files. The dives and files might be
 unordered, but order of dives having the same date and time has to be
-respected. 
+respected, so use stable sort.
 
-+-------------+--------------+----------------------------------+
-| Diver       | UI           | Logbook                          |
-+=============+==============+==================================+
-| Enumerate   | Verify input | Sort (in-place) all dives from   |
-| dives.      | parameters.  | all files and assign total and   |
-|             |              | day dive numbers.                |
-|             |              |                                  |
-|             |              | Assign total and day dive number |
-|             |              | to each dive.                    |
-|             |              |                                  |
-|             |              | Save files.                      |
-+-------------+--------------+----------------------------------+
++-------------+--------------+-----------------------------------+
+| Diver       | UI           | Logbook                           |
++=============+==============+===================================+
+| Enumerate   | Verify input | Sort all dives from all files and |
+| dives.      | parameters.  | and assign total and day dive     |
+|             |              | numbers.                          |
+|             |              |                                   |
+|             |              | Assign total and day dive number  |
+|             |              | to each dive.                     |
+|             |              |                                   |
+|             |              | Save files.                       |
++-------------+--------------+-----------------------------------+
 
 .. vim: sw=4:et:ai
