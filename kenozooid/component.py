@@ -23,6 +23,7 @@ mechanism.
 """
 
 import itertools
+ichain = itertools.chain.from_iterable
 import logging
 
 log = logging.getLogger('kenozooid.component')
@@ -76,7 +77,7 @@ def query(iface=None, **params):
     Look for class implementing specified interface.
     """
     if iface is None:
-        data = itertools.chain(*_registry.values())
+        data = ichain(_registry.values())
     elif iface in _registry:
         data = _registry[iface]
     else:
@@ -94,7 +95,9 @@ def params(cls):
      cls
         Class realizing component.
     """
-    for c, p in itertools.chain(*_registry.values()):
+    for c, p in ichain(_registry.values()):
         if c == cls:
             return p
 
+
+# vim: sw=4:et:ai

@@ -27,6 +27,7 @@ import lxml.etree as et
 import os.path
 import logging
 import itertools
+ichain = itertools.chain.from_iterable
 from itertools import zip_longest as lzip
 import pkg_resources
 
@@ -56,7 +57,7 @@ def find_dive_nodes(files, nodes=None):
     nodes = [] if nodes is None else nodes
     data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
         for q, f in lzip(nodes, files))
-    return itertools.chain(*data)
+    return ichain(data)
 
 
 def find_dive_gas_nodes(files, nodes=None):
@@ -77,7 +78,7 @@ def find_dive_gas_nodes(files, nodes=None):
     nodes = [] if nodes is None else nodes
     data = (ku.find(f, ku.XP_FIND_DIVE_GASES, nodes=q) \
         for q, f in lzip(nodes, files))
-    nodes_by_id = ((n.get('id'), n) for n in itertools.chain(*data))
+    nodes_by_id = ((n.get('id'), n) for n in ichain(data))
     return dict(nodes_by_id).values()
 
 
