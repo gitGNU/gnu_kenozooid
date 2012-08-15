@@ -30,6 +30,7 @@ import unittest
 import kenozooid.logbook as kl
 import kenozooid.uddf as ku
 import kenozooid.data as kd
+import kenozooid.tests.test_uddf as ktu
 
 class IntegrationTestCaseBase(unittest.TestCase):
     """
@@ -144,7 +145,6 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         Prepare input file.
         """
         super().setUp()
-        import kenozooid.tests.test_uddf as ktu
         fin = self.fin = '{}/dive_copy_in.uddf'.format(self.tdir)
         f = open(fin, 'wb')
         f.write(ktu.UDDF_PROFILE)
@@ -305,6 +305,48 @@ class DiveFindingTestCase(unittest.TestCase):
         """
         nodes = list(kl.find_dive_nodes([self.f1, self.f2, self.f3], ['1-2']))
         self.assertEquals(8, len(nodes))
+
+
+
+class DiveEnumIntegrationTestCase(IntegrationTestCaseBase):
+    """
+    Dive enumeration integration tests.
+    """
+    def setUp(self):
+        """
+        Prepare input file.
+        """
+        super().setUp()
+        fin = self.fin = '{}/dive_enum_in.uddf'.format(self.tdir)
+        f = open(fin, 'wb')
+        f.write(ktu.UDDF_PROFILE)
+        f.close()
+
+
+    def test_dive_enum(self):
+        """
+        Test enumerating dives
+        """
+        kl.enum_dives([self.fin])
+        r = ku.find(self.fin, '//uddf:dive//uddf:divenumber/text()')
+        self.assertEquals(['1', '2', '3'], list(r))
+
+
+    def test_dive_reenum(self):
+        """
+        Test re-enumerating dives
+        """
+        kl.enum_dives([self.fin])
+
+        r = ku.find(self.fin, '//uddf:dive//uddf:divenumber/text()')
+        assert ['1', '2', '3'] == list(r)
+
+        d = kd.Dive(datetime=datetime(2010, 1, 2, 5, 7), depth=33.0,
+                duration=3540)
+        kl.add_dive(d, self.fin)
+        kl.enum_dives([self.fin]) # re-enumerate
+        r = ku.find(self.fin, '//uddf:dive//uddf:divenumber/text()')
+        self.assertEquals(['1', '2', '3', '4'], list(r))
 
 
 # vim: sw=4:et:ai

@@ -306,14 +306,17 @@ def enum_dives(files, total=1):
     cache = dict(((v[0], v[1]), (n, k)) for n, (k, v) in enumerate(data, total))
 
     # update data
-    FIND_DN = 'uddf:informationbeforedive/uddf:divenumber'
     for f in files:
         doc = ku.parse(f)
         for n in ku.XP_FIND_DIVES(doc, nodes=None):
             id = n.get('id')
-            dnn = ku.xp_first(n, FIND_DN)
+            dnn = ku.xp_first(n, 'uddf:informationbeforedive/uddf:divenumber')
             if dnn is None:
-                *_, dnn = ku.create_node(FIND_DN, parent=n)
+                pn = ku.xp_first(n, 'uddf:informationbeforedive/uddf:internaldivenumber')
+                if pn is None:
+                    pn = ku.xp_first(n, 'uddf:informationbeforedive/uddf:datetime')
+                *_, dnn = ku.create_node('uddf:divenumber')
+                pn.addprevious(dnn)
             dnn.text = str(cache[f, id][0])
         ku.save(doc.getroot(), f)
 
