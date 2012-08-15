@@ -485,6 +485,12 @@ class EnumDives(object):
         """
         Add options for dive enumeration.
         """
+        parser.add_argument('-ns', '---dive-total-number',
+                metavar='dive_total_number',
+                nargs='?',
+                type=int,
+                default=1,
+                help='start of total dive number')
         parser.add_argument('input',
                 nargs='+',
                 help='UDDF files with dive data')
@@ -494,8 +500,8 @@ class EnumDives(object):
         """
         Execute command to enumerate dives.
         """
-        import kenozooid.uddf as ku
         import kenozooid.logbook as kl
+        kl.enum_dives(args.input, args.dive_total_number)
 
 
 
