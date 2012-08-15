@@ -39,23 +39,24 @@ UDDF_PROFILE = b"""\
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
   <generator>
     <name>kenozooid</name>
-    <version>0.1.0</version>
-    <manufacturer>
+    <manufacturer id='kenozooid'>
       <name>Kenozooid Team</name>
       <contact>
         <homepage>http://wrobell.it-zone.org/kenozooid/</homepage>
       </contact>
     </manufacturer>
-    <datetime>2010-11-16 23:55:13</datetime>
+    <version>0.1.0</version>
+    <datetime>2010-11-16T23:55:13</datetime>
   </generator>
   <diver>
-    <owner>
+    <owner id='owner'>
       <personal>
         <firstname>Anonymous</firstname>
         <lastname>Guest</lastname>
       </personal>
       <equipment>
         <divecomputer id="su">
+          <name>Sensus Ultra</name>
           <model>Sensus Ultra</model>
         </divecomputer>
       </equipment>
@@ -91,13 +92,13 @@ UDDF_PROFILE = b"""\
     </mix>
   </gasdefinitions>
   <profiledata>
-    <repetitiongroup>
+    <repetitiongroup id='rg'>
       <!-- this dive has to have gas switching -->
       <dive id='d01'>
         <informationbeforedive>
-            <datetime>2009-09-19T13:10:23</datetime>
             <link ref='konig'/>
             <link ref='b1'/>
+            <datetime>2009-09-19T13:10:23</datetime>
         </informationbeforedive>
         <samples>
           <waypoint>
@@ -128,9 +129,9 @@ UDDF_PROFILE = b"""\
       <!-- this dive shall have not gas switching -->
       <dive id='d02'>
         <informationbeforedive>
-            <datetime>2010-10-30T13:24:43</datetime>
             <link ref='b1'/>
             <link ref='b2'/>
+            <datetime>2010-10-30T13:24:43</datetime>
         </informationbeforedive>
         <samples>
           <waypoint>
@@ -641,7 +642,7 @@ class CreateDataTestCase(unittest.TestCase):
         """
         Test generic method for creating XML nodes
         """
-        doc = et.XML('<uddf><diver></diver></uddf>')
+        doc = et.XML('<uddf><a/><diver></diver><b/></uddf>')
 
         dq = et.XPath('//diver')
         tq = et.XPath('//test')
@@ -659,6 +660,10 @@ class CreateDataTestCase(unittest.TestCase):
         sd = et.tostring(doc, pretty_print=True)
         self.assertEquals(1, len(dq(doc)), sd)
         self.assertEquals(2, len(tq(doc)), sd)
+
+        # verify the parent order
+        self.assertEquals(['a', 'diver', 'b'],
+            [n.tag for n in doc.getchildren()])
 
 
     def test_create_node_prepend(self):
