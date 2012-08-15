@@ -790,6 +790,8 @@ def set_data(node, queries, formatters=None, **data):
 
 def create_node(path, parent=None, append=True):
     """
+    TODO: get rid of parent, does not make sense
+
     Create a hierarchy of nodes using XML nodes path specification.
 
     Path is a string of node names separated by slash character, i.e. a/b/c
@@ -819,13 +821,16 @@ def create_node(path, parent=None, append=True):
     n = parent
     for t in tags:
         is_last = tags[-1] == t
+        k_exists = False
 
         k = None
         if n is not None:
             k = xp_first(n, t)
         if is_last or k is None:
             k = et.Element(T(t))
-        if n is not None:
+        elif k is not None:
+            k_exists = True
+        if n is not None and not k_exists:
             if append:
                 n.append(k)
             else:
