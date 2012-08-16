@@ -157,7 +157,7 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
 
-        kl.copy_dives([self.fin], ['1'], fl)
+        kl.copy_dives([self.fin], ['1'], None, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -176,8 +176,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         Test copying existing dive
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
-        kl.copy_dives([self.fin], ['1'], fl)
-        kl.copy_dives([self.fin], ['1'], fl) # try to duplicate
+        kl.copy_dives([self.fin], ['1'], None, fl)
+        kl.copy_dives([self.fin], ['1'], None, fl) # try to duplicate
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -235,7 +235,7 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
 
-        kl.copy_dives([self.fin], ['1'], fl)
+        kl.copy_dives([self.fin], ['1'], None, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -249,7 +249,7 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
 
-        kl.copy_dives([self.fin], ['2'], fl)
+        kl.copy_dives([self.fin], ['2'], None, fl)
         nodes = ku.find(fl, '//uddf:dive')
 
         dn = next(nodes)
@@ -262,8 +262,8 @@ class DiveCopyingIntegrationTestCase(IntegrationTestCaseBase):
         """
         fl = '{}/dive_copy_logbook.uddf'.format(self.tdir)
 
-        kl.copy_dives([self.fin], ['1'], fl) # copy gases in
-        kl.copy_dives([self.fin], ['2'], fl) # copy no gases
+        kl.copy_dives([self.fin], ['1'], None, fl) # copy gases in
+        kl.copy_dives([self.fin], ['2'], None, fl) # copy no gases
 
         nodes = ku.find(fl, '//uddf:dive')
         dn = next(nodes) # 1st dive shall have gases

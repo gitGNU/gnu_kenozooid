@@ -229,7 +229,7 @@ def upgrade_file(fin):
     return doc
 
 
-def copy_dives(files, nodes, lfile):
+def copy_dives(files, nodes, n_dives, lfile):
     """
     Copy dive nodes to logbook file.
 
@@ -240,6 +240,8 @@ def copy_dives(files, nodes, lfile):
         Collection of files.
      nodes
         Collection of dive ranges.
+     n_dives
+        Numeric range of total dive number, `None` if any dive.
      lfile
         Logbook file.
     """
@@ -248,7 +250,7 @@ def copy_dives(files, nodes, lfile):
     else:
         doc = ku.create()
 
-    dives = find_dive_nodes(files, nodes)
+    dives = find_dive_nodes(files, nodes, n_dives)
     gases = find_dive_gas_nodes(files, nodes)
 
     _, rg = ku.create_node('uddf:profiledata/uddf:repetitiongroup',
@@ -296,7 +298,7 @@ def enum_dives(files, total=1):
     parsers = (str, lambda dt: ku.dparse(dt).date())
 
     fnodes = ((f, n) for f in files for n in
-        ku.find(f, ku.XP_FIND_DIVES, nodes=None))
+        ku.find(f, ku.XP_FIND_DIVES, nodes=None, dives=None))
     data = ((f, ku.dive_data(n, fields, queries, parsers)) for f, n in fnodes)
     data = ((item[0], item[1].id, item[1].date) for item in data) # flatten data
     data = sorted(data, key=itemgetter(2))
@@ -312,7 +314,7 @@ def enum_dives(files, total=1):
     # update data
     for f in files:
         doc = ku.parse(f)
-        for n in ku.XP_FIND_DIVES(doc, nodes=None):
+        for n in ku.XP_FIND_DIVES(doc, nodes=None, dives=None):
             id = n.get('id')
             dnn = ku.xp_first(n, 'uddf:informationbeforedive/uddf:divenumber')
             if dnn is None:

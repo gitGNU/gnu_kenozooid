@@ -152,7 +152,7 @@ class CopyDive(object):
         import kenozooid.logbook as kl
 
         r, f = args.input
-        kl.copy_dives(f, r, args.logbook)
+        kl.copy_dives(f, r, args.dives, args.logbook)
 
 
 

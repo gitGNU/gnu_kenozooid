@@ -190,6 +190,10 @@ def add_uddf_input(parser):
      parser
         ``argparse`` library parser.
     """
+    parser.add_argument('-n',
+            dest='dives',
+            help='fetch dives with their number (i.e. 40-42,45 are dives'
+                ' with dive number 40, 41, 42 and 45)')
     parser.add_argument('-k',
             dest='input',
             nargs=0,
@@ -199,7 +203,7 @@ def add_uddf_input(parser):
             nargs='+',
             action=UDDFInputAction,
             metavar='[-k dives] input',
-            help='dives from specified UDDF file (i.e.  1-3,6 is dive'
+            help='dives from specified UDDF file (i.e. 1-3,6 is dive'
                 ' 1, 2, 3, and 6 from a file, all by default)')
     parser.add_argument('input',
             nargs=argparse.REMAINDER,

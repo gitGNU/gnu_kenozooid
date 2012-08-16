@@ -109,7 +109,7 @@ class PlotProfiles(object):
                     .format(ext))
 
         r, f = args.input
-        dives = kl.find_dives(f, r)
+        dives = kl.find_dives(f, r, args.dives)
 
         kp.plot(dives, fout,
             ptype=args.plot_type,
@@ -153,7 +153,7 @@ class Analyze(object):
         import kenozooid.logbook as kl
 
         r, f = args.input
-        dives = kl.find_dives(f, r)
+        dives = kl.find_dives(f, r, args.dives)
         analyze(args.script, args.args, dives)
 
 
