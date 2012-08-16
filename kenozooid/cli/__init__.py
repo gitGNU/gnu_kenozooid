@@ -186,6 +186,16 @@ def add_uddf_input(parser):
     """
     Add list of UDDF files as input argument to a parser.
 
+    The function adds several options and arguments
+
+    - `-n` is added to fetch dives by their number
+    - multiple UDDF files can be specified
+    - each file can be preceded with `-k` option to indicate which dives
+      should be fetched from a file
+
+    The `-k` and `-n` options are glued with 'and' operator - use only one
+    of them if confused.
+
     :Parameters:
      parser
         ``argparse`` library parser.
