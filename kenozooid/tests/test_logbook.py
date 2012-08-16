@@ -307,6 +307,18 @@ class DiveFindingTestCase(unittest.TestCase):
         self.assertEquals(8, len(nodes))
 
 
+    def test_find_with_dive_number(self):
+        """
+        Test finding dive nodes from UDDF files with dive number
+        """
+        nodes = list(kl.find_dive_nodes([self.f1, self.f2, self.f3], None,
+            '299-302'))
+        self.assertEquals(3, len(nodes))
+
+        ids = [ku.xp_first(n, '@id') for n in nodes]
+        self.assertEquals(['d01'] * 3, ids)
+
+
 
 class DiveEnumIntegrationTestCase(IntegrationTestCaseBase):
     """

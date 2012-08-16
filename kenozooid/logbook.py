@@ -39,10 +39,10 @@ from kenozooid.units import K2C
 log = logging.getLogger('kenozooid.logbook')
 
 
-def find_dive_nodes(files, nodes=None):
+def find_dive_nodes(files, nodes=None, dives=None):
     """
-    Find dive nodes in UDDF files using optional numeric ranges as search
-    parameter.
+    Find dive nodes in UDDF files using optional numeric ranges or total
+    dive number as search parameters.
 
     The collection of dive nodes is returned.
 
@@ -51,12 +51,14 @@ def find_dive_nodes(files, nodes=None):
         Collection of UDDF files.
      nodes
         Numeric ranges of nodes, `None` if all nodes.
+     dives
+        Numeric range of total dive number, `None` if any dive.
 
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dives`
     """
     nodes = [] if nodes is None else nodes
-    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q) \
+    data = (ku.find(f, ku.XP_FIND_DIVES, nodes=q, dives=dives) \
         for q, f in lzip(nodes, files))
     return ichain(data)
 
@@ -83,10 +85,10 @@ def find_dive_gas_nodes(files, nodes=None):
     return dict(nodes_by_id).values()
 
 
-def find_dives(files, nodes=None):
+def find_dives(files, nodes=None, dives=None):
     """
-    Find dive data in UDDF files using optional node ranges as search
-    parameter.
+    Find dive data in UDDF files using optional node ranges or total dive
+    number as search parameters.
 
     The collection of dive data is returned.
 
@@ -95,11 +97,13 @@ def find_dives(files, nodes=None):
         Collection of UDDF files.
      nodes
         Numeric ranges of nodes, `None` if all nodes.
+     dives
+        Numeric range of total dive number, `None` if any dive.
 
     .. seealso:: :py:func:`parse_range`
     .. seealso:: :py:func:`find_dive_nodes`
     """
-    return (ku.dive_data(n) for n in find_dive_nodes(files, nodes))
+    return (ku.dive_data(n) for n in find_dive_nodes(files, nodes, dives))
         
 
 def list_dives(dives):

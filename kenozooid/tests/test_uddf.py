@@ -98,6 +98,7 @@ UDDF_PROFILE = b"""\
         <informationbeforedive>
             <link ref='konig'/>
             <link ref='b1'/>
+            <divenumber>301</divenumber>
             <datetime>2009-09-19T13:10:23</datetime>
         </informationbeforedive>
         <samples>
@@ -1158,6 +1159,29 @@ class RangeTestCase(unittest.TestCase):
         q = '//uddf:dive[in-range(position(), "2-")]/@id'
         dt = list(ku.find(f, ku.XPath(q)))
         self.assertEquals(['d02', 'd03'], dt)
+
+
+    def test_in_range_query_subquery(self):
+        """
+        Test XPath number range query with subquery
+        """
+        f = BytesIO(UDDF_PROFILE)
+
+        q = '//uddf:dive[in-range(uddf:informationbeforedive/uddf:divenumber/text(), "299-302")]/@id'
+        dt = list(ku.find(f, ku.XPath(q)))
+        self.assertEquals(['d01'], dt)
+
+
+    def test_in_range_query_pos_subquery_combined(self):
+        """
+        Test XPath number range query with positiona and subquery
+        """
+        f = BytesIO(UDDF_PROFILE)
+
+        q = '//uddf:dive[in-range(position(), "4-5") or in-range(uddf:informationbeforedive/uddf:divenumber/text(), "299-302")]/@id'
+        dt = list(ku.find(f, ku.XPath(q)))
+        self.assertEquals(['d01'], dt)
+
 
 
 class NodeCopyTestCase(unittest.TestCase):

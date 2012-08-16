@@ -178,7 +178,8 @@ XP_FIND_SITE = XPath('/uddf:uddf/uddf:divesite/uddf:site[' \
 
 # XPath query to find dives
 XP_FIND_DIVES = XPath('/uddf:uddf/uddf:profiledata' \
-    '/uddf:repetitiongroup/uddf:dive[in-range(position(), $nodes)]')
+    '/uddf:repetitiongroup/uddf:dive[in-range(position(), $nodes)' \
+    ' and in-range(uddf:informationbeforedive/uddf:divenumber/text(), $dives)]')
 
 # XPath query to find dive gases
 XP_FIND_DIVE_GASES = XPath('/uddf:uddf/uddf:gasdefinitions' \
@@ -609,11 +610,20 @@ def in_range(ctx, pos, nodes):
     """
     if not nodes:
         return True
-    if 'in-range' not in ctx.eval_context:
+
+    if isinstance(pos, list):
+        if len(pos) == 0:
+            return False
+        if len(pos) != 1:
+            raise ValueError('Too many parameters')
+        pos = int(pos[0])
+
+    kf = 'in-range({})'.format(nodes)
+    if kf not in ctx.eval_context:
         nr = parse_range(nodes)
-        fstr = 'ctx.eval_context["in-range"] = lambda n: {}'.format(nr)
+        fstr = 'ctx.eval_context["{}"] = lambda n: {}'.format(kf, nr)
         exec(fstr)
-    return ctx.eval_context['in-range'](pos)
+    return ctx.eval_context[kf](pos)
 
 # register in-range XPath function
 ns = et.FunctionNamespace(None)
