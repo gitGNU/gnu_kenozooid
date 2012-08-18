@@ -96,6 +96,7 @@ XPath.__doc__ = """
 
 # XPath queries for default dive data
 XP_DEFAULT_DIVE_DATA = (
+    XPath('uddf:informationbeforedive/uddf:divenumber/text()'),
     XPath('uddf:informationbeforedive/uddf:datetime/text()'),
     XPath('uddf:informationafterdive/uddf:greatestdepth/text()'),
     XPath('uddf:informationafterdive/uddf:diveduration/text()'),
@@ -385,10 +386,10 @@ def dive_data(node, fields=None, queries=None, parsers=None):
     .. seealso:: :py:func:`find_data`
     """
     if fields is None:
-        fields = ('datetime', 'depth', 'duration', 'temp', 'avg_depth',
-                'mode', 'profile')
+        fields = ('number', 'datetime', 'depth', 'duration', 'temp',
+            'avg_depth', 'mode', 'profile')
         queries = XP_DEFAULT_DIVE_DATA
-        parsers = (dparse, float, float, float, float, str, dive_profile)
+        parsers = (int, dparse, float, float, float, float, str, dive_profile)
 
     return find_data('Dive', node, fields, queries, parsers)
 

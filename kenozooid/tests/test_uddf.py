@@ -335,6 +335,7 @@ class FindDataTestCase(unittest.TestCase):
         f = BytesIO(UDDF_PROFILE)
         node = next(ku.find(f, '//uddf:dive[1]'))
         dive = ku.dive_data(node)
+        self.assertEquals(301, dive.number)
         self.assertEquals(datetime(2009, 9, 19, 13, 10, 23), dive.datetime)
         self.assertEquals(20, dive.duration)
         self.assertEquals(30.2, dive.depth)
