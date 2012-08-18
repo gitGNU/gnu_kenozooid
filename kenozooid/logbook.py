@@ -114,6 +114,7 @@ def list_dives(dives):
     each dive a tuple of formatted dive information
     is returned
 
+    - dive number, i.e. 102
     - date and time of dive, i.e. 2011-03-19 14:56
     - maximum depth, i.e. 6.0m
     - dive average depth, i.e. 2.0m
@@ -134,8 +135,8 @@ def list_dives(dives):
             avg_depth = ''
             if dive.avg_depth is not None:
                 avg_depth = '{:.1f}m'.format(dive.avg_depth)
-            yield (format(dive.datetime, FMT_DIVETIME), depth, avg_depth,
-                    duration, temp)
+            yield (dive.number, format(dive.datetime, FMT_DIVETIME), depth,
+                avg_depth, duration, temp)
         except TypeError as ex:
             log.debug(ex)
             log.warn('invalid dive data, skipping dive')
