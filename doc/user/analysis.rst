@@ -111,6 +111,8 @@ object. The following data are provided by Kenozooid
 
 The data frame containig dive information has the following columns
 
+``number``
+    Dive number.
 ``datetime``
     Date and time of a dive.
 ``depth``

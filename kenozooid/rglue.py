@@ -65,8 +65,8 @@ def dives_df(dives):
     """
     Create R data frame for dives using rpy interface.
     """
-    cols = 'datetime', 'depth', 'duration', 'temp', 'avg_depth'
-    vf = str_vec, float_vec, float_vec, float_vec, float_vec
+    cols = 'number', 'datetime', 'depth', 'duration', 'temp', 'avg_depth'
+    vf = int_vec, str_vec, float_vec, float_vec, float_vec, float_vec
     return df(cols, vf, dives)
 
 
@@ -77,7 +77,7 @@ def dive_profiles_df(dives):
     cols = ('dive', 'depth', 'time', 'temp', 'setpoint', 
         'deco_time', 'deco_depth', 'deco_alarm',
         'gas_name', 'gas_o2', 'gas_he', 'mod_low', 'mod_high')
-    vf = (int_vec,) + (float_vec, ) * 6 + (bool_vec, str_vec, int_vec,
+    vf = (int_vec, ) + (float_vec, ) * 6 + (bool_vec, str_vec, int_vec,
             int_vec, float_vec, float_vec)
     p = ((k, s.depth, s.time, s.temp, s.setpoint, s.deco_time, s.deco_depth, s.alarm,
           None if s.gas is None else s.gas.name,
