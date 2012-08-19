@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
   <generator><!--Upgraded by Kenozooid 0.6.0.-->
     <name>kenozooid</name>
@@ -88,7 +88,7 @@
         <informationbeforedive>
           <link ref="sckg"/>
           <link ref="jk"/>
-          <datetime>2009-10-22T15:32:43</datetime>
+          <divenumber>14</divenumber><datetime>2009-10-22T15:32:43</datetime>
         </informationbeforedive>
         <samples>
           <waypoint>
@@ -1716,7 +1716,7 @@
         <informationbeforedive>
           <link ref="sckg"/>
           <link ref="jn"/>
-          <datetime>2010-10-29T06:02:30</datetime>
+          <divenumber>15</divenumber><datetime>2010-10-29T06:02:30</datetime>
         </informationbeforedive>
         <samples>
           <waypoint>
