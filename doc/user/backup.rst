@@ -23,18 +23,18 @@ The backup files are useful in several situations
 
 To create a backup file of OSTC dive computer data::
 
-    kz backup ostc /dev/ttyUSB0 backup-ostc-20090214.uddf
+    $ kz backup ostc /dev/ttyUSB0 backup-ostc-20090214.uddf
 
 or to backup Sensus Ultra data::
 
-    kz backup su /dev/ttyUSB0 backup-su-20090214.uddf
+    $ kz backup su /dev/ttyUSB0 backup-su-20090214.uddf
 
 During the backup, Kenozooid extracts dive data from binary data and stores
 both binary and dive data in a backup file. This allows to access the dive
 computer data with other Kenozooid commands immediately.  For example, to
 list the dives (see :ref:`logbook-ls`) from a backup file::
 
-    kz dive list backup-su-20090214.uddf
+    $ kz dive list backup-su-20090214.uddf
 
 Dive Data Extraction
 ^^^^^^^^^^^^^^^^^^^^
@@ -45,7 +45,7 @@ are implemented.
 
 To extract dives from a backup file run ``dive extract`` command::
 
-    kz dive extract backup-su-20090214.uddf backup-su-20090214-01.uddf
+    $ kz dive extract backup-su-20090214.uddf backup-su-20090214-01.uddf
 
 The ``dive extract`` command behaves in similar way to backup command - the
 dive data is stored along with binary data, which was used as source of
@@ -65,7 +65,7 @@ with ``convert`` command.
 
 To convert OSTC dive computer binary data into UDDF format::
 
-    kz convert ostc ostc-20090214.dump backup-ostc-20090214.uddf
+    $ kz convert ostc ostc-20090214.dump backup-ostc-20090214.uddf
 
 As in case of ``backup`` and ``dive extract`` commands, the UDDF file
 contains both dive data and binary data
