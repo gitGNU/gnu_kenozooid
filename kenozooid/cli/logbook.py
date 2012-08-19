@@ -79,7 +79,7 @@ class ListDives(object):
             dives = kl.find_dives([fin])
             print('{}:'.format(fin))
             for i, d in enumerate(kl.list_dives(dives), 1):
-                print('{:5}| {:>4}: {:>9} {:>9} ({:>5}) {:>9} {:>9}'.format(i,
+                print('{:5}: {:>4} {:>9} {:>9} ({:>5}) {:>9} {:>9}'.format(i,
                     d[0] or ' -- ', d[1], d[2], d[3] or ' --- ', d[4], d[5]))
 
 
