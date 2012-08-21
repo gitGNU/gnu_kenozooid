@@ -2,7 +2,8 @@ Changelog
 =========
 Kenozooid 0.11.0
 ----------------
-- added support for dive enumeration with dive number and day dive number
+- added support for dive enumeration with dive number
+- dives can be found using dive number
 
 Kenozooid 0.10.0
 ----------------
