@@ -103,17 +103,18 @@ class DiveDataInjectTestCase(unittest.TestCase):
         Test dive data frame creation
         """
         dives = (
-            (datetime(2011, 10, 11), 31.0, 2010, 12),
-            (datetime(2011, 10, 12), 32.0, 2020, 14),
-            (datetime(2011, 10, 13), 33.0, 2030, None),
+            (1, datetime(2011, 10, 11), 31.0, 2010, 12),
+            (2, datetime(2011, 10, 12), 32.0, 2020, 14),
+            (3, datetime(2011, 10, 13), 33.0, 2030, None),
         )
         d = dives_df(dives)
         self.assertEquals(3, d.nrow)
-        self.assertEquals(4, d.ncol)
+        self.assertEquals(5, d.ncol)
         #self.assertEquals((), tuple(d[0]))
-        self.assertEquals((31.0, 32.0, 33.0), tuple(d[1]))
-        self.assertEquals((2010, 2020, 2030), tuple(d[2]))
-        self.assertEquals((12, 14, ro.NA_Real), tuple(d[3]))
+        self.assertEquals((1, 2, 3), tuple(d[1]))
+        self.assertEquals((31.0, 32.0, 33.0), tuple(d[2]))
+        self.assertEquals((2010, 2020, 2030), tuple(d[3]))
+        self.assertEquals((12, 14, ro.NA_Real), tuple(d[4]))
 
 
     def test_dive_profiles_df(self):
@@ -171,11 +172,11 @@ class DiveDataInjectTestCase(unittest.TestCase):
             kd.Sample(time=25, depth=10.0, temp=11.0, alarm=False),
         )
 
-        d1 = kd.Dive(datetime=datetime(2011, 10, 11), depth=31.0,
+        d1 = kd.Dive(number=1, datetime=datetime(2011, 10, 11), depth=31.0,
                 duration=2010, temp=12, profile=p1)
-        d2 = kd.Dive(datetime=datetime(2011, 10, 12), depth=32.0,
+        d2 = kd.Dive(number=2, datetime=datetime(2011, 10, 12), depth=32.0,
                 duration=2020, temp=14, profile=p2)
-        d3 = kd.Dive(datetime=datetime(2011, 10, 13), depth=33.0,
+        d3 = kd.Dive(number=3, datetime=datetime(2011, 10, 13), depth=33.0,
                 duration=2030, temp=None, profile=p3)
 
         inject_dive_data((d1, d2, d3))
@@ -183,10 +184,10 @@ class DiveDataInjectTestCase(unittest.TestCase):
         d_df = ro.globalenv['kz.dives']
 
         self.assertEquals(3, d_df.nrow)
-        self.assertEquals(5, d_df.ncol)
-        self.assertEquals((31.0, 32.0, 33.0), tuple(d_df[1]))
-        self.assertEquals((2010, 2020, 2030), tuple(d_df[2]))
-        self.assertEquals((12, 14, ro.NA_Real), tuple(d_df[3]))
+        self.assertEquals(6, d_df.ncol)
+        self.assertEquals((31.0, 32.0, 33.0), tuple(d_df[2]))
+        self.assertEquals((2010, 2020, 2030), tuple(d_df[3]))
+        self.assertEquals((12, 14, ro.NA_Real), tuple(d_df[4]))
 
         p_df = ro.globalenv['kz.profiles']
 
