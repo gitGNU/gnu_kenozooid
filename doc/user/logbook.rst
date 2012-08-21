@@ -31,6 +31,49 @@ To list the dives from a logbook file or from a dive computer backup file::
         1:   14 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
         2:   15 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
 
+Enumerating Dives
+^^^^^^^^^^^^^^^^^
+Dives can be enumerated with dive number by using ``dive enum`` command.
+
+If a dive has no dive number assigned, then the dive listing shows ``--``
+instead of a dive number::
+
+    $ kz dive list logbook.uddf
+    logbook.uddf:
+        1:  --  2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
+        2:  --  2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
+
+To enumerate dives in a logbook file (or in multiple logbook files)::
+
+    $ kz dive enum -ns 14 logbook.uddf
+    $ kz dive list logbook.uddf
+    logbook.uddf:
+        1:   14 2009-10-22 15:32     30.3m ( --- )     64:16    29.0°C
+        2:   15 2010-10-29 06:02     29.4m ( --- )     61:30    26.7°C
+
+When dives are enumerated, the specific dives can be found with ``-n``
+option. For example, enumerate all backup files first::
+
+    $ kz dive enum backup-su-20110728.uddf backup-ostc-20110728.uddf
+    $ kz dive list backup-su-20110728.uddf backup-ostc-20110728.uddf
+    backup-su-20110728.uddf:
+        1:    1 2009-09-19 13:25     12.0m ( --- )     02:50    15.5°C
+    ...
+      139:  139 2011-05-29 14:17     25.4m ( --- )     48:20     7.5°C
+    backup-ostc-20110728.uddf:
+        1:  140 2011-06-12 21:45     40.8m ( --- )     58:50     5.4°C
+        2:  141 2011-06-19 12:26     58.8m ( --- )     48:40     6.2°C
+    ...
+        6:  145 2011-07-07 21:44     27.5m ( 8.4m)     60:38     7.0°C
+        7:  146 2011-07-20 21:50     49.9m (19.6m)     65:42     5.7°C
+        8:  147 2011-07-28 21:26     60.2m (20.9m)     64:08     5.7°C
+
+Plot dive 139, 141, 145 and 146 (``-n`` option is used to find dives in all
+files)::
+
+    $ kz dive plot -n 139,141,145-146 backup-su-20110728.uddf backup-ostc-20110728.uddf
+
+
 Buddies Listing 
 ^^^^^^^^^^^^^^^
 The buddy data list consists of
