@@ -51,8 +51,8 @@
 
 <!-- inject kenozooid specific information -->
 <xsl:template match="uddf30:generator">
-    <xsl:element name="{local-name()}">
-        <xsl:comment>Upgraded by Kenozooid 0.6.0.</xsl:comment>
+    <xsl:element name="{local-name()}" namespace="http://www.streit.cc/uddf/3.1/">
+        <xsl:comment>Upgraded by Kenozooid 0.12.0.</xsl:comment>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>
