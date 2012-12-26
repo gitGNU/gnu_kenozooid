@@ -209,9 +209,9 @@ def upgrade_file(fin):
      fin
         File with UDDF data to upgrade.
     """
-    current = (3, 1)
-    versions = ((3, 0), )
-    xslt = ('uddf-3.0.0-3.1.0.xslt',)
+    current = (3, 2)
+    versions = ((3, 0), (3, 1)) # previous versions
+    xslt = ('uddf-3.0.0-3.1.0.xslt', 'uddf-3.1.0-3.2.0.xslt')
 
     ver = ku.get_version(fin)
     if ver == current:

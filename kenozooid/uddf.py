@@ -69,7 +69,7 @@ log = logging.getLogger('kenozooid.uddf')
 #
 # Default UDDF namespace mapping.
 #
-_NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.1/'}
+_NSMAP = {'uddf': 'http://www.streit.cc/uddf/3.2/'}
 
 # Node id formatter
 FORMAT_ID = 'id-{}'
@@ -220,7 +220,7 @@ def parse(f, ver_check=True):
     doc = et.parse(f)
     if ver_check:
         v1, v2, *_ = doc.getroot().get('version').split('.')
-        if (v1, v2) != ('3', '1'):
+        if (v1, v2) != ('3', '2'):
             raise ValueError('UDDF file version {}.{} is not supported.' \
                     ' Please upgrade file with "kz upgrade" command.' \
                     .format(v1, v2))
@@ -697,7 +697,7 @@ DEFAULT_FMT_DIVE_PROFILE = {
 # basic data for an UDDF file
 # fixme: obsolete
 UDDF_BASIC = """\
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
 <generator>
     <name>kenozooid</name>
     <manufacturer id='kenozooid'>
@@ -1011,7 +1011,7 @@ def create_uddf(datetime=datetime.now(), equipment=None, gases=None, dives=None,
             if dives else None,
 
         xmlns=_NSMAP['uddf'],
-        version='3.1.0',
+        version='3.2.0',
     )
     return doc
 
@@ -1180,7 +1180,7 @@ def save(doc, fout, validate=True):
 
         if validate:
             log.debug('validating uddf file')
-            fs = pkg_resources.resource_stream('kenozooid', 'uddf/uddf_3.1.0.xsd')
+            fs = pkg_resources.resource_stream('kenozooid', 'uddf/uddf_3.2.0.xsd')
             if hasattr(fs, 'name'):
                 log.debug('uddf xsd found: {}'.format(fs.name))
             schema = et.XMLSchema(et.parse(fs))

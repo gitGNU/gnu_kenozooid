@@ -26,6 +26,7 @@ from io import BytesIO
 from datetime import datetime
 from functools import partial
 from dirty.xml import xml
+from collections import OrderedDict
 import tempfile
 import shutil
 import unittest
@@ -36,7 +37,7 @@ import kenozooid.data as kd
 
 UDDF_PROFILE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
   <generator>
     <name>kenozooid</name>
     <manufacturer id='kenozooid'>
@@ -199,7 +200,7 @@ UDDF_PROFILE = b"""\
 
 UDDF_DUMP = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
   <generator>
     <name>kenozooid</name>
     <version>0.1.0</version>
@@ -237,7 +238,7 @@ UDDF_DUMP = b"""\
 
 UDDF_BUDDY = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
 <diver>
     <owner>
         <personal>
@@ -267,7 +268,7 @@ UDDF_BUDDY = b"""\
 
 UDDF_SITE = b"""\
 <?xml version='1.0' encoding='utf-8'?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
 <divesite>
     <site id='markgraf'><name>SMS Markgraf</name><geography><location>Scapa Flow</location></geography></site>
     <site id='konig'><name>SMS Konig</name><geography><location>Scapa Flow</location></geography></site>
@@ -453,7 +454,7 @@ class CreateDataTestCase(unittest.TestCase):
         now = datetime.now()
 
         doc = ku.create(datetime=now)
-        self.assertEquals('3.1.0', doc.get('version'))
+        self.assertEquals('3.2.0', doc.get('version'))
 
         q = '//uddf:generator/uddf:datetime/text()'
         dt = ku.xp_first(doc, q)
@@ -623,10 +624,10 @@ class CreateDataTestCase(unittest.TestCase):
         with node reuse
         """
         doc = et.XML('<uddf></uddf>')
-        fq = {
-            's': ['t/@a', 't/@b'],
-            't': ['t/@a', 't/@b', 't/@a', 't/@b'],
-        }
+        fq = OrderedDict((
+            ('s', ['t/@a', 't/@b']),
+            ('t', ['t/@a', 't/@b', 't/@a', 't/@b'])
+        ))
         ku.set_data(doc, fq, s=[1, 2], t=['A1', 'A2', 'A3', 'A4'])
         sd = et.tostring(doc)
 
@@ -1019,7 +1020,7 @@ class PostprocessingTestCase(unittest.TestCase):
         Test UDDF reordering
         """
         doc = et.parse(BytesIO(b"""
-<uddf xmlns="http://www.streit.cc/uddf/3.1/">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/">
 <generator>
     <name>kenozooid</name>
 </generator>
@@ -1195,7 +1196,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a2/>
         <a2/>
@@ -1207,7 +1208,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1219,7 +1220,7 @@ class NodeCopyTestCase(unittest.TestCase):
 
         with ku.NodeCopier(t) as nc:
             r = nc.copy(a, c)
-        self.assertEquals('{http://www.streit.cc/uddf/3.1/}a1', r.tag)
+        self.assertEquals('{http://www.streit.cc/uddf/3.2/}a1', r.tag)
 
         n = ku.xp_first(t, '//uddf:a1')
         self.assertTrue(n is not None)
@@ -1232,7 +1233,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1 id = 'id_1'>
         <a2/>
         <a2/>
@@ -1244,7 +1245,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1256,7 +1257,7 @@ class NodeCopyTestCase(unittest.TestCase):
 
         with ku.NodeCopier(t) as nc:
             r = nc.copy(a, c)
-            self.assertEquals('{http://www.streit.cc/uddf/3.1/}a1', r.tag)
+            self.assertEquals('{http://www.streit.cc/uddf/3.2/}a1', r.tag)
 
             # copy once again the same node
             self.assertTrue(nc.copy(a, c) is None)
@@ -1272,7 +1273,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a2 id = 'id-a1'/>
         <a2 id = 'id-a2' ref = 'id-a1'/>
@@ -1284,7 +1285,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1308,7 +1309,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a2 id = 'id-a1'/>
         <a2 id = 'id-a2' ref = 'id-b2'/>
@@ -1320,7 +1321,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
     <b1>
         <b2 id = 'id-b2'/>
@@ -1351,7 +1352,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a2 id = 'id-a1'/>
         <a2 id = 'id-a2' ref = 'id-b1'/>
@@ -1363,7 +1364,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1388,7 +1389,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a2 id = 'id-a21'/>
         <a2 id = 'id-a22' ref = 'id-b1'/>
@@ -1402,7 +1403,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1429,7 +1430,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a3 id = 'id-a3'>
             <a5 id = 'id-a5'>
@@ -1446,7 +1447,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1478,7 +1479,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a3 id = 'id-a3'>
             <a5 id = 'id-a5' ref = 'id-b2'>
@@ -1495,7 +1496,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1527,7 +1528,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1 ref = 'id-b1'>
         <a2 ref = 'id-b2'/>
     </a1>
@@ -1538,7 +1539,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c/>
 </uddf>
 """
@@ -1559,7 +1560,7 @@ class NodeCopyTestCase(unittest.TestCase):
         """
         SOURCE = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <a1>
         <a2 id = 'id-a1'/>
         <a2 id = 'id-a2'/>
@@ -1568,7 +1569,7 @@ class NodeCopyTestCase(unittest.TestCase):
 """
         TARGET = b"""\
 <?xml version="1.0" encoding="utf-8"?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">
     <c>
         <a3 id = 'id-a1'/>
     </c>
@@ -1616,7 +1617,7 @@ class UDDFSaveTestCase(unittest.TestCase):
 
         preamble = b"""\
 <?xml version='1.0' encoding='UTF-8'?>
-<uddf xmlns="http://www.streit.cc/uddf/3.1/" version="3.1.0">\
+<uddf xmlns="http://www.streit.cc/uddf/3.2/" version="3.2.0">\
 """
         self.assertTrue(s.startswith(preamble), s)
 
