@@ -32,14 +32,16 @@ class DriverFindingTestCase(unittest.TestCase):
     Driver finding tests.
     """
     def test_find(self):
-        """Test driver finding
+        """
+        Test driver finding
         """
         drv = find_driver(Simulator, 'dummy')
         self.assertTrue(drv is not None)
 
 
     def test_not_implemented(self):
-        """Test exception on not implemented functionality
+        """
+        Test exception on not implemented functionality
         """
         class C: pass # dummy does not implement C interface
         drv = find_driver(C, 'dummy')
@@ -47,7 +49,8 @@ class DriverFindingTestCase(unittest.TestCase):
 
 
     def test_unknown_driver(self):
-        """Test exception on unknown driver
+        """
+        Test exception on unknown driver
         """
         self.assertRaises(DeviceError, find_driver, Simulator, 'unknown')
 
