@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.12.0
+----------------
+- support for UDDF 3.2.0
+
 Kenozooid 0.11.0
 ----------------
 - added support for dive enumeration with dive number
