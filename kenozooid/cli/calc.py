@@ -41,7 +41,7 @@ class Calculate(object):
         """
         cmds = ('ppO2', 'ppN2', 'ead')
         desc = ('calculate O2 partial pressure (ppO2)',
-            'calculate Nitrogen parital pressure (ppN2)', 
+            'calculate Nitrogen partial pressure (ppN2)', 
             'calculate equivalent air depth (EAD)')
         subp = parser.add_subparsers()
         for cmd, d in zip(cmds, desc):
