@@ -261,7 +261,7 @@ class Convert(object):
     """
     Command line module for binary dive computer data conversion.
     """
-    description = 'convert binary dive computer data.'
+    description = 'convert binary dive computer data'
 
     @classmethod
     def add_arguments(self, parser):
