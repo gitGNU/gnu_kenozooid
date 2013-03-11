@@ -43,9 +43,8 @@ from kenozooid.units import C2K, B2Pa
 from . import parser as ostc_parser
 import kenozooid.data as kd
 
-GAS_GETTERS = dict(
-    zip(range(1, 7), (attrgetter('gas{}_o2'.format(i), 'gas{}_he'.format(i))
-        for i in range(1, 7))))
+GAS_GETTERS = {i: (attrgetter('gas{}_o2'.format(i), 'gas{}_he'.format(i)))
+        for i in range(1, 7)}
 
 def pressure(depth):
     """
