@@ -30,7 +30,7 @@
 <!-- inject kenozooid specific information -->
 <xsl:template match="uddf31:generator">
     <xsl:element name="{local-name()}" namespace="http://www.streit.cc/uddf/3.2/">
-        <xsl:comment>Upgraded by Kenozooid 0.12.0.</xsl:comment>
+        <xsl:comment>Upgraded by Kenozooid 0.13.0.</xsl:comment>
         <xsl:apply-templates/>
     </xsl:element>
 </xsl:template>

@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.13.0
+----------------
+- command line user interface fixes
+
 Kenozooid 0.12.0
 ----------------
 - support for UDDF 3.2.0
