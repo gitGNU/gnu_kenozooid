@@ -129,6 +129,18 @@ class DataModelTestCase(unittest.TestCase):
         self.assertEquals('tx1050', dc._get_gas(header, 6).id)
 
 
+    def test_gas_info_error(self):
+        """
+        Test OSTC error when fetching gas mix from header
+        """
+        dives = ostc_parser.profiles(od.RAW_DATA_OSTC_MK2_194)
+        header, profile = list(dives)[7]
+        header = ostc_parser.header(header)
+        dc = OSTCDataParser()
+
+        self.assertRaises(ValueError, dc._get_gas, None, 255)
+
+
     def test_ppo2_set(self):
         """
         Test OSTC ppO2 change

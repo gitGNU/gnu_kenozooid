@@ -43,7 +43,7 @@ from kenozooid.units import C2K, B2Pa
 from . import parser as ostc_parser
 import kenozooid.data as kd
 
-GAS_GETTERS = {i: (attrgetter('gas{}_o2'.format(i), 'gas{}_he'.format(i)))
+GAS_GETTERS = {i: attrgetter('gas{}_o2'.format(i), 'gas{}_he'.format(i))
         for i in range(1, 7)}
 
 def pressure(depth):
@@ -264,7 +264,10 @@ class OSTCDataParser(object):
          gas_no
             Gas number to get (1-6).
         """
-        o2, he = GAS_GETTERS[gas_no](header)
+        getter = GAS_GETTERS.get(gas_no)
+        if getter is None:
+            raise ValueError('invalid gas mix number')
+        o2, he = getter(header)
         return kd.gas(o2=o2, he=he)
 
 
