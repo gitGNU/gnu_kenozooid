@@ -21,7 +21,7 @@
 Kenozooid calculator command line modules.
 """
 
-from kenozooid.cli import CLIModule, ArgumentError
+from kenozooid.cli import CLIModule, ArgumentError, NoCommandError
 from kenozooid.component import inject
 
 
@@ -43,22 +43,22 @@ class Calculate(object):
         desc = ('calculate O2 partial pressure (ppO2)',
             'calculate Nitrogen partial pressure (ppN2)', 
             'calculate equivalent air depth (EAD)')
-        subp = parser.add_subparsers()
+        subp = parser.add_subparsers(dest='cmd')
         for cmd, d in zip(cmds, desc):
             p = subp.add_parser(cmd, help=d)
-            p.set_defaults(cmd_calc=cmd)
+            p.set_defaults(calc=cmd, patser=p)
             p.add_argument('depth', type=float, nargs=1)
             p.add_argument('ean', type=float, nargs=1)
 
         p = subp.add_parser('mod',
                 help='calculate maximum operating depth (MOD)')
-        p.set_defaults(cmd_calc='mod')
+        p.set_defaults(calc='mod')
         p.add_argument('pp', type=float, nargs='?', default=1.4)
         p.add_argument('ean', type=float, nargs=1)
 
         p = subp.add_parser('rmv',
                 help='calculate respiratory minute volume (RMV)')
-        p.set_defaults(cmd_calc='rmv')
+        p.set_defaults(calc='rmv')
         p.add_argument('tank', type=float, nargs=1,
                 help='tank size in liters, i.e. 12, 15')
         p.add_argument('pressure', type=float, nargs=1,
@@ -76,7 +76,10 @@ class Calculate(object):
         """
         import kenozooid.calc as kcalc
 
-        cmd = args.cmd_calc
+        cmd = args.cmd
+        if cmd == 'calc':
+            raise NoCommandError(args.parser)
+
         f = getattr(kcalc, cmd)
         if cmd in ('ppO2', 'ppN2', 'ead'):
             result = f(args.depth[0], args.ean[0])
@@ -86,7 +89,7 @@ class Calculate(object):
             result = f(args.tank[0], args.pressure[0], args.depth[0],
                     args.duration[0])
         else:
-            raise ArgumentError()
+            assert False
 
         print('{0:.2f}'.format(result))
 

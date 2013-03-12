@@ -62,6 +62,20 @@ class ArgumentError(BaseException):
     """
 
 
+
+class NoCommandError(BaseException):
+    """
+    No command specified.
+
+    :Attributes:
+     parser
+        Parser command for which error is raised.
+    """
+    def __init__(self, parser):
+        self.parser = parser
+
+
+
 class UDDFInputAction(argparse.Action):
     """
     Parse arguments being a list of UDDF input files with '-k' option per
@@ -117,7 +131,7 @@ def add_commands(parser, prefix=None, title=None):
      title
         Help title of commands.
     """
-    subp = parser.add_subparsers(title=title)
+    subp = parser.add_subparsers(dest='cmd', title=title)
 
     # find command line modules sorted by their names
     modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
@@ -144,6 +158,7 @@ def add_commands(parser, prefix=None, title=None):
         p = subp.add_parser(cmd, help=desc)
         if not master:
             p.set_defaults(cmd=name)
+        p.set_defaults(parser=p)
         cls.add_arguments(p)
 
 
@@ -178,7 +193,8 @@ def add_master_command(name, title, desc):
             add_commands(parser, name, title)
 
         def __call__(self, args):
-            raise ArgumentError()
+            raise NoCommandError(args.parser)
+
     return Command
 
 
