@@ -4,6 +4,7 @@ Kenozooid 0.13.0
 ----------------
 - command line user interface fixes
 - OSTC parser fixes
+- R output should be visible only when command-line verbose option is enabled
 
 Kenozooid 0.12.0
 ----------------

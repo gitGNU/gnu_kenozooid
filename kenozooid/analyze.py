@@ -22,6 +22,7 @@ Dive analytics via R statistical package.
 """
 
 import rpy2.robjects as ro
+import rpy2.rinterface
 import logging
 import pkg_resources
 import os.path
@@ -31,6 +32,11 @@ import kenozooid.rglue as kr
 
 log = logging.getLogger('kenozooid.analyze')
 R = ro.r
+
+def r_log(s):
+    log.debug(s)
+
+rpy2.rinterface.set_writeconsole(r_log)
 
 def analyze(script, args, dives):
     """
