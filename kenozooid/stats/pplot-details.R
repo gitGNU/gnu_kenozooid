@@ -2,8 +2,8 @@
 # plot dive profiles
 #
 
-library(Hmisc)
-library(grid)
+suppressPackageStartupMessages(library(Hmisc))
+suppressPackageStartupMessages(library(grid))
 
 # annotate points with labels without overlapping
 # x is sorted, overlapping labels are moved down

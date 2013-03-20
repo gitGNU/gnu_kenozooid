@@ -33,10 +33,6 @@ import kenozooid.rglue as kr
 log = logging.getLogger('kenozooid.analyze')
 R = ro.r
 
-def r_log(s):
-    log.debug(s)
-
-rpy2.rinterface.set_writeconsole(r_log)
 
 def analyze(script, args, dives):
     """

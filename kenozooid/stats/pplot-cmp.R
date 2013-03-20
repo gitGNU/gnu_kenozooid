@@ -2,9 +2,9 @@
 # compare dive profiles on one plot
 #
 
-library(Hmisc)
-library(grid)
-library(colorspace)
+suppressPackageStartupMessages(library(Hmisc))
+suppressPackageStartupMessages(library(grid))
+suppressPackageStartupMessages(library(colorspace))
 
 if (length(kz.args) < 2) {
     stop('Arguments required: output file, output file format')
