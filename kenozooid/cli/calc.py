@@ -43,10 +43,11 @@ class Calculate(object):
         desc = ('calculate O2 partial pressure (ppO2)',
             'calculate Nitrogen partial pressure (ppN2)', 
             'calculate equivalent air depth (EAD)')
-        subp = parser.add_subparsers(dest='cmd')
+        subp = parser.add_subparsers()
+
         for cmd, d in zip(cmds, desc):
             p = subp.add_parser(cmd, help=d)
-            p.set_defaults(calc=cmd, patser=p)
+            p.set_defaults(calc=cmd, subcmd='calc', patser=p)
             p.add_argument('depth', type=float, nargs=1)
             p.add_argument('ean', type=float, nargs=1)
 
@@ -76,16 +77,17 @@ class Calculate(object):
         """
         import kenozooid.calc as kcalc
 
-        cmd = args.cmd
-        if cmd == 'calc':
+        if not hasattr(args, 'calc'):
             raise NoCommandError(args.parser)
 
-        f = getattr(kcalc, cmd)
-        if cmd in ('ppO2', 'ppN2', 'ead'):
+        calc = args.calc
+
+        f = getattr(kcalc, calc)
+        if calc in ('ppO2', 'ppN2', 'ead'):
             result = f(args.depth[0], args.ean[0])
-        elif cmd == 'mod':
+        elif calc == 'mod':
             result = f(args.ean[0], args.pp)
-        elif cmd == 'rmv':
+        elif calc == 'rmv':
             result = f(args.tank[0], args.pressure[0], args.depth[0],
                     args.duration[0])
         else:

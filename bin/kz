@@ -56,7 +56,11 @@ import kenozooid.driver.su
 
 # execute the command line module
 try:
-    cls = next(query(name=args.cmd), None)
+    if args.cmd == args.subcmd:
+        kz_cmd = args.cmd
+    else:
+        kz_cmd = args.cmd + ' ' + args.subcmd
+    cls = next(query(name=kz_cmd), None)
     if not cls:
         raise NoCommandError(parser)
 

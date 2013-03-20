@@ -131,7 +131,7 @@ def add_commands(parser, prefix=None, title=None):
      title
         Help title of commands.
     """
-    subp = parser.add_subparsers(dest='cmd', title=title)
+    subp = parser.add_subparsers(dest='subcmd', title=title)
 
     # find command line modules sorted by their names
     modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
@@ -156,9 +156,7 @@ def add_commands(parser, prefix=None, title=None):
             cmd = name
 
         p = subp.add_parser(cmd, help=desc)
-        if not master:
-            p.set_defaults(cmd=name)
-        p.set_defaults(parser=p)
+        p.set_defaults(cmd=name, parser=p)
         cls.add_arguments(p)
 
 
