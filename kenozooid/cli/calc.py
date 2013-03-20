@@ -43,11 +43,11 @@ class Calculate(object):
         desc = ('calculate O2 partial pressure (ppO2)',
             'calculate Nitrogen partial pressure (ppN2)', 
             'calculate equivalent air depth (EAD)')
-        subp = parser.add_subparsers()
+        subp = parser.add_subparsers(title='Calculator commands')
 
         for cmd, d in zip(cmds, desc):
             p = subp.add_parser(cmd, help=d)
-            p.set_defaults(calc=cmd, subcmd='calc', patser=p)
+            p.set_defaults(calc=cmd, subcmd='calc', parser=p)
             p.add_argument('depth', type=float, nargs=1)
             p.add_argument('ean', type=float, nargs=1)
 
