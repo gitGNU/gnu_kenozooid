@@ -18,17 +18,18 @@
 #
 
 """
-Kenozooid calculator command line modules.
+Kenozooid calculator commands.
 """
 
-from kenozooid.cli import CLIModule, ArgumentError, NoCommandError
+from kenozooid.cli import CLICommand, ArgumentError, NoCommandError
 from kenozooid.component import inject
 
 
-@inject(CLIModule, name='calc')
+@inject(CLICommand, name='calc')
 class Calculate(object):
     """
-    Kenozooid calculator command line module.
+    Kenozooid calculator command implementing various diving related
+    calculators.
     """
     description = 'air and nitrox calculations (partial pressure, EAD, MOD); metric units'
 

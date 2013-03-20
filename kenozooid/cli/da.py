@@ -25,12 +25,12 @@ import os.path
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
+from kenozooid.cli import CLICommand, ArgumentError, add_master_command, \
         add_uddf_input
 
 log = logging.getLogger('kenozooid.cli.da')
 
-@inject(CLIModule, name='plot')
+@inject(CLICommand, name='plot')
 class PlotProfiles(object):
     """
     Plot profiles of dives command.
@@ -125,7 +125,7 @@ class PlotProfiles(object):
 
 
 
-@inject(CLIModule, name='analyze')
+@inject(CLICommand, name='analyze')
 class Analyze(object):
     """
     Analyze dives with R script.

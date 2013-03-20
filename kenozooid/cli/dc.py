@@ -24,7 +24,7 @@ Dive computer related Kenozooid command line commands.
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
+from kenozooid.cli import CLICommand, ArgumentError, add_master_command, \
         add_uddf_input
 from kenozooid.component import query, params
 from kenozooid.driver import DeviceDriver, Simulator, DataParser
@@ -36,10 +36,10 @@ add_master_command('sim',
         'Kenozooid dive simulation commands',
         'simulate dives with a dive computer')
 
-@inject(CLIModule, name='drivers')
+@inject(CLICommand, name='drivers')
 class ListDrivers(object):
     """
-    Dive computers drivers listing command line module.
+    Command to list dive computers drivers.
     """
     description = 'list available dive computer drivers and their capabilities'
 
@@ -91,7 +91,7 @@ class ListDrivers(object):
 ###                 print >> sys.stderr, 'Device %s (%s) error: %s' % (id, name, ex)
 
 
-@inject(CLIModule, name='sim plan')
+@inject(CLICommand, name='sim plan')
 class Simulate(object):
     """
     Simulate dive on a dive computer.
@@ -146,7 +146,7 @@ class Simulate(object):
 
 
 
-@inject(CLIModule, name='sim replay')
+@inject(CLICommand, name='sim replay')
 class Simulate(object):
     """
     Replay dive profile on a dive computer.
@@ -190,10 +190,10 @@ class Simulate(object):
 
 
 
-@inject(CLIModule, name='backup')
+@inject(CLICommand, name='backup')
 class Backup(object):
     """
-    Command line module for dive computer data backup.
+    Dive computer data backup Kenozooid command.
     """
     description = 'backup dive computer data (logbook, settings, etc.)'
 
@@ -224,7 +224,7 @@ class Backup(object):
 
 
 
-@inject(CLIModule, name='dive extract')
+@inject(CLICommand, name='dive extract')
 class DumpExtract(object):
     """
     Extract dive profiles from dive computer dump (binary) data.
@@ -256,12 +256,12 @@ class DumpExtract(object):
 
 
 
-@inject(CLIModule, name='convert')
+@inject(CLICommand, name='convert')
 class Convert(object):
     """
-    Command line module for binary dive computer data conversion.
+    Command to store binary dive computer data in UDDF file.
     """
-    description = 'convert binary dive computer data'
+    description = 'store binary dive computer data in UDDF file'
 
     @classmethod
     def add_arguments(self, parser):

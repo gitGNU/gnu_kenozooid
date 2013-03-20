@@ -27,16 +27,16 @@ import argparse
 
 from kenozooid.component import query, params, inject
 
-class CLIModule(object):
+class CLICommand(object):
     """
-    Command line module for Kenozooid.
+    Kenozooid's command.
     """
     description = ''
 
     @classmethod
     def add_arguments(self, parser):
         """
-        Add command line module arguments to command line parser.
+        Add a command arguments to command line parser.
 
         :Parameters:
          parser
@@ -45,27 +45,27 @@ class CLIModule(object):
 
     def __call__(self, args):
         """
-        Execute command line module.
+        Execute Kenozooid command.
 
         May raise ArgumentError exception to indicate wrong arguments.
 
         :Parameters:
          args
-            Command line module arguments.
+            Command arguments.
         """
 
 
 
 class ArgumentError(BaseException):
     """
-    Wrong command line module arguments.
+    Error to indicate incorrect Kenozooid command arguments.
     """
 
 
 
 class NoCommandError(BaseException):
     """
-    No command specified.
+    No Kenozooid command specified.
 
     :Attributes:
      parser
@@ -134,10 +134,10 @@ def add_commands(parser, prefix=None, title=None):
     m_subp = parser.add_subparsers(dest='subcmd', title=title)
     c_subp = None # current subparser
 
-    # find command line modules sorted by their names
-    modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
+    # find Kenozooid commands and sort them by their names
+    commands = sorted(query(CLICommand), key=lambda cls: params(cls)['name'])
 
-    for cls in modules:
+    for cls in commands:
         p = params(cls)
         name = p['name']
         master = p.get('master', False)
@@ -181,7 +181,7 @@ def add_master_command(name, title, desc):
         Command description.
     """
 
-    @inject(CLIModule, name=name, master=True)
+    @inject(CLICommand, name=name, master=True)
     class Command(object):
 
         title = None

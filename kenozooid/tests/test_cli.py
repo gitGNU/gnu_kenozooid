@@ -25,7 +25,7 @@ from io import BytesIO
 import argparse
 
 from kenozooid.cli.logbook import _name_parse
-from kenozooid.cli import add_uddf_input, add_commands, CLIModule
+from kenozooid.cli import add_uddf_input, add_commands, CLICommand
 from kenozooid.component import _registry, inject
 
 import unittest
@@ -163,7 +163,7 @@ class CommandTestCase(unittest.TestCase):
         """
         Test CLI simple command parsing
         """
-        @inject(CLIModule, name='test')
+        @inject(CLICommand, name='test')
         class Test(object):
             description = 'test description'
 
@@ -189,7 +189,7 @@ class CommandTestCase(unittest.TestCase):
         """
         Test CLI command and subcommand parsing
         """
-        @inject(CLIModule, name='test', master=True)
+        @inject(CLICommand, name='test', master=True)
         class Test(object):
             description = 'test description'
             title = None
@@ -202,7 +202,7 @@ class CommandTestCase(unittest.TestCase):
                 pass
 
 
-        @inject(CLIModule, name='test a')
+        @inject(CLICommand, name='test a')
         class TestA(object):
             description = 'test a description'
             title = None
@@ -215,7 +215,7 @@ class CommandTestCase(unittest.TestCase):
                 pass
 
 
-        @inject(CLIModule, name='test b')
+        @inject(CLICommand, name='test b')
         class TestB(object):
             description = 'test b description'
             title = None

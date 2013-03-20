@@ -28,7 +28,7 @@ from lxml import etree as et
 import logging
 
 from kenozooid.component import inject
-from kenozooid.cli import CLIModule, ArgumentError, add_master_command, \
+from kenozooid.cli import CLICommand, ArgumentError, add_master_command, \
     add_uddf_input
 from kenozooid.component import query, params
 from kenozooid.util import nformat
@@ -52,7 +52,7 @@ add_master_command('buddy',
         'manage dive buddies in UDDF file')
 
 
-@inject(CLIModule, name='dive list')
+@inject(CLICommand, name='dive list')
 class ListDives(object):
     """
     List dives from UDDF file.
@@ -84,7 +84,7 @@ class ListDives(object):
 
 
 
-@inject(CLIModule, name='dive add')
+@inject(CLICommand, name='dive add')
 class AddDive(object):
     """
     Add a dive to logbook file.
@@ -129,7 +129,7 @@ class AddDive(object):
 
 
 
-@inject(CLIModule, name='dive copy')
+@inject(CLICommand, name='dive copy')
 class CopyDive(object):
     """
     Copy dives to logbook file.
@@ -156,7 +156,7 @@ class CopyDive(object):
 
 
 
-@inject(CLIModule, name='site add')
+@inject(CLICommand, name='site add')
 class AddDiveSite(object):
     """
     Add dive site to UDDF file.
@@ -220,7 +220,7 @@ class AddDiveSite(object):
 
 
 
-@inject(CLIModule, name='site list')
+@inject(CLICommand, name='site list')
 class ListDiveSites(object):
     """
     List dive sites from UDDF file.
@@ -269,7 +269,7 @@ class ListDiveSites(object):
 
 
 
-@inject(CLIModule, name='site del')
+@inject(CLICommand, name='site del')
 class DelDiveSite(object):
     """
     Remove dive site from UDDF file.
@@ -305,7 +305,7 @@ class DelDiveSite(object):
 
 
 
-@inject(CLIModule, name='buddy add')
+@inject(CLICommand, name='buddy add')
 class AddBuddy(object):
     """
     Add dive buddy to UDDF file.
@@ -359,7 +359,7 @@ class AddBuddy(object):
         ku.save(doc, fout)
 
 
-@inject(CLIModule, name='buddy list')
+@inject(CLICommand, name='buddy list')
 class ListBuddies(object):
     """
     List dive buddies from UDDF file.
@@ -403,7 +403,7 @@ class ListBuddies(object):
                 print(nformat(fmt, i + 1, b))
 
 
-@inject(CLIModule, name='buddy del')
+@inject(CLICommand, name='buddy del')
 class DelBuddy(object):
     """
     Remove dive buddies from UDDF file.
@@ -438,7 +438,7 @@ class DelBuddy(object):
         ku.save(doc.getroot(), fin)
 
 
-@inject(CLIModule, name='upgrade')
+@inject(CLICommand, name='upgrade')
 class UpgradeFile(object):
     """
     Upgrade a file to newer version of UDDF.
@@ -473,7 +473,7 @@ class UpgradeFile(object):
 
 
 
-@inject(CLIModule, name='dive enum')
+@inject(CLICommand, name='dive enum')
 class EnumDives(object):
     """
     Enumerate dives.
