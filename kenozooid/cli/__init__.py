@@ -140,7 +140,6 @@ def add_commands(parser, prefix=None, title=None):
 
         p = params(cls)
         name = p['name']
-        master = p.get('master', False)
 
         # no prefix then simply use name as command, command shall have no
         # spaces;
@@ -181,7 +180,7 @@ def add_master_command(name, title, desc):
         Command description.
     """
 
-    @inject(CLIModule, name=name, master=True)
+    @inject(CLIModule, name=name)
     class Command(object):
 
         description = desc

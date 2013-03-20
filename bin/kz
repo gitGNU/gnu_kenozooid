@@ -56,6 +56,9 @@ import kenozooid.driver.su
 
 # execute the command line module
 try:
+    if not hasattr(args, 'cmd'):
+        raise NoCommandError(parser)
+
     if args.cmd == args.subcmd:
         kz_cmd = args.cmd
     else:
