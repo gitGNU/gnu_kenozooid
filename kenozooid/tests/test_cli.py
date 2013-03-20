@@ -25,7 +25,8 @@ from io import BytesIO
 import argparse
 
 from kenozooid.cli.logbook import _name_parse
-from kenozooid.cli import add_uddf_input
+from kenozooid.cli import add_uddf_input, add_commands, CLIModule
+from kenozooid.component import _registry, inject
 
 import unittest
 
@@ -144,6 +145,111 @@ class UDDFInputActionTestCase(unittest.TestCase):
         args = self.parser.parse_args(args=['f2', '-k', '2-3', 'f1', 'out'])
         self.assertEquals(([None, '2-3'], ['f2', 'f1']), args.input)
         self.assertEquals('out', args.output)
+
+
+
+class CommandTestCase(unittest.TestCase):
+    """
+    CLI commands and subcommands parsing tests.
+    """
+    def tearDown(self):
+        """
+        Clear interface registry after each test.
+        """
+        _registry.clear()
+
+
+    def test_simple_command(self):
+        """
+        Test CLI simple command parsing
+        """
+        @inject(CLIModule, name='test')
+        class Test(object):
+            description = 'test description'
+
+            @classmethod
+            def add_arguments(self, parser):
+                pass
+
+            def __call__(self, args):
+                pass
+
+        parser = argparse.ArgumentParser()
+        add_commands(parser)
+
+        args = parser.parse_args('test'.split())
+        self.assertTrue(hasattr(args, 'cmd'))
+        self.assertTrue(hasattr(args, 'subcmd'))
+        self.assertTrue(hasattr(args, 'parser'))
+        self.assertEquals('test', args.cmd)
+        self.assertEquals('test', args.subcmd)
+
+
+    def test_complex_command(self):
+        """
+        Test CLI command and subcommand parsing
+        """
+        @inject(CLIModule, name='test', master=True)
+        class Test(object):
+            description = 'test description'
+            title = None
+
+            @classmethod
+            def add_arguments(self, parser):
+                pass
+
+            def __call__(self, args):
+                pass
+
+
+        @inject(CLIModule, name='test a')
+        class TestA(object):
+            description = 'test a description'
+            title = None
+
+            @classmethod
+            def add_arguments(self, parser):
+                pass
+
+            def __call__(self, args):
+                pass
+
+
+        @inject(CLIModule, name='test b')
+        class TestB(object):
+            description = 'test b description'
+            title = None
+
+            @classmethod
+            def add_arguments(self, parser):
+                pass
+
+            def __call__(self, args):
+                pass
+
+        parser = argparse.ArgumentParser()
+        add_commands(parser)
+
+        args = parser.parse_args('test'.split())
+        self.assertTrue(hasattr(args, 'cmd'))
+        self.assertTrue(hasattr(args, 'subcmd'))
+        self.assertTrue(hasattr(args, 'parser'))
+        self.assertEquals('test', args.cmd)
+        self.assertEquals('test', args.subcmd)
+
+        args = parser.parse_args('test a'.split())
+        self.assertTrue(hasattr(args, 'cmd'))
+        self.assertTrue(hasattr(args, 'subcmd'))
+        self.assertTrue(hasattr(args, 'parser'))
+        self.assertEquals('test', args.cmd)
+        self.assertEquals('a', args.subcmd)
+
+        args = parser.parse_args('test b'.split())
+        self.assertTrue(hasattr(args, 'cmd'))
+        self.assertTrue(hasattr(args, 'subcmd'))
+        self.assertTrue(hasattr(args, 'parser'))
+        self.assertEquals('test', args.cmd)
+        self.assertEquals('b', args.subcmd)
 
 
 # vim: sw=4:et:ai
