@@ -1,5 +1,10 @@
 Changelog
 =========
+Kenozooid 0.14.0
+----------------
+- command line user interface fixes
+- fixed a bug, when R scripts output was suppressed
+
 Kenozooid 0.13.0
 ----------------
 - command line user interface fixes
