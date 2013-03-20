@@ -131,30 +131,31 @@ def add_commands(parser, prefix=None, title=None):
      title
         Help title of commands.
     """
-    subp = parser.add_subparsers(dest='subcmd', title=title)
+    m_subp = parser.add_subparsers(dest='subcmd', title=title)
+    c_subp = None # current subparser
 
     # find command line modules sorted by their names
     modules = sorted(query(CLIModule), key=lambda cls: params(cls)['name'])
-    for cls in modules:
-        desc = cls.description
 
+    for cls in modules:
         p = params(cls)
         name = p['name']
+        master = p.get('master', False)
+        desc = cls.description
+        title = cls.title if master else None
 
-        # no prefix then simply use name as command, command shall have no
-        # spaces;
-        # if there is prefix then match command with its prefix
-        if prefix:
-            if not name.startswith(prefix) or name == prefix:
-                continue
-
-            cmd = name.rsplit(' ', 1)[1]
-        elif ' ' in name:
-            continue
+        if ' '  in name:
+            assert c_subp # no master command, no subcommand
+            cmd, subcmd = name.split()
+            p = c_subp.add_parser(subcmd, help=desc)
         else:
-            cmd = name
+            cmd, subcmd = name, name
+            p = m_subp.add_parser(subcmd, help=desc)
+            if master: # add master command
+                c_subp = p.add_subparsers(dest='subcmd', title=title)
+            else:
+                c_subp = None
 
-        p = subp.add_parser(cmd, help=desc)
         p.set_defaults(cmd=name, parser=p)
         cls.add_arguments(p)
 
@@ -180,17 +181,20 @@ def add_master_command(name, title, desc):
         Command description.
     """
 
-    @inject(CLIModule, name=name)
+    @inject(CLIModule, name=name, master=True)
     class Command(object):
 
+        title = None
         description = desc
 
         @classmethod
         def add_arguments(self, parser):
-            add_commands(parser, name, title)
+            pass
 
         def __call__(self, args):
             raise NoCommandError(args.parser)
+
+    Command.title = title
 
     return Command
 

@@ -59,10 +59,10 @@ try:
     if not hasattr(args, 'cmd'):
         raise NoCommandError(parser)
 
-    if args.cmd == args.subcmd:
-        kz_cmd = args.cmd
-    else:
-        kz_cmd = args.cmd + ' ' + args.subcmd
+    kz_cmd = args.cmd
+    if args.cmd != args.subcmd:
+        kz_cmd += ' ' + args.subcmd
+
     cls = next(query(name=kz_cmd), None)
     if not cls:
         raise NoCommandError(parser)
