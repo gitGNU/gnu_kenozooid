@@ -10,6 +10,7 @@ w:
 - ostc-dump-35.uddf
 - ostc-dump-40.uddf
 - ostc-dump-44.uddf
+- ostc-dump-49.uddf
 
 solodiver:
 - ostc-dump-2{1,2,3}.uddf
@@ -34,5 +35,6 @@ ola:
 - ostc-dump-34.uddf
 - ostc-dump-41.uddf
 - ostc-dump-45.uddf
+- ostc-dump-48.uddf
 
 # vim: sw=4:et:ai
