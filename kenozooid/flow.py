@@ -72,7 +72,7 @@ def send(data, tc):
 @coroutine
 def split(*tc):
     """
-    Coroutines to receive a value and send it to all coroutines specified
+    Coroutine to receive a value and send it to all coroutines specified
     in ``tc`` list.
 
     :Parameters:
