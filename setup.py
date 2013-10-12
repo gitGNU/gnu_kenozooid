@@ -177,6 +177,7 @@ setup(
     author='Artur Wroblewski',
     author_email='wrobell@pld-linux.org',
     url='http://wrobell.it-zone.org/kenozooid',
+    setup_requires = ['setuptools_git >= 1.0',],
     packages=find_packages('.'),
     scripts=('bin/kz',),
     include_package_data=True,
