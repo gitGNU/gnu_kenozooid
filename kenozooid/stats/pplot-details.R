@@ -60,7 +60,7 @@ kz.args.width = 10
 kz.args.height = 5
 
 if (kz.args.fmt == 'pdf') {
-    cairo_pdf(kz.args.fout, width=kz.args.width, height=kz.args.height, onefile=TRUE)
+    pdf(kz.args.fout, width=kz.args.width, height=kz.args.height, onefile=TRUE)
 } else if (kz.args.fmt == 'png') {
     fimg = png
     kz.args.width = 900
