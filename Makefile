@@ -21,8 +21,8 @@ doc: .homepage-stamp .epydoc-stamp .sphinx-stamp
 	./bin/kz plot --info --avg-depth -k 8 examples/backup-ostc-20110728.uddf doc/user/dive-2011-06-26.png
 	./bin/kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -k 1,2 examples/logbook.uddf doc/user/divemode-compare.pdf
 	./bin/kz plot -t cmp --legend --labels Rebreather 'Open Circuit' -k 1,2 examples/logbook.uddf doc/user/divemode-compare.png
-	sphinx-build-3 doc build/homepage/doc
-	sphinx-build-3 -b epub doc doc-tmp-epub
+	sphinx-build doc build/homepage/doc
+	sphinx-build -b epub doc doc-tmp-epub
 	cp doc-tmp-epub/*.epub build/homepage/doc
 	cp doc/user/*.pdf build/homepage/doc/user/
 
