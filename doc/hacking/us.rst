@@ -131,6 +131,68 @@ The diver calculates
 - respiratory minute volume (RMV) for tank size, pressure in tank, maximum
   depth and dive duration
 
+.. _hk-us-plan-deco:
+
+Decompression Dive
+^^^^^^^^^^^^^^^^^^
+The diver is planning a decompression dive.
+
+The dive plan input is
+
+- gas mix list
+
+  - travel gas mixes (0 or more)
+  - bottom gas mix
+  - decompression gas mixes
+
+- diving cylinders specification
+- bottom time
+- maximum dive depth
+
+Kenozooid calculates dive plan, which consists of
+
+- dive profile summary
+
+  - maximum dive depth
+  - bottom time including descent time
+  - sum of decompression time
+  - total dive time
+
+- emergency dive profile summary for lost gas
+- emergency dive profile summary for +5m/+3min (5 meters deeper and 3 minutes longer)
+- emergency dive profile summary for lost gas for +5m/+3min
+
+- gas logistics information
+
+  - volume of required gas mixes for each dive profile (calculated using
+    rule of thirds)
+  - verification that volume of gas mix fits into specified diving
+    cylinders
+
+- dive slates for
+
+  - planned dive profile
+  - lost gas emergency dive profile
+  - +5m/+3min emergency dive profile
+  - lost gas and +5m/+3min emergency dive profile
+
+Dive slate consists of the following columns
+
+- depth (is prefixed with `*` character on gas mix change event)
+- decompression time
+- run time
+- gas mix used at given dive profile segment
+
+The dive plan is shown on the screen or can be saved into a PDF file for
+printing.
+
+The following is assumed at the moment and should be parameterized later
+
+- RMV 20l/min
+- descent rate 20m/min
+- travel and decompression gas mixes cylinders pressure 200bar
+- bottom gas mix cylinder pressure 220bar
+
 .. _hk-us-logbook:
 
 Logbook
