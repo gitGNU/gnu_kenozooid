@@ -159,22 +159,24 @@ Kenozooid calculates dive plan, which consists of
   - total dive time
 
 - emergency dive profile summary for lost gas
-- emergency dive profile summary for +5m/+3min (5 meters deeper and 3 minutes longer)
-- emergency dive profile summary for lost gas for +5m/+3min
+- emergency dive profile summary for extended dive profile
+- emergency dive profile summary for extended dive profile and lost gas
 
 - gas logistics information
 
-  - volume of required gas mixes for each dive profile (calculated using
-    rule of thirds)
-  - verification that volume of gas mix fits into specified diving
-    cylinders
+  - volume of each required gas mix for dive profile calculated using rule
+    of thirds
+  - verification message for each emergency dive profile that volume of gas
+    is sufficient for a dive profile, warning otherwise
+  - verification message that volume of each gas mix fits into specified,
+    appropriate diving cylinder, warning otherwise
 
 - dive slates for
 
   - planned dive profile
-  - lost gas emergency dive profile
-  - +5m/+3min emergency dive profile
-  - lost gas and +5m/+3min emergency dive profile
+  - emergency lost gas dive profile
+  - emergency extended dive profile
+  - emergency extended dive profile and lost gas
 
 Dive slate consists of the following columns
 
@@ -190,8 +192,10 @@ The following is assumed at the moment and should be parameterized later
 
 - RMV 20l/min
 - descent rate 20m/min
+- last stop 6m
 - travel and decompression gas mixes cylinders pressure 200bar
 - bottom gas mix cylinder pressure 220bar
+- extended dive profile is 5 meters deeper and 3 minutes longer (+5m/+3min)
 
 .. _hk-us-logbook:
 
