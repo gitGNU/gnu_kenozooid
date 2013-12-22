@@ -146,16 +146,17 @@ The dive plan input is
   - decompression gas mixes
 
 - diving cylinders specification
-- bottom time
 - maximum dive depth
+- bottom time
 
 Kenozooid calculates dive plan, which consists of
 
 - dive profile summary
 
   - maximum dive depth
-  - bottom time including descent time
-  - sum of decompression time
+  - bottom time (includes descent time)
+  - descent time
+  - total decompression time
   - total dive time
 
 - emergency dive profile summary for lost gas
@@ -178,6 +179,8 @@ Kenozooid calculates dive plan, which consists of
   - emergency extended dive profile
   - emergency extended dive profile and lost gas
 
+Decompression stops are calculated with a decompression engine library.
+
 Dive slate consists of the following columns
 
 - depth (is prefixed with `*` character on gas mix change event)
@@ -196,6 +199,10 @@ The following is assumed at the moment and should be parameterized later
 - travel and decompression gas mixes cylinders pressure 200bar
 - bottom gas mix cylinder pressure 220bar
 - extended dive profile is 5 meters deeper and 3 minutes longer (+5m/+3min)
+- decompression model is ZH-L16B-GF (ZH-L16C-GF can be used in the future
+  also)
+- decompression engine library is ``decotengu`` (``libdeco-ostc`` can be
+  used in the future also)
 
 .. _hk-us-logbook:
 
