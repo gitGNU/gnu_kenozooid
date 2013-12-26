@@ -212,6 +212,7 @@ Manage Logbook
 Add Dive
 ^^^^^^^^
 **Input:** dive data, logbook file name, optional dive data
+
 **Output:** dive in logbook file
 
 Dive data is
