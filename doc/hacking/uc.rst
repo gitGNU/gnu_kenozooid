@@ -182,6 +182,30 @@ be provided by the diver.
 |                    | the calculation. |            |
 +--------------------+------------------+------------+
 
+Decompression Dive Planning
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**User Story**: :ref:`hk-us-plan-deco`
+
+**Input**: gas mix list, diving cylinders specification, maximum dive
+depth, bottom time
+
+**Output**: dive plan
+
++-----------+--------------------+---------------------------------------------+
+| Diver     | UI                 | Planning                                    |
++===========+====================+=============================================+
+| Plan deco | Verify and parse   | Prepare dive profile and emergency dive     |
+| dive      | input parameters.  | profiles.                                   |
+|           |                    |                                             |
+|           |                    | For each dive profile                       |
+|           |                    |                                             |
+|           |                    | - calculate and verify gas mix requirements |
+|           |                    | - create dive slate                         |
++-----------+--------------------+---------------------------------------------+
+|           | Display dive plan. |                                             |
++-----------+--------------------+---------------------------------------------+
+
 Manage Logbook
 --------------
 
