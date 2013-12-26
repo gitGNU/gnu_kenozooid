@@ -178,13 +178,24 @@ def dive_slate(profile, stops):
     depth = profile.depth
     # runtime is float number, which tracks minute and fraction of minute,
     # but it is rounded when added to dive slate
-    rt = profile.time
+    rt = 0
     fs = stops[0]
 
-    # TODO: travel zone
+    # travel zone
+    if gas_list.travel_gas:
+        prev_depth = 0
+        slate.append((0, None, 0, gas_list.travel_gas[0]))
+        for m in gas_list.travel_gas[1:]:
+            rt += (m.depth - prev_depth) / 10
+            slate.append((m.depth, None, round(rt), m))
+            prev_depth = m.depth
+        m = gas_list.bottom_gas
+        rt += (m.depth - prev_depth) / 10
+        slate.append((m.depth, None, round(rt), m))
 
     # dive bottom
-    m = gas_list.bottom_gas
+    rt = profile.time # reset runtime to dive bottom time
+    m = None if gas_list.travel_gas else gas_list.bottom_gas
     slate.append((depth, None, rt, m))
 
     # deco free zone

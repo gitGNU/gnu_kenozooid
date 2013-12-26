@@ -124,4 +124,39 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEquals((0, None, 51, None), slate[7], slate)
 
 
+    def test_dive_slate_travel(self):
+        """
+        Test dive slate creation (with travel gas)
+        """
+        ean32 = GasMix(0, 32, 0)
+        ean30 = GasMix(33, 30, 0)
+        ean27 = GasMix(37, 27, 0)
+        ean50 = GasMix(22, 50, 0)
+        ean80 = GasMix(10, 80, 0)
+
+        gas_list = GasList(ean27)
+        gas_list.travel_gas.append(ean32)
+        gas_list.travel_gas.append(ean30)
+        gas_list.deco_gas.append(ean50)
+        gas_list.deco_gas.append(ean80)
+
+        profile = DiveProfile(DiveProfileType.PLANNED, gas_list, 45, 35)
+
+        Stop = namedtuple('Stop', 'depth time')
+        stops = [
+            Stop(18, 1),
+            Stop(15, 1),
+            Stop(12, 2),
+            Stop(9, 3),
+            Stop(6, 5),
+        ]
+
+        slate = dive_slate(profile, stops)
+
+        self.assertEquals((0, None, 0, ean32), slate[0], slate)
+        self.assertEquals((33, None, 3, ean30), slate[1], slate)
+        self.assertEquals((37, None, 4, ean27), slate[2], slate)
+        self.assertEquals((45, None, 35, None), slate[3], slate)
+
+
 # vim: sw=4:et:ai
