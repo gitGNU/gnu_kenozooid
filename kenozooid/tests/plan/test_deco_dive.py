@@ -17,4 +17,27 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from kenozooid.plan.deco import plan_deco_dive, DiveProfileType
+
+import unittest
+
+class DecoDivePlannerTestCase(unittest.TestCase):
+    """
+    Decompression dive planner tests.
+    """
+    def test_deco_dive_plan(self):
+        """
+        Test deco dive plan
+        """
+        gas_list = []
+        plan = plan_deco_dive(gas_list, 45, 35)
+
+        self.assertEquals(4, len(plan.profiles))
+
+        t = DiveProfileType
+        expected = [t.PLANNED, t.EXTENDED, t.LOST_GAS, t.EXTENDED_LOST_GAS]
+        types = [p.type for p in plan.profiles]
+        self.assertEquals(expected, types)
+
+
 # vim: sw=4:et:ai

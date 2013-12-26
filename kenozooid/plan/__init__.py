@@ -17,4 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+"""
+Dive planning.
+"""
+
 # vim: sw=4:et:ai
