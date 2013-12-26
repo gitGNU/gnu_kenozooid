@@ -21,6 +21,92 @@
 Decompression dive planning.
 """
 
+from collections import namedtuple
+
+GasMix = namedtuple('GasMix', 'depth o2 he')
+GasMix.__doc__ = """
+Gas mix information.
+
+:var depth: Gas mix switch depth.
+:var o2: O2 percentage.
+:var he: Helium percentage.
+"""
+
+
+class GasList(object):
+    """
+    List of gas mixes.
+
+    :var travel_gas: List of travel gas mixes.
+    :var bottom_gas: Bottom gas mix.
+    :var deco_gas: List of decompression gas mixes.
+    """
+    def __init__(self, gas):
+        """
+        Create list of gas mixes.
+
+        :param gas: Bottom gas mix.
+        """
+        self.bottom_gas = gas
+        self.travel_gas = []
+        self.deco_gas = []
+
+
+
+class DivePlan(object):
+    """
+    Dive plan information.
+
+    :var profiles: List of dive profiles.
+    """
+    def __init__(self):
+        self.profiles = []
+
+
+
+class DiveProfile(object):
+    """
+    Dive profile information.
+
+    :var type: Dive profile type.
+    :var gas_list: Gas list for the dive profile.
+    :var depth: Maximum dive depth.
+    :var time: Dive bottom time.
+    :var slate: Dive slate.
+    :var gas_info: Gas mix requirements.
+    """
+    def __init__(self, type, gas_list, depth, time):
+        self.type = type
+        self.gas_list = gas_list
+        self.depth = depth
+        self.time = time
+        self.slate = []
+        self.gas_info = []
+
+
+
+class DiveProfileType(object):
+    """
+    Dive profile type.
+
+    The dive profile types are
+
+    PLANNED
+        Dive profile planned by a diver.
+    EXTENDED
+        Extended dive profile compared to planned dive profile.
+    LOST_GAS
+        Dive profile as planned dive but for lost decompression gas.
+    EXTENDED_LOST_GAS
+        Combination of `EXTENDED` and `LOST_GAS` dive profiles.
+    """
+    PLANNED = 'planned'
+    EXTENDED = 'extended'
+    LOST_GAS = 'lost gas'
+    EXTENDED_LOST_GAS = 'extended + lost gas'
+
+
+
 def plan_deco_dive(gas_list, depth, time):
     """
     Plan decompression dive.
@@ -53,8 +139,22 @@ def deco_stops(profile):
 
     :param profile: Dive profile information.
     """
-    stops = []
-    return stops
+    import decotengu # configurable in the future, do not import globally
+    engine, dt = decotengu.create()
+
+    gas_list = profile.gas_list
+
+    # add gas mix information to decompression engine
+    for m in gas_list.travel_gas:
+        engine.add_gas(m.depth, m.o2, m.he, travel=True)
+    m = gas_list.bottom_gas
+    engine.add_gas(m.depth, m.o2, m.he)
+    for m in gas_list.deco_gas:
+        engine.add_gas(m.depth, m.o2, m.he)
+
+    list(engine.calculate(profile.depth, profile.time))
+
+    return dt.stops
 
 
 def dive_slate(profile, stops):
@@ -76,57 +176,6 @@ def gas_info(profile):
     """
     info = []
     return info
-
-
-class DivePlan(object):
-    """
-    Dive plan information.
-
-    :var profiles: List of dive profiles.
-    """
-    def __init__(self):
-        self.profiles = []
-
-
-class DiveProfile(object):
-    """
-    Dive profile information.
-
-    :var type: Dive profile type.
-    :var gas_list: Gas list for the dive profile.
-    :var depth: Maximum dive depth.
-    :var time: Dive bottom time.
-    :var slate: Dive slate.
-    :var gas_info: Gas mix requirements.
-    """
-    def __init__(self, type, gas_list, depth, time):
-        self.type = type
-        self.gas_list = gas_list
-        self.depth = depth
-        self.time = time
-        self.slate = []
-        self.gas_info = []
-
-
-class DiveProfileType(object):
-    """
-    Dive profile type.
-
-    The dive profile types are
-
-    PLANNED
-        Dive profile planned by a diver.
-    EXTENDED
-        Extended dive profile compared to planned dive profile.
-    LOST_GAS
-        Dive profile as planned dive but for lost decompression gas.
-    EXTENDED_LOST_GAS
-        Combination of `EXTENDED` and `LOST_GAS` dive profiles.
-    """
-    PLANNED = 'planned'
-    EXTENDED = 'extended'
-    LOST_GAS = 'lost gas'
-    EXTENDED_LOST_GAS = 'extended + lost gas'
 
 
 # vim: sw=4:et:ai
