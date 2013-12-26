@@ -32,7 +32,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         """
         Test deco dive plan
         """
-        gas_list = []
+        gas_list = GasList(GasMix(0, 21, 0))
         plan = plan_deco_dive(gas_list, 45, 35)
 
         self.assertEquals(4, len(plan.profiles))
