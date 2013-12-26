@@ -161,10 +161,52 @@ def dive_slate(profile, stops):
     """
     Calculate dive slate for a dive profile.
 
+    The dive decompression stops is a collection of items implementing the
+    following interface
+
+    depth
+        Depth of dive stop [m].
+    time
+        Time of dive stop [min].
+
     :param profile: Dive profile information.
     :parma stops: Dive decompression stops.
     """
     slate = []
+
+    gas_list = profile.gas_list
+    depth = profile.depth
+    # runtime is float number, which tracks minute and fraction of minute,
+    # but it is rounded when added to dive slate
+    rt = profile.time
+    fs = stops[0]
+
+    # TODO: travel zone
+
+    # dive bottom
+    m = gas_list.bottom_gas
+    slate.append((depth, None, rt, m))
+
+    # deco free zone
+    switch = [m for m in gas_list.deco_gas if m.depth > fs.depth]
+    prev_depth = depth
+    for m in switch:
+        rt += (prev_depth - m.depth) / 10
+        slate.append((m.depth, None, round(rt), m))
+        prev_depth = m.depth
+
+    # deco zone
+    switch = {(m.depth // 3) * 3: m for m in gas_list.deco_gas if m.depth <= fs.depth}
+    for s in stops:
+        m = switch.get(s.depth)
+        rt += (prev_depth - s.depth) / 10
+        rt += s.time
+        slate.append((s.depth, s.time, round(rt), m))
+        prev_depth = s.depth
+
+    rt += prev_depth / 10
+    slate.append((0, None, round(rt), None))
+
     return slate
 
 

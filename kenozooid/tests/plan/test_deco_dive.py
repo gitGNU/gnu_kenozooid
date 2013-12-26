@@ -17,8 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from kenozooid.plan.deco import plan_deco_dive, deco_stops, DiveProfile, \
-    DiveProfileType, GasList, GasMix
+from collections import namedtuple
+
+from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
+    DiveProfile, DiveProfileType, GasList, GasMix
 
 import unittest
 from unittest import mock
@@ -77,6 +79,49 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
         # check deco stops are returned
         self.assertEquals(dt.stops, stops)
+
+
+    def test_dive_slate(self):
+        """
+        Test dive slate creation
+        """
+        ean27 = GasMix(33, 27, 0)
+        ean50 = GasMix(22, 50, 0)
+        ean80 = GasMix(10, 80, 0)
+
+        gas_list = GasList(ean27)
+        gas_list.deco_gas.append(ean50)
+        gas_list.deco_gas.append(ean80)
+
+        profile = DiveProfile(DiveProfileType.PLANNED, gas_list, 45, 35)
+
+        Stop = namedtuple('Stop', 'depth time')
+        stops = [
+            Stop(18, 1),
+            Stop(15, 1),
+            Stop(12, 2),
+            Stop(9, 3),
+            Stop(6, 5),
+        ]
+
+        slate = dive_slate(profile, stops)
+
+        self.assertEquals(8, len(slate), slate)
+
+        self.assertEquals((45, None, 35, ean27), slate[0], slate)
+        self.assertEquals((22, None, 37, ean50), slate[1], slate)
+        # runtime = 38.7
+        self.assertEquals((18, 1, 39, None), slate[2], slate)
+        # runtime = 38.7 + 1.3
+        self.assertEquals((15, 1, 40, None), slate[3], slate)
+        # runtime = 40 + 2.3
+        self.assertEquals((12, 2, 42, None), slate[4], slate)
+        # runtime = 42.3 + 3.3
+        self.assertEquals((9, 3, 46, ean80), slate[5], slate)
+        # runtime = 45.6 + 5.3
+        self.assertEquals((6, 5, 51, None), slate[6], slate)
+        # runtime = 50.9 + 0.6 = 51.4999...
+        self.assertEquals((0, None, 51, None), slate[7], slate)
 
 
 # vim: sw=4:et:ai
