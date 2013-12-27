@@ -21,7 +21,24 @@
 Decompression dive planning.
 """
 
+import re
 from collections import namedtuple
+
+from kenozooid.data import gas
+from kenozooid.calc import mod
+
+
+RE_GAS = re.compile("""
+    ^(?P<name>
+        (?P<type> O2 | AIR | EAN | TX)
+        ((?<=TX|AN)(?P<o2>[0-9]{2}))?
+        ((?<=TX..)/(?P<he>[0-9]{2}))?
+    )
+    (@(?P<depth>[0-9]+))?
+    (\|(?P<tank>([2-9]x[1-9]{1,2})))?
+    $
+""", re.VERBOSE)
+
 
 class GasList(object):
     """
@@ -250,6 +267,59 @@ def plan_to_text(plan):
             txt.append(t)
 
     return '\n'.join(txt)
+
+
+def parse_gas(t, travel=False):
+    """
+    Parse gas mix.
+
+    :param t: Gas mix string.
+    :param travel: True if travel gas mix.
+    """
+    t = t.upper()
+    v = RE_GAS.search(t)
+    m = None
+
+    if v:
+        n = v.group('name')
+
+        p = v.group('o2')
+        if p is None:
+            if n == 'AIR':
+                o2 = 21
+            elif n == 'O2':
+                o2 = 100
+            else:
+                return None
+        else:
+            o2 = int(p)
+
+        p = v.group('he')
+        he = 0 if p is None else int(p)
+
+        p = v.group('depth')
+        depth = mod(o2, 1.6) if p is None else int(p)
+        #tank = v.group('tank')
+        m = gas(o2, he, depth=int(depth))
+
+    return m
+
+
+def parse_gas_list(*args):
+    """
+    Parse gas mix list.
+
+    :param *args: List of gas mix strings.
+    """
+    travel_gas = [parse_gas(a[1:], True) for a in args if a[0] == '+']
+    deco_gas = [parse_gas(a) for a in args if a[0] != '+']
+    bottom_gas = deco_gas[0]
+    del deco_gas[0]
+
+    gl = GasList(bottom_gas)
+    gl.travel_gas.extend(travel_gas)
+    gl.deco_gas.extend(deco_gas)
+    return gl
 
 
 # vim: sw=4:et:ai

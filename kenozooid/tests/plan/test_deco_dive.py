@@ -20,7 +20,7 @@
 from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
-    DiveProfile, DiveProfileType, GasList
+    DiveProfile, DiveProfileType, GasList, parse_gas, parse_gas_list
 from kenozooid.data import gas
 
 import unittest
@@ -158,6 +158,90 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEquals((33, None, 3, ean30), slate[1], slate)
         self.assertEquals((37, None, 4, ean27), slate[2], slate)
         self.assertEquals((45, None, 35, None), slate[3], slate)
+
+
+class GasMixParserTestCase(unittest.TestCase):
+    """
+    Gas mix parser tests.
+    """
+    def test_parse_gas_air(self):
+        """
+        Test parsing air gas mix
+        """
+        m = parse_gas('air')
+        self.assertEquals(21, m.o2)
+        self.assertEquals(0, m.he)
+        self.assertEquals(66, m.depth)
+
+        m = parse_gas('air@0')
+        self.assertEquals(21, m.o2)
+        self.assertEquals(0, m.he)
+        self.assertEquals(0, m.depth)
+
+
+    def test_parse_gas_o2(self):
+        """
+        Test parsing o2 gas mix
+        """
+        m = parse_gas('o2')
+        self.assertEquals(100, m.o2)
+        self.assertEquals(0, m.he)
+        self.assertEquals(6, m.depth)
+
+
+    def test_parse_gas_ean(self):
+        """
+        Test parsing EAN gas mix
+        """
+        m = parse_gas('EAN50')
+        self.assertEquals(50, m.o2)
+        self.assertEquals(0, m.he)
+        self.assertEquals(22, m.depth)
+
+        m = parse_gas('ean32@21')
+        self.assertEquals(32, m.o2)
+        self.assertEquals(0, m.he)
+        self.assertEquals(21, m.depth)
+
+
+    def test_parse_trimix(self):
+        """
+        Test parsing trimix gas
+        """
+        m = parse_gas('TX21/33@10')
+        self.assertEquals(21, m.o2)
+        self.assertEquals(33, m.he)
+        self.assertEquals(10, m.depth)
+
+        m = parse_gas('TX17/18')
+        self.assertEquals(17, m.o2)
+        self.assertEquals(18, m.he)
+        self.assertEquals(84, m.depth)
+
+    # TODO: 'TX17/18|2x12', 'TX21/33@10'
+
+    def test_parse_gas_unknown(self):
+        """
+        Test parsing unknown gas mix
+        """
+        mixes = [
+            'EAN50/30', 'O2/30', 'EAN', 'TX@20', 'TX/30', 'EAN100',
+            'TX100/10'
+        ]
+        for m in mixes:
+            self.assertTrue(parse_gas(m) is None, m)
+
+
+    def test_parse_gas_list(self):
+        """
+        Test parsing gas list
+        """
+        air = gas(21, 0)
+        ean50 = gas(50, 0, 22)
+        gas_list = parse_gas_list('air@0', 'ean50')
+        self.assertEquals([], gas_list.travel_gas)
+        self.assertEquals(air, gas_list.bottom_gas)
+        self.assertEquals([ean50], gas_list.deco_gas)
 
 
 # vim: sw=4:et:ai

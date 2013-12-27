@@ -45,6 +45,10 @@ class DecoPlan(object):
         """
         Parse decompression dive planner command arguments.
         """
+        parser.add_argument(
+            'gas_list',
+            help='gas list, i.e. "air" or "air ean50@20 o2"'
+        )
         parser.add_argument('depth', type=int, help='dive depth')
         parser.add_argument('time', type=int, help='dive bottom time')
 
@@ -54,9 +58,8 @@ class DecoPlan(object):
         Execute Kenozooid decompression dive planning command.
         """
         import kenozooid.plan.deco as planner
-        from kenozooid.data import gas
-        gl = planner.GasList(gas(21, 0))
-        plan = planner.plan_deco_dive(gl, args.depth, args.time)
+        gas_list = planner.parse_gas_list(*args.gas_list.split())
+        plan = planner.plan_deco_dive(gas_list, args.depth, args.time)
         print(planner.plan_to_text(plan))
 
 
