@@ -73,7 +73,7 @@ class DivesTestCase(unittest.TestCase):
         """
         Test trimix gas data creation
         """
-        21/35, 18/45 and 15/55
+        # 21/35, 18/45 and 15/55
         e = kd.Gas(id='tx2135', name='TX 21/35', o2=21, he=35, depth=0)
         self.assertEquals(e, kd.gas(21, 35))
 
