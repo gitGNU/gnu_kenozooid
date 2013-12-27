@@ -114,22 +114,26 @@ class DiveProfileType(object):
 
 
 
-def plan_deco_dive(gas_list, depth, time):
+def plan_deco_dive(gas_list, depth, time, ext=(5, 3)):
     """
     Plan decompression dive.
     """
+    ext_depth = depth + ext[0]
+    ext_time = time + ext[1]
     plan = DivePlan()
 
     p = DiveProfile(DiveProfileType.PLANNED, gas_list, depth, time)
     plan.profiles.append(p)
 
-    p = DiveProfile(DiveProfileType.EXTENDED, gas_list, depth, time)
+    p = DiveProfile(DiveProfileType.EXTENDED, gas_list, ext_depth, ext_time)
     plan.profiles.append(p)
 
     p = DiveProfile(DiveProfileType.LOST_GAS, gas_list, depth, time)
     plan.profiles.append(p)
 
-    p = DiveProfile(DiveProfileType.EXTENDED_LOST_GAS, gas_list, depth, time)
+    p = DiveProfile(
+        DiveProfileType.EXTENDED_LOST_GAS, gas_list, ext_depth, ext_time
+    )
     plan.profiles.append(p)
 
     for p in plan.profiles:

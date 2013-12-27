@@ -45,6 +45,15 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         types = [p.type for p in plan.profiles]
         self.assertEquals(expected, types)
 
+        self.assertEquals(45, plan.profiles[0].depth)
+        self.assertEquals(35, plan.profiles[0].time)
+        self.assertEquals(50, plan.profiles[1].depth)
+        self.assertEquals(38, plan.profiles[1].time)
+        self.assertEquals(45, plan.profiles[2].depth)
+        self.assertEquals(35, plan.profiles[2].time)
+        self.assertEquals(50, plan.profiles[3].depth)
+        self.assertEquals(38, plan.profiles[3].time)
+
 
     @mock.patch('decotengu.create')
     def test_deco_stops(self, f_c):
