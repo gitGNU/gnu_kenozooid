@@ -28,6 +28,7 @@ import kenozooid.cli.calc
 import kenozooid.cli.da
 import kenozooid.cli.dc
 import kenozooid.cli.logbook
+import kenozooid.cli.plan
 
 # add common options to command line parser
 parser = argparse.ArgumentParser(
