@@ -35,7 +35,13 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         """
         Test deco dive plan
         """
-        gas_list = GasList(gas(21, 0, depth=0))
+        ean50 = gas(50, 0, 22)
+        ean80 = gas(80, 0, 9)
+        air = gas(21, 0, depth=0)
+        gas_list = GasList(air)
+        gas_list.deco_gas.append(ean50)
+        gas_list.deco_gas.append(ean80)
+
         plan = plan_deco_dive(gas_list, 45, 35)
 
         self.assertEquals(4, len(plan.profiles))
@@ -53,6 +59,18 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEquals(35, plan.profiles[2].time)
         self.assertEquals(50, plan.profiles[3].depth)
         self.assertEquals(38, plan.profiles[3].time)
+
+        # check deco gas
+        self.assertEquals([ean50, ean80], plan.profiles[0].gas_list.deco_gas)
+        self.assertEquals([ean50, ean80], plan.profiles[1].gas_list.deco_gas)
+        self.assertEquals([], plan.profiles[2].gas_list.deco_gas)
+        self.assertEquals([], plan.profiles[3].gas_list.deco_gas)
+
+        # check bottom gas
+        self.assertEquals(air, plan.profiles[0].gas_list.bottom_gas)
+        self.assertEquals(air, plan.profiles[1].gas_list.bottom_gas)
+        self.assertEquals(air, plan.profiles[2].gas_list.bottom_gas)
+        self.assertEquals(air, plan.profiles[3].gas_list.bottom_gas)
 
 
     @mock.patch('decotengu.create')
