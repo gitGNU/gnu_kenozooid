@@ -20,7 +20,8 @@
 from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
-    DiveProfile, DiveProfileType, GasList, GasMix
+    DiveProfile, DiveProfileType, GasList
+from kenozooid.data import gas
 
 import unittest
 from unittest import mock
@@ -34,7 +35,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         """
         Test deco dive plan
         """
-        gas_list = GasList(GasMix(0, 21, 0))
+        gas_list = GasList(gas(21, 0, depth=0))
         plan = plan_deco_dive(gas_list, 45, 35)
 
         self.assertEquals(4, len(plan.profiles))
@@ -59,10 +60,10 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         dt = mock.MagicMock()
         f_c.return_value = engine, dt
 
-        gas_list = GasList(GasMix(33, 27, 0))
-        gas_list.travel_gas.append(GasMix(0, 32, 0))
-        gas_list.deco_gas.append(GasMix(22, 50, 0))
-        gas_list.deco_gas.append(GasMix(10, 80, 0))
+        gas_list = GasList(gas(27, 0, depth=33))
+        gas_list.travel_gas.append(gas(32, 0, depth=0))
+        gas_list.deco_gas.append(gas(50, 0, depth=22))
+        gas_list.deco_gas.append(gas(80, 0, depth=10))
 
         p = DiveProfile(DiveProfileType.PLANNED, gas_list, 45, 35)
         stops = deco_stops(p)
@@ -85,9 +86,9 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         """
         Test dive slate creation
         """
-        ean27 = GasMix(33, 27, 0)
-        ean50 = GasMix(22, 50, 0)
-        ean80 = GasMix(10, 80, 0)
+        ean27 = gas(27, 0, depth=33)
+        ean50 = gas(50, 0, depth=22)
+        ean80 = gas(80, 0, depth=10)
 
         gas_list = GasList(ean27)
         gas_list.deco_gas.append(ean50)
@@ -128,11 +129,11 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         """
         Test dive slate creation (with travel gas)
         """
-        ean32 = GasMix(0, 32, 0)
-        ean30 = GasMix(33, 30, 0)
-        ean27 = GasMix(37, 27, 0)
-        ean50 = GasMix(22, 50, 0)
-        ean80 = GasMix(10, 80, 0)
+        ean32 = gas(32, 0, depth=0)
+        ean30 = gas(30, 0, depth=33)
+        ean27 = gas(27, 0, depth=37)
+        ean50 = gas(50, 0, depth=22)
+        ean80 = gas(80, 0, depth=10)
 
         gas_list = GasList(ean27)
         gas_list.travel_gas.append(ean32)

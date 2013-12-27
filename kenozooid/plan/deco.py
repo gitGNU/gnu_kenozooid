@@ -23,16 +23,6 @@ Decompression dive planning.
 
 from collections import namedtuple
 
-GasMix = namedtuple('GasMix', 'depth o2 he')
-GasMix.__doc__ = """
-Gas mix information.
-
-:var depth: Gas mix switch depth.
-:var o2: O2 percentage.
-:var he: Helium percentage.
-"""
-
-
 class GasList(object):
     """
     List of gas mixes.
@@ -244,7 +234,7 @@ def plan_to_text(plan):
         txt.append('-' * len(t))
 
         slate = p.slate
-        t = ' {:>3} {:>3} {:>6} {}'.format('D', 'DT', 'RT', 'GAS')
+        t = ' {:>3} {:>3} {:>4} {:7}'.format('D', 'DT', 'RT', 'GAS')
         txt.append(t)
         txt.append(' ' + '-' * (len(t) - 1))
         for item in slate:
@@ -252,7 +242,7 @@ def plan_to_text(plan):
 
             m = item[3]
             star = '*' if m else ' '
-            m = m if m else ''
+            m = m.name if m else ''
 
             t = '{}{:>3} {:>3} {:>4} {}'.format(
                 star, int(item[0]), st, int(item[2]), m
@@ -260,5 +250,6 @@ def plan_to_text(plan):
             txt.append(t)
 
     return '\n'.join(txt)
+
 
 # vim: sw=4:et:ai
