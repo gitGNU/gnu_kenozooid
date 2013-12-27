@@ -231,4 +231,34 @@ def gas_info(profile):
     return info
 
 
+def plan_to_text(plan):
+    """
+    Convert decompressiond dive plan to text.
+    """
+    txt = []
+    for p in plan.profiles:
+        txt.append('')
+
+        t = 'Slate: {}'.format(p.type)
+        txt.append(t)
+        txt.append('-' * len(t))
+
+        slate = p.slate
+        t = ' {:>3} {:>3} {:>6} {}'.format('D', 'DT', 'RT', 'GAS')
+        txt.append(t)
+        txt.append(' ' + '-' * (len(t) - 1))
+        for item in slate:
+            st = int(item[1]) if item[1] else ''
+
+            m = item[3]
+            star = '*' if m else ' '
+            m = m if m else ''
+
+            t = '{}{:>3} {:>3} {:>4} {}'.format(
+                star, int(item[0]), st, int(item[2]), m
+            )
+            txt.append(t)
+
+    return '\n'.join(txt)
+
 # vim: sw=4:et:ai
