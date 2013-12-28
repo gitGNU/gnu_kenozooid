@@ -172,6 +172,74 @@ def deco_stops(profile):
     return dt.stops
 
 
+def dive_legs(gas_list, depth, time, stops, descent_rate):
+    """
+    Calculate dive legs information.
+
+    The dive legs information is used for other calculations, i.e. dive gas
+    consumption.
+
+    Dive profile is split into legs using
+
+    - gas mix switch depths
+    - dive maximum depth and bottom time
+    - descent rate
+    - list of decompression stops
+
+    The ascent rate is assumed to be 10m/min.
+
+    Each dive leg consists of the following information
+
+    - start depth
+    - end depth
+    - time
+    - gas mix used during a dive leg
+    """
+    legs = []
+
+    # start with descent
+    if gas_list.travel_gas:
+        mixes = gas_list.travel_gas
+        depths = [0] + [m.depth for m in mixes[:-1]]
+        for d, m in zip(depths, mixes):
+            t = (m.depth - d) / descent_rate
+            assert t > 0, (d, m, t)
+            legs.append((d, m.depth, t, m))
+    d = legs[-1][1] if legs else 0
+    if d != depth:
+        t = (depth - d) / descent_rate
+        legs.append((d, depth, t, gas_list.bottom_gas))
+
+    assert abs(sum(l[2] for l in legs) - depth / descent_rate) < 0.00001
+
+    # max depth leg, exclude descent time
+    t = time - depth / descent_rate
+    legs.append((depth, depth, t, gas_list.bottom_gas))
+
+    # deco free ascent
+    fs = stops[0]
+    mixes = [m for m in gas_list.deco_gas if m.depth > fs.depth]
+    depths = [depth] + [m.depth for m in mixes] + [fs.depth]
+    rd = zip(depths[:-1], depths[1:])
+    mixes.insert(0, gas_list.bottom_gas)
+    for (d1, d2), m in zip(rd, mixes):
+        assert d1 > d2, (d1, d2)
+        t = (d1 - d2) / 10
+        legs.append((d1, d2, t, m))
+
+    # deco ascent
+    depths = [s.depth for s in stops[1:]] + [0]
+    mixes = {(m.depth // 3) * 3: m for m in gas_list.deco_gas if m.depth <= fs.depth}
+    cm = legs[-1][3] # current gas mix
+    for s, d in zip(stops, depths):
+        cm = mixes.get(s.depth, cm) # use current gas mix until gas mix switch
+        legs.append((s.depth, s.depth, s.time, cm))
+        t = (s.depth - d) / 10
+        legs.append((s.depth, d, t, cm))
+
+    return legs
+
+
 def dive_slate(profile, stops, descent_rate):
     """
     Calculate dive slate for a dive profile.

@@ -20,12 +20,13 @@
 from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
-    DiveProfile, ProfileType, GasList, parse_gas, parse_gas_list
+    dive_legs, DiveProfile, ProfileType, GasList, parse_gas, parse_gas_list
 from kenozooid.data import gas
 
 import unittest
 from unittest import mock
 
+Stop = namedtuple('Stop', 'depth time')
 
 class DecoDivePlannerTestCase(unittest.TestCase):
     """
@@ -123,7 +124,6 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
         profile = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
 
-        Stop = namedtuple('Stop', 'depth time')
         stops = [
             Stop(18, 1),
             Stop(15, 1),
@@ -170,7 +170,6 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
         profile = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
 
-        Stop = namedtuple('Stop', 'depth time')
         stops = [
             Stop(18, 1),
             Stop(15, 1),
@@ -269,6 +268,113 @@ class GasMixParserTestCase(unittest.TestCase):
         self.assertEquals([], gas_list.travel_gas)
         self.assertEquals(air, gas_list.bottom_gas)
         self.assertEquals([ean50], gas_list.deco_gas)
+
+
+
+class DiveLegsTestCase(unittest.TestCase):
+    """
+    Dive legs calculation tests.
+    """
+    def test_dive_legs(self):
+        """
+        Test dive legs calculation
+        """
+        air = gas(21, 0)
+        gas_list = GasList(air)
+        stops = [
+            Stop(18, 1),
+            Stop(15, 1),
+            Stop(12, 2),
+            Stop(9, 3),
+            Stop(6, 5),
+        ]
+
+        legs = dive_legs(gas_list, 60, 25, stops, 20)
+
+        self.assertEquals(3 + 10, len(legs))
+        self.assertEquals((0, 60, 3, air), legs[0])
+        self.assertEquals((60, 60, 22, air), legs[1])
+        self.assertEquals((60, 18, 4.2, air), legs[2])
+
+        deco_legs = legs[3::2]
+        for s, l in zip(stops, deco_legs):
+            self.assertEquals((s.depth, s.depth, s.time, air), l)
+
+        self.assertEquals((6, 0, 0.6, air), legs[-1])
+
+
+    def test_dive_legs_deco_gas(self):
+        """
+        Test dive legs calculation with deco gas
+        """
+        air = gas(21, 0)
+        ean50 = gas(50, 0, 22)
+        ean80 = gas(80, 0, 10)
+        o2 = gas(100, 0, 6)
+        gas_list = GasList(air)
+        gas_list.deco_gas.extend((ean50, ean80, o2))
+        stops = [
+            Stop(18, 1),
+            Stop(15, 1),
+            Stop(12, 2),
+            Stop(9, 3),
+            Stop(6, 5),
+        ]
+
+        legs = dive_legs(gas_list, 60, 25, stops, 20)
+
+        self.assertEquals(4 + 10, len(legs))
+        self.assertEquals((0, 60, 3, air), legs[0])
+        self.assertEquals((60, 60, 22, air), legs[1])
+        self.assertEquals((60, 22, 3.8, air), legs[2])
+        self.assertEquals((22, 18, 0.4, ean50), legs[3])
+
+        self.assertEquals((18, 18, 1, ean50), legs[4])
+        self.assertEquals((18, 15, 0.3, ean50), legs[5])
+        self.assertEquals((15, 15, 1, ean50), legs[6])
+        self.assertEquals((15, 12, 0.3, ean50), legs[7])
+
+        self.assertEquals((12, 12, 2, ean50), legs[8])
+        self.assertEquals((12, 9, 0.3, ean50), legs[9])
+        self.assertEquals((9, 9, 3, ean80), legs[10])
+        self.assertEquals((9, 6, 0.3, ean80), legs[11])
+
+        self.assertEquals((6, 6, 5, o2), legs[-2])
+        self.assertEquals((6, 0, 0.6, o2), legs[-1])
+
+
+    def test_dive_legs_travel_gas(self):
+        """
+        Test dive legs calculation with travel gas
+        """
+        air = gas(21, 0)
+        ean36 = gas(36, 0, depth=30)
+        ean26 = gas(26, 0, depth=40)
+        gas_list = GasList(air)
+        gas_list.travel_gas.append(ean36)
+        gas_list.travel_gas.append(ean26)
+        stops = [
+            Stop(18, 1),
+            Stop(15, 1),
+            Stop(12, 2),
+            Stop(9, 3),
+            Stop(6, 5),
+        ]
+
+        legs = dive_legs(gas_list, 60, 25, stops, 20)
+
+        self.assertEquals(5 + 10, len(legs))
+        self.assertEquals((0, 30, 1.5, ean36), legs[0])
+        self.assertEquals((30, 40, 0.5, ean26), legs[1])
+        self.assertEquals((40, 60, 1, air), legs[2])
+        self.assertEquals((60, 60, 22, air), legs[3])
+        self.assertEquals((60, 18, 4.2, air), legs[4])
+
+        deco_legs = legs[5::2]
+        for s, l in zip(stops, deco_legs):
+            self.assertEquals((s.depth, s.depth, s.time, air), l)
+
+        self.assertEquals((6, 0, 0.6, air), legs[-1])
 
 
 # vim: sw=4:et:ai
