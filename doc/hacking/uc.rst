@@ -200,6 +200,7 @@ depth, bottom time
 |           |                    |                                             |
 |           |                    | For each dive profile                       |
 |           |                    |                                             |
+|           |                    | - prepare summary                           |
 |           |                    | - calculate and verify gas mix requirements |
 |           |                    | - create dive slate                         |
 +-----------+--------------------+---------------------------------------------+
