@@ -92,7 +92,7 @@ class DiveProfile(object):
 
 
 
-class DiveProfileType(object):
+class ProfileType(object):
     """
     Dive profile type.
 
@@ -126,17 +126,17 @@ def plan_deco_dive(gas_list, depth, time, ext=(5, 3)):
 
     plan = DivePlan()
 
-    p = DiveProfile(DiveProfileType.PLANNED, gas_list, depth, time)
+    p = DiveProfile(ProfileType.PLANNED, gas_list, depth, time)
     plan.profiles.append(p)
 
-    p = DiveProfile(DiveProfileType.EXTENDED, gas_list, ext_depth, ext_time)
+    p = DiveProfile(ProfileType.EXTENDED, gas_list, ext_depth, ext_time)
     plan.profiles.append(p)
 
-    p = DiveProfile(DiveProfileType.LOST_GAS, lost_gas_list, depth, time)
+    p = DiveProfile(ProfileType.LOST_GAS, lost_gas_list, depth, time)
     plan.profiles.append(p)
 
     p = DiveProfile(
-        DiveProfileType.EXTENDED_LOST_GAS, lost_gas_list, ext_depth, ext_time
+        ProfileType.EXTENDED_LOST_GAS, lost_gas_list, ext_depth, ext_time
     )
     plan.profiles.append(p)
 

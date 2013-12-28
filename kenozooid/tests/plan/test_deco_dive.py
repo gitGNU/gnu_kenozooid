@@ -20,7 +20,7 @@
 from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
-    DiveProfile, DiveProfileType, GasList, parse_gas, parse_gas_list
+    DiveProfile, ProfileType, GasList, parse_gas, parse_gas_list
 from kenozooid.data import gas
 
 import unittest
@@ -46,7 +46,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
         self.assertEquals(4, len(plan.profiles))
 
-        t = DiveProfileType
+        t = ProfileType
         expected = [t.PLANNED, t.EXTENDED, t.LOST_GAS, t.EXTENDED_LOST_GAS]
         types = [p.type for p in plan.profiles]
         self.assertEquals(expected, types)
@@ -92,7 +92,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         gas_list.deco_gas.append(gas(50, 0, depth=22))
         gas_list.deco_gas.append(gas(80, 0, depth=10))
 
-        p = DiveProfile(DiveProfileType.PLANNED, gas_list, 45, 35)
+        p = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
         stops = deco_stops(p)
 
         args = engine.add_gas.call_args_list
@@ -121,7 +121,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         gas_list.deco_gas.append(ean50)
         gas_list.deco_gas.append(ean80)
 
-        profile = DiveProfile(DiveProfileType.PLANNED, gas_list, 45, 35)
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
 
         Stop = namedtuple('Stop', 'depth time')
         stops = [
@@ -168,7 +168,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         gas_list.deco_gas.append(ean50)
         gas_list.deco_gas.append(ean80)
 
-        profile = DiveProfile(DiveProfileType.PLANNED, gas_list, 45, 35)
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
 
         Stop = namedtuple('Stop', 'depth time')
         stops = [
