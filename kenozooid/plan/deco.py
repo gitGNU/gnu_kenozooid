@@ -177,7 +177,7 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
     Calculate dive legs information.
 
     The dive legs information is used for other calculations, i.e. dive gas
-    consumption.
+    consumption, dive slate.
 
     Dive profile is split into legs using
 
@@ -194,27 +194,28 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
     - end depth
     - time
     - gas mix used during a dive leg
+    - deco zone indicator (true or false)
     """
     legs = []
 
     # start with descent
     if gas_list.travel_gas:
-        mixes = gas_list.travel_gas
-        depths = [0] + [m.depth for m in mixes[:-1]]
-        for d, m in zip(depths, mixes):
-            t = (m.depth - d) / descent_rate
-            assert t > 0, (d, m, t)
-            legs.append((d, m.depth, t, m))
+        mixes = gas_list.travel_gas + [gas_list.bottom_gas]
+        depths = [m.depth for m in mixes[1:]]
+        for m, d in zip(mixes, depths):
+            t = (d - m.depth) / descent_rate
+            assert t > 0, (m, d, t)
+            legs.append((m.depth, d, t, m, False))
     d = legs[-1][1] if legs else 0
     if d != depth:
         t = (depth - d) / descent_rate
-        legs.append((d, depth, t, gas_list.bottom_gas))
+        legs.append((d, depth, t, gas_list.bottom_gas, False))
 
     assert abs(sum(l[2] for l in legs) - depth / descent_rate) < 0.00001
 
     # max depth leg, exclude descent time
     t = time - depth / descent_rate
-    legs.append((depth, depth, t, gas_list.bottom_gas))
+    legs.append((depth, depth, t, gas_list.bottom_gas, False))
 
     # deco free ascent
     fs = stops[0]
@@ -225,7 +226,7 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
     for (d1, d2), m in zip(rd, mixes):
         assert d1 > d2, (d1, d2)
         t = (d1 - d2) / 10
-        legs.append((d1, d2, t, m))
+        legs.append((d1, d2, t, m, False))
 
     # deco ascent
     depths = [s.depth for s in stops[1:]] + [0]
@@ -233,9 +234,9 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
     cm = legs[-1][3] # current gas mix
     for s, d in zip(stops, depths):
         cm = mixes.get(s.depth, cm) # use current gas mix until gas mix switch
-        legs.append((s.depth, s.depth, s.time, cm))
+        legs.append((s.depth, s.depth, s.time, cm, True))
         t = (s.depth - d) / 10
-        legs.append((s.depth, d, t, cm))
+        legs.append((s.depth, d, t, cm, True))
 
     return legs
 
@@ -252,55 +253,76 @@ def dive_slate(profile, stops, descent_rate):
     time
         Time of dive stop [min].
 
+    Dive slate is list of items consisting of
+
+    - dive depth
+    - decompression stop information, null if no decompression
+    - run time in minutes
+    - gas mix on gas switch, null otherwise
+
     :param profile: Dive profile information.
     :param stops: Dive decompression stops.
     :param descent_rate: Dive descent rate.
     """
     slate = []
 
-    gas_list = profile.gas_list
     depth = profile.depth
-    # runtime is float number, which tracks minute and fraction of minute,
-    # but it is rounded when added to dive slate
-    rt = 0
-    fs = stops[0]
+    time = profile.time
+    gas_list = profile.gas_list
 
-    # travel zone
-    if gas_list.travel_gas:
-        prev_depth = 0
-        slate.append((0, None, 0, gas_list.travel_gas[0]))
-        for m in gas_list.travel_gas[1:]:
-            rt += (m.depth - prev_depth) / descent_rate
-            slate.append((m.depth, None, round(rt), m))
-            prev_depth = m.depth
-        m = gas_list.bottom_gas
-        rt += (m.depth - prev_depth) / descent_rate
-        slate.append((m.depth, None, round(rt), m))
+    legs = dive_legs(gas_list, depth, time, stops, descent_rate)
 
-    # dive bottom
-    rt = profile.time # reset runtime to dive bottom time
-    m = None if gas_list.travel_gas else gas_list.bottom_gas
-    slate.append((depth, None, rt, m))
+    # travel gas switches
+    k = len(gas_list.travel_gas)
+    if k:
+        k += 1
+        rt = 0
+        for i in range(k):
+            leg = legs[i]
 
-    # deco free zone
-    switch = [m for m in gas_list.deco_gas if m.depth > fs.depth]
-    prev_depth = depth
-    for m in switch:
-        rt += (prev_depth - m.depth) / 10
-        slate.append((m.depth, None, round(rt), m))
-        prev_depth = m.depth
+            d = leg[0]
+            m = leg[3]
+            slate.append((d, None, round(rt), m))
+            rt += leg[2]
 
-    # deco zone
-    switch = {(m.depth // 3) * 3: m for m in gas_list.deco_gas if m.depth <= fs.depth}
-    for s in stops:
-        m = switch.get(s.depth)
-        rt += (prev_depth - s.depth) / 10
-        rt += s.time
-        slate.append((s.depth, s.time, round(rt), m))
-        prev_depth = s.depth
+        legs = legs[k:]
 
-    rt += prev_depth / 10
-    slate.append((0, None, round(rt), None))
+    # bottom time, no descent row on slate
+    rt = legs[0][2] + legs[1][2] # reset run-time
+    d = legs[1][0]
+    m = None if gas_list.travel_gas else legs[1][3]
+    slate.append((d, None, round(rt), m))
+
+    # no deco gas switches
+    no_deco = [l for l in legs if not l[4]]
+    no_deco = no_deco[2:]
+    for i in range(1, len(no_deco)):
+        prev = no_deco[i - 1]
+        leg = no_deco[i]
+
+        d = leg[0]
+        rt += prev[2]
+        m = leg[3]
+        slate.append((d, None, round(rt), m))
+
+    # decompression stops
+    deco = [l for l in legs if l[4]]
+    deco.insert(0, no_deco[-1])
+    for i in range(1, len(deco), 2):
+        prev = deco[i - 1]
+        leg = deco[i]
+
+        d = leg[1]
+        dt = leg[2]
+        rt += dt + prev[2]
+        m = None if prev[3] == leg[3] else leg[3] # indicate gas switch only
+        slate.append((d, dt, round(rt), m))
+
+    # surface
+    leg = deco[-1]
+    d = leg[1]
+    rt += leg[2]
+    slate.append((d, None, round(rt), None))
 
     return slate
 

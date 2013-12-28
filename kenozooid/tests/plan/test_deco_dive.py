@@ -292,15 +292,15 @@ class DiveLegsTestCase(unittest.TestCase):
         legs = dive_legs(gas_list, 60, 25, stops, 20)
 
         self.assertEquals(3 + 10, len(legs))
-        self.assertEquals((0, 60, 3, air), legs[0])
-        self.assertEquals((60, 60, 22, air), legs[1])
-        self.assertEquals((60, 18, 4.2, air), legs[2])
+        self.assertEquals((0, 60, 3, air, False), legs[0])
+        self.assertEquals((60, 60, 22, air, False), legs[1])
+        self.assertEquals((60, 18, 4.2, air, False), legs[2])
 
         deco_legs = legs[3::2]
         for s, l in zip(stops, deco_legs):
-            self.assertEquals((s.depth, s.depth, s.time, air), l)
+            self.assertEquals((s.depth, s.depth, s.time, air, True), l)
 
-        self.assertEquals((6, 0, 0.6, air), legs[-1])
+        self.assertEquals((6, 0, 0.6, air, True), legs[-1])
 
 
     def test_dive_legs_deco_gas(self):
@@ -324,32 +324,32 @@ class DiveLegsTestCase(unittest.TestCase):
         legs = dive_legs(gas_list, 60, 25, stops, 20)
 
         self.assertEquals(4 + 10, len(legs))
-        self.assertEquals((0, 60, 3, air), legs[0])
-        self.assertEquals((60, 60, 22, air), legs[1])
-        self.assertEquals((60, 22, 3.8, air), legs[2])
-        self.assertEquals((22, 18, 0.4, ean50), legs[3])
+        self.assertEquals((0, 60, 3, air, False), legs[0])
+        self.assertEquals((60, 60, 22, air, False), legs[1])
+        self.assertEquals((60, 22, 3.8, air, False), legs[2])
+        self.assertEquals((22, 18, 0.4, ean50, False), legs[3])
 
-        self.assertEquals((18, 18, 1, ean50), legs[4])
-        self.assertEquals((18, 15, 0.3, ean50), legs[5])
-        self.assertEquals((15, 15, 1, ean50), legs[6])
-        self.assertEquals((15, 12, 0.3, ean50), legs[7])
+        self.assertEquals((18, 18, 1, ean50, True), legs[4])
+        self.assertEquals((18, 15, 0.3, ean50, True), legs[5])
+        self.assertEquals((15, 15, 1, ean50, True), legs[6])
+        self.assertEquals((15, 12, 0.3, ean50, True), legs[7])
 
-        self.assertEquals((12, 12, 2, ean50), legs[8])
-        self.assertEquals((12, 9, 0.3, ean50), legs[9])
-        self.assertEquals((9, 9, 3, ean80), legs[10])
-        self.assertEquals((9, 6, 0.3, ean80), legs[11])
+        self.assertEquals((12, 12, 2, ean50, True), legs[8])
+        self.assertEquals((12, 9, 0.3, ean50, True), legs[9])
+        self.assertEquals((9, 9, 3, ean80, True), legs[10])
+        self.assertEquals((9, 6, 0.3, ean80, True), legs[11])
 
-        self.assertEquals((6, 6, 5, o2), legs[-2])
-        self.assertEquals((6, 0, 0.6, o2), legs[-1])
+        self.assertEquals((6, 6, 5, o2, True), legs[-2])
+        self.assertEquals((6, 0, 0.6, o2, True), legs[-1])
 
 
     def test_dive_legs_travel_gas(self):
         """
         Test dive legs calculation with travel gas
         """
-        air = gas(21, 0)
-        ean36 = gas(36, 0, depth=30)
-        ean26 = gas(26, 0, depth=40)
+        ean36 = gas(36, 0, depth=0)
+        ean26 = gas(26, 0, depth=30)
+        air = gas(21, 0, depth=40)
         gas_list = GasList(air)
         gas_list.travel_gas.append(ean36)
         gas_list.travel_gas.append(ean26)
@@ -364,17 +364,17 @@ class DiveLegsTestCase(unittest.TestCase):
         legs = dive_legs(gas_list, 60, 25, stops, 20)
 
         self.assertEquals(5 + 10, len(legs))
-        self.assertEquals((0, 30, 1.5, ean36), legs[0])
-        self.assertEquals((30, 40, 0.5, ean26), legs[1])
-        self.assertEquals((40, 60, 1, air), legs[2])
-        self.assertEquals((60, 60, 22, air), legs[3])
-        self.assertEquals((60, 18, 4.2, air), legs[4])
+        self.assertEquals((0, 30, 1.5, ean36, False), legs[0])
+        self.assertEquals((30, 40, 0.5, ean26, False), legs[1])
+        self.assertEquals((40, 60, 1, air, False), legs[2])
+        self.assertEquals((60, 60, 22, air, False), legs[3])
+        self.assertEquals((60, 18, 4.2, air, False), legs[4])
 
         deco_legs = legs[5::2]
         for s, l in zip(stops, deco_legs):
-            self.assertEquals((s.depth, s.depth, s.time, air), l)
+            self.assertEquals((s.depth, s.depth, s.time, air, True), l)
 
-        self.assertEquals((6, 0, 0.6, air), legs[-1])
+        self.assertEquals((6, 0, 0.6, air, True), legs[-1])
 
 
 # vim: sw=4:et:ai
