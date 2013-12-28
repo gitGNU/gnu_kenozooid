@@ -132,7 +132,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
             Stop(6, 5),
         ]
 
-        slate = dive_slate(profile, stops)
+        slate = dive_slate(profile, stops, 20)
 
         self.assertEquals(8, len(slate), slate)
 
@@ -179,11 +179,11 @@ class DecoDivePlannerTestCase(unittest.TestCase):
             Stop(6, 5),
         ]
 
-        slate = dive_slate(profile, stops)
+        slate = dive_slate(profile, stops, 20)
 
         self.assertEquals((0, None, 0, ean32), slate[0], slate)
-        self.assertEquals((33, None, 3, ean30), slate[1], slate)
-        self.assertEquals((37, None, 4, ean27), slate[2], slate)
+        self.assertEquals((33, None, 2, ean30), slate[1], slate)
+        self.assertEquals((37, None, 2, ean27), slate[2], slate)
         self.assertEquals((45, None, 35, None), slate[3], slate)
 
 

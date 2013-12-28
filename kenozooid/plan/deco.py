@@ -114,7 +114,7 @@ class ProfileType(object):
 
 
 
-def plan_deco_dive(gas_list, depth, time, ext=(5, 3)):
+def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
     """
     Plan decompression dive.
     """
@@ -142,7 +142,7 @@ def plan_deco_dive(gas_list, depth, time, ext=(5, 3)):
 
     for p in plan.profiles:
         stops = deco_stops(p)
-        p.slate = dive_slate(p, stops)
+        p.slate = dive_slate(p, stops, descent_rate)
         p.gas_info = gas_info(p)
 
     return plan
@@ -172,7 +172,7 @@ def deco_stops(profile):
     return dt.stops
 
 
-def dive_slate(profile, stops):
+def dive_slate(profile, stops, descent_rate):
     """
     Calculate dive slate for a dive profile.
 
@@ -185,7 +185,8 @@ def dive_slate(profile, stops):
         Time of dive stop [min].
 
     :param profile: Dive profile information.
-    :parma stops: Dive decompression stops.
+    :param stops: Dive decompression stops.
+    :param descent_rate: Dive descent rate.
     """
     slate = []
 
@@ -201,11 +202,11 @@ def dive_slate(profile, stops):
         prev_depth = 0
         slate.append((0, None, 0, gas_list.travel_gas[0]))
         for m in gas_list.travel_gas[1:]:
-            rt += (m.depth - prev_depth) / 10
+            rt += (m.depth - prev_depth) / descent_rate
             slate.append((m.depth, None, round(rt), m))
             prev_depth = m.depth
         m = gas_list.bottom_gas
-        rt += (m.depth - prev_depth) / 10
+        rt += (m.depth - prev_depth) / descent_rate
         slate.append((m.depth, None, round(rt), m))
 
     # dive bottom
