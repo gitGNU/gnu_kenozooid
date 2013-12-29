@@ -337,9 +337,35 @@ def gas_info(profile):
     return info
 
 
+def gas_consumption(gas_list, legs, rmv=20):
+    """
+    Calculate gas mix consumption information.
+
+    Gas mix consumption is calculated for each gas mix on the gas list.
+    The consumption information is returned as dictionary `gas mix -> usage`,
+    where gas usage is volume of gas in liters.
+
+    FIXME: apply separate RMV for decompression gas
+
+    :param gas_list: Gas list information.
+    :param legs: Dive legs as calculated by ``dive_legs`` function.
+    :param rmv: Respiratory minute volume (RMV) [min/l].
+    """
+    cons = {m: 0 for m in gas_list.travel_gas}
+    cons[gas_list.bottom_gas] = 0
+    cons.update({m: 0 for m in gas_list.deco_gas})
+    for leg in legs:
+        d = (leg[0] + leg[1]) / 2
+        t = leg[2]
+        m = leg[3]
+        cons[m] += (d / 10 + 1) * t * rmv
+
+    return cons
+
+
 def plan_to_text(plan):
     """
-    Convert decompressiond dive plan to text.
+    Convert decompression dive plan to text.
     """
     txt = []
     for p in plan.profiles:
