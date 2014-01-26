@@ -24,7 +24,6 @@ Kenozooid's logbook command line user interface.
 import sys
 import os.path
 from functools import partial
-from lxml import etree as et
 import logging
 
 from kenozooid.component import inject
