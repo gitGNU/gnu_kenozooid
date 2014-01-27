@@ -368,6 +368,17 @@ def plan_to_text(plan):
     Convert decompression dive plan to text.
     """
     txt = []
+
+    # dive profiles summaries
+    for p in plan.profiles:
+        txt.append('')
+        t = 'Dive Profile Summary ({})'.format(p.type)
+        txt.append(t)
+        txt.append('-' * len(t))
+        txt.append('Depth: {}m'.format(p.depth))
+        txt.append('Bottom Time: {}min'.format(p.time))
+
+    # dive slates
     for p in plan.profiles:
         txt.append('')
 
