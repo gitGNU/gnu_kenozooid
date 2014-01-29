@@ -20,7 +20,7 @@
 from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
-    dive_legs, gas_consumption, parse_gas, parse_gas_list, \
+    dive_legs, depth_to_time, gas_consumption, parse_gas, parse_gas_list, \
     DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
 
@@ -185,6 +185,26 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEquals((33, None, 2, ean30), slate[1], slate)
         self.assertEquals((37, None, 2, ean27), slate[2], slate)
         self.assertEquals((45, None, 35, None), slate[3], slate)
+
+
+    def test_depth_to_time_ascent(self):
+        """
+        Test depth to time conversion (ascent)
+
+        The time is expected to be > 0.
+        """
+        t = depth_to_time(45, 10, 10)
+        self.assertEquals(3.5, t)
+
+
+    def test_depth_to_time_descent(self):
+        """
+        Test depth to time conversion (descent)
+
+        The time is expected to be > 0.
+        """
+        t = depth_to_time(0, 45, 20)
+        self.assertEquals(2.25, t)
 
 
 class GasMixParserTestCase(unittest.TestCase):

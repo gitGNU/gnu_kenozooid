@@ -79,6 +79,7 @@ class DiveProfile(object):
     :var gas_list: Gas list for the dive profile.
     :var depth: Maximum dive depth.
     :var time: Dive bottom time.
+    :var descent_time: Time required to descent to dive bottom depth.
     :var slate: Dive slate.
     :var gas_info: Gas mix requirements.
     """
@@ -87,6 +88,7 @@ class DiveProfile(object):
         self.gas_list = gas_list
         self.depth = depth
         self.time = time
+        self.descent_time = 0
         self.slate = []
         self.gas_info = []
 
@@ -144,6 +146,7 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
         stops = deco_stops(p)
         p.slate = dive_slate(p, stops, descent_rate)
         p.gas_info = gas_info(p)
+        p.descent_time  = depth_to_time(0, depth, descent_rate)
 
     return plan
 
@@ -203,12 +206,12 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
         mixes = gas_list.travel_gas + [gas_list.bottom_gas]
         depths = [m.depth for m in mixes[1:]]
         for m, d in zip(mixes, depths):
-            t = (d - m.depth) / descent_rate
+            t = depth_to_time(d, m.depth, descent_rate)
             assert t > 0, (m, d, t)
             legs.append((m.depth, d, t, m, False))
     d = legs[-1][1] if legs else 0
     if d != depth:
-        t = (depth - d) / descent_rate
+        t = depth_to_time(depth, d, descent_rate)
         legs.append((d, depth, t, gas_list.bottom_gas, False))
 
     assert abs(sum(l[2] for l in legs) - depth / descent_rate) < 0.00001
@@ -327,6 +330,17 @@ def dive_slate(profile, stops, descent_rate):
     return slate
 
 
+def depth_to_time(start, end, rate):
+    """
+    Calculate time required to descent or ascent from start to end depth.
+
+    :param start: Starting depth.
+    :param end: Ending depth.
+    :param rate: Ascent or descent rate.
+    """
+    return abs(start - end) / rate
+
+
 def gas_info(profile):
     """
     Calculate gas requirements information.
@@ -377,6 +391,7 @@ def plan_to_text(plan):
         txt.append('-' * len(t))
         txt.append('Depth: {}m'.format(p.depth))
         txt.append('Bottom Time: {}min'.format(p.time))
+        txt.append('Descent Time: {}min'.format(p.descent_time))
 
     # dive slates
     for p in plan.profiles:
