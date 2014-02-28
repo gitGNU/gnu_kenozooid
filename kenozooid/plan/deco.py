@@ -149,12 +149,12 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
     for p in plan.profiles:
         stops = deco_stops(p)
 
-        legs = dive_legs(p.gas_list, p.depth, p.time, stops, descent_rate)
+        legs = dive_legs(p, stops, descent_rate)
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
+        p.slate = dive_slate(p, stops, legs, descent_rate)
 
-        p.slate = dive_slate(p, stops, descent_rate)
         p.gas_info = gas_info(p)
         p.descent_time  = depth_to_time(0, p.depth, descent_rate)
 
@@ -185,7 +185,7 @@ def deco_stops(profile):
     return dt.stops
 
 
-def dive_legs(gas_list, depth, time, stops, descent_rate):
+def dive_legs(profile, stops, descent_rate):
     """
     Calculate dive legs information.
 
@@ -209,6 +209,10 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
     - gas mix used during a dive leg
     - deco zone indicator (true or false)
     """
+    gas_list = profile.gas_list
+    depth = profile.depth
+    time = profile.time
+
     legs = []
 
     # start with descent
@@ -254,7 +258,7 @@ def dive_legs(gas_list, depth, time, stops, descent_rate):
     return legs
 
 
-def dive_slate(profile, stops, descent_rate):
+def dive_slate(profile, stops, legs, descent_rate):
     """
     Calculate dive slate for a dive profile.
 
@@ -275,6 +279,7 @@ def dive_slate(profile, stops, descent_rate):
 
     :param profile: Dive profile information.
     :param stops: Dive decompression stops.
+    :param legs: Dive legs.
     :param descent_rate: Dive descent rate.
     """
     slate = []
@@ -282,8 +287,6 @@ def dive_slate(profile, stops, descent_rate):
     depth = profile.depth
     time = profile.time
     gas_list = profile.gas_list
-
-    legs = dive_legs(gas_list, depth, time, stops, descent_rate)
 
     # travel gas switches
     k = len(gas_list.travel_gas)

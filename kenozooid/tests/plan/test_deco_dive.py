@@ -123,7 +123,11 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         gas_list.deco_gas.append(ean50)
         gas_list.deco_gas.append(ean80)
 
-        profile = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
+        depth = 45
+        time = 35
+        descent_rate = 20
+
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, depth, time)
 
         stops = [
             Stop(18, 1),
@@ -133,7 +137,8 @@ class DecoDivePlannerTestCase(unittest.TestCase):
             Stop(6, 5),
         ]
 
-        slate = dive_slate(profile, stops, 20)
+        legs = dive_legs(profile, stops, descent_rate)
+        slate = dive_slate(profile, stops, legs, descent_rate)
 
         self.assertEquals(8, len(slate), slate)
 
@@ -169,7 +174,11 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         gas_list.deco_gas.append(ean50)
         gas_list.deco_gas.append(ean80)
 
-        profile = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
+        depth = 45
+        time = 35
+        descent_rate = 20
+
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, depth, time)
 
         stops = [
             Stop(18, 1),
@@ -179,7 +188,8 @@ class DecoDivePlannerTestCase(unittest.TestCase):
             Stop(6, 5),
         ]
 
-        slate = dive_slate(profile, stops, 20)
+        legs = dive_legs(profile, stops, descent_rate)
+        slate = dive_slate(profile, stops, legs, descent_rate)
 
         self.assertEquals((0, None, 0, ean32), slate[0], slate)
         self.assertEquals((33, None, 2, ean30), slate[1], slate)
@@ -353,8 +363,9 @@ class DiveLegsTestCase(unittest.TestCase):
             Stop(9, 3),
             Stop(6, 5),
         ]
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, 60, 25)
 
-        legs = dive_legs(gas_list, 60, 25, stops, 20)
+        legs = dive_legs(profile, stops, 20)
 
         self.assertEquals(3 + 10, len(legs))
         self.assertEquals((0, 60, 3, air, False), legs[0])
@@ -385,8 +396,9 @@ class DiveLegsTestCase(unittest.TestCase):
             Stop(9, 3),
             Stop(6, 5),
         ]
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, 60, 25)
 
-        legs = dive_legs(gas_list, 60, 25, stops, 20)
+        legs = dive_legs(profile, stops, 20)
 
         self.assertEquals(4 + 10, len(legs))
         self.assertEquals((0, 60, 3, air, False), legs[0])
@@ -426,7 +438,8 @@ class DiveLegsTestCase(unittest.TestCase):
             Stop(6, 5),
         ]
 
-        legs = dive_legs(gas_list, 60, 25, stops, 20)
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, 60, 25)
+        legs = dive_legs(profile, stops, 20)
 
         self.assertEquals(5 + 10, len(legs))
         self.assertEquals((0, 30, 1.5, ean36, False), legs[0])
