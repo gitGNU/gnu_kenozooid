@@ -81,6 +81,7 @@ class DiveProfile(object):
     :var time: Dive bottom time.
     :var descent_time: Time required to descent to dive bottom depth.
     :var deco_time: Total decompression time.
+    :var dive_time: Total dive time.
     :var slate: Dive slate.
     :var gas_info: Gas mix requirements.
     """
@@ -91,6 +92,7 @@ class DiveProfile(object):
         self.time = time
         self.descent_time = 0
         self.deco_time = 0
+        self.dive_time = 0
         self.slate = []
         self.gas_info = []
 
@@ -150,6 +152,7 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
         legs = dive_legs(p.gas_list, p.depth, p.time, stops, descent_rate)
 
         p.deco_time = sum_deco_time(legs)
+        p.dive_time = sum_dive_time(legs)
 
         p.slate = dive_slate(p, stops, descent_rate)
         p.gas_info = gas_info(p)
@@ -359,6 +362,17 @@ def sum_deco_time(legs):
     return sum(l[2] for l in legs if l[-1])
 
 
+def sum_dive_time(legs):
+    """
+    Calculate total dive time using dive legs.
+
+    :param legs: List of dive legs.
+
+    ..seealso:: :py:func:`dive_legs`
+    """
+    return sum(l[2] for l in legs)
+
+
 def gas_info(profile):
     """
     Calculate gas requirements information.
@@ -412,6 +426,8 @@ def plan_to_text(plan):
         txt.append('Descent Time: {}min'.format(p.descent_time))
         t = round(p.deco_time)
         txt.append('Total Decompression Time: {}min'.format(t))
+        t = round(p.dive_time)
+        txt.append('Total Dive Time: {}min'.format(t))
 
     # dive slates
     for p in plan.profiles:

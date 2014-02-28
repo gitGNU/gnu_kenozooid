@@ -21,7 +21,7 @@ from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
     dive_legs, depth_to_time, gas_consumption, parse_gas, parse_gas_list, \
-    sum_deco_time, DiveProfile, ProfileType, GasList
+    sum_deco_time, sum_dive_time, DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
 
 import unittest
@@ -209,7 +209,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
     def test_sum_deco_time(self):
         """
-        Test summing dive decompression time
+        Test calculating dive decompression time
         """
         legs = [
             (0, 10, 1, 'A', False),
@@ -227,6 +227,28 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         ]
         t = sum_deco_time(legs)
         self.assertAlmostEquals(10 + 1.5, t)
+
+
+    def test_sum_dive_time(self):
+        """
+        Test calculating total dive time
+        """
+        legs = [
+            (0, 10, 1, 'A', False),
+            (10, 40, 3, 'B', False),
+            (40, 40, 30, None, False),
+            (40, 15, 2.5, None, False),
+            (15, 15, 1, None, True),
+            (15, 12, 0.3, None, True),
+            (12, 12, 1, None, True),
+            (12, 9, 0.3, None, True),
+            (9, 9, 3, None, True),
+            (9, 6, 0.3, None, True),
+            (6, 6, 5, None, True),
+            (6, 0, 0.6, None, True),
+        ]
+        t = sum_dive_time(legs)
+        self.assertAlmostEquals(4 + 30 + 2.5 + 10 + 1.5, t)
 
 
 class GasMixParserTestCase(unittest.TestCase):
