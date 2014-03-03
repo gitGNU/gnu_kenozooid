@@ -21,7 +21,7 @@ from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
     dive_legs, depth_to_time, gas_consumption, parse_gas, parse_gas_list, \
-    dive_legs_overhead, \
+    dive_legs_overhead, min_bottom_gas, \
     sum_deco_time, sum_dive_time, DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
 
@@ -536,6 +536,31 @@ class GasMixConsumptionTestCase(unittest.TestCase):
         self.assertEquals(2, len(cons))
         self.assertEquals(3795, cons[air])
         self.assertEquals(445.5, cons[ean50])
+
+
+    def test_min_bottom_gas(self):
+        """
+        Test minimal volume of bottom gas calculation
+        """
+        air = gas(21, 0)
+        ean50 = gas(50, 0, depth=22)
+        gas_list = GasList(air)
+        gas_list.deco_gas.append(ean50)
+
+        legs = [
+            (0, 40, 2, air, False),   # 3b * 2min * 30min/l = 180l
+            (40, 40, 20, air, False), # 5b * 20min * 30min/l = 3000l
+            (40, 22, 5, air, False),  # 4.1b * 5min * 30min/l = 615l
+            (22, 9, 2, ean50, False), # 2.55b * 2min * 30min/l = 153l
+            (9, 9, 1, ean50, True),   # 1.9b * 1min * 30min/l = 57l
+            (9, 6, 1, ean50, True),   # 1.75b * 1min * 30min/l = 52.5l
+            (6, 6, 3, ean50, True),   # 1.6b * 3min  * 30min/l = 144l
+            (6, 0, 1, ean50, True),   # 1.3b * 1min * 30min/l = 39l
+        ]
+
+        vol = min_bottom_gas(gas_list, legs, 30)
+
+        self.assertEquals(3795 * 1.5, vol)
 
 
 # vim: sw=4:et:ai

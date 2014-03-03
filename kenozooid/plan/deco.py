@@ -146,10 +146,13 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
     )
     plan.profiles.append(p)
 
+    bottom_gas_vol = 0 # minimal volume of bottom gas mix
     for p in plan.profiles:
         stops = deco_stops(p)
 
         legs = dive_legs(p, stops, descent_rate)
+        if p.type == ProfileType.PLANNED:
+            bottom_gas_vol = min_bottom_gas(p.gas_list, legs)
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
@@ -157,6 +160,8 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
 
         p.gas_info = gas_info(p)
         p.descent_time  = depth_to_time(0, p.depth, descent_rate)
+
+    assert bottom_gas_vol > 0
 
     return plan
 
@@ -434,6 +439,25 @@ def gas_consumption(gas_list, legs, rmv=20):
         cons[m] += (d / 10 + 1) * t * rmv
 
     return cons
+
+
+def min_bottom_gas(gas_list, legs, rmv=20):
+    """
+    Calculate minimal volume of bottom gas required for a dive using rule
+    of thirds.
+
+    :param gas_list: Gas list information.
+    :param legs: List of dive legs.
+    """
+    bottom_gas = gas_list.bottom_gas
+
+    # calculate required gas for overhead part of a dive
+    oh_legs = dive_legs_overhead(gas_list, legs)
+    cons = gas_consumption(gas_list, oh_legs, rmv=rmv)
+    vol = cons[bottom_gas]
+
+    # use rule of thirds
+    return vol * 1.5
 
 
 def plan_to_text(plan):
