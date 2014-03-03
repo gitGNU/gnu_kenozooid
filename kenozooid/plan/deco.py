@@ -258,6 +258,28 @@ def dive_legs(profile, stops, descent_rate):
     return legs
 
 
+def dive_legs_overhead(gas_list, legs):
+    """
+    Determine the overhead part of a decompression dive.
+
+    The overhead part of a dive is the descent, bottom and ascent parts of
+    a dive up to first decompression stop or first decompression gas mix
+    switch.
+
+    The overhead part of a dive is used to calculate gas mix consumption
+    using rule of thirds.
+
+    :param gas_list: Gas list information.
+    :param legs: List of dive legs.
+
+    ..seealso:: :py:func:`dive_legs`
+    """
+    mix = gas_list.deco_gas[0]
+    nr = range(len(legs))
+    k = next(k for k in nr if legs[k][3] == mix or legs[k][-1])
+    return legs[:k]
+
+
 def dive_slate(profile, stops, legs, descent_rate):
     """
     Calculate dive slate for a dive profile.
@@ -397,8 +419,10 @@ def gas_consumption(gas_list, legs, rmv=20):
     FIXME: apply separate RMV for decompression gas
 
     :param gas_list: Gas list information.
-    :param legs: Dive legs as calculated by ``dive_legs`` function.
+    :param legs: List of dive legs.
     :param rmv: Respiratory minute volume (RMV) [min/l].
+
+    ..seealso:: :py:func:`dive_legs`
     """
     cons = {m: 0 for m in gas_list.travel_gas}
     cons[gas_list.bottom_gas] = 0

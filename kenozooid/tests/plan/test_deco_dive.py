@@ -21,6 +21,7 @@ from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
     dive_legs, depth_to_time, gas_consumption, parse_gas, parse_gas_list, \
+    dive_legs_overhead, \
     sum_deco_time, sum_dive_time, DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
 
@@ -453,6 +454,56 @@ class DiveLegsTestCase(unittest.TestCase):
             self.assertEquals((s.depth, s.depth, s.time, air, True), l)
 
         self.assertEquals((6, 0, 0.6, air, True), legs[-1])
+
+
+    def test_dive_legs_overhead_deco(self):
+        """
+        Test calculating overhead part of a deco dive (first deco stop)
+        """
+        ean50 = gas(50, 0, depth=22)
+        air = gas(21, 0, depth=40)
+        gas_list = GasList(air)
+        gas_list.deco_gas.append(ean50)
+
+        legs = [
+            (0, 40, 2, air, False),
+            (40, 40, 20, air, False),
+            (40, 24, 5, air, False), # up to first deco stop
+            (24, 24, 1, air, True),
+            (24, 21, 1, air, True),
+            (21, 21, 1, ean50, True),
+            # ...
+            (9, 9, 1, ean50, True),
+            (9, 9, 1, ean50, True),
+            (9, 6, 1, ean50, True),
+            # ...
+        ]
+        oh_legs = dive_legs_overhead(gas_list, legs)
+        self.assertEquals(legs[:3], oh_legs)
+
+
+    def test_dive_legs_overhead_switch(self):
+        """
+        Test calculating overhead part of a deco dive (gas mix switch)
+        """
+        ean50 = gas(50, 0, depth=22)
+        air = gas(21, 0, depth=40)
+        gas_list = GasList(air)
+        gas_list.deco_gas.append(ean50)
+
+        legs = [
+            (0, 40, 2, air, False),
+            (40, 40, 20, air, False),
+            (40, 22, 5, air, False),
+            (22, 9, 2, ean50, False), # up to first gas mix switch
+            (9, 9, 1, ean50, True),
+            (9, 6, 1, ean50, True),
+            (6, 6, 3, ean50, True),
+            (6, 0, 1, ean50, True),
+        ]
+        oh_legs = dive_legs_overhead(gas_list, legs)
+        self.assertEquals(legs[:3], oh_legs)
+
 
 
 
