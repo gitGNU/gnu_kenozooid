@@ -466,19 +466,31 @@ def plan_to_text(plan):
     """
     txt = []
 
-    # dive profiles summaries
-    for p in plan.profiles:
-        txt.append('')
-        t = 'Dive Profile Summary ({})'.format(p.type)
-        txt.append(t)
-        txt.append('-' * len(t))
-        txt.append('Depth: {}m'.format(p.depth))
-        txt.append('Bottom Time: {}min'.format(p.time))
-        txt.append('Descent Time: {}min'.format(p.descent_time))
-        t = round(p.deco_time)
-        txt.append('Total Decompression Time: {}min'.format(t))
-        t = round(p.dive_time)
-        txt.append('Total Dive Time: {}min'.format(t))
+    # dive profiles summary
+    txt.append('')
+    t = 'Dive Profile Summary'
+    txt.append(t)
+    txt.append('-' * len(t))
+
+    titles = (
+        'Depth [m]', 'Bottom Time [min]', 'Descent Time [min]',
+        'Total Decompression Time [min]', 'Total Dive Time [min]',
+    )
+    attrs = ('depth', 'time', 'descent_time', 'deco_time', 'dive_time')
+    fmts = ('{:>6d}', '{:>6d}', '{:>6.1f}', '{:>6.0f}', '{:>6.0f}')
+    assert len(titles) == len(fmts) == len(attrs)
+
+    # create dive profiles summary table
+    th = '-' * 30 + ' ' + ' '.join(['-' * 6, ] * 4)
+    txt.append(th)
+    txt.append(' ' * 33 + 'P      E      LG    E+LG')
+    txt.append(th)
+    for title, attr, fmt in zip(titles, attrs, fmts):
+        t = '{:30s} '.format(title) + ' '.join([fmt] * 4)
+        values = [getattr(p, attr) for p in plan.profiles]
+        txt.append(t.format(*values))
+
+    txt.append(th)
 
     # dive slates
     for p in plan.profiles:
