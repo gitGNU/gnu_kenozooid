@@ -83,6 +83,8 @@ class DiveProfile(object):
     :var deco_time: Total decompression time.
     :var dive_time: Total dive time.
     :var slate: Dive slate.
+    :var gas_vol: Dictionary of gas mix and gas volume required for the
+        dive.
     :var gas_info: Gas mix requirements.
     """
     def __init__(self, type, gas_list, depth, time):
@@ -94,6 +96,7 @@ class DiveProfile(object):
         self.deco_time = 0
         self.dive_time = 0
         self.slate = []
+        self.gas_vol = {}
         self.gas_info = []
 
 
@@ -147,12 +150,13 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
     plan.profiles.append(p)
 
     bottom_gas_vol = 0 # minimal volume of bottom gas mix
+    rmv = 20
     for p in plan.profiles:
         stops = deco_stops(p)
 
         legs = dive_legs(p, stops, descent_rate)
         if p.type == ProfileType.PLANNED:
-            bottom_gas_vol = min_bottom_gas(p.gas_list, legs)
+            bottom_gas_vol = min_bottom_gas(p.gas_list, legs, rmv=rmv)
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
@@ -160,6 +164,7 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
 
         p.gas_info = gas_info(p)
         p.descent_time  = depth_to_time(0, p.depth, descent_rate)
+        p.gas_vol = gas_volume(p.gas_list, legs, rmv=rmv)
 
     assert bottom_gas_vol > 0
 
@@ -413,13 +418,13 @@ def gas_info(profile):
     return info
 
 
-def gas_consumption(gas_list, legs, rmv=20):
+def gas_volume(gas_list, legs, rmv=20):
     """
-    Calculate gas mix consumption information.
+    Calculate dive gas mix volume information.
 
-    Gas mix consumption is calculated for each gas mix on the gas list.
-    The consumption information is returned as dictionary `gas mix -> usage`,
-    where gas usage is volume of gas in liters.
+    Gas mix volume is calculated for each gas mix on the gas list.  The
+    volume information is returned as dictionary `gas mix -> usage`, where
+    gas usage is volume of gas in liters.
 
     FIXME: apply separate RMV for decompression gas
 
@@ -453,7 +458,7 @@ def min_bottom_gas(gas_list, legs, rmv=20):
 
     # calculate required gas for overhead part of a dive
     oh_legs = dive_legs_overhead(gas_list, legs)
-    cons = gas_consumption(gas_list, oh_legs, rmv=rmv)
+    cons = gas_volume(gas_list, oh_legs, rmv=rmv)
     vol = cons[bottom_gas]
 
     # use rule of thirds
@@ -489,6 +494,19 @@ def plan_to_text(plan):
         t = '{:30s} '.format(title) + ' '.join([fmt] * 4)
         values = [getattr(p, attr) for p in plan.profiles]
         txt.append(t.format(*values))
+    txt.append(th)
+
+    # required gas volume is part of summary table as well
+    gas_list = plan.profiles[0].gas_list # all other plans, do not use more
+                                         # gas mixes
+    gas_list = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
+    for m in gas_list:
+        n = 'Gas Mix {} [l]'.format(m.name)
+        vol = (p.gas_vol.get(m, 0) for p in plan.profiles)
+        na = '  xx  '
+        s = ('{:6.0f}'.format(v) if v > 0 else na for v in vol)
+        t = '{:30s}'.format(n) + ' ' + ' '.join(s)
+        txt.append(t)
 
     txt.append(th)
 

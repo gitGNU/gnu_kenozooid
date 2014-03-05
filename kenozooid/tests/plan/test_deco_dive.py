@@ -20,7 +20,7 @@
 from collections import namedtuple
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
-    dive_legs, depth_to_time, gas_consumption, parse_gas, parse_gas_list, \
+    dive_legs, depth_to_time, gas_volume, parse_gas, parse_gas_list, \
     dive_legs_overhead, min_bottom_gas, \
     sum_deco_time, sum_dive_time, DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
@@ -511,9 +511,9 @@ class GasMixConsumptionTestCase(unittest.TestCase):
     """
     Gas mix consumption tests.
     """
-    def test_gas_consumption(self):
+    def test_gas_volume(self):
         """
-        Test gas consumption calculation
+        Test gas volume calculation
         """
         air = gas(21, 0)
         ean50 = gas(50, 0, depth=22)
@@ -531,7 +531,7 @@ class GasMixConsumptionTestCase(unittest.TestCase):
             (6, 0, 1, ean50, True),   # 1.3b * 1min * 30min/l = 39l
         ]
 
-        cons = gas_consumption(gas_list, legs, 30)
+        cons = gas_volume(gas_list, legs, 30)
 
         self.assertEquals(2, len(cons))
         self.assertEquals(3795, cons[air])
