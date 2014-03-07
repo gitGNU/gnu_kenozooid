@@ -22,7 +22,7 @@ Decompression dive planning.
 """
 
 import re
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 from kenozooid.data import gas
 from kenozooid.calc import mod
@@ -65,12 +65,11 @@ class DivePlan(object):
     Dive plan information.
 
     :var profiles: List of dive profiles.
-    :var bottom_gas_vol: Minimal volume of bottom gas mix required
-        for the plan.
+    :var min_gas_vol: Minimal volume of gas mixes required for the plan.
     """
     def __init__(self):
         self.profiles = []
-        self.bottom_gas_vol = 0
+        self.min_gas_vol = {}
 
 
 
@@ -88,7 +87,7 @@ class DiveProfile(object):
     :var slate: Dive slate.
     :var gas_vol: Dictionary of gas mix and gas volume required for the
         dive.
-    :var gas_info: Gas mix requirements.
+    :var gas_info: Gas mix requirements information.
     """
     def __init__(self, type, gas_list, depth, time):
         self.type = type
@@ -157,17 +156,19 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3)):
 
         legs = dive_legs(p, stops, descent_rate)
         if p.type == ProfileType.PLANNED:
-            plan.bottom_gas_vol = min_bottom_gas(p.gas_list, legs, rmv=rmv)
+            plan.min_gas_vol = min_gas_volume(p.gas_list, legs, rmv=rmv)
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
         p.slate = dive_slate(p, stops, legs, descent_rate)
 
-        p.gas_info = gas_info(p)
         p.descent_time  = depth_to_time(0, p.depth, descent_rate)
         p.gas_vol = gas_volume(p.gas_list, legs, rmv=rmv)
 
-    assert plan.bottom_gas_vol > 0
+        if p.type != ProfileType.PLANNED:
+            p.gas_info = gas_vol_info(p.gas_vol, plan.min_gas_vol)
+
+    assert plan.min_gas_vol
 
     return plan
 
@@ -409,13 +410,34 @@ def sum_dive_time(legs):
     return sum(l[2] for l in legs)
 
 
-def gas_info(profile):
+def gas_vol_info(gas_vol, min_gas_vol):
     """
-    Calculate gas requirements information.
+    Analyze gas volume requirements using gas mix volume calculations.
 
-    :param profile: Dive profile information.
+    The list of messages is returned, which confirm required gas mix volume
+    or warn about gas logistics problems.
+
+    :param gas_vol: Gas volume requirements per gas mix.
+    :param min_gas_vol: Minimal gas mixes volume for the plan.
+
+    .. seealso::
+
+       :py:func:`min_gas_volume`
+       :py:func:`gas_volume`
+
     """
     info = []
+    for mix, vol in gas_vol.items():
+        assert mix in min_gas_vol
+
+        fmt = '{}Gas mix {} volume {}.'
+        if vol <= min_gas_vol[mix]:
+            msg = fmt.format('', mix.name, 'OK')
+        else:
+            msg = fmt.format('WARN: ', mix.name, 'NOT OK')
+        info.append(msg)
+
+    # TODO: msg = 'No diving cylinders specified to verify its configuration.'
     return info
 
 
@@ -423,7 +445,7 @@ def gas_volume(gas_list, legs, rmv=20):
     """
     Calculate dive gas mix volume information.
 
-    Gas mix volume is calculated for each gas mix on the gas list.  The
+    Gas mix volume is calculated for each gas mix on the gas list. The
     volume information is returned as dictionary `gas mix -> usage`, where
     gas usage is volume of gas in liters.
 
@@ -435,9 +457,9 @@ def gas_volume(gas_list, legs, rmv=20):
 
     ..seealso:: :py:func:`dive_legs`
     """
-    cons = {m: 0 for m in gas_list.travel_gas}
-    cons[gas_list.bottom_gas] = 0
-    cons.update({m: 0 for m in gas_list.deco_gas})
+    mixes = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
+    zeros = [0] * len(mixes)
+    cons = OrderedDict(zip(mixes, zeros))
     for leg in legs:
         d = (leg[0] + leg[1]) / 2
         t = leg[2]
@@ -447,23 +469,30 @@ def gas_volume(gas_list, legs, rmv=20):
     return cons
 
 
-def min_bottom_gas(gas_list, legs, rmv=20):
+def min_gas_volume(gas_list, legs, rmv=20):
     """
-    Calculate minimal volume of bottom gas required for a dive using rule
-    of thirds.
+    Calculate minimal volume of gas mixes required for a dive using rule of
+    thirds.
+
+    The volume information is returned as dictionary `gas mix -> usage`,
+    where gas usage is volume of gas in liters.
 
     :param gas_list: Gas list information.
     :param legs: List of dive legs.
     """
-    bottom_gas = gas_list.bottom_gas
+    # simply take gas volume requirements for the dive
+    gas_vol = gas_volume(gas_list, legs, rmv=rmv)
 
-    # calculate required gas for overhead part of a dive
+    # but recalculate required volume of bottom gas for overhead part of
+    # dive
     oh_legs = dive_legs_overhead(gas_list, legs)
     cons = gas_volume(gas_list, oh_legs, rmv=rmv)
-    vol = cons[bottom_gas]
+    gas_vol[gas_list.bottom_gas] = cons[gas_list.bottom_gas]
 
     # use rule of thirds
-    return vol * 1.5
+    for mix in gas_vol:
+        gas_vol[mix] *= 1.5
+    return gas_vol
 
 
 def plan_to_text(plan):
@@ -497,7 +526,16 @@ def plan_to_text(plan):
         txt.append(t.format(*values))
     txt.append(th)
 
-    # required gas volume is part of summary table as well
+    txt.append('')
+    t = 'Gas Logistics'
+    txt.append(t)
+    txt.append('-' * len(t))
+
+    # required gas volume information as a table
+    th = '-' * 30 + ' ' + ' '.join(['-' * 6, ] * 4)
+    txt.append(th)
+    txt.append(' ' * 33 + 'P      E      LG    E+LG')
+    txt.append(th)
     gas_list = plan.profiles[0].gas_list # all other plans, do not use more
                                          # gas mixes
     gas_list = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
@@ -510,6 +548,14 @@ def plan_to_text(plan):
         txt.append(t)
 
     txt.append(th)
+
+    # gas volume analysis information
+    txt.append('')
+    for p in plan.profiles:
+        if p.type != ProfileType.PLANNED:
+            txt.append('Dive profile: {}'.format(p.type))
+            txt.extend('  ' + s for s in p.gas_info)
+    txt.append('')
 
     # dive slates
     for p in plan.profiles:

@@ -17,11 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
     dive_legs, depth_to_time, gas_volume, parse_gas, parse_gas_list, \
-    dive_legs_overhead, min_bottom_gas, \
+    dive_legs_overhead, min_gas_volume, gas_vol_info, \
     sum_deco_time, sum_dive_time, DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
 
@@ -558,9 +558,46 @@ class GasMixConsumptionTestCase(unittest.TestCase):
             (6, 0, 1, ean50, True),   # 1.3b * 1min * 30min/l = 39l
         ]
 
-        vol = min_bottom_gas(gas_list, legs, 30)
+        vol = min_gas_volume(gas_list, legs, 30)
 
-        self.assertEquals(3795 * 1.5, vol)
+        self.assertEquals(3795 * 1.5, vol[air])
+        self.assertEquals(445.5 * 1.5, vol[ean50])
+
+
+    def test_gas_vol_info(self):
+        """
+        Test gas volume requirements analysis
+        """
+        air = gas(21, 0)
+        ean50 = gas(50, 0, depth=22)
+
+        mixes = (air, 2000), (ean50, 100)
+        gas_vol = OrderedDict(mixes)
+
+        mixes = (air, 2000), (ean50, 100)
+        min_gas_vol = OrderedDict(mixes)
+
+        info = gas_vol_info(gas_vol, min_gas_vol)
+        self.assertEquals(info[0], 'Gas mix Air volume OK.')
+        self.assertEquals(info[1], 'Gas mix EAN50 volume OK.')
+
+
+    def test_gas_vol_info_warn(self):
+        """
+        Test gas volume requirements analysis (warning)
+        """
+        air = gas(21, 0)
+        ean50 = gas(50, 0, depth=22)
+
+        mixes = (air, 2000), (ean50, 100)
+        gas_vol = OrderedDict(mixes)
+
+        mixes = (air, 1999), (ean50, 99)
+        min_gas_vol = OrderedDict(mixes)
+
+        info = gas_vol_info(gas_vol, min_gas_vol)
+        self.assertEquals(info[0], 'WARN: Gas mix Air volume NOT OK.')
+        self.assertEquals(info[1], 'WARN: Gas mix EAN50 volume NOT OK.')
 
 
 # vim: sw=4:et:ai
