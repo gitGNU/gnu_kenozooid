@@ -65,9 +65,12 @@ class DivePlan(object):
     Dive plan information.
 
     :var profiles: List of dive profiles.
+    :var bottom_gas_vol: Minimal volume of bottom gas mix required
+        for the plan.
     """
     def __init__(self):
         self.profiles = []
+        self.bottom_gas_vol = 0
 
 
 
@@ -123,7 +126,7 @@ class ProfileType(object):
 
 
 
-def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
+def plan_deco_dive(gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3)):
     """
     Plan decompression dive.
     """
@@ -149,14 +152,12 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
     )
     plan.profiles.append(p)
 
-    bottom_gas_vol = 0 # minimal volume of bottom gas mix
-    rmv = 20
     for p in plan.profiles:
         stops = deco_stops(p)
 
         legs = dive_legs(p, stops, descent_rate)
         if p.type == ProfileType.PLANNED:
-            bottom_gas_vol = min_bottom_gas(p.gas_list, legs, rmv=rmv)
+            plan.bottom_gas_vol = min_bottom_gas(p.gas_list, legs, rmv=rmv)
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
@@ -166,7 +167,7 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, ext=(5, 3)):
         p.descent_time  = depth_to_time(0, p.depth, descent_rate)
         p.gas_vol = gas_volume(p.gas_list, legs, rmv=rmv)
 
-    assert bottom_gas_vol > 0
+    assert plan.bottom_gas_vol > 0
 
     return plan
 
