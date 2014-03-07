@@ -145,9 +145,9 @@ The dive plan input is
   - bottom gas mix
   - decompression gas mixes
 
-- diving cylinders specification
 - maximum dive depth
 - bottom time
+- diving cylinders specification (optional)
 
 Kenozooid calculates dive plan, which consists of
 
@@ -165,12 +165,13 @@ Kenozooid calculates dive plan, which consists of
 
 - gas logistics information
 
-  - volume of each required gas mix for dive profile calculated using rule
-    of thirds
-  - verification message for each emergency dive profile that volume of gas
-    is sufficient for a dive profile, warning otherwise
+  - volume of each required gas mix for the dive plan calculated using
+    rule of thirds
+  - volume of each required gas mix for every dive profile (no rule
+    applied)
   - verification message that volume of each gas mix fits into specified,
-    appropriate diving cylinder, warning otherwise
+    appropriate diving cylinder, warning otherwise (if diving cylinder
+    configuration specified)
 
 - dive slates for
 
