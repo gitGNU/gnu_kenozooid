@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.15.0
+----------------
+- added support for OSTC 2C dive computer in ostc driver
+
 Kenozooid 0.14.0
 ----------------
 - command line user interface fixes
