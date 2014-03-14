@@ -24,6 +24,7 @@ OSTC driver tests.
 from collections import namedtuple
 from datetime import datetime
 import unittest
+from unittest import mock
 
 import kenozooid.data as kd
 import kenozooid.driver.ostc.parser as ostc_parser
@@ -273,6 +274,26 @@ class DataParserTestCase(unittest.TestCase):
 
         ver = dc.version(od.RAW_DATA_OSTC_MK2_196)
         self.assertEquals('OSTC Mk.2 1.96', ver)
+
+
+    def test_version_ostc_2c(self):
+        """
+        Test OSTC 2C model and version identification
+
+        Verify that OSTC with serial 7000 is identified as OSTC 2C
+        """
+        with mock.patch('kenozooid.driver.ostc.parser.get_data') as f:
+            status = f.return_value = mock.MagicMock()
+            status.eeprom = mock.MagicMock()
+            status.eeprom.serial = 7000
+            status.ver1 = 2
+            status.ver2 = 1
+
+            dc = OSTCDataParser()
+            data = mock.MagicMock()
+            ver = dc.version(data)
+
+            self.assertEquals('OSTC 2C 2.01', ver)
 
 
 # vim: sw=4:et:ai

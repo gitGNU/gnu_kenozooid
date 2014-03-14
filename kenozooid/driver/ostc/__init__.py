@@ -277,7 +277,9 @@ class OSTCDataParser(object):
         """
         status = ostc_parser.get_data(data)
         model = 'OSTC'
-        if status.eeprom.serial > 2047:
+        if status.eeprom.serial > 6999:
+            model = 'OSTC 2C'
+        elif status.eeprom.serial > 2047:
             model = 'OSTC 2N'
         elif status.eeprom.serial > 300:
             model = 'OSTC Mk.2'
