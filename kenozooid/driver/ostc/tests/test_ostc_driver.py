@@ -254,7 +254,7 @@ class DataParserTestCase(unittest.TestCase):
         self.assertEquals('OSTC Mk.2 1.90', ver)
 
 
-    def test_version_ostc_n2(self):
+    def test_version_ostc_2n(self):
         """
         Test OSTC 2N model and version parsing from raw data
         """
