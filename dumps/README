@@ -39,4 +39,7 @@ ola:
 - ostc-dump-48.uddf
 - ostc-dump-51.uddf
 
+f:
+- ostc-dump-52.uddf
+
 # vim: sw=4:et:ai
