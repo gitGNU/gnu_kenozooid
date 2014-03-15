@@ -40,6 +40,6 @@ ola:
 - ostc-dump-51.uddf
 
 f:
-- ostc-dump-52.uddf
+- ostc-dump-52.uddf (first dive: simulation)
 
 # vim: sw=4:et:ai
