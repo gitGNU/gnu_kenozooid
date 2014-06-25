@@ -41,7 +41,7 @@ def coroutine(func):
 
 def pipe(data, *gens):
     """
-    Pipe data through list of geneators.
+    Pipe data through list of generators.
     
     :Parameters:
      data
