@@ -67,12 +67,21 @@ class DivePlan(object):
     """
     Dive plan information.
 
+    Dive plan information contains list of dive profiles, gas volume
+    information and dive decompression parameters.
+
     :var profiles: List of dive profiles.
     :var min_gas_vol: Minimal volume of gas mixes required for the plan.
+    :var last_stop_6m: True if last stop is at 6m.
+    :var gf_low: Gradient factor low value (decompression model specific).
+    :var gf_high: Gradient factor high value (decompression model specific).
     """
     def __init__(self):
         self.profiles = []
         self.min_gas_vol = {}
+        self.last_stop_6m = False
+        self.gf_low = 30
+        self.gf_high = 85
 
 
 
@@ -158,9 +167,7 @@ def plan_deco_dive(
     plan.profiles.append(p)
 
     for p in plan.profiles:
-        stops = deco_stops(
-            p, last_stop_6m=last_stop_6m, gf_low=gf_low, gf_high=gf_high
-        )
+        stops = deco_stops(plan, p)
 
         legs = dive_legs(p, stops, descent_rate)
         if p.type == ProfileType.PLANNED:
@@ -182,17 +189,20 @@ def plan_deco_dive(
     return plan
 
 
-def deco_stops(profile, last_stop_6m=False, gf_low=30, gf_high=85):
+def deco_stops(plan, profile):
     """
     Calculate decompression stops for a dive profile.
 
+    The dive plan information is used to configure decompression engine.
+
+    :param plan: Dive plan information.
     :param profile: Dive profile information.
     """
     import decotengu # configurable in the future, do not import globally
     engine = decotengu.create()
-    engine.last_stop_6m = last_stop_6m
-    engine.model.gf_low = gf_low / 100
-    engine.model.gf_high = gf_high / 100
+    engine.last_stop_6m = plan.last_stop_6m
+    engine.model.gf_low = plan.gf_low / 100
+    engine.model.gf_high = plan.gf_high / 100
 
     gas_list = profile.gas_list
 

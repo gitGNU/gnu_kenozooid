@@ -71,10 +71,12 @@ class DecoPlan(object):
         """
         import kenozooid.plan.deco as planner
         gas_list = planner.parse_gas_list(*args.gas_list.split())
-        plan = planner.plan_deco_dive(
-            gas_list, args.depth, args.time, last_stop_6m=args.last_stop_6m,
-            gf_low=args.gf_low, gf_high=args.gf_high
-        )
+        plan = planner.plan_deco_dive(gas_list, args.depth, args.time)
+
+        plan.last_stop_6m = args.last_stop_6m
+        plan.gf_low = args.gf_low
+        plan.gf_high = args.gf_high
+
         print(planner.plan_to_text(plan))
 
 
