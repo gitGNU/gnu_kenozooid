@@ -129,7 +129,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
 
     @mock.patch('decotengu.create')
-    def test_deco_stops_last_stop_3m(self, f_c):
+    def test_deco_stops_last_stop_6m(self, f_c):
         """
         Test deco dive plan deco stops calculator last stop at 6m
 
@@ -143,6 +143,24 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         p = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
         deco_stops(p, last_stop_6m=True)
         self.assertTrue(engine.last_stop_6m)
+
+
+    @mock.patch('decotengu.create')
+    def test_deco_stops_gf_change(self, f_c):
+        """
+        Test deco dive plan deco stops calculator gradient factors change
+
+        Verify that gradient factors parameters are passed correctly to the
+        deco engine. This test is DecoTengu decompression library specific.
+        """
+        engine = mock.MagicMock()
+        f_c.return_value = engine
+        gas_list = GasList(gas(27, 0, depth=33))
+
+        p = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
+        deco_stops(p, gf_low=10, gf_high=95)
+        self.assertEqual(0.1, engine.model.gf_low)
+        self.assertEqual(0.95, engine.model.gf_high)
 
 
     def test_dive_slate(self):
