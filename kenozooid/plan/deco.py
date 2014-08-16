@@ -23,9 +23,12 @@ Decompression dive planning.
 
 import re
 from collections import namedtuple, OrderedDict
+import logging
 
 from kenozooid.data import gas
 from kenozooid.calc import mod
+
+logger = logging.getLogger(__name__)
 
 
 RE_GAS = re.compile("""
@@ -165,8 +168,9 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3)):
         p.descent_time  = depth_to_time(0, p.depth, descent_rate)
         p.gas_vol = gas_volume(p.gas_list, legs, rmv=rmv)
 
-        if p.type != ProfileType.PLANNED:
-            p.gas_info = gas_vol_info(p.gas_vol, plan.min_gas_vol)
+        # after ver. 0.15
+        # if p.type != ProfileType.PLANNED:
+        #     p.gas_info = gas_vol_info(p.gas_vol, plan.min_gas_vol)
 
     assert plan.min_gas_vol
 
@@ -180,21 +184,24 @@ def deco_stops(profile):
     :param profile: Dive profile information.
     """
     import decotengu # configurable in the future, do not import globally
-    engine, dt = decotengu.create()
+    engine = decotengu.create()
 
     gas_list = profile.gas_list
 
     # add gas mix information to decompression engine
     for m in gas_list.travel_gas:
+        logger.debug('adding travel gas {}'.format(m))
         engine.add_gas(m.depth, m.o2, m.he, travel=True)
     m = gas_list.bottom_gas
+    logger.debug('adding bottom gas {}'.format(m))
     engine.add_gas(m.depth, m.o2, m.he)
     for m in gas_list.deco_gas:
+        logger.debug('adding deco gas {}'.format(m))
         engine.add_gas(m.depth, m.o2, m.he)
 
     list(engine.calculate(profile.depth, profile.time))
 
-    return dt.stops
+    return engine.deco_table
 
 
 def dive_legs(profile, stops, descent_rate):
@@ -541,7 +548,8 @@ def plan_to_text(plan):
     gas_list = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
     for m in gas_list:
         n = 'Gas Mix {} [l]'.format(m.name)
-        vol = (p.gas_vol.get(m, 0) for p in plan.profiles)
+        vol = [p.gas_vol.get(m, 0) for p in plan.profiles]
+        vol[0] = plan.min_gas_vol[m]
         na = '  xx  '
         s = ('{:6.0f}'.format(v) if v > 0 else na for v in vol)
         t = '{:30s}'.format(n) + ' ' + ' '.join(s)
@@ -549,13 +557,14 @@ def plan_to_text(plan):
 
     txt.append(th)
 
+    # after ver. 0.15
     # gas volume analysis information
-    txt.append('')
-    for p in plan.profiles:
-        if p.type != ProfileType.PLANNED:
-            txt.append('Dive profile: {}'.format(p.type))
-            txt.extend('  ' + s for s in p.gas_info)
-    txt.append('')
+    # txt.append('')
+    # for p in plan.profiles:
+    #     if p.type != ProfileType.PLANNED:
+    #         txt.append('Dive profile: {}'.format(p.type))
+    #         txt.extend('  ' + s for s in p.gas_info)
+    # txt.append('')
 
     # dive slates
     for p in plan.profiles:

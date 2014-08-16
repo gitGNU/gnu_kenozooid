@@ -87,8 +87,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         - decompression stops are returned
         """
         engine = mock.MagicMock()
-        dt = mock.MagicMock()
-        f_c.return_value = engine, dt
+        f_c.return_value = engine
 
         gas_list = GasList(gas(27, 0, depth=33))
         gas_list.travel_gas.append(gas(32, 0, depth=0))
@@ -109,7 +108,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEquals(((10, 80, 0),), args[3])
 
         # check deco stops are returned
-        self.assertEquals(dt.stops, stops)
+        self.assertEquals(engine.deco_table, stops)
 
 
     def test_dive_slate(self):
