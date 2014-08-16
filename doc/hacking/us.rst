@@ -143,15 +143,15 @@ The dive plan input is
 
   - travel gas mixes (0 or more)
   - bottom gas mix
-  - decompression gas mixes
+  - decompression gas mixes (0 or more)
 
 - maximum dive depth
 - bottom time
-- diving cylinders specification (optional)
+.. not for ver. 0.15: - diving cylinders specification (optional)
 
 Kenozooid calculates dive plan, which consists of
 
-- dive profile summary
+- main dive profile summary
 
   - maximum dive depth
   - bottom time (includes descent time)
@@ -165,13 +165,12 @@ Kenozooid calculates dive plan, which consists of
 
 - gas logistics information
 
-  - volume of each required gas mix for the dive plan calculated using
-    rule of thirds
-  - volume of each required gas mix for every dive profile (no rule
-    applied)
-  - verification message that volume of each gas mix fits into specified,
-    appropriate diving cylinder, warning otherwise (if diving cylinder
-    configuration specified)
+  - volume of each required gas mix for the main dive profile calculated
+    using rule of thirds
+  - volume of each required gas mix for each emergency dive profile
+.. not for ver. 0.15: - verification message that volume of each gas mix fits into specified,
+.. not for ver. 0.15:   appropriate diving cylinder, warning otherwise (if diving cylinder
+.. not for ver. 0.15:   configuration specified)
 
 - dive slates for
 
@@ -189,21 +188,26 @@ Dive slate consists of the following columns
 - run time
 - gas mix used at given dive profile segment
 
-The dive plan is shown on the screen or can be saved as PDF file for
-printing.
+The dive plan is shown on the screen.
 
-The following is assumed at the moment and should be parameterized later
+.. not for ver. 0.15: or can be saved as PDF file for printing.
+
+The dive plan should be configurable with
+
+- last stop 3m or 6m; default 6m
+- gradient factors; default GF low 30%, GF high 85%
+
+The following parameters are used for dive plan calculation and might be
+configurable in the future
 
 - RMV 20l/min
 - descent rate 20m/min
-- last stop 6m
-- travel and decompression gas mixes cylinders pressure 200bar
-- bottom gas mix cylinder pressure 220bar
 - extended dive profile is 5 meters deeper and 3 minutes longer (+5m/+3min)
-- decompression model is ZH-L16B-GF (ZH-L16C-GF can be used in the future
-  also)
-- decompression engine library is ``decotengu`` (``libdeco-ostc`` can be
-  used in the future also)
+- decompression model is ZH-L16B-GF
+- decompression engine library is ``decotengu``
+
+.. not for ver. 0.15: - travel and decompression gas mixes cylinders pressure 200bar
+.. not for ver. 0.15: - bottom gas mix cylinder pressure 220bar
 
 .. _hk-us-logbook:
 
