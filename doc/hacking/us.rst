@@ -188,7 +188,8 @@ Dive slate consists of the following columns
 - run time
 - gas mix used at given dive profile segment
 
-The dive plan is shown on the screen.
+The dive plan is shown on the screen in textual format compatible with
+reStructuredText standard.
 
 .. not for ver. 0.15: or can be saved as PDF file for printing.
 

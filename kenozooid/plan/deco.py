@@ -541,15 +541,16 @@ def plan_to_text(plan):
     assert len(titles) == len(fmts) == len(attrs)
 
     # create dive profiles summary table
-    th = '-' * 30 + ' ' + ' '.join(['-' * 6, ] * 4)
+    th = '=' * 30 + ' ' + ' '.join(['=' * 6, ] * 4)
     txt.append(th)
-    txt.append(' ' * 33 + 'P      E      LG    E+LG')
+    txt.append(' {:32}'.format('Name') + 'P      E      LG    E+LG')
     txt.append(th)
     for title, attr, fmt in zip(titles, attrs, fmts):
         t = '{:30s} '.format(title) + ' '.join([fmt] * 4)
         values = [getattr(p, attr) for p in plan.profiles]
         txt.append(t.format(*values))
     txt.append(th)
+    txt.append('')
 
     txt.append('')
     t = 'Gas Logistics'
@@ -557,15 +558,15 @@ def plan_to_text(plan):
     txt.append('-' * len(t))
 
     # required gas volume information as a table
-    th = '-' * 30 + ' ' + ' '.join(['-' * 6, ] * 4)
+    th = '=' * 30 + ' ' + ' '.join(['=' * 6, ] * 4)
     txt.append(th)
-    txt.append(' ' * 33 + 'P      E      LG    E+LG')
+    txt.append('{:33s}'.format('Gas Mix') + 'P      E      LG    E+LG')
     txt.append(th)
     gas_list = plan.profiles[0].gas_list # all other plans, do not use more
                                          # gas mixes
     gas_list = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
     for m in gas_list:
-        n = 'Gas Mix {} [l]'.format(m.name)
+        n = 'Gas Mix {} [liter]'.format(m.name)
         vol = [p.gas_vol.get(m, 0) for p in plan.profiles]
         # the main profile gas volume reported using rule of thirds
         vol[0] = plan.min_gas_vol[m]
@@ -575,6 +576,7 @@ def plan_to_text(plan):
         txt.append(t)
 
     txt.append(th)
+    txt.append('')
 
     # after ver. 0.15
     # gas volume analysis information
@@ -586,17 +588,16 @@ def plan_to_text(plan):
     # txt.append('')
 
     # dive slates
+    t = 'Dive Slates'
+    txt.append(t)
+    txt.append('-' * len(t))
     for p in plan.profiles:
+        txt.append('Profile *{}*::'.format(p.type))
         txt.append('')
-
-        t = 'Slate: {}'.format(p.type)
-        txt.append(t)
-        txt.append('-' * len(t))
-
         slate = p.slate
-        t = ' {:>3} {:>3} {:>4} {:7}'.format('D', 'DT', 'RT', 'GAS')
+        t = '     {:>3} {:>3} {:>4} {:7}'.format('D', 'DT', 'RT', 'GAS')
         txt.append(t)
-        txt.append(' ' + '-' * (len(t) - 1))
+        txt.append('    ' + '-' * (len(t) - 1))
         for item in slate:
             st = int(item[1]) if item[1] else ''
 
@@ -604,10 +605,11 @@ def plan_to_text(plan):
             star = '*' if m else ' '
             m = m.name if m else ''
 
-            t = '{}{:>3} {:>3} {:>4} {}'.format(
+            t = '    {}{:>3} {:>3} {:>4} {}'.format(
                 star, int(item[0]), st, int(item[2]), m
             )
             txt.append(t)
+        txt.append('')
 
     return '\n'.join(txt)
 
