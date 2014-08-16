@@ -70,12 +70,14 @@ class DecoPlan(object):
         Execute Kenozooid decompression dive planning command.
         """
         import kenozooid.plan.deco as planner
-        gas_list = planner.parse_gas_list(*args.gas_list.split())
-        plan = planner.plan_deco_dive(gas_list, args.depth, args.time)
+        plan = planner.DivePlan()
 
         plan.last_stop_6m = args.last_stop_6m
         plan.gf_low = args.gf_low
         plan.gf_high = args.gf_high
+
+        gas_list = planner.parse_gas_list(*args.gas_list.split())
+        planner.plan_deco_dive(plan, gas_list, args.depth, args.time)
 
         print(planner.plan_to_text(plan))
 

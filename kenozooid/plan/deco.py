@@ -75,6 +75,10 @@ class DivePlan(object):
     :var last_stop_6m: True if last stop is at 6m.
     :var gf_low: Gradient factor low value (decompression model specific).
     :var gf_high: Gradient factor high value (decompression model specific).
+    :var descent_rate: Descent rate.
+    :var rmv: Respiratory Minute Volume.
+    :var ext_profile: Tuple depth and time to add for an extended dive
+        profile.
     """
     def __init__(self):
         self.profiles = []
@@ -82,6 +86,10 @@ class DivePlan(object):
         self.last_stop_6m = False
         self.gf_low = 30
         self.gf_high = 85
+
+        self.descent_rate = 20
+        self.rmv = 20
+        self.ext_profile = 5, 3
 
 
 
@@ -137,20 +145,26 @@ class ProfileType(object):
 
 
 
-def plan_deco_dive(
-        gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3),
-        last_stop_6m=False, gf_low=30, gf_high=85
-    ):
+def plan_deco_dive(plan, gas_list, depth, time):
     """
     Plan decompression dive.
+
+    The dive plan information is calculated and stored in the dive plan
+    object.
+
+    Any dive plan configuration should be set in the dive plan object
+    before calling this function.
+
+    :param plan: Dive plan object to be filled with dive plan information.
+    :param gas_list: Gas mix configuration list.
+    :param depth: Maximum dive depth.
+    :param time: Dive bottom time.
     """
-    ext_depth = depth + ext[0]
-    ext_time = time + ext[1]
+    ext_depth = depth + plan.ext_profile[0]
+    ext_time = time + plan.ext_profile[1]
 
     lost_gas_list = GasList(gas_list.bottom_gas)
     lost_gas_list.travel_gas.extend(gas_list.travel_gas)
-
-    plan = DivePlan()
 
     p = DiveProfile(ProfileType.PLANNED, gas_list, depth, time)
     plan.profiles.append(p)
@@ -169,24 +183,22 @@ def plan_deco_dive(
     for p in plan.profiles:
         stops = deco_stops(plan, p)
 
-        legs = dive_legs(p, stops, descent_rate)
+        legs = dive_legs(p, stops, plan.descent_rate)
         if p.type == ProfileType.PLANNED:
-            plan.min_gas_vol = min_gas_volume(p.gas_list, legs, rmv=rmv)
+            plan.min_gas_vol = min_gas_volume(p.gas_list, legs, rmv=plan.rmv)
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
-        p.slate = dive_slate(p, stops, legs, descent_rate)
+        p.slate = dive_slate(p, stops, legs, plan.descent_rate)
 
-        p.descent_time  = depth_to_time(0, p.depth, descent_rate)
-        p.gas_vol = gas_volume(p.gas_list, legs, rmv=rmv)
+        p.descent_time  = depth_to_time(0, p.depth, plan.descent_rate)
+        p.gas_vol = gas_volume(p.gas_list, legs, rmv=plan.rmv)
 
         # after ver. 0.15
         # if p.type != ProfileType.PLANNED:
         #     p.gas_info = gas_vol_info(p.gas_vol, plan.min_gas_vol)
 
     assert plan.min_gas_vol
-
-    return plan
 
 
 def deco_stops(plan, profile):
@@ -610,6 +622,30 @@ def plan_to_text(plan):
             )
             txt.append(t)
         txt.append('')
+
+    # dive plan parameters
+    t = 'Parameters'
+    txt.append(t)
+    txt.append('-' * len(t))
+
+    titles = (
+        'Last stop at 6m', 'GF Low', 'GF High', #'RMV [l/min]', 'Extended Profile',
+        #'Decompression Model', 'Decompression Library'
+    )
+    attrs = ('last_stop_6m', 'gf_low', 'gf_high')#, 'deco_time', 'dive_time')
+    fmts = (' {}', '{:>6}%', '{:>6}%')#, '{:>6.0f}')#, '{:>6.0f}')
+    assert len(titles) == len(fmts) == len(attrs)
+
+    th = '=' * 30 + ' ' + '=' * 7
+    txt.append(th)
+    txt.append('Parameter' + ' ' * 23 + 'Value')
+    txt.append(th)
+    for title, attr, fmt in zip(titles, attrs, fmts):
+        t = '{:30s} '.format(title) + fmt
+        txt.append(t.format(getattr(plan, attr)))
+    txt.append(th)
+    txt.append('')
+
 
     return '\n'.join(txt)
 

@@ -45,7 +45,8 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         gas_list.deco_gas.append(ean50)
         gas_list.deco_gas.append(ean80)
 
-        plan = plan_deco_dive(gas_list, 45, 35)
+        plan = DivePlan()
+        plan_deco_dive(plan, gas_list, 45, 35)
 
         self.assertEquals(4, len(plan.profiles))
 
