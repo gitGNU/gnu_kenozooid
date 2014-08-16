@@ -549,6 +549,7 @@ def plan_to_text(plan):
     for m in gas_list:
         n = 'Gas Mix {} [l]'.format(m.name)
         vol = [p.gas_vol.get(m, 0) for p in plan.profiles]
+        # the main profile gas volume reported using rule of thirds
         vol[0] = plan.min_gas_vol[m]
         na = '  xx  '
         s = ('{:6.0f}'.format(v) if v > 0 else na for v in vol)
