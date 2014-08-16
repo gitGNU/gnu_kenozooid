@@ -25,7 +25,7 @@ def _py_inst(mods, names, py_miss):
         print('''\
   Install {} Python module with command
 
-      easy_install-3.2 --user {}
+      pip install --user {}
 '''.format(m, n))
 
 class CheckDeps(Command):
