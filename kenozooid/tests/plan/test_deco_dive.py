@@ -111,6 +111,40 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEquals(engine.deco_table, stops)
 
 
+    @mock.patch('decotengu.create')
+    def test_deco_stops_last_stop_3m(self, f_c):
+        """
+        Test deco dive plan deco stops calculator last stop at 3m
+
+        Verify that last stop parameter is passed correctly to the deco
+        engine. This test is DecoTengu decompression library specific.
+        """
+        engine = mock.MagicMock()
+        f_c.return_value = engine
+        gas_list = GasList(gas(27, 0, depth=33))
+
+        p = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
+        deco_stops(p)
+        self.assertFalse(engine.last_stop_6m)
+
+
+    @mock.patch('decotengu.create')
+    def test_deco_stops_last_stop_3m(self, f_c):
+        """
+        Test deco dive plan deco stops calculator last stop at 6m
+
+        Verify that last stop parameter is passed correctly to the deco
+        engine. This test is DecoTengu decompression library specific.
+        """
+        engine = mock.MagicMock()
+        f_c.return_value = engine
+        gas_list = GasList(gas(27, 0, depth=33))
+
+        p = DiveProfile(ProfileType.PLANNED, gas_list, 45, 35)
+        deco_stops(p, last_stop_6m=True)
+        self.assertTrue(engine.last_stop_6m)
+
+
     def test_dive_slate(self):
         """
         Test dive slate creation

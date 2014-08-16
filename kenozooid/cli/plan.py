@@ -51,6 +51,10 @@ class DecoPlan(object):
         )
         parser.add_argument('depth', type=int, help='dive depth')
         parser.add_argument('time', type=int, help='dive bottom time')
+        parser.add_argument(
+            '-6', dest='last_stop_6m', action='store_true', default=False,
+            help='last stop at 3m'
+        )
 
 
     def __call__(self, args):
@@ -59,7 +63,9 @@ class DecoPlan(object):
         """
         import kenozooid.plan.deco as planner
         gas_list = planner.parse_gas_list(*args.gas_list.split())
-        plan = planner.plan_deco_dive(gas_list, args.depth, args.time)
+        plan = planner.plan_deco_dive(
+            gas_list, args.depth, args.time, last_stop_6m=args.last_stop_6m
+        )
         print(planner.plan_to_text(plan))
 
 

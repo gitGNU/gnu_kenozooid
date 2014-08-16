@@ -128,7 +128,10 @@ class ProfileType(object):
 
 
 
-def plan_deco_dive(gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3)):
+def plan_deco_dive(
+        gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3),
+        last_stop_6m=False
+    ):
     """
     Plan decompression dive.
     """
@@ -155,7 +158,7 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3)):
     plan.profiles.append(p)
 
     for p in plan.profiles:
-        stops = deco_stops(p)
+        stops = deco_stops(p, last_stop_6m=last_stop_6m)
 
         legs = dive_legs(p, stops, descent_rate)
         if p.type == ProfileType.PLANNED:
@@ -177,7 +180,7 @@ def plan_deco_dive(gas_list, depth, time, descent_rate=20, rmv=20, ext=(5, 3)):
     return plan
 
 
-def deco_stops(profile):
+def deco_stops(profile, last_stop_6m=False):
     """
     Calculate decompression stops for a dive profile.
 
@@ -185,6 +188,7 @@ def deco_stops(profile):
     """
     import decotengu # configurable in the future, do not import globally
     engine = decotengu.create()
+    engine.last_stop_6m = last_stop_6m
 
     gas_list = profile.gas_list
 

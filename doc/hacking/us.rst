@@ -194,7 +194,7 @@ The dive plan is shown on the screen.
 
 The dive plan should be configurable with
 
-- last stop 3m or 6m; default 6m
+- last stop 3m or 6m; default 3m
 - gradient factors; default GF low 30%, GF high 85%
 
 The following parameters are used for dive plan calculation and might be
