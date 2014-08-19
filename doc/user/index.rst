@@ -14,8 +14,8 @@ User Manual
    dc
    plot
    analysis
+   plan
    logbook
-   calc    
    ri
    links
    ack
