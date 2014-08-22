@@ -3,12 +3,47 @@ Decompression Dive Plan
 The ``plan deco`` Kenozooid command enables diver to plan a decompression
 dive.
 
-Example::
+For example. to plan decompression dive to 42 meters, for 25 minutes, EAN27
+bottom gas mix, EAN50 decompression gas mix and last decompression stop at
+6m use command::
 
-    $ kz plan deco -6 -gl 20 -gh 90  'ean27 ean50@22' 42 25
+    $ kz plan deco -6 'ean27 ean50@22' 42 25
 
 Dive Plan Input
 ---------------
+Dive plan input requires three mandatory arguments
+
+- gas mix list
+- dive maximum depth in meters
+- bottom time in minutes
+
+The dive maximum depth and bottom time arguments shall require no
+explanation.
+
+The gas mix list is space separated list of gas mix names
+
+- optional travel gas mix
+- mandatory bottom gas mix
+- optional decompression gas mix
+
+The gas mix name is case insensitive and can be
+
+air
+    Air gas mix, set to 21% oxygen and 79% nitrogen.
+o2
+    Gas mix with 100% oxygen.
+eanOO
+    Nitrox gas mix with `OO` oxygen percentage, for example `EAN27`, `EAN50`.
+txOO/HE
+    Trimix gas mix  with `OO` oxygen percentage and `HE` helium percentage,
+    for example `TX21/35`, `TX18/45`, `TX15/55`.
+
+To specify gas mix switch depth with its name add `@D` suffix where `D` is
+the depth, for example `EAN50@22` is gas mix to be switched to at 22
+meters.
+
+Travel gas mix name has `+` prefix, for example `+EAN32@0` or `+EAN32` is
+EAN32 travel gas mix to be used from surface.
 
 Dive Plan Overview
 ------------------
