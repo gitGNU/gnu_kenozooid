@@ -3,11 +3,26 @@ Decompression Dive Plan
 The ``plan deco`` Kenozooid command enables diver to plan a decompression
 dive.
 
-For example. to plan decompression dive to 42 meters, for 25 minutes, EAN27
-bottom gas mix, EAN50 decompression gas mix and last decompression stop at
-6m use command::
+For example, to plan decompression dive
 
-    $ kz plan deco -6 'ean27 ean50@22' 42 25
+- with EAN27 bottom gas mix
+- with EAN50 decompression gas mix
+- to maximum depth of 42 meters
+- for 25 minutes
+
+use command::
+
+    $ kz plan deco 'ean27 ean50@22' 42 25
+
+To change the dive plan parameters to
+
+- respiratory volume minute set to 16l/min (default 20l/min)
+- gradient factors low 20% and high 90% (default 30% and 85%)
+- last decompression stop at 6m (default 3m)
+
+we can use the command::
+
+    $ kz plan deco --rmv 16 -gl 20 -gh 90 -6 'ean27 ean50@22' 42 25
 
 Dive Plan Input
 ---------------
@@ -75,6 +90,11 @@ Example of dive plan summary
 ============================== ====== ====== ====== ======
  Name                            P      E      LG    E+LG
 ============================== ====== ====== ====== ======
+Depth [m]                          42     47     42     47
+Bottom Time [min]                  25     28     25     28
+Descent Time [min]                2.1    2.4    2.1    2.4
+Total Decompression Time [min]     14     25     20     38
+Total Dive Time [min]              41     56     47     69
 ============================== ====== ====== ====== ======
 
 Dive Slates
@@ -99,7 +119,14 @@ Example of dive slate for planned dive profile::
 
        D  DT   RT GAS
     ------------------------
-
+    * 42       25 EAN27
+    * 22       27 EAN50
+      18   1   28
+      15   1   30
+      12   1   31
+       9   1   32
+       6   8   41
+       0       41
 
 Gas Mix Logistics
 -----------------
@@ -108,6 +135,8 @@ Example of gas mix logistics information
 ============================== ====== ====== ====== ======
 Gas Mix                          P      E      LG    E+LG
 ============================== ====== ====== ====== ======
+Gas Mix EAN27 [liter]            3216   2703   2731   3764
+Gas Mix EAN50 [liter]             644    709   xx     xx
 ============================== ====== ====== ====== ======
 
 .. vim: sw=4:et:ai
