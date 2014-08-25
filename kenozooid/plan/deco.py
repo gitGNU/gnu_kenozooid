@@ -629,11 +629,11 @@ def plan_to_text(plan):
     txt.append('-' * len(t))
 
     titles = (
-        'Last stop at 6m', 'GF Low', 'GF High', #'RMV [l/min]', 'Extended Profile',
+        'RMV [l/min]', 'Last stop at 6m', 'GF Low', 'GF High', #'RMV [l/min]', 'Extended Profile',
         #'Decompression Model', 'Decompression Library'
     )
-    attrs = ('last_stop_6m', 'gf_low', 'gf_high')#, 'deco_time', 'dive_time')
-    fmts = (' {}', '{:>6}%', '{:>6}%')#, '{:>6.0f}')#, '{:>6.0f}')
+    attrs = ('rmv', 'last_stop_6m', 'gf_low', 'gf_high')#, 'deco_time', 'dive_time')
+    fmts = ('{:>6}', ' {}', '{:>6}%', '{:>6}%')#, '{:>6.0f}')#, '{:>6.0f}')
     assert len(titles) == len(fmts) == len(attrs)
 
     th = '=' * 30 + ' ' + '=' * 7

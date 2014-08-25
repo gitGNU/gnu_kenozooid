@@ -52,16 +52,20 @@ class DecoPlan(object):
         parser.add_argument('depth', type=int, help='dive depth')
         parser.add_argument('time', type=int, help='dive bottom time')
         parser.add_argument(
+            '--rmv', '-r', dest='rmv', default=20, type=int,
+            help='respiratory minute volume, i.e. 16 [l/min]'
+        )
+        parser.add_argument(
             '-6', dest='last_stop_6m', action='store_true', default=False,
-            help='last stop at 3m'
+            help='last stop at 6m'
         )
         parser.add_argument(
             '--gf-low', '-gl', dest='gf_low', default=30, type=int,
-            help='GF Low, i.e. 30 [%]'
+            help='GF Low, i.e. 30 [%%]'
         )
         parser.add_argument(
             '--gf-high', '-gh', dest='gf_high', default=85, type=int,
-            help='GF High, i.e. 85 [%]'
+            help='GF High, i.e. 85 [%%]'
         )
 
 
@@ -72,6 +76,7 @@ class DecoPlan(object):
         import kenozooid.plan.deco as planner
         plan = planner.DivePlan()
 
+        plan.rmv = args.rmv
         plan.last_stop_6m = args.last_stop_6m
         plan.gf_low = args.gf_low
         plan.gf_high = args.gf_high

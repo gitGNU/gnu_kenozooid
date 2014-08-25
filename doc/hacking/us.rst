@@ -197,11 +197,11 @@ The dive plan should be configurable with
 
 - last stop 3m or 6m; default 3m
 - gradient factors; default GF low 30%, GF high 85%
+- respiratory minute volume (RMV); default 20l/min
 
 The following parameters are used for dive plan calculation and might be
 configurable in the future
 
-- RMV 20l/min
 - descent rate 20m/min
 - extended dive profile is 5 meters deeper and 3 minutes longer (+5m/+3min)
 - decompression model is ZH-L16B-GF
