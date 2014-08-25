@@ -16,7 +16,7 @@ use command::
 
 To change the dive plan parameters to
 
-- respiratory volume minute set to 16l/min (default 20l/min)
+- respiratory volume minute 16l/min (default 20l/min)
 - gradient factors low 20% and high 90% (default 30% and 85%)
 - last decompression stop at 6m (default 3m)
 
