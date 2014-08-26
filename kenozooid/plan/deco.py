@@ -331,7 +331,7 @@ def dive_legs_overhead(gas_list, legs):
 
     ..seealso:: :py:func:`dive_legs`
     """
-    mix = gas_list.deco_gas[0]
+    mix = gas_list.deco_gas[0] if gas_list.deco_gas else None
     nr = range(len(legs))
     k = next(k for k in nr if legs[k][3] == mix or legs[k][-1])
     return legs[:k]

@@ -627,6 +627,30 @@ class DiveLegsTestCase(unittest.TestCase):
         self.assertEqual(legs[:3], oh_legs)
 
 
+    def test_dive_legs_overhead_no_deco(self):
+        """
+        Test calculating overhead part of a deco dive (no deco gas mix)
+        """
+        air = gas(21, 0, depth=40)
+        gas_list = GasList(air)
+
+        legs = [
+            (0, 40, 2, air, False),
+            (40, 40, 20, air, False),
+            (40, 24, 5, air, False), # up to first deco stop
+            (24, 24, 1, air, True),
+            (24, 21, 1, air, True),
+            (21, 21, 1, air, True),
+            # ...
+            (9, 9, 1, air, True),
+            (9, 9, 1, air, True),
+            (9, 6, 1, air, True),
+            # ...
+        ]
+        oh_legs = dive_legs_overhead(gas_list, legs)
+        self.assertEqual(legs[:3], oh_legs)
+
+
     def test_dive_legs_overhead_switch(self):
         """
         Test calculating overhead part of a deco dive (gas mix switch)
