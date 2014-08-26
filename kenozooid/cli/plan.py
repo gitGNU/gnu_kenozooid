@@ -21,8 +21,7 @@
 Kenozooid dive planning commands.
 """
 
-from kenozooid.cli import CLICommand, ArgumentError, \
-    add_master_command
+from kenozooid.cli import CLICommand, ArgumentError, add_master_command
 from kenozooid.component import inject
 
 # for comand 'plan deco'
@@ -82,7 +81,11 @@ class DecoPlan(object):
         plan.gf_high = args.gf_high
 
         gas_list = planner.parse_gas_list(*args.gas_list.split())
-        planner.plan_deco_dive(plan, gas_list, args.depth, args.time)
+
+        try:
+            planner.plan_deco_dive(plan, gas_list, args.depth, args.time)
+        except planner.DivePlanError as ex:
+            raise ArgumentError(ex)
 
         print(planner.plan_to_text(plan))
 

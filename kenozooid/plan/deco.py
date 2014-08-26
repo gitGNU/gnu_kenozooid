@@ -44,6 +44,13 @@ RE_GAS = re.compile("""
 """, re.VERBOSE)
 
 
+class DivePlanError(Exception):
+    """
+    Dive planner exception.
+    """
+
+
+
 class GasList(object):
     """
     List of gas mixes.
@@ -190,6 +197,8 @@ def plan_deco_dive(plan, gas_list, depth, time):
 
     for p in plan.profiles:
         stops = deco_stops(plan, p)
+        if not stops:
+            raise DivePlanError('NDL dive, no plan calculated')
 
         legs = dive_legs(p, stops, plan.descent_rate)
         if p.type == ProfileType.PLANNED:
