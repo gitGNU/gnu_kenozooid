@@ -366,13 +366,12 @@ def dive_slate(profile, stops, legs, descent_rate):
     depth = profile.depth
     time = profile.time
     gas_list = profile.gas_list
+    rt = 0
 
     # travel gas switches
     k = len(gas_list.travel_gas)
     if k:
-        k += 1
-        rt = 0
-        for i in range(k):
+        for i in range(k + 1):
             leg = legs[i]
 
             d = leg[0]
@@ -383,7 +382,7 @@ def dive_slate(profile, stops, legs, descent_rate):
         legs = legs[k:]
 
     # bottom time, no descent row on slate
-    rt = legs[0][2] + legs[1][2] # reset run-time
+    rt += legs[0][2] + legs[1][2] # reset run-time
     d = legs[1][0]
     m = None if gas_list.travel_gas else legs[1][3]
     slate.append((d, None, round(rt), m))
@@ -402,7 +401,8 @@ def dive_slate(profile, stops, legs, descent_rate):
 
     # decompression stops
     deco = [l for l in legs if l[4]]
-    deco.insert(0, no_deco[-1])
+    if no_deco:
+        deco.insert(0, no_deco[-1])
     for i in range(1, len(deco), 2):
         prev = deco[i - 1]
         leg = deco[i]

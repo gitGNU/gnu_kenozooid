@@ -230,6 +230,46 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertEqual((33, None, 2, ean30), slate[1], slate)
         self.assertEqual((37, None, 2, ean27), slate[2], slate)
         self.assertEqual((45, None, 35, None), slate[3], slate)
+        self.assertEqual((22, None, 38, ean50), slate[4], slate)
+        self.assertEqual((18, 1, 39, None), slate[5], slate)
+        self.assertEqual((9, 3, 46, ean80), slate[8], slate)
+
+
+    def test_dive_slate_travel_no_deco(self):
+        """
+        Test dive slate creation (with travel gas, no deco gas)
+        """
+        ean32 = gas(32, 0, depth=0)
+        ean30 = gas(30, 0, depth=33)
+        ean27 = gas(27, 0, depth=37)
+
+        gas_list = GasList(ean27)
+        gas_list.travel_gas.append(ean32)
+        gas_list.travel_gas.append(ean30)
+
+        depth = 45
+        time = 35
+        descent_rate = 20
+
+        profile = DiveProfile(ProfileType.PLANNED, gas_list, depth, time)
+
+        stops = [
+            Stop(18, 1),
+            Stop(15, 1),
+            Stop(12, 2),
+            Stop(9, 3),
+            Stop(6, 5),
+        ]
+
+        legs = dive_legs(profile, stops, descent_rate)
+        slate = dive_slate(profile, stops, legs, descent_rate)
+
+        self.assertEqual((0, None, 0, ean32), slate[0], slate)
+        self.assertEqual((33, None, 2, ean30), slate[1], slate)
+        self.assertEqual((37, None, 2, ean27), slate[2], slate)
+        self.assertEqual((45, None, 35, None), slate[3], slate)
+        self.assertEqual((18, 1, 39, None), slate[4], slate)
+        self.assertEqual((9, 3, 46, None), slate[7], slate)
 
 
     def test_depth_to_time_ascent(self):
