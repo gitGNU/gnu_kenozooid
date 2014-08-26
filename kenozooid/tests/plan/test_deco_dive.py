@@ -21,7 +21,7 @@ from collections import namedtuple, OrderedDict
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
     dive_legs, depth_to_time, gas_volume, parse_gas, parse_gas_list, \
-    dive_legs_overhead, min_gas_volume, gas_vol_info, \
+    dive_legs_overhead, min_gas_volume, gas_vol_info, gas_mix_depth_update, \
     sum_deco_time, sum_dive_time, DivePlan, DiveProfile, ProfileType, GasList
 from kenozooid.data import gas
 
@@ -296,6 +296,77 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         self.assertAlmostEquals(4 + 30 + 2.5 + 10 + 1.5, t)
 
 
+
+class GasMixDepthUpdateTestCase(unittest.TestCase):
+    """
+    Gas mix switch depth update tests.
+    """
+    def test_bottom_gas_mix_no_travel(self):
+        """
+        Test bottom gas mix depth update when no travel gas mix
+        """
+        air = gas(21, 0, None)
+
+        gas_list = GasList(air)
+        result = gas_mix_depth_update(gas_list, 1.4, 1.6)
+        self.assertEqual(0, result.bottom_gas.depth)
+
+
+    def test_bottom_gas_mix_with_travel(self):
+        """
+        Test bottom gas mix depth update when travel gas mix added
+        """
+        ean50 = gas(50, 0, None)
+        air = gas(21, 0, None)
+
+        gas_list = GasList(air)
+        gas_list.travel_gas = [ean50]
+
+        result = gas_mix_depth_update(gas_list, 1.4, 1.6)
+
+        self.assertEqual(1, len(result.travel_gas))
+        self.assertEqual(0, result.travel_gas[0].depth)
+        self.assertEqual(18, result.bottom_gas.depth)
+
+
+    def test_travel_gas_mix(self):
+        """
+        Test travel gas mix depth update
+        """
+        ean50 = gas(50, 0, None)
+        ean32 = gas(32, 0, None)
+        air = gas(21, 0, None)
+
+        gas_list = GasList(air)
+        gas_list.travel_gas = [ean50, ean32]
+
+        result = gas_mix_depth_update(gas_list, 1.4, 1.6)
+
+        self.assertEqual(2, len(result.travel_gas))
+        self.assertEqual(0, result.travel_gas[0].depth)
+        self.assertEqual(18, result.travel_gas[1].depth)
+        self.assertEqual(33, result.bottom_gas.depth)
+
+
+    def test_deco_gas_mix(self):
+        """
+        Test deco gas mix depth update
+        """
+        air = gas(21, 0, None)
+        ean50 = gas(50, 0, None)
+        o2 = gas(100, 0, 6)
+
+        gas_list = GasList(air)
+        gas_list.deco_gas = [ean50, o2]
+
+        result = gas_mix_depth_update(gas_list, 1.4, 1.6)
+
+        m1, m2 = result.deco_gas
+        self.assertEqual(22, m1.depth)
+        self.assertEqual(6, m2.depth)
+
+
+
 class GasMixParserTestCase(unittest.TestCase):
     """
     Gas mix parser tests.
@@ -307,7 +378,7 @@ class GasMixParserTestCase(unittest.TestCase):
         m = parse_gas('air')
         self.assertEqual(21, m.o2)
         self.assertEqual(0, m.he)
-        self.assertEqual(66, m.depth)
+        self.assertTrue(m.depth is None)
 
         m = parse_gas('air@0')
         self.assertEqual(21, m.o2)
@@ -319,7 +390,7 @@ class GasMixParserTestCase(unittest.TestCase):
         """
         Test parsing o2 gas mix
         """
-        m = parse_gas('o2')
+        m = parse_gas('o2@6')
         self.assertEqual(100, m.o2)
         self.assertEqual(0, m.he)
         self.assertEqual(6, m.depth)
@@ -332,7 +403,7 @@ class GasMixParserTestCase(unittest.TestCase):
         m = parse_gas('EAN50')
         self.assertEqual(50, m.o2)
         self.assertEqual(0, m.he)
-        self.assertEqual(22, m.depth)
+        self.assertTrue(m.depth is None)
 
         m = parse_gas('ean32@21')
         self.assertEqual(32, m.o2)
@@ -352,7 +423,7 @@ class GasMixParserTestCase(unittest.TestCase):
         m = parse_gas('TX17/18')
         self.assertEqual(17, m.o2)
         self.assertEqual(18, m.he)
-        self.assertEqual(84, m.depth)
+        self.assertTrue(m.depth is None)
 
     # TODO: 'TX17/18|2x12', 'TX21/33@10'
 
@@ -373,7 +444,7 @@ class GasMixParserTestCase(unittest.TestCase):
         Test parsing gas list
         """
         air = gas(21, 0)
-        ean50 = gas(50, 0, 22)
+        ean50 = gas(50, 0, None)
         gas_list = parse_gas_list('air@0', 'ean50')
         self.assertEqual([], gas_list.travel_gas)
         self.assertEqual(air, gas_list.bottom_gas)
@@ -537,7 +608,6 @@ class DiveLegsTestCase(unittest.TestCase):
         ]
         oh_legs = dive_legs_overhead(gas_list, legs)
         self.assertEqual(legs[:3], oh_legs)
-
 
 
 

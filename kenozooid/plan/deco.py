@@ -21,6 +21,7 @@
 Decompression dive planning.
 """
 
+import math
 import re
 from collections import namedtuple, OrderedDict
 import logging
@@ -90,6 +91,9 @@ class DivePlan(object):
         self.descent_rate = 20
         self.rmv = 20
         self.ext_profile = 5, 3
+
+        self.gas_mix_ppo2 = 1.4
+        self.deco_gas_mix_ppo2 = 1.6
 
 
 
@@ -162,6 +166,10 @@ def plan_deco_dive(plan, gas_list, depth, time):
     """
     ext_depth = depth + plan.ext_profile[0]
     ext_time = time + plan.ext_profile[1]
+
+    gas_list = gas_mix_depth_update(
+        gas_list, plan.gas_mix_ppo2, plan.deco_gas_mix_ppo2
+    )
 
     lost_gas_list = GasList(gas_list.bottom_gas)
     lost_gas_list.travel_gas.extend(gas_list.travel_gas)
@@ -532,6 +540,60 @@ def min_gas_volume(gas_list, legs, rmv=20):
     return gas_vol
 
 
+def gas_mix_depth_update(gas_list, ppo2, deco_ppo2):
+    """
+    Update gas mix list, so every gas mix has depth specified.
+
+    The following rules are used
+
+    - gas mixes with non-null depth are _not_ changed
+    - first travel gas mix switch depth is 0m
+    - if no travel gas mixes specified, then bottom gas mix switch depth is
+      set to 0m
+    - travel and bottom gas mixes are updated with MOD calculated using
+      ppO2 and O2 value of previous gas mix on the list
+    - decompression gas mixes are updated with MOD calculated using
+      decompression ppO2 and O2 value of changed gas mix
+
+    :param gas_list: Gas mix list to modify.
+    :param ppo2: ppO2 value used to calculate MOD of travel and bottom gas
+        mixes.
+    :param deco_ppo2: ppO2 value used to calculate MOD of decompression gas
+        mixes.
+    """
+    def change_gas_mix(gas_mix, o2, ppo2, condition):
+        if gas_mix.depth is None:
+            v = mod(o2, ppo2) if condition else 0
+            return gas_mix._replace(depth=math.floor(v))
+        else:
+            return gas_mix
+
+    m = gas_list.travel_gas[-1] if gas_list.travel_gas else gas_list.bottom_gas
+    bottom_gas = change_gas_mix(
+        gas_list.bottom_gas, m.o2, ppo2, gas_list.travel_gas
+    )
+    new_list = GasList(bottom_gas)
+
+    if gas_list.travel_gas:
+        # change first travel gas mix
+        m = gas_list.travel_gas[0]
+        m = m._replace(depth=0) if m.depth is None else m
+        assert m.depth is not None
+        new_list.travel_gas = [m]
+
+        o2_list = [m.o2 for m in gas_list.travel_gas]
+        new_list.travel_gas.extend(
+            change_gas_mix(m, o2, ppo2, True) for m, o2 in
+            zip(gas_list.travel_gas[1:], o2_list[:-1])
+        )
+
+    new_list.deco_gas = [
+        change_gas_mix(m, m.o2, deco_ppo2, True) for m in gas_list.deco_gas
+    ]
+
+    return new_list
+
+
 def plan_to_text(plan):
     """
     Convert decompression dive plan to text.
@@ -679,9 +741,9 @@ def parse_gas(t, travel=False):
         he = 0 if p is None else int(p)
 
         p = v.group('depth')
-        depth = mod(o2, 1.6) if p is None else int(p)
+        depth = None if p is None else int(p)
         #tank = v.group('tank')
-        m = gas(o2, he, depth=int(depth))
+        m = gas(o2, he, depth=depth)
 
     return m
 

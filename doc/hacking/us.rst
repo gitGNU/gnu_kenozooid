@@ -139,7 +139,7 @@ The diver is planning a decompression dive.
 
 The dive plan input is
 
-- gas mix list
+- gas mix list (each with optional gas mix switch)
 
   - travel gas mixes (0 or more)
   - bottom gas mix
@@ -205,6 +205,8 @@ configurable in the future
 - descent rate 20m/min
 - extended dive profile is 5 meters deeper and 3 minutes longer (+5m/+3min)
 - decompression model is ZH-L16B-GF
+- travel and bottom gas mix switch depth is calculated using ppO2 1.4
+- bottom gas mix switch depth is calculated using ppO2 1.6
 - decompression engine library is ``decotengu``
 
 .. not for ver. 0.15: - travel and decompression gas mixes cylinders pressure 200bar

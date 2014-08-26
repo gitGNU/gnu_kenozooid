@@ -12,7 +12,7 @@ For example, to plan decompression dive
 
 use command::
 
-    $ kz plan deco 'ean27 ean50@22' 42 25
+    $ kz plan deco 'ean27 ean50' 42 25
 
 To change the dive plan parameters to
 
@@ -22,7 +22,11 @@ To change the dive plan parameters to
 
 we can use the command::
 
-    $ kz plan deco --rmv 16 -gl 20 -gh 90 -6 'ean27 ean50@22' 42 25
+    $ kz plan deco --rmv 16 -gl 20 -gh 90 -6 'ean27 ean50' 42 25
+
+or to specify gas mix switch depth in explicit way::
+
+    $ kz plan deco --rmv 16 -gl 20 -gh 90 -6 'ean27@0 ean50@22' 42 25
 
 Dive Plan Input
 ---------------
