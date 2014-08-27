@@ -21,9 +21,11 @@
 Decompression dive planning.
 """
 
+from collections import namedtuple
+import itertools
 import math
+import operator
 import re
-from collections import namedtuple, OrderedDict
 import logging
 
 from kenozooid.data import gas
@@ -515,8 +517,12 @@ def gas_volume(gas_list, legs, rmv=20):
     Calculate dive gas mix volume information.
 
     Gas mix volume is calculated for each gas mix on the gas list. The
-    volume information is returned as dictionary `gas mix -> usage`, where
-    gas usage is volume of gas in liters.
+    volume information is returned as dictionary `gas mix name -> usage`,
+    where gas usage is volume of gas in liters.
+
+    The key of the gas mix volume dictionary is gas mix name to merge all
+    travel and decompression gas mixes information regardless their depth
+    switch.
 
     FIXME: apply separate RMV for decompression gas
 
@@ -527,15 +533,17 @@ def gas_volume(gas_list, legs, rmv=20):
     ..seealso:: :py:func:`dive_legs`
     """
     mixes = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
-    zeros = [0] * len(mixes)
-    cons = OrderedDict(zip(mixes, zeros))
-    for leg in legs:
-        d = (leg[0] + leg[1]) / 2
-        t = leg[2]
-        m = leg[3]
-        cons[m] += (d / 10 + 1) * t * rmv
+    gas_vol = {m.name: 0 for m in mixes}
 
-    return cons
+    items = (
+        (leg[3].name, ((leg[0] + leg[1]) / 2 / 10 + 1) * leg[2] * rmv)
+        for leg in legs
+    )
+    key = operator.itemgetter(0)
+    items = sorted(items, key=key)
+    items = itertools.groupby(items, key)
+    gas_vol.update({m: sum(v[1] for v in vols) for m, vols in items})
+    return gas_vol
 
 
 def min_gas_volume(gas_list, legs, rmv=20):
@@ -556,7 +564,7 @@ def min_gas_volume(gas_list, legs, rmv=20):
     # dive
     oh_legs = dive_legs_overhead(gas_list, legs)
     cons = gas_volume(gas_list, oh_legs, rmv=rmv)
-    gas_vol[gas_list.bottom_gas] = cons[gas_list.bottom_gas]
+    gas_vol[gas_list.bottom_gas] = cons[gas_list.bottom_gas.name]
 
     # use rule of thirds
     for mix in gas_vol:
@@ -663,8 +671,9 @@ def plan_to_text(plan):
     gas_list = plan.profiles[0].gas_list # all other plans, do not use more
                                          # gas mixes
     gas_list = gas_list.travel_gas + [gas_list.bottom_gas] + gas_list.deco_gas
-    for m in gas_list:
-        n = 'Gas Mix {} [liter]'.format(m.name)
+    gas_mix_names = sorted(set(m.name for m in gas_list))
+    for m in gas_mix_names:
+        n = 'Gas Mix {} [liter]'.format(m)
         vol = [p.gas_vol.get(m, 0) for p in plan.profiles]
         # the main profile gas volume reported using rule of thirds
         vol[0] = plan.min_gas_vol[m]

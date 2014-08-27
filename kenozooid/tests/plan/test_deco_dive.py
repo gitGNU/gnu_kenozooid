@@ -704,8 +704,8 @@ class GasMixConsumptionTestCase(unittest.TestCase):
         cons = gas_volume(gas_list, legs, 30)
 
         self.assertEqual(2, len(cons))
-        self.assertEqual(3795, cons[air])
-        self.assertEqual(445.5, cons[ean50])
+        self.assertEqual(3795, cons['Air'])
+        self.assertEqual(445.5, cons['EAN50'])
 
 
     def test_min_bottom_gas(self):
@@ -730,8 +730,8 @@ class GasMixConsumptionTestCase(unittest.TestCase):
 
         vol = min_gas_volume(gas_list, legs, 30)
 
-        self.assertEqual(3795 * 1.5, vol[air])
-        self.assertEqual(445.5 * 1.5, vol[ean50])
+        self.assertEqual(3795 * 1.5, vol['Air'])
+        self.assertEqual(445.5 * 1.5, vol['EAN50'])
 
 
     def test_gas_vol_info(self):
