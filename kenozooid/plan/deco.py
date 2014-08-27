@@ -237,14 +237,16 @@ def deco_stops(plan, profile):
 
     # add gas mix information to decompression engine
     for m in gas_list.travel_gas:
-        logger.debug('adding travel gas {}'.format(m))
         engine.add_gas(m.depth, m.o2, m.he, travel=True)
+        logger.debug('added travel gas {}'.format(m))
+
     m = gas_list.bottom_gas
-    logger.debug('adding bottom gas {}'.format(m))
     engine.add_gas(m.depth, m.o2, m.he)
+    logger.debug('added bottom gas {}'.format(m))
+
     for m in gas_list.deco_gas:
-        logger.debug('adding deco gas {}'.format(m))
         engine.add_gas(m.depth, m.o2, m.he)
+        logger.debug('added deco gas {}'.format(m))
 
     list(engine.calculate(profile.depth, profile.time))
 
@@ -276,44 +278,57 @@ def dive_legs(profile, stops, descent_rate):
     - deco zone indicator (true or false)
     """
     gas_list = profile.gas_list
-    depth = profile.depth
+    max_depth = profile.depth
     time = profile.time
 
     legs = []
 
     # start with descent
     if gas_list.travel_gas:
+        # add dive legs when travel gas mixes are used
         mixes = gas_list.travel_gas + [gas_list.bottom_gas]
         depths = [m.depth for m in mixes[1:]]
-        for m, d in zip(mixes, depths):
-            t = depth_to_time(d, m.depth, descent_rate)
-            assert t > 0, (m, d, t)
-            legs.append((m.depth, d, t, m, False))
-    d = legs[-1][1] if legs else 0
-    if d != depth:
-        t = depth_to_time(depth, d, descent_rate)
-        legs.append((d, depth, t, gas_list.bottom_gas, False))
+        times = (
+            depth_to_time(d, m.depth, descent_rate)
+            for m, d in zip(mixes, depths)
+        )
+        legs.extend(
+            (m.depth, d, t, m, False)
+            for m, d, t in zip(mixes, depths, times)
+        )
 
-    assert abs(sum(l[2] for l in legs) - depth / descent_rate) < 0.00001
+    # descent leg to max depth, it is always from bottom gas mix switch
+    # depth (with or without travel gas mixes), skip it if bottom gas mix
+    # to be switched at max depth
+    m = gas_list.bottom_gas
+    if max_depth > m.depth:
+        t = depth_to_time(m.depth, max_depth, descent_rate)
+        legs.append((m.depth, max_depth, t, m, False))
+
+    assert abs(sum(l[2] for l in legs) - max_depth / descent_rate) < 0.00001
 
     # max depth leg, exclude descent time
-    t = time - depth / descent_rate
-    legs.append((depth, depth, t, gas_list.bottom_gas, False))
+    t = time - max_depth / descent_rate
+    legs.append((max_depth, max_depth, t, gas_list.bottom_gas, False))
 
-    # deco free ascent
-    fs = stops[0]
-    mixes = [m for m in gas_list.deco_gas if m.depth > fs.depth]
-    depths = [depth] + [m.depth for m in mixes] + [fs.depth]
+    first_stop = stops[0]
+
+    # ascent without decompression stops
+    mixes = [m for m in gas_list.deco_gas if m.depth > first_stop.depth]
+    depths = [max_depth] + [m.depth for m in mixes] + [first_stop.depth]
     rd = zip(depths[:-1], depths[1:])
     mixes.insert(0, gas_list.bottom_gas)
-    for (d1, d2), m in zip(rd, mixes):
-        assert d1 > d2, (d1, d2)
-        t = (d1 - d2) / 10
-        legs.append((d1, d2, t, m, False))
+    legs.extend(
+        (d1, d2, (d1 - d2) / 10, m, False)
+        for (d1, d2), m in zip(rd, mixes)
+    )
 
-    # deco ascent
+    # ascent with decompression stops till the surface
     depths = [s.depth for s in stops[1:]] + [0]
-    mixes = {(m.depth // 3) * 3: m for m in gas_list.deco_gas if m.depth <= fs.depth}
+    mixes = {
+        (m.depth // 3) * 3: m for m in gas_list.deco_gas
+        if m.depth <= first_stop.depth
+    }
     cm = legs[-1][3] # current gas mix
     for s, d in zip(stops, depths):
         cm = mixes.get(s.depth, cm) # use current gas mix until gas mix switch

@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+from pprint import pformat
 from collections import namedtuple, OrderedDict
 
 from kenozooid.plan.deco import plan_deco_dive, deco_stops, dive_slate, \
@@ -150,7 +151,7 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         """
         Test dive slate creation
         """
-        ean27 = gas(27, 0, depth=33)
+        ean27 = gas(27, 0, depth=0)
         ean50 = gas(50, 0, depth=22)
         ean80 = gas(80, 0, depth=10)
 
@@ -175,7 +176,8 @@ class DecoDivePlannerTestCase(unittest.TestCase):
         legs = dive_legs(profile, stops, descent_rate)
         slate = dive_slate(profile, stops, legs, descent_rate)
 
-        self.assertEqual(8, len(slate), slate)
+        msg = '\n{}\n{}'.format(pformat(legs), pformat(slate))
+        self.assertEqual(8, len(slate), msg)
 
         self.assertEqual((45, None, 35, ean27), slate[0], slate)
         self.assertEqual((22, None, 37, ean50), slate[1], slate)
