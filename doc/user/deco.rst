@@ -134,6 +134,29 @@ Example of dive slate for planned dive profile::
 
 Gas Mix Logistics
 -----------------
+Gas mix logistics information provides diver with volume of each gas mix
+required during each of dive profiles of a decompression dive. The volume
+is calculated using 20l/min respiratory minute volume (RMV) by default and
+is expressed in liters.
+
+The gas mix volume for planned dive profile is calculated using rule of
+thirds. For example, if 2000 liters of bottom gas mix is to be consumed by
+a diver during planned dive profile, then dive cylinder setup holding 3000 liters
+of the gas mix is required.
+
+Having gas mix volume value, we can calculate if diving cylinder setup is
+sufficient for a dive. For example, if 1600 liters of decompression gas mix
+is required and we have choice of using 7 liter or 10 liter cylinder, then
+we can calculate required pressure in each cylinder::
+
+    1600 / 7  = 229
+    1600 / 10 = 160
+
+and we should decide to take 10 liter cylinder for the dive.
+
+*NOTE:* The emergency dive profiles gas mix volume information is
+calculated as is, this is *without* rule of thirds.
+
 Example of gas mix logistics information
 
 ============================== ====== ====== ====== ======
@@ -142,5 +165,9 @@ Gas Mix                          P      E      LG    E+LG
 Gas Mix EAN27 [liter]            3216   2703   2731   3764
 Gas Mix EAN50 [liter]             644    709   xx     xx
 ============================== ====== ====== ====== ======
+
+Above example shows that we need at least 3216 liters of EAN27 for planned
+dive profile (we will consume 2144 liters of gas mix). For any emergency
+dive profile we need no more than 3764 liters of the gas mix.
 
 .. vim: sw=4:et:ai
