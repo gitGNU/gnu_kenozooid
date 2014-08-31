@@ -187,8 +187,8 @@ Decompression Dive Planning
 
 **User Story**: :ref:`hk-us-plan-deco`
 
-**Input**: gas mix list, diving cylinders specification, maximum dive
-depth, bottom time
+**Input**: gas mix list, maximum dive depth, bottom time, dive plan
+parameters
 
 **Output**: dive plan
 
@@ -201,8 +201,11 @@ depth, bottom time
 |           |                    | For each dive profile                       |
 |           |                    |                                             |
 |           |                    | - prepare summary                           |
-|           |                    | - calculate and verify gas mix requirements |
+|           |                    | - calculate gas mix requirements            |
 |           |                    | - create dive slate                         |
++-----------+--------------------+---------------------------------------------+
+|           | Send dive plan for | Render dive plan.                           |
+|           | rendering.         |                                             |
 +-----------+--------------------+---------------------------------------------+
 |           | Display dive plan. |                                             |
 +-----------+--------------------+---------------------------------------------+
