@@ -27,5 +27,5 @@ doc: .homepage-stamp .epydoc-stamp .sphinx-stamp
 	cp doc/user/*.pdf build/homepage/doc/user/
 
 upload-doc:
-	$(RSYNC) build/homepage/ wrobell@maszyna.it-zone.org:~/public_html/kenozooid
+	$(RSYNC) build/homepage/ wrobell@wrobell.it-zone.org:~/public_html/kenozooid
 
