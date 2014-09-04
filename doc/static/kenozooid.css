@@ -1,0 +1,5 @@
+@import url('alabaster.css');
+
+div.align-right img {
+    float: right;
+}
