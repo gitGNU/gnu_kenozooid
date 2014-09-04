@@ -58,6 +58,6 @@ UDDF homepage
 
 UDDF specification
 
-    http://www.streit.cc/extern/uddf_v310/en/index.html
+    http://www.uddf.org/
 
 .. vim: sw=4:et:ai
