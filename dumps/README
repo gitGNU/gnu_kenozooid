@@ -13,6 +13,7 @@ w:
 - ostc-dump-49.uddf
 - ostc-dump-50.uddf
 - ostc-dump-53.uddf (contains some dives from ostc-dump-50.uddf)
+- ostc-dump-55.uddf
 
 solodiver:
 - ostc-dump-2{1,2,3}.uddf
@@ -40,6 +41,7 @@ ola:
 - ostc-dump-48.uddf
 - ostc-dump-51.uddf
 - ostc-dump-54.uddf (contains some dives from ostc-dump-51.uddf)
+- ostc-dump-56.uddf
 
 f:
 - ostc-dump-52.uddf (first dive: simulation)
