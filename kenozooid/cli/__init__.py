@@ -156,7 +156,7 @@ def add_commands(parser, prefix=None, title=None):
             else:
                 c_subp = None
 
-        p.set_defaults(cmd=name, parser=p)
+        p.set_defaults(cmd=cmd, parser=p)
         cls.add_arguments(p)
 
 

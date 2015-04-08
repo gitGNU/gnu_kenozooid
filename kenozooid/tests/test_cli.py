@@ -234,22 +234,22 @@ class CommandTestCase(unittest.TestCase):
         self.assertTrue(hasattr(args, 'cmd'))
         self.assertTrue(hasattr(args, 'subcmd'))
         self.assertTrue(hasattr(args, 'parser'))
-        self.assertEquals('test', args.cmd)
-        self.assertEquals('test', args.subcmd)
+        self.assertEquals('test', args.cmd, args)
+        self.assertIsNone(args.subcmd, args)
 
         args = parser.parse_args('test a'.split())
         self.assertTrue(hasattr(args, 'cmd'))
         self.assertTrue(hasattr(args, 'subcmd'))
         self.assertTrue(hasattr(args, 'parser'))
-        self.assertEquals('test', args.cmd)
-        self.assertEquals('a', args.subcmd)
+        self.assertEquals('test', args.cmd, args)
+        self.assertEquals('a', args.subcmd, args)
 
         args = parser.parse_args('test b'.split())
         self.assertTrue(hasattr(args, 'cmd'))
         self.assertTrue(hasattr(args, 'subcmd'))
         self.assertTrue(hasattr(args, 'parser'))
-        self.assertEquals('test', args.cmd)
-        self.assertEquals('b', args.subcmd)
+        self.assertEquals('test', args.cmd, args)
+        self.assertEquals('b', args.subcmd, args)
 
 
 # vim: sw=4:et:ai
