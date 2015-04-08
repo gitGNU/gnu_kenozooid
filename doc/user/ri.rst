@@ -15,7 +15,7 @@ platform (Windows, Mac OS X).
 +=================+==========+=============+==========================+============================+
 |                                             **Core**                                             |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| Python          |   3.2    | execution   | Arch, Debian Wheezy,     | Kenozooid is written       |
+| Python          |   3.4.3  | execution   | Arch, Debian Wheezy,     | Kenozooid is written       |
 |                 |          | environment | Fedora 15, Mac OS X,     | in Python language         |
 |                 |          |             | PLD Linux, Ubuntu Natty, |                            |
 |                 |          |             | Windows                  |                            |
@@ -40,12 +40,12 @@ platform (Windows, Mac OS X).
 | libdivecomputer |          | library     |                          | required by Sensus Ultra   |
 |                 |          |             |                          | driver                     |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| R               |  2.15.0  | R scripts   | Arch, Debian Wheezy,     | plotting and dive data     |
+| R               |  3.1.3   | R scripts   | Arch, Debian Wheezy,     | plotting and dive data     |
 |                 |          | execution   | Fedora 15, Mac OS X,     | analysis                   |
 |                 |          | environment | PLD Linux, Ubuntu Natty, |                            |
 |                 |          |             | Windows                  |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
-| rpy             |  2.2.5   | Python      | PLD Linux                | used to communicate with R |
+| rpy             |  2.5.6   | Python      | PLD Linux                | used to communicate with R |
 |                 |          | module      |                          |                            |
 +-----------------+----------+-------------+--------------------------+----------------------------+
 | Hmisc           |          | R package   |                          | used for plotting          |
