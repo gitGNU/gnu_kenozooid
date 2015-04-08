@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.15.1
+----------------
+- command line user interface fix after `argparse` library changes
+
 Kenozooid 0.15.0
 ----------------
 - implemented decompression dive planning feature
