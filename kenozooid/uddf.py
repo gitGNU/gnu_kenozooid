@@ -37,7 +37,7 @@ The result of parsing or search of data is usually iterator of XML nodes or
 data records (named tuples in Python terms).
 
 Module `lxml` is used for XML parsing and querying with XPath. Full
-capabilities of underlying `libxml2' library is used by design. The
+capabilities of underlying `libxml2` library is used by design. The
 ElementTree XML data model is used for XML nodes.
 """
 
