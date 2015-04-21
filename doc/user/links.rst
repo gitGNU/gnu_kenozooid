@@ -30,9 +30,9 @@ OSTC 2N web page can be found at
 
     http://www.heinrichsweikamp.net/
 
-OSTC dive computer communication protocol can be obtained by contacting
+OSTC dive computer communication protocol can be obtained from
 
-    http://www.heinrichsweikamp.net/forum/file.php?2,file=138,filename=ostc_interface_description.pdf
+    https://bitbucket.org/heinrichsweikamp/ostc2_code/src/default/docu/
 
 ReefNet Sensus Ultra
 ^^^^^^^^^^^^^^^^^^^^
