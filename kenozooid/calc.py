@@ -18,8 +18,12 @@
 #
 
 """
-Various calculation methods like partial pressure, equivalent air depth,
-maximum operating depth, etc.
+Functions to calculate
+
+- partial pressure
+- equivalent air depth
+- maximum operating depth
+- respiratory minute volume
 """
 
 import functools
@@ -34,36 +38,36 @@ def ppg(depth, ean, gas):
      ean
         O2 percentage, i.e. 32, 34, 27.5.
      gas
-        Gas to be calculated - O2 (oxygen) or N2 (nitrogen).
+        Gas name - O2 (oxygen) or N2 (nitrogen).
     """
     if gas not in ('O2', 'N2'):
-        raise ValueError('Invalid gas value: '  + gas)
+        raise ValueError('Invalid gas name: '  + gas)
 
     p = 1.0 + depth / 10.0 # absolute pressure
     fg = ean / 100.0 if gas == 'O2' else 1.0 - ean / 100.0
-    
+
     return p * fg
 
 
 def mod(ean, pp=1.4):
     """
-    Calculate maximum operating depth for specified partial pressure.
+    Calculate maximum operating depth for a gas and partial pressure.
 
     :Parameters:
      ean
         O2 percentage, i.e. 32, 34, 27.5.
      pp
-        Maximum partial pressure.
+        Partial pressure value.
     """
-    fg = ean / 100.0 
+    fg = ean / 100.0
     p = pp / fg
     return (p - 1) * 10
 
 
 def ead(depth, ean):
     """
-    Calculate equivalent air depth for specified depth and EAN.
-    
+    Calculate equivalent air depth for depth and a gas.
+
     :Parameters:
      depth
         Depth in meters.
@@ -93,7 +97,25 @@ def rmv(tank, pressure, depth, duration):
 
 
 ppN2 = functools.partial(ppg, gas='N2')
-ppO2 = functools.partial(ppg, gas='O2')
+ppN2.__doc__ = """
+Calculate partial pressure of nitrogen.
 
+:Parameters:
+ depth
+    Depth in meters.
+ ean
+    O2 percentage, i.e. 32, 34, 27.5.
+"""
+
+ppO2 = functools.partial(ppg, gas='O2')
+ppO2.__doc__ = """
+Calculate partial pressure of oxygen.
+
+:Parameters:
+ depth
+    Depth in meters.
+ ean
+    O2 percentage, i.e. 32, 34, 27.5.
+"""
 
 # vim: sw=4:et:ai

@@ -9,9 +9,10 @@ sys.path.append(os.path.abspath('doc'))
 import kenozooid
 
 extensions = [
-    'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.todo',
-    'sphinx.ext.viewcode', 'extapi', 'alabaster'
+    'sphinx.ext.autodoc', 'sphinx.ext.autosummary', 'sphinx.ext.doctest',
+    'sphinx.ext.todo', 'sphinx.ext.viewcode', 'extapi', 'alabaster'
 ]
+
 project = 'Kenozooid'
 source_suffix = '.rst'
 master_doc = 'index'
