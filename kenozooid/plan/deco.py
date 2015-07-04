@@ -129,10 +129,10 @@ class DiveProfile(object):
         self.gas_list = gas_list
         self.depth = depth
         self.time = time
-        self.descent_time = 0
-        self.deco_time = 0
-        self.dive_time = 0
-        self.pp_o2 = 0
+        self.descent_time = None
+        self.deco_time = None
+        self.dive_time = None
+        self.pp_o2 = None
         self.slate = []
         self.gas_vol = {}
         self.gas_info = []
