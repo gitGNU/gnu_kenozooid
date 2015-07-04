@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.16.0
+----------------
+- calculator functions `ppO2` and `ppN2` renamed to `pp_o2` and `pp_n2`
+
 Kenozooid 0.15.1
 ----------------
 - command line user interface fix after `argparse` library changes
