@@ -28,11 +28,15 @@ or to specify gas mix switch depth in explicit way::
 
     $ kz plan deco --rmv 16 -gl 20 -gh 90 -6 'ean27@0 ean50@22' 42 25
 
-The example of decompression dive plan generated with above command can be
-viewed :download:`here <deco-plan.txt>`.
+Decompression dive plan generated with above command is
+
+.. literalinclude:: deco-plan.txt
 
 The dive plan output is in `reStructuredText format <http://docutils.sourceforge.net/rst.html>`_
 and can be simply printed or converted to many formats like PDF or HTML.
+
+The decompression dive plan input and the details of its output are
+discussed in the following sections.
 
 Dive Plan Input
 ---------------
