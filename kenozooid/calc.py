@@ -96,8 +96,8 @@ def rmv(tank, pressure, depth, duration):
     return tank * pressure / (depth / 10.0 + 1) / duration
 
 
-ppN2 = functools.partial(ppg, gas='N2')
-ppN2.__doc__ = """
+pp_n2 = functools.partial(ppg, gas='N2')
+pp_n2.__doc__ = """
 Calculate partial pressure of nitrogen.
 
 :Parameters:
@@ -107,8 +107,8 @@ Calculate partial pressure of nitrogen.
     O2 percentage, i.e. 32, 34, 27.5.
 """
 
-ppO2 = functools.partial(ppg, gas='O2')
-ppO2.__doc__ = """
+pp_o2 = functools.partial(ppg, gas='O2')
+pp_o2.__doc__ = """
 Calculate partial pressure of oxygen.
 
 :Parameters:

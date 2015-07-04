@@ -23,42 +23,42 @@ Tests for calculation methods.
 
 import unittest
 
-from kenozooid.calc import ppg, ppO2, ppN2, mod, ead, rmv
+from kenozooid.calc import ppg, pp_o2, pp_n2, mod, ead, rmv
 
 
 class PPTestCase(unittest.TestCase):
     """
     Partial pressure tests.
     """
-    def test_ppO2(self):
+    def test_pp_o2(self):
         """
-        Test air ppO2 calculation
+        Test air pp_o2 calculation
         """
-        pp = ppO2(57, 21)
+        pp = pp_o2(57, 21)
         self.assertAlmostEqual(1.4, round(pp, 1), places=1)
 
 
-    def test_ppN2(self):
+    def test_pp_n2(self):
         """
-        Test air ppN2 calculation
+        Test air pp_n2 calculation
         """
-        pp = ppN2(57, 21)
+        pp = pp_n2(57, 21)
         self.assertAlmostEqual(6.7 - 1.4, round(pp, 1), places=1)
 
 
-    def test_ppO2EAN34(self):
+    def test_pp_o2_ean34(self):
         """
-        Test EAN 34 ppO2 calculation
+        Test EAN 34 pp_o2 calculation
         """
-        pp = ppO2(28, 34)
+        pp = pp_o2(28, 34)
         self.assertAlmostEqual(1.292, pp, places=3)
 
 
-    def test_ppN2EAN34(self):
+    def test_pp_n2_ean34(self):
         """
-        Test EAN 34 ppN2 calculation
+        Test EAN 34 pp_n2 calculation
         """
-        pp = ppN2(28, 34)
+        pp = pp_n2(28, 34)
         self.assertAlmostEqual(3.8 - 1.292, pp, places=3)
 
 
@@ -76,14 +76,14 @@ class MODTestCase(unittest.TestCase):
 
 
     def test_EAN50(self):
-        """Test EAN 50 MOD calculation at 1.6 ppO2
+        """Test EAN 50 MOD calculation at 1.6 pp_o2
         """
         d = mod(50, 1.6)
         self.assertAlmostEqual(22, d, places=1)
 
 
     def test_EAN80(self):
-        """Test EAN 80 MOD calculation at 1.6 ppO2
+        """Test EAN 80 MOD calculation at 1.6 pp_o2
         """
         d = mod(80, 1.6)
         self.assertAlmostEqual(10, d, places=1)
