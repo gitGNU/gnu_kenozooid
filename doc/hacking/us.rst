@@ -152,13 +152,6 @@ The dive plan input is
 Kenozooid calculates dive plan, which consists of
 
 - main dive profile summary
-
-  - maximum dive depth
-  - bottom time (includes descent time)
-  - descent time
-  - total decompression time
-  - total dive time
-
 - emergency dive profile summary for lost gas
 - emergency dive profile summary for extended dive profile
 - emergency dive profile summary for extended dive profile and lost gas
@@ -178,6 +171,14 @@ Kenozooid calculates dive plan, which consists of
   - emergency lost gas dive profile
   - emergency extended dive profile
   - emergency extended dive profile and lost gas
+
+Profile summary is
+
+- maximum dive depth
+- bottom time (includes descent time)
+- descent time
+- total decompression time
+- total dive time
 
 Decompression stops are calculated with a decompression engine library.
 
