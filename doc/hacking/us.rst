@@ -180,6 +180,7 @@ Profile summary is
 - total decompression time
 - total dive time
 - O2 partial pressure of bottom gas mix at maximum dive depth
+- maximum operating depth for bottom gas mix and maximum dive depth
 
 Decompression stops are calculated with a decompression engine library.
 

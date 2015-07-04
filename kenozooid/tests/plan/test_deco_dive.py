@@ -58,12 +58,20 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
         self.assertEqual(45, plan.profiles[0].depth)
         self.assertEqual(35, plan.profiles[0].time)
+        self.assertAlmostEqual(1.16, plan.profiles[0].pp_o2, 2)
+        self.assertAlmostEqual(56.67, plan.profiles[0].mod, 2)
         self.assertEqual(50, plan.profiles[1].depth)
         self.assertEqual(38, plan.profiles[1].time)
+        self.assertAlmostEquals(1.26, plan.profiles[1].pp_o2, 2)
+        self.assertAlmostEquals(56.67, plan.profiles[1].mod, 2)
         self.assertEqual(45, plan.profiles[2].depth)
         self.assertEqual(35, plan.profiles[2].time)
+        self.assertAlmostEquals(1.16, plan.profiles[2].pp_o2, 2)
+        self.assertAlmostEquals(56.67, plan.profiles[2].mod, 2)
         self.assertEqual(50, plan.profiles[3].depth)
         self.assertEqual(38, plan.profiles[3].time)
+        self.assertAlmostEquals(1.26, plan.profiles[3].pp_o2, 2)
+        self.assertAlmostEquals(56.67, plan.profiles[3].mod, 2)
 
         # check deco gas
         self.assertEqual([ean50, ean80], plan.profiles[0].gas_list.deco_gas)

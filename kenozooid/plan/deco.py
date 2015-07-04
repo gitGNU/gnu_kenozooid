@@ -119,6 +119,8 @@ class DiveProfile(object):
     :var dive_time: Total dive time.
     :var pp_o2: The O2 partial pressure of bottom gas mix at maximum dive
         depth.
+    :var mod: Maximum operating depth for bottom gas mix and maximum dive
+        depth.
     :var slate: Dive slate.
     :var gas_vol: Dictionary of gas mix and gas volume required for the
         dive.
@@ -133,6 +135,7 @@ class DiveProfile(object):
         self.deco_time = None
         self.dive_time = None
         self.pp_o2 = None
+        self.mod = None
         self.slate = []
         self.gas_vol = {}
         self.gas_info = []
@@ -212,6 +215,7 @@ def plan_deco_dive(plan, gas_list, depth, time):
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
         p.pp_o2 = pp_o2(p.depth, p.gas_list.bottom_gas.o2)
+        p.mod = mod(p.gas_list.bottom_gas.o2, plan.gas_mix_ppo2)
         p.slate = dive_slate(p, stops, legs, plan.descent_rate)
 
         p.descent_time  = depth_to_time(0, p.depth, plan.descent_rate)
@@ -645,10 +649,12 @@ def plan_to_text(plan):
     titles = (
         'Depth [m]', 'Bottom Time [min]', 'Descent Time [min]',
         'Total Decompression Time [min]', 'Total Dive Time [min]',
-        'Max O2 Pressure of Bottom Gas',
+        'O2 Pressure of Bottom Gas Mix', 'MOD for Bottom Gas Mix'
     )
-    attrs = 'depth', 'time', 'descent_time', 'deco_time', 'dive_time', 'pp_o2'
-    fmts = '{:>6d}', '{:>6d}', '{:>6.1f}', '{:>6.0f}', '{:>6.0f}', '{:>6.2f}'
+    attrs = 'depth', 'time', 'descent_time', 'deco_time', 'dive_time', \
+        'pp_o2', 'mod'
+    fmts = '{:>6d}', '{:>6d}', '{:>6.1f}', '{:>6.0f}', '{:>6.0f}', \
+        '{:>6.2f}', '{:>6.0f}'
     assert len(titles) == len(fmts) == len(attrs)
 
     # create dive profiles summary table
