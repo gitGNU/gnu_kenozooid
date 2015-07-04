@@ -2,6 +2,8 @@ Changelog
 =========
 Kenozooid 0.16.0
 ----------------
+- decompression dive plan summary extended with O2 partial pressure and
+  maximum operating depth information
 - calculator functions `ppO2` and `ppN2` renamed to `pp_o2` and `pp_n2`
 
 Kenozooid 0.15.1
