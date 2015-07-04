@@ -154,8 +154,8 @@ Calculate
 The diver uses a calculator for dive planning. There are several
 calculators
 
-- ppO2
-- ppN2
+- pp_o2
+- pp_n2
 - ead
 - mod
 - rmv
