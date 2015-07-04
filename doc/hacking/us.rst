@@ -179,6 +179,7 @@ Profile summary is
 - descent time
 - total decompression time
 - total dive time
+- O2 partial pressure of bottom gas mix at maximum dive depth
 
 Decompression stops are calculated with a decompression engine library.
 
@@ -317,6 +318,6 @@ The diver removes buddy data from logbook file.
 Upgrade Files
 ^^^^^^^^^^^^^
 The file format standard used by Kenozooid changes with time. The diver
-wants to upgrade his files to newer version of the file format. 
+wants to upgrade his files to newer version of the file format.
 
 .. vim: sw=4:et:ai

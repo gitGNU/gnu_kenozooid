@@ -29,7 +29,7 @@ import re
 import logging
 
 from kenozooid.data import gas
-from kenozooid.calc import mod
+from kenozooid.calc import mod, pp_o2
 
 logger = logging.getLogger(__name__)
 
@@ -117,6 +117,8 @@ class DiveProfile(object):
     :var descent_time: Time required to descent to dive bottom depth.
     :var deco_time: Total decompression time.
     :var dive_time: Total dive time.
+    :var pp_o2: The O2 partial pressure of bottom gas mix at maximum dive
+        depth.
     :var slate: Dive slate.
     :var gas_vol: Dictionary of gas mix and gas volume required for the
         dive.
@@ -130,6 +132,7 @@ class DiveProfile(object):
         self.descent_time = 0
         self.deco_time = 0
         self.dive_time = 0
+        self.pp_o2 = 0
         self.slate = []
         self.gas_vol = {}
         self.gas_info = []
@@ -208,6 +211,7 @@ def plan_deco_dive(plan, gas_list, depth, time):
 
         p.deco_time = sum_deco_time(legs)
         p.dive_time = sum_dive_time(legs)
+        p.pp_o2 = pp_o2(p.depth, p.gas_list.bottom_gas.o2)
         p.slate = dive_slate(p, stops, legs, plan.descent_rate)
 
         p.descent_time  = depth_to_time(0, p.depth, plan.descent_rate)
@@ -641,9 +645,10 @@ def plan_to_text(plan):
     titles = (
         'Depth [m]', 'Bottom Time [min]', 'Descent Time [min]',
         'Total Decompression Time [min]', 'Total Dive Time [min]',
+        'Max O2 Pressure of Bottom Gas',
     )
-    attrs = ('depth', 'time', 'descent_time', 'deco_time', 'dive_time')
-    fmts = ('{:>6d}', '{:>6d}', '{:>6.1f}', '{:>6.0f}', '{:>6.0f}')
+    attrs = 'depth', 'time', 'descent_time', 'deco_time', 'dive_time', 'pp_o2'
+    fmts = '{:>6d}', '{:>6d}', '{:>6.1f}', '{:>6.0f}', '{:>6.0f}', '{:>6.2f}'
     assert len(titles) == len(fmts) == len(attrs)
 
     # create dive profiles summary table
