@@ -22,6 +22,7 @@ Decompression dive planning.
 """
 
 from collections import namedtuple
+import enum
 import itertools
 import math
 import operator
@@ -142,7 +143,7 @@ class DiveProfile(object):
 
 
 
-class ProfileType(object):
+class ProfileType(enum.Enum):
     """
     Dive profile type.
 
@@ -710,7 +711,7 @@ def plan_to_text(plan):
     txt.append(t)
     txt.append('-' * len(t))
     for p in plan.profiles:
-        txt.append('Profile *{}*::'.format(p.type))
+        txt.append('Profile *{}*::'.format(p.type.value))
         txt.append('')
         slate = p.slate
         t = '     {:>3} {:>3} {:>4} {:7}'.format('D', 'DT', 'RT', 'GAS')
