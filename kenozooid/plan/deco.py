@@ -190,11 +190,12 @@ def plan_deco_dive(plan, gas_list, depth, time):
     lost_gas_list = GasList(gas_list.bottom_gas)
     lost_gas_list.travel_gas.extend(gas_list.travel_gas)
 
+    pt = ProfileType
     plan.profiles = [
-        DiveProfile(ProfileType.PLANNED, gas_list, depth, time),
-        DiveProfile(ProfileType.LOST_GAS, lost_gas_list, depth, time),
-        DiveProfile(ProfileType.EXTENDED, gas_list, ext_depth, ext_time),
-        DiveProfile(ProfileType.EXTENDED_LOST_GAS, lost_gas_list, ext_depth, ext_time),
+        DiveProfile(pt.PLANNED, gas_list, depth, time),
+        DiveProfile(pt.LOST_GAS, lost_gas_list, depth, time),
+        DiveProfile(pt.EXTENDED, gas_list, ext_depth, ext_time),
+        DiveProfile(pt.EXTENDED_LOST_GAS, lost_gas_list, ext_depth, ext_time),
     ]
 
     for p in plan.profiles:

@@ -51,39 +51,38 @@ class DecoDivePlannerTestCase(unittest.TestCase):
 
         self.assertEqual(4, len(plan.profiles))
 
-        t = ProfileType
-        expected = [t.PLANNED, t.EXTENDED, t.LOST_GAS, t.EXTENDED_LOST_GAS]
+        pt = ProfileType
+        profiles = [pt.PLANNED, pt.LOST_GAS, pt.EXTENDED, pt.EXTENDED_LOST_GAS]
         types = [p.type for p in plan.profiles]
-        self.assertEqual(expected, types)
+        self.assertEqual(profiles, types)
 
-        self.assertEqual(45, plan.profiles[0].depth)
-        self.assertEqual(35, plan.profiles[0].time)
-        self.assertAlmostEqual(1.16, plan.profiles[0].pp_o2, 2)
-        self.assertAlmostEqual(56.67, plan.profiles[0].mod, 2)
-        self.assertEqual(50, plan.profiles[1].depth)
-        self.assertEqual(38, plan.profiles[1].time)
-        self.assertAlmostEquals(1.26, plan.profiles[1].pp_o2, 2)
-        self.assertAlmostEquals(56.67, plan.profiles[1].mod, 2)
-        self.assertEqual(45, plan.profiles[2].depth)
-        self.assertEqual(35, plan.profiles[2].time)
-        self.assertAlmostEquals(1.16, plan.profiles[2].pp_o2, 2)
-        self.assertAlmostEquals(56.67, plan.profiles[2].mod, 2)
-        self.assertEqual(50, plan.profiles[3].depth)
-        self.assertEqual(38, plan.profiles[3].time)
-        self.assertAlmostEquals(1.26, plan.profiles[3].pp_o2, 2)
-        self.assertAlmostEquals(56.67, plan.profiles[3].mod, 2)
+        expected = [45, 45, 50, 50]
+        depths = [p.depth for p in plan.profiles]
+        self.assertEqual(expected, depths)
+
+        expected = [35, 35, 38, 38]
+        times = [p.time for p in plan.profiles]
+        self.assertEqual(expected, times)
+
+        expected = [1.155, 1.155, 1.26, 1.26]
+        pp_o2 = [p.pp_o2 for p in plan.profiles]
+        self.assertEqual(expected, pp_o2)
+
+        expected = [56.67] * 4
+        mod = [round(p.mod, 2) for p in plan.profiles]
+        self.assertEqual(expected, mod)
 
         # check deco gas
-        self.assertEqual([ean50, ean80], plan.profiles[0].gas_list.deco_gas)
-        self.assertEqual([ean50, ean80], plan.profiles[1].gas_list.deco_gas)
-        self.assertEqual([], plan.profiles[2].gas_list.deco_gas)
-        self.assertEqual([], plan.profiles[3].gas_list.deco_gas)
+        idx = [i for i, _ in enumerate(profiles)]
+        expected = [[ean50, ean80], []] * 2
+        for i, v in zip(idx, expected):
+            deco_gas = plan.profiles[i].gas_list.deco_gas
+            self.assertEqual(v, deco_gas)
 
         # check bottom gas
-        self.assertEqual(air, plan.profiles[0].gas_list.bottom_gas)
-        self.assertEqual(air, plan.profiles[1].gas_list.bottom_gas)
-        self.assertEqual(air, plan.profiles[2].gas_list.bottom_gas)
-        self.assertEqual(air, plan.profiles[3].gas_list.bottom_gas)
+        expected = [air] * 4
+        bottom_gas = [p.gas_list.bottom_gas for p in plan.profiles]
+        self.assertEqual(expected, bottom_gas)
 
 
     @mock.patch('decotengu.create')
