@@ -151,16 +151,16 @@ class ProfileType(enum.Enum):
 
     PLANNED
         Dive profile planned by a diver.
-    EXTENDED
-        Extended dive profile compared to planned dive profile.
     LOST_GAS
         Dive profile as planned dive but for lost decompression gas.
+    EXTENDED
+        Extended dive profile compared to planned dive profile.
     EXTENDED_LOST_GAS
         Combination of `EXTENDED` and `LOST_GAS` dive profiles.
     """
     PLANNED = 'planned'
-    EXTENDED = 'extended'
     LOST_GAS = 'lost gas'
+    EXTENDED = 'extended'
     EXTENDED_LOST_GAS = 'extended + lost gas'
 
 
@@ -190,19 +190,12 @@ def plan_deco_dive(plan, gas_list, depth, time):
     lost_gas_list = GasList(gas_list.bottom_gas)
     lost_gas_list.travel_gas.extend(gas_list.travel_gas)
 
-    p = DiveProfile(ProfileType.PLANNED, gas_list, depth, time)
-    plan.profiles.append(p)
-
-    p = DiveProfile(ProfileType.EXTENDED, gas_list, ext_depth, ext_time)
-    plan.profiles.append(p)
-
-    p = DiveProfile(ProfileType.LOST_GAS, lost_gas_list, depth, time)
-    plan.profiles.append(p)
-
-    p = DiveProfile(
-        ProfileType.EXTENDED_LOST_GAS, lost_gas_list, ext_depth, ext_time
-    )
-    plan.profiles.append(p)
+    plan.profiles = [
+        DiveProfile(ProfileType.PLANNED, gas_list, depth, time),
+        DiveProfile(ProfileType.LOST_GAS, lost_gas_list, depth, time),
+        DiveProfile(ProfileType.EXTENDED, gas_list, ext_depth, ext_time),
+        DiveProfile(ProfileType.EXTENDED_LOST_GAS, lost_gas_list, ext_depth, ext_time),
+    ]
 
     for p in plan.profiles:
         stops = deco_stops(plan, p)
@@ -661,7 +654,7 @@ def plan_to_text(plan):
     # create dive profiles summary table
     th = '=' * 30 + ' ' + ' '.join(['=' * 6, ] * 4)
     txt.append(th)
-    txt.append(' {:32}'.format('Name') + 'P      E      LG    E+LG')
+    txt.append(' {:32}'.format('Name') + 'P      LG     E     E+LG')
     txt.append(th)
     for title, attr, fmt in zip(titles, attrs, fmts):
         t = '{:30s} '.format(title) + ' '.join([fmt] * 4)
@@ -678,7 +671,7 @@ def plan_to_text(plan):
     # required gas volume information as a table
     th = '=' * 30 + ' ' + ' '.join(['=' * 6, ] * 4)
     txt.append(th)
-    txt.append('{:33s}'.format('Gas Mix') + 'P      E      LG    E+LG')
+    txt.append('{:33s}'.format('Gas Mix') + 'P      LG     E     E+LG')
     txt.append(th)
     gas_list = plan.profiles[0].gas_list # all other plans, do not use more
                                          # gas mixes
