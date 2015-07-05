@@ -31,6 +31,7 @@ or to specify gas mix switch depth in explicit way::
 Decompression dive plan generated with above command is
 
 .. literalinclude:: deco-plan.txt
+   :language: rst
 
 The dive plan output is in `reStructuredText format <http://docutils.sourceforge.net/rst.html>`_
 and can be simply printed or converted to many formats like PDF or HTML.
