@@ -89,12 +89,12 @@ situations, which gives four dive profiles in total
 
 P
     Planned dive profile.
+LG
+    Emergency dive profile for lost decompression gas situation.
 E
     Emergency dive profile for extended dive situation, this is deeper and
     longer dive. By default, extended dive profile is 5m deeper and 3 minutes
     longer.
-LG
-    Emergency dive profile for lost decompression gas situation.
 E+LG
     Emergency dive profile for both extended and lost decompression gas
     situations.
@@ -102,13 +102,15 @@ E+LG
 Example of dive plan summary
 
 ============================== ====== ====== ====== ======
- Name                            P      E      LG    E+LG
+ Name                            P      LG     E     E+LG
 ============================== ====== ====== ====== ======
-Depth [m]                          42     47     42     47
-Bottom Time [min]                  25     28     25     28
-Descent Time [min]                2.1    2.4    2.1    2.4
-Total Decompression Time [min]     14     25     20     38
-Total Dive Time [min]              41     56     47     69
+Depth [m]                          42     42     47     47
+Bottom Time [min]                  25     25     28     28
+Descent Time [min]                2.1    2.1    2.4    2.4
+Total Decompression Time [min]     14     20     25     38
+Total Dive Time [min]              41     47     56     69
+O2 Pressure of Bottom Gas Mix    1.40   1.40   1.54   1.54
+MOD for Bottom Gas Mix             42     42     42     42
 ============================== ====== ====== ====== ======
 
 Dive Slates
@@ -170,10 +172,10 @@ calculated as is, this is *without* rule of thirds.
 Example of gas mix logistics information
 
 ============================== ====== ====== ====== ======
-Gas Mix                          P      E      LG    E+LG
+Gas Mix                          P      LG     E     E+LG
 ============================== ====== ====== ====== ======
-Gas Mix EAN27 [liter]            3216   2703   2731   3764
-Gas Mix EAN50 [liter]             644    709   xx     xx
+Gas Mix EAN27 [liter]            3216   2731   2703   3764
+Gas Mix EAN50 [liter]             644   xx      709   xx
 ============================== ====== ====== ====== ======
 
 Above example shows that we need at least 3216 liters of EAN27 for planned
