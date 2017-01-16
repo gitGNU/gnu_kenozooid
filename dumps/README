@@ -50,6 +50,7 @@ ola:
 - ostc-dump-60.uddf
 - ostc-dump-62.uddf
 - ostc-dump-64.uddf
+- ostc-dump-65.uddf
 
 f:
 - ostc-dump-52.uddf (first dive: simulation)
