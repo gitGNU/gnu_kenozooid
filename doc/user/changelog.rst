@@ -1,5 +1,9 @@
 Changelog
 =========
+Kenozooid 0.16.1
+----------------
+- fixed parsing of calculator command-line arguments
+
 Kenozooid 0.16.0
 ----------------
 - decompression dive plan summary extended with O2 partial pressure and

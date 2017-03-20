@@ -22,6 +22,6 @@ Kenozooid is software stack to support different capabilities of dive
 computers.
 """
 
-__version__ = '0.16.0'
+__version__ = '0.16.1'
 
 # vim: sw=4:et:ai
