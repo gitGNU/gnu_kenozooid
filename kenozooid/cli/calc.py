@@ -24,6 +24,11 @@ Kenozooid calculator commands.
 from kenozooid.cli import CLICommand, ArgumentError, NoCommandError
 from kenozooid.component import inject
 
+COMMANDS = {
+    'ppO2': ('pp_o2', 'calculate O2 partial pressure (ppO2)'),
+    'ppN2': ('pp_n2', 'calculate Nitrogen partial pressure (ppN2)'),
+    'ead': ('ead', 'calculate equivalent air depth (EAD)'),
+}
 
 @inject(CLICommand, name='calc')
 class Calculate(object):
@@ -40,13 +45,9 @@ class Calculate(object):
 
         TODO: Add imperial/metric units support.
         """
-        cmds = ('ppO2', 'ppN2', 'ead')
-        desc = ('calculate O2 partial pressure (ppO2)',
-            'calculate Nitrogen partial pressure (ppN2)', 
-            'calculate equivalent air depth (EAD)')
         subp = parser.add_subparsers(title='Calculator commands')
 
-        for cmd, d in zip(cmds, desc):
+        for cmd, (_, d) in COMMANDS.items():
             p = subp.add_parser(cmd, help=d)
             p.set_defaults(calc=cmd, subcmd='calc', parser=p)
             p.add_argument('depth', type=float, nargs=1)
@@ -83,14 +84,15 @@ class Calculate(object):
 
         calc = args.calc
 
-        f = getattr(kcalc, calc)
-        if calc in ('ppO2', 'ppN2', 'ead'):
+        if calc in COMMANDS:
+            f = getattr(kcalc, COMMANDS[calc][0])
             result = f(args.depth[0], args.ean[0])
         elif calc == 'mod':
-            result = f(args.ean[0], args.pp)
+            result = kcalc.mod(args.ean[0], args.pp)
         elif calc == 'rmv':
-            result = f(args.tank[0], args.pressure[0], args.depth[0],
-                    args.duration[0])
+            result = kcalc.rmv(
+                args.tank[0], args.pressure[0], args.depth[0], args.duration[0]
+            )
         else:
             assert False
 
