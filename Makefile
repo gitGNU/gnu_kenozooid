@@ -30,6 +30,6 @@ doc: .homepage-stamp .epydoc-stamp .sphinx-stamp
 	sphinx-build -b epub doc doc-tmp-epub
 	cp doc-tmp-epub/*.epub build/homepage/doc
 
-upload-doc:
-	$(RSYNC) build/homepage/ wrobell@wrobell.it-zone.org:~/public_html/kenozooid
+doc-upload:
+	$(RSYNC) build/homepage/ wrobell@dcmod.org:~/public_html/kenozooid
 
