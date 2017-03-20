@@ -182,7 +182,7 @@ setup(
     version=VERSION,
     description='Kenozooid is dive planning and analysis toolbox',
     author='Artur Wroblewski',
-    author_email='wrobell@pld-linux.org',
+    author_email='wrobell@riseup.net',
     url='https://dcmod.org/kenozooid',
     setup_requires = ['setuptools_git >= 1.0',],
     packages=find_packages('.'),

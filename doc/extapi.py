@@ -2,7 +2,7 @@
 # Kenozooid - software stack to support different capabilities of dive
 # computers.
 #
-# Copyright (C) 2009 by Artur Wroblewski <wrobell@pld-linux.org>
+# Copyright (C) 2009 by Artur Wroblewski <wrobell@riseup.net>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
