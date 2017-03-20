@@ -3,6 +3,7 @@ Changelog
 Kenozooid 0.16.1
 ----------------
 - fixed parsing of calculator command-line arguments
+- homepage moved to https://wrobell.dcmod.org/kenozooid/
 
 Kenozooid 0.16.0
 ----------------
